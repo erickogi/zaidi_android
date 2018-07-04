@@ -1,4 +1,4 @@
-package com.dev.lishaboramobile.Account.Fragments;
+package com.dev.lishaboramobile.Global.Account.Fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

@@ -19,8 +19,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Account.EntryActivity" />
-        <activity android:name=".Account.SplashActivity"></activity>
+        <activity android:name=".Global.Account.EntryActivity" />
+        <activity android:name=".Global.Account.SplashActivity"></activity>
     </application>
 
 </manifest>
