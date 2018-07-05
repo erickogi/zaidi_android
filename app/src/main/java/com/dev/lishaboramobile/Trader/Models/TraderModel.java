@@ -16,6 +16,7 @@ public class TraderModel {
     private   String code ;
     private   String entity ;
     private   String entitycode ;
+    private String transactioncode;
     @NonNull
     private   String names ;
     private   String mobile ;
@@ -208,5 +209,13 @@ public class TraderModel {
 
     public void setDummy(int dummy) {
         this.dummy = dummy;
+    }
+
+    public String getTransactioncode() {
+        return transactioncode;
+    }
+
+    public void setTransactioncode(String transactioncode) {
+        this.transactioncode = transactioncode;
     }
 }

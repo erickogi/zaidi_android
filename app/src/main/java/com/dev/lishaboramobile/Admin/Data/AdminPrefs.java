@@ -15,16 +15,16 @@ public class AdminPrefs {
     private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
 
 
-    private static final String names = "names";
+    private static final String NAMES = "names";
 
-    private static final String mobile = "UserId";
-    private static final String email = "UserName";
-    private static final String department = "FirstName";
-    private static final String password = "LastName";
-    private static final String apikey = "Email";
-    private static final String firebasetoken = "Email";
-    private static final String status = "PhoneNumber";
-    private static final String transactiontime = "Designation";
+    private static final String MOBILE = "mobile";
+    private static final String EMAIL = "email";
+    private static final String DEPARTMENT = "department";
+    private static final String PASSWORD = "password";
+    private static final String APIKEY = "apikey";
+    private static final String FIREBASE_TOKEN = "firebasetoken";
+    private static final String STATUS = "status";
+    private static final String TRANSACTION_TIME = "transaction_time";
 
     // Shared Preferences
 
@@ -61,30 +61,30 @@ public class AdminPrefs {
 
 
     public void setAdmin(AdminModel admin){
-        editor.putString(names,admin.getNames());
-        editor.putString(mobile,admin.getMobile());
-        editor.putString(email,admin.getEmail());
-        editor.putString(department,admin.getDepartment());
-        editor.putString(password,admin.getPassword());
-        editor.putString(apikey,admin.getApikey());
-        editor.putString(firebasetoken,admin.getFirebasetoken());
-        editor.putString(status,admin.getStatus());
-        editor.putString(transactiontime,admin.getTransactiontime());
+        editor.putString(NAMES,admin.getNames());
+        editor.putString(MOBILE,admin.getMobile());
+        editor.putString(EMAIL,admin.getEmail());
+        editor.putString(DEPARTMENT,admin.getDepartment());
+        editor.putString(PASSWORD,admin.getPassword());
+        editor.putString(APIKEY,admin.getApikey());
+        editor.putString(FIREBASE_TOKEN,admin.getFirebasetoken());
+        editor.putString(STATUS,admin.getStatus());
+        editor.putString(TRANSACTION_TIME,admin.getTransactiontime());
         editor.commit();
 
     }
 
     public AdminModel getAdmin(){
         AdminModel adminModel=new AdminModel();
-        adminModel.setNames(pref.getString(names,null));
-        adminModel.setEmail(pref.getString(email,null));
-        adminModel.setMobile(pref.getString(mobile,null));
-        adminModel.setDepartment(pref.getString(department,null));
-        adminModel.setPassword(pref.getString(password,null));
-        adminModel.setApikey(pref.getString(apikey,null));
-        adminModel.setFirebasetoken(pref.getString(firebasetoken,null));
-        adminModel.setStatus(pref.getString(status,null));
-        adminModel.setTransactiontime(pref.getString(transactiontime,null));
+        adminModel.setNames(pref.getString(NAMES,null));
+        adminModel.setEmail(pref.getString(EMAIL,null));
+        adminModel.setMobile(pref.getString(MOBILE,null));
+        adminModel.setDepartment(pref.getString(DEPARTMENT,null));
+        adminModel.setPassword(pref.getString(PASSWORD,null));
+        adminModel.setApikey(pref.getString(APIKEY,null));
+        adminModel.setFirebasetoken(pref.getString(FIREBASE_TOKEN,null));
+        adminModel.setStatus(pref.getString(STATUS,null));
+        adminModel.setTransactiontime(pref.getString(TRANSACTION_TIME,null));
 
         return adminModel;
 

@@ -1,4 +1,4 @@
-package com.dev.lishaboramobile.Global.Data;
+package com.dev.lishaboramobile.Global.Data.Operations.Converters;
 
 import android.arch.persistence.room.TypeConverter;
 

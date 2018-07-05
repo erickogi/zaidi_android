@@ -9,16 +9,21 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+import com.dev.lishaboramobile.Global.Utils.Jobs.WorkManager.UpWork;
+import com.dev.lishaboramobile.Global.Utils.Jobs.WorkManager.UpWorkCreator;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
+public class MainActivity extends AppCompatActivity {
+    private FirebaseAnalytics mFirebaseAnalytics;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //
+// Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
-
-        setContentView(R.layout.activity_main);
+       setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -26,10 +31,18 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "w");
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "e");
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "image");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
+        UpWorkCreator upWork=new UpWorkCreator();
+        //upWork.createUpSyncWork();
+
     }
 
     @Override

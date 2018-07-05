@@ -1,6 +1,6 @@
 package com.dev.lishaboramobile.Admin.Models;
 
-public class AdminModel {
+public class AdminModel  {
     private   String names ;
     private   String mobile ;
     private   String email ;
