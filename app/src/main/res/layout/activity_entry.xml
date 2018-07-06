@@ -1,9 +1,205 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout
+
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+
+    android:id="@+id/relative_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Global.Account.EntryActivity">
+    android:layout_gravity="center"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:visibility="visible">
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout
+
+        android:id="@+id/transitions_container"
+        android:orientation="vertical"
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/logo"
+            android:background="@color/colorPrimary"
+            android:src="@mipmap/ic_launcher_foreground"
+            style="style/@style/SplashTheme"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp"></ImageView>
+
+        <com.dev.customfonts.MyTextView_Roboto_Bold
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            android:textColor="@color/white"
+            android:padding="8dp"
+            android:layout_marginTop="6dp"
+
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:text="Welcome to LishaBora"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:id="@+id/linear2"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical"
+            android:layout_weight="2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+            <LinearLayout
+
+                android:layout_gravity="center"
+                android:padding="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <com.hbb20.CountryCodePicker
+                    android:id="@+id/ccp"
+                    app:ccp_contentColor="@color/white"
+                    app:ccp_hintExampleNumberType="MOBILE"
+                    app:ccp_autoDetectCountry="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    />
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:hint="Enter your phone number "
+                    android:textColorHint="@color/white"
+
+
+
+                    app:hintAnimationEnabled="true"
+                    android:layout_height="wrap_content">
+                    <android.support.design.widget.TextInputEditText
+                        android:textColor="@color/white"
+                        android:hint="0714893843"
+                        android:id="@+id/editText_carrierNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="phone"
+                        />
+
+                </android.support.design.widget.TextInputLayout>
+
+
+
+
+            </LinearLayout>
+            <Button
+                android:padding="4dp"
+                android:layout_gravity="end"
+                android:onClick="next"
+                android:layout_marginStart="1dp"
+                android:background="@color/colorAccent"
+                android:text="Next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <GridLayout
+                android:visibility="gone"
+                android:id="@+id/grid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentStart="true"
+                android:layout_gravity="center"
+                android:columnCount="4"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <Button
+                    android:onClick="one"
+
+                    android:layout_columnWeight="1"
+                    android:text="1" />
+
+                <Button
+                    android:onClick="two"
+
+                    android:layout_columnWeight="1"
+                    android:text="2" />
+
+                <Button
+                    android:onClick="three"
+
+                    android:layout_columnWeight="1"
+                    android:text="3" />
+
+                <Button
+                    android:onClick="four"
+
+                    android:layout_columnWeight="1"
+                    android:text="4" />
+
+                <Button
+                    android:onClick="five"
+                    android:layout_columnWeight="1"
+                    android:text="5" />
+
+                <Button
+                    android:onClick="six"
+
+                    android:layout_columnWeight="1"
+                    android:text="6" />
+
+                <Button
+                    android:onClick="seven"
+
+                    android:layout_columnWeight="1"
+                    android:text="7" />
+
+                <Button
+                    android:onClick="eight"
+
+                    android:layout_columnWeight="1"
+                    android:text="8" />
+
+                <Button
+                    android:onClick="nine"
+
+                    android:layout_columnWeight="1"
+                    android:text="9" />
+
+                <Button
+                    android:onClick="zero"
+
+                    android:layout_columnWeight="1"
+                    android:text="0" />
+                <Button
+                    android:onClick="clear"
+                    android:layout_marginEnd="1dp"
+                    android:background="@color/red_color_picker"
+                    android:layout_column="2"
+                    android:layout_columnWeight="1"
+                    android:text="Clear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <Button
+                    android:onClick="next"
+                    android:layout_marginStart="1dp"
+                    android:background="@color/colorAccent"
+                   android:layout_column="3"
+                    android:layout_columnWeight="1"
+                    android:text="Next"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </GridLayout>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

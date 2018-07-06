@@ -17,7 +17,7 @@ public class UpWork extends Worker {
     @Override
     public WorkerResult doWork() {
 
-        doUpSync();
+       // doUpSync();
 
         return WorkerResult.SUCCESS;
     }

@@ -10,9 +10,9 @@ import com.dev.lishaboramobile.Trader.Models.TraderModel;
 public class TraderPrefs {
     // Shared preferences file name
 
-    private static final String PREF_NAME = "lishaboraprefs";
+    private static final String PREF_NAME = "lishaboratraderprefs";
 
-    // All Shared Preferences Keys
+    // All Trader Preferences Keys
 
     private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
 

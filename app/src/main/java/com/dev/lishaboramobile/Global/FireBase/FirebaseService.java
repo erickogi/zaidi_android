@@ -21,7 +21,9 @@ import java.util.Random;
 //import com.erickogi14gmail.photozuri.Payments.Payments;
 
 /**
- * Created by Eric on 2/20/2018.
+ *
+ * @author Eric
+ * @date 2/20/2018
  */
 
 public class FirebaseService extends FirebaseMessagingService {

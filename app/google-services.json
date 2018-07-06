@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "511298483228",
+    "firebase_url": "https://lishaboramobile.firebaseio.com",
+    "project_id": "lishaboramobile",
+    "storage_bucket": "lishaboramobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:511298483228:android:feee85759df59f42",
+        "android_client_info": {
+          "package_name": "com.dev.lishaboramobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "511298483228-g52ipvbko7o74uib3988p4lv06ch5qil.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dev.lishaboramobile",
+            "certificate_hash": "87fbf7edadff0dff22c4f9c6574c15f1711b24c1"
+          }
+        },
+        {
+          "client_id": "511298483228-allsc2nrfoqef2fe8vek07ep6cie4khl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdEvBzAFxSi63v1hnlUar2ihj0eQf6iPs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "511298483228-allsc2nrfoqef2fe8vek07ep6cie4khl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -8,7 +8,7 @@ import com.dev.lishaboramobile.Admin.Models.AdminModel;
 public class AdminPrefs {
     // Shared preferences file name
 
-    private static final String PREF_NAME = "lishaboraprefs";
+    private static final String PREF_NAME = "lishaboraadminprefs";
 
     // All Shared Preferences Keys
 

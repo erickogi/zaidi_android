@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        UpWorkCreator upWork=new UpWorkCreator();
+        //UpWorkCreator upWork=new UpWorkCreator();
         //upWork.createUpSyncWork();
 
     }
