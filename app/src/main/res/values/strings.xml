@@ -3,4 +3,8 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_admin">AdminActivity</string>
     <string name="title_activity_trader">TraderActivity</string>
+    <string name="no_internet">You don\'t have an active internet connection</string>
+    <string name="invalid_phone">Invalid Phone Number</string>
+    <string name="enter_phone">Enter your phone number</string>
+    <string name="reguired">Required</string>
 </resources>

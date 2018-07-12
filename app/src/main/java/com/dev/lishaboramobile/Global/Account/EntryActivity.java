@@ -1,25 +1,22 @@
 package com.dev.lishaboramobile.Global.Account;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.GridLayout;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.dev.lishaboramobile.Admin.Views.AdminActivity;
 import com.dev.lishaboramobile.Global.Utils.NetworkUtils;
 import com.dev.lishaboramobile.R;
 import com.hbb20.CountryCodePicker;
@@ -29,51 +26,81 @@ import com.transitionseverywhere.TransitionManager;
 
 public class EntryActivity extends AppCompatActivity {
     CountryCodePicker ccp;
-    TextInputEditText editTextCarrierNumber;LinearLayout linearLayout2,linearLayout1;
+    private final int PHONE_VIEW = 1;
+    private final int PASSWORD_VIEW = 2;
     ImageView imageView;
+    TextInputEditText editTextCarrierNumber, edtPassword;
     GridLayout gridView;
     private boolean isImageVisible=true;
+    LinearLayout linearLayout2, linearLayout1;
     private RelativeLayout relativeLayoutParent;
+    LinearLayout linearLayoutPassword, linearLayoutPhoneNumber;
+    EntryController entryController;
+    private boolean isPhone = true;
+    private ViewGroup transitionsContainer;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_entry);
-        final ViewGroup transitionsContainer = (ViewGroup) findViewById(R.id.transitions_container);
+    protected void onStart() {
+        super.onStart();
+        entryController = new EntryController(EntryActivity.this);
+
+    }
+
+    private void bindViews() {
+        transitionsContainer = findViewById(R.id.transitions_container);
         linearLayout2=findViewById(R.id.linear2);
+        linearLayoutPassword = findViewById(R.id.linear_password);
+        linearLayoutPhoneNumber = findViewById(R.id.linear_phone);
         imageView=findViewById(R.id.logo);
         gridView=findViewById(R.id.grid);
         gridView.setVisibility(View.GONE);
-        ccp = (CountryCodePicker) findViewById(R.id.ccp);
+        ccp = findViewById(R.id.ccp);
         relativeLayoutParent=findViewById(R.id.relative_parent);
-        ccp.setCcpClickable(false);
 
         editTextCarrierNumber =  findViewById(R.id.editText_carrierNumber);
-//        ccp.registerCarrierNumberEditText(editTextCarrierNumber);
-//
-//        ccp.setPhoneNumberValidityChangeListener(isValidNumber -> {
-//            // your code
-//            if(!isValidNumber){
-//                editTextCarrierNumber.setError("Invalid");
-//            }
-//        });
+        edtPassword = findViewById(R.id.editText_password);
 
-        editTextCarrierNumber.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                TransitionManager.beginDelayedTransition(transitionsContainer,
-                        new ChangeBounds().setPathMotion(new ArcMotion()).setDuration(500));
+    }
 
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) linearLayout2.getLayoutParams();
-                params.gravity =(Gravity.LEFT | Gravity.TOP);
-                linearLayout2.setLayoutParams(params);
-                imageView.setVisibility(View.GONE);
-                isImageVisible=false;
-                //gridView.setVisibility(View.VISIBLE);
+    private void viewTransitions(boolean isHeaderVisible) {
+        if (isHeaderVisible) {
+            imageView.setVisibility(View.VISIBLE);
+            isImageVisible = true;
+        } else {
+            TransitionManager.beginDelayedTransition(transitionsContainer,
+                    new ChangeBounds().setPathMotion(new ArcMotion()).setDuration(500));
 
-            }
-        });
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) linearLayout2.getLayoutParams();
+            params.gravity = (Gravity.LEFT | Gravity.TOP);
+            linearLayout2.setLayoutParams(params);
+            imageView.setVisibility(View.GONE);
+            isImageVisible = false;
+        }
+    }
 
+    private void viewSwitchTo(int whichView) {
+        switch (whichView) {
+            case PHONE_VIEW:
+                linearLayoutPhoneNumber.setVisibility(View.VISIBLE);
+                linearLayoutPassword.setVisibility(View.GONE);
+                isPhone = true;
+                break;
+
+            case PASSWORD_VIEW:
+                linearLayoutPassword.setVisibility(View.VISIBLE);
+                linearLayoutPhoneNumber.setVisibility(View.GONE);
+                isPhone = false;
+
+            default:
+        }
+
+    }
+
+    private void viewActions() {
+        ccp.setCcpClickable(false);
+        editTextCarrierNumber.setOnClickListener(v -> viewTransitions(false));
+        edtPassword.setOnClickListener(v -> viewTransitions(false));
         editTextCarrierNumber.addTextChangedListener(new TextWatcher() {
             private static final char space = ' ';
 
@@ -89,23 +116,23 @@ public class EntryActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-               // if(s.length()>0&&editTextCarrierNumber.getText().toString().charAt(0)!='0') {
-                    if (s.length() > 0 && (s.length() % 4) == 0) {
-                        final char c = s.charAt(s.length() - 1);
-                        if (space == c) {
-                            s.delete(s.length() - 1, s.length());
-                        }
-
+                // if(s.length()>0&&editTextCarrierNumber.getText().toString().charAt(0)!='0') {
+                if (s.length() > 0 && (s.length() % 4) == 0) {
+                    final char c = s.charAt(s.length() - 1);
+                    if (space == c) {
+                        s.delete(s.length() - 1, s.length());
                     }
-                    // Insert char where needed.
-                    if (s.length() > 0 && (s.length() % 4) == 0) {
-                        char c = s.charAt(s.length() - 1);
-                        // Only if its a digit where there should be a space we insert a space
-                        if (Character.isDigit(c) && TextUtils.split(s.toString(), String.valueOf(space)).length <= 3) {
-                            s.insert(s.length() - 1, String.valueOf(space));
-                        }
 
+                }
+                // Insert char where needed.
+                if (s.length() > 0 && (s.length() % 4) == 0) {
+                    char c = s.charAt(s.length() - 1);
+                    // Only if its a digit where there should be a space we insert a space
+                    if (Character.isDigit(c) && TextUtils.split(s.toString(), String.valueOf(space)).length <= 3) {
+                        s.insert(s.length() - 1, String.valueOf(space));
                     }
+
+                }
 //                }else {
 //                    if(s.length()==4){
 //                        final char c = s.charAt(s.length() - 1);
@@ -134,21 +161,40 @@ public class EntryActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_entry);
+        bindViews();
+        viewActions();
+
+
+    }
+
+
     @Override
     public void onBackPressed() {
-        if(isImageVisible) {
-            super.onBackPressed();
-        }else {
-            isImageVisible=true;
-            imageView.setVisibility(View.VISIBLE);
-            gridView.setVisibility(View.GONE);
+
+        if (isPhone) {
+            if (isImageVisible) {
+                super.onBackPressed();
+
+            } else {
+                viewTransitions(true);
+            }
+        } else {
+            if (isImageVisible) {
+                viewSwitchTo(PHONE_VIEW);
+            } else {
+                viewTransitions(true);
+            }
         }
+
+
     }
-    private static boolean isValidPhoneNumber(String mobile) {
-        Log.d("enteredPhone",mobile);
-        String regEx = "^[0-9]{9}$";
-        return mobile.matches(regEx);
-    }
+
     public void numberClicked(int a){
         String n=editTextCarrierNumber.getText().toString();
         editTextCarrierNumber.setText(n+String.valueOf(a));
@@ -168,27 +214,56 @@ public class EntryActivity extends AppCompatActivity {
 
     public void next(View view) {
 
-        if(!TextUtils.isEmpty(editTextCarrierNumber.getText().toString())) {
-            String phoneNumber = editTextCarrierNumber.getText().toString().replaceAll(" ", "").trim();
+        if (isPhone) {
+            if (!TextUtils.isEmpty(editTextCarrierNumber.getText().toString())) {
+                String phoneNumber = editTextCarrierNumber.getText().toString().replaceAll(" ", "").trim();
 
-            String phone="";
+                String phone = "";
 
-            StringBuilder sb=new StringBuilder(phoneNumber);
-            if(sb.charAt(0)=='0'){
+                StringBuilder sb = new StringBuilder(phoneNumber);
 
-            }
-            if(isValidPhoneNumber(sb.toString()) ){
+                if (entryController.isValidPhoneNumber(sb.toString())) {
 
-                if (NetworkUtils.Companion.isConnected(this)) {
-                    checkPhone();
+                    if (NetworkUtils.Companion.isConnected(this)) {
+                        checkPhone();
+                    } else {
+                        snack(getString(R.string.no_internet));
+                    }
+                } else {
+                    editTextCarrierNumber.setError(getString(R.string.invalid_phone));
                 }
             }else {
-                editTextCarrierNumber.setError("Invalid Phone ");
+                snack(getString(R.string.enter_phone));
+                editTextCarrierNumber.requestFocus();
+                editTextCarrierNumber.setError(getString(R.string.reguired));
             }
+        } else {
+            isPhone = false;
+
+            if (!TextUtils.isEmpty(edtPassword.getText().toString())) {
+                checkPassword();
+            } else {
+                edtPassword.requestFocus();
+                edtPassword.setError("Required");
+                snack("Enter your password");
+            }
+
         }
     }
 
+    private void checkPassword() {
+        startActivity(new Intent(EntryActivity.this, AdminActivity.class));
+        finish();
+    }
+
     private void checkPhone() {
+
+
+        isPhone = false;
+        linearLayoutPhoneNumber.setVisibility(View.GONE);
+        linearLayoutPassword.setVisibility(View.VISIBLE);
+
+
 
     }
 
