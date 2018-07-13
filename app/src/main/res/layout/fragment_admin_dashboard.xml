@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.RecyclerView
+
+        android:id="@+id/recyclerView"
+
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:layout_below="@+id/search"
+        android:layout_centerHorizontal="true"
+        android:background="@color/divider"
+        android:nestedScrollingEnabled="false"
+        android:scrollIndicators="start|end"
+        android:scrollbarSize="6dp"
+        android:scrollbars="vertical"
+
+        >
+
+
+    </android.support.v7.widget.RecyclerView>
+
+
+    <!--<android.support.v7.widget.CardView-->
+    <!--app:cardElevation="@dimen/cardview_default_elevation"-->
+    <!--app:cardUseCompatPadding="true"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_weight="1"-->
+    <!--android:layout_height="0dp">-->
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent">-->
+    <!--<com.github.mikephil.charting.charts.PieChart-->
+    <!--android:id="@+id/chartTraders"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent" />-->
+    <!--</LinearLayout>-->
+    <!--</android.support.v7.widget.CardView>-->
+    <!--<android.support.v7.widget.CardView-->
+    <!--app:cardUseCompatPadding="true"-->
+    <!--app:cardElevation="@dimen/cardview_default_elevation"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_weight="1"-->
+    <!--android:layout_height="0dp">-->
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent">-->
+    <!--<com.github.mikephil.charting.charts.PieChart-->
+    <!--android:id="@+id/chartMilk"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent" />-->
+    <!--</LinearLayout>-->
+    <!--</android.support.v7.widget.CardView>-->
+</LinearLayout>

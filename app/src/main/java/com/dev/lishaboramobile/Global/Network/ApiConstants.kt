@@ -11,9 +11,9 @@ class ApiConstants {
         var baseUrl: String = "http://lishabora.net/512/APIS/"
 
         //Accounts
-        var Accounts: String = "Accounts/"
-        var PhoneAuth: String = "AuthPhone.php"
-        var PasswordAuth: String = "AuthPassword.php"
+        var Accounts: String = baseUrl + "Accounts/"
+        var PhoneAuth: String = Accounts + "AuthPhone.php"
+        var PasswordAuth: String = Accounts + "AuthPassword.php"
 
 
     }

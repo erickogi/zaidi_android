@@ -41,7 +41,7 @@ class Request {
                             // handle error
 
                             Log.d("eww", error.toString())
-                            listener.onError("" + error)
+                            listener.onError(error)
                             //  listener.onError(error)
                         }
                     })

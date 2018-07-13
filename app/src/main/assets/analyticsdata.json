@@ -1,0 +1,94 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "Farmers Milk  Analysis (Litres)",
+      "description": "This is a farmers chart api simulation for ui design ",
+      "total": 300,
+      "lvModels": [
+        {
+          "id": 9,
+          "label": "5-10 ",
+          "value": "30",
+          "color": "#808080"
+        },
+        {
+          "id": 9,
+          "label": "10-20",
+          "value": "120",
+          "color": "#800080"
+        },
+        {
+          "id": 9,
+          "label": "20-30",
+          "value": "100",
+          "color": "#000080"
+        },
+        {
+          "id": 9,
+          "label": "30...",
+          "value": "50",
+          "color": "#008080"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Traders Analysis",
+      "description": "This is a traders chart api simulation for ui design ",
+      "total": "100",
+      "lvModels": [
+        {
+          "id": 9,
+          "label": "In-Active",
+          "value": "30",
+          "color": "#808080"
+        },
+        {
+          "id": 10,
+          "label": "Active",
+          "value": "70",
+          "color": "#008080"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Products sales Analysis (April)",
+      "description": "This is a products chart api simulation for ui design ",
+      "total": "40000 Ksh",
+      "lvModels": [
+        {
+          "id": 0,
+          "label": "Jawabu",
+          "value": "12000",
+          "color": "#808080"
+        },
+        {
+          "id": 1,
+          "label": "Dairy",
+          "value": "5000",
+          "color": "#FFFF00"
+        },
+        {
+          "id": 2,
+          "label": "Chicken Feeds",
+          "value": "3000",
+          "color": "#008000"
+        },
+        {
+          "id": 3,
+          "label": "Hydro",
+          "value": "10000",
+          "color": "#808000"
+        },
+        {
+          "id": 4,
+          "label": "MaziwaMix",
+          "value": "10000",
+          "color": "#0000FF"
+        }
+      ]
+    }
+  ]
+}

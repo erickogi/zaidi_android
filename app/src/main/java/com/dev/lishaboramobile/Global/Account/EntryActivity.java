@@ -1,5 +1,7 @@
 package com.dev.lishaboramobile.Global.Account;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -11,18 +13,28 @@ import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.dev.lishaboramobile.Admin.Models.AdminModel;
 import com.dev.lishaboramobile.Admin.Views.AdminActivity;
+import com.dev.lishaboramobile.Global.AppConstants;
 import com.dev.lishaboramobile.Global.Utils.NetworkUtils;
 import com.dev.lishaboramobile.R;
+import com.dev.lishaboramobile.Trader.Models.TraderModel;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hbb20.CountryCodePicker;
 import com.transitionseverywhere.ArcMotion;
 import com.transitionseverywhere.ChangeBounds;
 import com.transitionseverywhere.TransitionManager;
+
+import java.lang.reflect.Type;
+import java.util.Objects;
 
 public class EntryActivity extends AppCompatActivity {
     CountryCodePicker ccp;
@@ -30,6 +42,7 @@ public class EntryActivity extends AppCompatActivity {
     private final int PASSWORD_VIEW = 2;
     ImageView imageView;
     TextInputEditText editTextCarrierNumber, edtPassword;
+    private TextView txtNames;
     GridLayout gridView;
     private boolean isImageVisible=true;
     LinearLayout linearLayout2, linearLayout1;
@@ -38,6 +51,7 @@ public class EntryActivity extends AppCompatActivity {
     EntryController entryController;
     private boolean isPhone = true;
     private ViewGroup transitionsContainer;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onStart() {
@@ -52,6 +66,7 @@ public class EntryActivity extends AppCompatActivity {
         linearLayoutPassword = findViewById(R.id.linear_password);
         linearLayoutPhoneNumber = findViewById(R.id.linear_phone);
         imageView=findViewById(R.id.logo);
+        txtNames = findViewById(R.id.txt_names);
         gridView=findViewById(R.id.grid);
         gridView.setVisibility(View.GONE);
         ccp = findViewById(R.id.ccp);
@@ -88,6 +103,7 @@ public class EntryActivity extends AppCompatActivity {
                 break;
 
             case PASSWORD_VIEW:
+                viewTransitions(true);
                 linearLayoutPassword.setVisibility(View.VISIBLE);
                 linearLayoutPhoneNumber.setVisibility(View.GONE);
                 isPhone = false;
@@ -214,6 +230,7 @@ public class EntryActivity extends AppCompatActivity {
 
     public void next(View view) {
 
+        hideKeyboard();
         if (isPhone) {
             if (!TextUtils.isEmpty(editTextCarrierNumber.getText().toString())) {
                 String phoneNumber = editTextCarrierNumber.getText().toString().replaceAll(" ", "").trim();
@@ -225,7 +242,7 @@ public class EntryActivity extends AppCompatActivity {
                 if (entryController.isValidPhoneNumber(sb.toString())) {
 
                     if (NetworkUtils.Companion.isConnected(this)) {
-                        checkPhone();
+                        checkPhone(sb.toString());
                     } else {
                         snack(getString(R.string.no_internet));
                     }
@@ -240,8 +257,9 @@ public class EntryActivity extends AppCompatActivity {
         } else {
             isPhone = false;
 
+
             if (!TextUtils.isEmpty(edtPassword.getText().toString())) {
-                checkPassword();
+                checkPassword(edtPassword.getText().toString());
             } else {
                 edtPassword.requestFocus();
                 edtPassword.setError("Required");
@@ -251,20 +269,195 @@ public class EntryActivity extends AppCompatActivity {
         }
     }
 
-    private void checkPassword() {
-        startActivity(new Intent(EntryActivity.this, AdminActivity.class));
-        finish();
+    private void checkPassword(String password) {
+//        entryController.authPassword(password, new EntryCallbacks() {
+//            @Override
+//            public void success(EntryModel entryModel) {
+//                if(entryModel.getResultCode()>0) {
+//                    String names="";
+//                    Type type;
+//                    Gson gson=new Gson();
+//                    switch (entryModel.getType()) {
+//                        case AppConstants.ADMIN:
+//                            type = new TypeToken<AdminModel>() {}.getType();
+//                            AdminModel adminModel=gson.fromJson(gson.toJson(entryModel.getData()),type);
+//                            names=adminModel.getNames();
+//
+//                            break;
+//                        case AppConstants.COLLECTOR:
+//
+//                            break;
+//
+//                        case AppConstants.DISTRIBUTER:
+//                            break;
+//
+//                        case AppConstants.FARMER:
+//
+//                            break;
+//                        case AppConstants.MASTER_TRADER:
+//
+//                            break;
+//
+//                        case AppConstants.TRADER:
+//                            type = new TypeToken<TraderModel>() {}.getType();
+//                            TraderModel traderModel=gson.fromJson(gson.toJson(entryModel.getData()),type);
+//                            names=traderModel.getNames();
+//                            break;
+//
+//                        default:
+//                    }
+//
+//                    setNames(names);
+//                    viewSwitchTo(PASSWORD_VIEW);
+//                }else {
+//                    if(progressDialog!=null&&progressDialog.isShowing()){
+//                        progressDialog.dismiss();
+//                    }
+//                    snack(entryModel.getResultDescription());
+//                }
+//
+//            }
+//
+//            @Override
+//            public void error(String response) {
+//
+//                snack(response);
+//
+//            }
+//
+//            @Override
+//            public void startProgressDialog() {
+//
+//                if(progressDialog!=null){
+//                    progressDialog.show();
+//                }else {
+//                    createDialog();
+//                    progressDialog.show();
+//                }
+//            }
+//
+//            @Override
+//            public void stopProgressDialog() {
+//                if(progressDialog!=null&&progressDialog.isShowing()){
+//                    progressDialog.dismiss();
+//                }
+//            }
+//
+//            @Override
+//            public void updateProgressDialog(String message) {
+//
+//                if(progressDialog!=null&&progressDialog.isShowing()){
+//                    progressDialog.setMessage(message);
+//                }
+//            }
+//        });
+
+        startActivity(new Intent(this, AdminActivity.class));
+
     }
 
-    private void checkPhone() {
+    private void checkPhone(String phone) {
 
 
-        isPhone = false;
-        linearLayoutPhoneNumber.setVisibility(View.GONE);
-        linearLayoutPassword.setVisibility(View.VISIBLE);
+        entryController.authPhone(phone, new EntryCallbacks() {
+            @Override
+            public void success(EntryModel entryModel) {
+                if (entryModel.getResultCode() > 0) {
+                    String names = "";
+                    Type type;
+                    Gson gson = new Gson();
+                    switch (entryModel.getType()) {
+                        case AppConstants.ADMIN:
+                            type = new TypeToken<AdminModel>() {
+                            }.getType();
+                            AdminModel adminModel = gson.fromJson(gson.toJson(entryModel.getData()), type);
+                            names = adminModel.getNames();
+
+                            break;
+                        case AppConstants.COLLECTOR:
+
+                            break;
+
+                        case AppConstants.DISTRIBUTER:
+                            break;
+
+                        case AppConstants.FARMER:
+
+                            break;
+                        case AppConstants.MASTER_TRADER:
+
+                            break;
+
+                        case AppConstants.TRADER:
+                            type = new TypeToken<TraderModel>() {
+                            }.getType();
+                            TraderModel traderModel = gson.fromJson(gson.toJson(entryModel.getData()), type);
+                            names = traderModel.getNames();
+                            break;
+
+                        default:
+                    }
+
+                    setNames(names);
+                    viewSwitchTo(PASSWORD_VIEW);
+                } else {
+                    if (progressDialog != null && progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
+                    snack(entryModel.getResultDescription());
+                }
+
+            }
+
+            @Override
+            public void error(String response) {
+
+                snack(response);
+
+            }
+
+            @Override
+            public void startProgressDialog() {
+
+                if (progressDialog != null) {
+                    progressDialog.show();
+                } else {
+                    createDialog();
+                    progressDialog.show();
+                }
+            }
+
+            @Override
+            public void stopProgressDialog() {
+                if (progressDialog != null && progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void updateProgressDialog(String message) {
+
+                if (progressDialog != null && progressDialog.isShowing()) {
+                    progressDialog.setMessage(message);
+                }
+            }
+        });
 
 
+    }
 
+    private void setNames(String names) {
+        txtNames.setText("You are login -in as " + names);
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager inputManager = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        if (inputManager != null) {
+            inputManager.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 
     public void clear(View view) {
@@ -324,4 +517,13 @@ public class EntryActivity extends AppCompatActivity {
         Snackbar.make(relativeLayoutParent, msg, Snackbar.LENGTH_SHORT)
                 .setAction("Action", null).show();
     }
+
+    private void createDialog() {
+        progressDialog = new ProgressDialog(EntryActivity.this);
+        progressDialog.setCancelable(false);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("Loading");
+        progressDialog.setIndeterminate(true);
+    }
+
 }

@@ -1,7 +1,7 @@
 package com.dev.lishaboramobile.Global.Account;
 
 public interface EntryCallbacks {
-    void success(String response, int Usertype, int accountState, Object data);
+    void success(EntryModel entryModel);
 
     void error(String response);
 

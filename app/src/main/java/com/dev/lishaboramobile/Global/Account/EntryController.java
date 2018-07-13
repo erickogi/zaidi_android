@@ -7,10 +7,9 @@ import com.androidnetworking.error.ANError;
 import com.dev.lishaboramobile.Global.Network.ApiConstants;
 import com.dev.lishaboramobile.Global.Network.Request;
 import com.dev.lishaboramobile.Global.Network.RequestListener;
+import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -35,8 +34,10 @@ public class EntryController {
     }
 
     void authPhone(String phone, EntryCallbacks entryCallbacks) {
+        Log.d("Params", phone);
         HashMap<String, String> params = new HashMap<>();
         params.put("Phone", phone);
+        entryCallbacks.startProgressDialog();
         Request.Companion.postRequest(ApiConstants.Companion.getPhoneAuth(), params, "", new RequestListener() {
             @Override
             public void onError(@NotNull ANError error) {
@@ -53,16 +54,55 @@ public class EntryController {
             @Override
             public void onSuccess(@NotNull String response) {
 
+                entryCallbacks.updateProgressDialog(response);
                 try {
-                    JSONObject jsonObject = new JSONObject(response);
 
-                    if (jsonObject.optInt(ApiConstants.Companion.getResultCode()) > 0) {
+                    Gson gson = new Gson();
+                    EntryModel entryModel = gson.fromJson(response, EntryModel.class);
+                    entryCallbacks.stopProgressDialog();
+                    entryCallbacks.success(entryModel);
 
 
-                    }
+                } catch (Exception e) {
+                    entryCallbacks.stopProgressDialog();
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    void authPassword(String password, EntryCallbacks entryCallbacks) {
+        Log.d("Params", password);
+        HashMap<String, String> params = new HashMap<>();
+        params.put("Password", password);
+        entryCallbacks.startProgressDialog();
+        Request.Companion.postRequest(ApiConstants.Companion.getPasswordAuth(), params, "", new RequestListener() {
+            @Override
+            public void onError(@NotNull ANError error) {
+                entryCallbacks.updateProgressDialog("");
+                entryCallbacks.stopProgressDialog();
+                entryCallbacks.error(error.getErrorBody());
+            }
+
+            @Override
+            public void onError(@NotNull String error) {
+
+            }
+
+            @Override
+            public void onSuccess(@NotNull String response) {
+
+                entryCallbacks.updateProgressDialog(response);
+                try {
+
+                    Gson gson = new Gson();
+                    EntryModel entryModel = gson.fromJson(response, EntryModel.class);
+                    entryCallbacks.stopProgressDialog();
+                    entryCallbacks.success(entryModel);
 
 
-                } catch (JSONException e) {
+                } catch (Exception e) {
+                    entryCallbacks.stopProgressDialog();
                     e.printStackTrace();
                 }
             }
