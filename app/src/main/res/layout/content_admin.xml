@@ -8,7 +8,9 @@
     tools:context=".Admin.Views.AdminActivity"
     tools:showIn="@layout/activity_admin">
 
+
     <FrameLayout
+        android:visibility="visible"
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"
 
@@ -16,5 +18,13 @@
         android:background="@color/white">
 
     </FrameLayout>
+    <android.support.v4.view.ViewPager
+
+
+        android:layout_margin="1dp"
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible" />
 
 </RelativeLayout>

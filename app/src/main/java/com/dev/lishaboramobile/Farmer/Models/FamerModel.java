@@ -17,7 +17,11 @@ public class FamerModel {
     private String names;
     private String mobile;
     private String cyclecode;
+    private String cyclename;
+    private String routecode;
+    private String routename;
     private String unitcode;
+    private String unitname;
     private String unitcapacity;
     private String unitprice;
     private String totalmilkcollection;
@@ -31,6 +35,38 @@ public class FamerModel {
     private String archive;
     private String status;
     private String dummy;
+
+    public String getCyclename() {
+        return cyclename;
+    }
+
+    public void setCyclename(String cyclename) {
+        this.cyclename = cyclename;
+    }
+
+    public String getRoutecode() {
+        return routecode;
+    }
+
+    public void setRoutecode(String routecode) {
+        this.routecode = routecode;
+    }
+
+    public String getRoutename() {
+        return routename;
+    }
+
+    public void setRoutename(String routename) {
+        this.routename = routename;
+    }
+
+    public String getUnitname() {
+        return unitname;
+    }
+
+    public void setUnitname(String unitname) {
+        this.unitname = unitname;
+    }
 
     public String getRoute() {
         return route;

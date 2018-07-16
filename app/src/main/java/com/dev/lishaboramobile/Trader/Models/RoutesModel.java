@@ -10,11 +10,39 @@ public class RoutesModel {
     private int id;
     private String code;
     private String route;
+    private String entity;
+    private String entitycode;
+    private String entityname;
     private String transactiontime;
     private String transactedby;
     private String synctime;
     private String transactioncode;
     private String status;
+
+
+    public String getEntityname() {
+        return entityname;
+    }
+
+    public void setEntityname(String entityname) {
+        this.entityname = entityname;
+    }
+
+    public String getEntity() {
+        return entity;
+    }
+
+    public void setEntity(String entity) {
+        this.entity = entity;
+    }
+
+    public String getEntitycode() {
+        return entitycode;
+    }
+
+    public void setEntitycode(String entitycode) {
+        this.entitycode = entitycode;
+    }
 
     public String getRoute() {
         return route;

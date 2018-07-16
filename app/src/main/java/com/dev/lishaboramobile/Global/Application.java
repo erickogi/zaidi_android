@@ -17,7 +17,7 @@ public class Application extends MultiDexApplication {
         mInstance = this;
         AndroidNetworking.initialize(getApplicationContext());
         AndroidNetworking.enableLogging();
-        new UCEHandler.Builder(this).setTrackActivitiesEnabled(true).addCommaSeparatedEmailAddresses("erickogi14@gmail.com").build();
+      //  new UCEHandler.Builder(this).setTrackActivitiesEnabled(true).addCommaSeparatedEmailAddresses("erickogi14@gmail.com").build();
 
     }
 
