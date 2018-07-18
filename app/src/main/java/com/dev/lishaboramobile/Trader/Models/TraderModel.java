@@ -16,11 +16,13 @@ public class TraderModel {
     private   String code ;
     private   String entity ;
     private   String entitycode ;
+    private String entityname;
     private String transactioncode;
     @NonNull
     private   String names ;
     private   String mobile ;
     private   String password ;
+    private String balance;
     @NonNull
     private   String apikey ;
     private   String firebasetoken ;
@@ -42,6 +44,21 @@ public class TraderModel {
     private   int synced ;
     private   int dummy ;
 
+    public String getEntityname() {
+        return entityname;
+    }
+
+    public void setEntityname(String entityname) {
+        this.entityname = entityname;
+    }
+
+    public String getBalance() {
+        return balance;
+    }
+
+    public void setBalance(String balance) {
+        this.balance = balance;
+    }
 
     public int getId() {
         return id;

@@ -3,27 +3,23 @@ package com.dev.lishaboramobile.Admin.Views;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.dev.lishaboramobile.Admin.Adapters.ViewPagerAdapter;
-import com.dev.lishaboramobile.Admin.Models.ChartModel;
-import com.dev.lishaboramobile.Admin.Models.LVModel;
+import com.dev.lishaboramobile.Admin.Callbacks.FabCallbacks;
+import com.dev.lishaboramobile.Admin.Callbacks.SearchViewCallbacks;
 import com.dev.lishaboramobile.R;
-import com.google.gson.Gson;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class AdminActivity extends AppCompatActivity {
@@ -40,7 +36,8 @@ public class AdminActivity extends AppCompatActivity {
     private FragmentLoansTab fragmentLoansTab;
     private FragmentMilkTab fragmentMilkTab;
    // private FragmentFarmersTab fragmentFarmersTab;
-
+   FloatingActionButton fab;
+    SearchView mSearchView;
 
 
 
@@ -51,14 +48,14 @@ public class AdminActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fab = findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+////            @Override
+////            public void onClick(View view) {
+////                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+////                        .setAction("Action", null).show();
+////            }
+//        });
 
         viewPager = findViewById(R.id.viewpager);
         viewPager.setVisibility(View.GONE);
@@ -70,13 +67,17 @@ public class AdminActivity extends AppCompatActivity {
        // setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
 
-
+        tabLayout.setVisibility(View.GONE);
 
        // setupTabIcons();
          setUpMainFragment();
 
+        fab.setVisibility(View.GONE);
+
+
 
     }
+
     private void setupTabIcons() {
 
         Objects.requireNonNull(tabLayout.getTabAt(0)).setText("Traders");
@@ -149,5 +150,76 @@ public class AdminActivity extends AppCompatActivity {
         }
     }
 
+    void searchAble(boolean shouldShow, String hint, SearchViewCallbacks searchViewCallbacks) {
+        if (mSearchView != null) {
+            if (shouldShow) {
+                mSearchView.setVisibility(View.VISIBLE);
+                if (hint != null) {
+                    mSearchView.setQueryHint(hint);
+                    mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                        @Override
+                        public boolean onQueryTextSubmit(String query) {
+                            searchViewCallbacks.onQueryTextSubmit(query);
+                            return true;
+                        }
+
+                        @Override
+                        public boolean onQueryTextChange(String newText) {
+                            searchViewCallbacks.onQueryTextChange(newText);
+                            return true;
+                        }
+                    });
+                }
+            } else {
+                mSearchView.setVisibility(View.GONE);
+            }
+        }
+
+
+    }
+
+    void fabButton(boolean shouldShow, Integer resource, FabCallbacks fabCallbacks) {
+        if (!shouldShow) {
+            fab.hide();
+        } else {
+            fab.show();
+            fab.setImageResource(resource);
+
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fabCallbacks.onClick();
+                }
+            });
+
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem mSearch = menu.findItem(R.id.action_search);
+        mSearchView = (SearchView) mSearch.getActionView();
+
+        mSearchView.setVisibility(View.GONE);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
 }

@@ -69,6 +69,8 @@ public class EntryController {
                 }
             }
         });
+
+
     }
 
     void authPassword(String password, EntryCallbacks entryCallbacks) {

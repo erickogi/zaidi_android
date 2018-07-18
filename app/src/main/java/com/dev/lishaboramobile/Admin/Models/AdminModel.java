@@ -1,6 +1,8 @@
 package com.dev.lishaboramobile.Admin.Models;
 
 public class AdminModel  {
+
+    private String code;
     private   String names ;
     private   String mobile ;
     private   String email ;
@@ -11,6 +13,13 @@ public class AdminModel  {
     private   String status ;
     private   String transactiontime ;
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public  String getNames() {
         return names;

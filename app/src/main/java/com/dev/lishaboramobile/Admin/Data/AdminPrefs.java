@@ -16,6 +16,7 @@ public class AdminPrefs {
 
 
     private static final String NAMES = "names";
+    private static final String CODE = "code";
 
     private static final String MOBILE = "mobile";
     private static final String EMAIL = "email";
@@ -59,23 +60,9 @@ public class AdminPrefs {
         editor.commit();
     }
 
-
-    public void setAdmin(AdminModel admin){
-        editor.putString(NAMES,admin.getNames());
-        editor.putString(MOBILE,admin.getMobile());
-        editor.putString(EMAIL,admin.getEmail());
-        editor.putString(DEPARTMENT,admin.getDepartment());
-        editor.putString(PASSWORD,admin.getPassword());
-        editor.putString(APIKEY,admin.getApikey());
-        editor.putString(FIREBASE_TOKEN,admin.getFirebasetoken());
-        editor.putString(STATUS,admin.getStatus());
-        editor.putString(TRANSACTION_TIME,admin.getTransactiontime());
-        editor.commit();
-
-    }
-
     public AdminModel getAdmin(){
         AdminModel adminModel=new AdminModel();
+        adminModel.setCode(pref.getString(CODE, null));
         adminModel.setNames(pref.getString(NAMES,null));
         adminModel.setEmail(pref.getString(EMAIL,null));
         adminModel.setMobile(pref.getString(MOBILE,null));
@@ -87,6 +74,21 @@ public class AdminPrefs {
         adminModel.setTransactiontime(pref.getString(TRANSACTION_TIME,null));
 
         return adminModel;
+
+    }
+
+    public void setAdmin(AdminModel admin) {
+        editor.putString(NAMES, admin.getNames());
+        editor.putString(CODE, admin.getCode());
+        editor.putString(MOBILE, admin.getMobile());
+        editor.putString(EMAIL, admin.getEmail());
+        editor.putString(DEPARTMENT, admin.getDepartment());
+        editor.putString(PASSWORD, admin.getPassword());
+        editor.putString(APIKEY, admin.getApikey());
+        editor.putString(FIREBASE_TOKEN, admin.getFirebasetoken());
+        editor.putString(STATUS, admin.getStatus());
+        editor.putString(TRANSACTION_TIME, admin.getTransactiontime());
+        editor.commit();
 
     }
 

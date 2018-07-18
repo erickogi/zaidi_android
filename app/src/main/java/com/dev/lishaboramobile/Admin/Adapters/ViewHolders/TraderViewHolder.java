@@ -1,8 +1,7 @@
-package com.dev.lishaboramobile.Admin.Adapters;
+package com.dev.lishaboramobile.Admin.Adapters.ViewHolders;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dev.lishaboramobile.Global.Utils.OnclickRecyclerListener;
@@ -11,8 +10,9 @@ import com.dev.lishaboramobile.R;
 import java.lang.ref.WeakReference;
 
 public class TraderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-    public RelativeLayout engineer_background;
-    public TextView statusLbl, status, id, idLbl, nameLbl, name, phoneLbl, phone, designationLbl, designation, created0nLbl, createdOn;
+    //  public RelativeLayout engineer_background;
+
+    public TextView status, id, name, phone, balance, famerscount;
     private WeakReference<OnclickRecyclerListener> listenerWeakReference;
 
 
@@ -25,7 +25,7 @@ public class TraderViewHolder extends RecyclerView.ViewHolder implements View.On
         id = itemView.findViewById(R.id.txt_id);
         name = itemView.findViewById(R.id.txt_name);
         phone = itemView.findViewById(R.id.txt_phone);
-        designation = itemView.findViewById(R.id.txt_balance);
+        balance = itemView.findViewById(R.id.txt_balance);
 
     }
 

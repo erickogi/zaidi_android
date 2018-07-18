@@ -35,10 +35,10 @@ public interface FarmersDao {
     @Query("SELECT * FROM FARMERS WHERE id =:keyid")
     LiveData<FamerModel> getFramerByKeyID(int keyid);
 
-    @Query("SELECT * FROM FARMERS WHERE archive =:archived")
+    @Query("SELECT * FROM FARMERS WHERE archived =:archived")
     LiveData<List<FamerModel>> getAllByArchivedStatus(int archived);
 
-    @Query("SELECT * FROM FARMERS WHERE `delete` =:deleted")
+    @Query("SELECT * FROM FARMERS WHERE `deleted` =:deleted")
     LiveData<List<FamerModel>> getAllByDeleteStatus(int deleted);
 
     @Query("SELECT * FROM FARMERS WHERE dummy =:dummy")
@@ -59,7 +59,7 @@ public interface FarmersDao {
     LiveData<FamerModel> getFramersByRoute(String route);
 
 
-    @Query("SELECT * FROM FARMERS WHERE entiycode =:entitycode")
+    @Query("SELECT * FROM FARMERS WHERE entitycode =:entitycode")
     LiveData<List<FamerModel>> getFramerByEntityCode(String entitycode);
 
     @Query("SELECT * FROM FARMERS WHERE names LIKE :names")
@@ -72,7 +72,7 @@ public interface FarmersDao {
     LiveData<List<FamerModel>> searchByMobile(String mobile);
 
 
-    @Query("SELECT * FROM FARMERS WHERE names LIKE :names OR mobile LIKE :moile AND dummy =:dummy AND `delete` = :deleted AND archive=:archived ")
+    @Query("SELECT * FROM FARMERS WHERE names LIKE :names OR mobile LIKE :moile AND dummy =:dummy AND `deleted` = :deleted AND archived=:archived ")
     LiveData<List<FamerModel>> search(String names, String moile, int dummy, int deleted, int archived);
 
 

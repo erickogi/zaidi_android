@@ -94,6 +94,7 @@ public class ChartsAdapter extends RecyclerView.Adapter<ChartsAdapter.MyViewHold
         chart.setCenterTextSize(14.5f);
         chart.setUsePercentValues(true);
         chart.setHoleRadius(30);
+        chart.setRotationEnabled(false);
 
 
         chart.invalidate(); // refresh
@@ -117,11 +118,14 @@ public class ChartsAdapter extends RecyclerView.Adapter<ChartsAdapter.MyViewHold
 
         public MyViewHolder(View itemView, OnclickRecyclerListener listener) {
             super(itemView);
+            linearLayout = itemView.findViewById(R.id.linear);
             txtHeader = itemView.findViewById(R.id.txt_header);
             chart = itemView.findViewById(R.id.chartFarmers);
             listenerWeakReference = new WeakReference<>(listener);
 
-            chart.setOnClickListener(this::onClick);
+            linearLayout.setOnClickListener(this);
+            linearLayout.setOnLongClickListener(this);
+            chart.setOnClickListener(this);
 
         }
 
@@ -134,9 +138,8 @@ public class ChartsAdapter extends RecyclerView.Adapter<ChartsAdapter.MyViewHold
         public void onClick(View v) {
 
 
-            if (v.getId() == R.id.chartFarmers) {
-                listenerWeakReference.get().onClickListener(getAdapterPosition());
-            }
+            listenerWeakReference.get().onClickListener(getAdapterPosition());
+
         }
 
         /**
@@ -147,6 +150,7 @@ public class ChartsAdapter extends RecyclerView.Adapter<ChartsAdapter.MyViewHold
          */
         @Override
         public boolean onLongClick(View v) {
+            listenerWeakReference.get().onLongClickListener(getAdapterPosition());
             return false;
         }
     }

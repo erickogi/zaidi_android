@@ -12,10 +12,12 @@ public class FamerModel {
 
     private String compositecode;
     private String code;
-    private String entiycode;
+    private String entitycode;
     private String entity;
     private String names;
     private String mobile;
+    private String apikey;
+    private String firebasetoken;
     private String cyclecode;
     private String cyclename;
     private String routecode;
@@ -28,13 +30,29 @@ public class FamerModel {
     private String totalorders;
     private String totalloans;
     private String transactedby;
-    private String transactiondate;
+    private String transactiontime;
     private String synctime;
     private String transactioncode;
-    private String delete;
-    private String archive;
+    private String deleted;
+    private String archived;
     private String status;
     private String dummy;
+
+    public String getApikey() {
+        return apikey;
+    }
+
+    public void setApikey(String apikey) {
+        this.apikey = apikey;
+    }
+
+    public String getFirebasetoken() {
+        return firebasetoken;
+    }
+
+    public void setFirebasetoken(String firebasetoken) {
+        this.firebasetoken = firebasetoken;
+    }
 
     public String getCyclename() {
         return cyclename;
@@ -108,12 +126,12 @@ public class FamerModel {
         this.code = code;
     }
 
-    public String getEntiycode() {
-        return entiycode;
+    public String getEntitycode() {
+        return entitycode;
     }
 
-    public void setEntiycode(String entiycode) {
-        this.entiycode = entiycode;
+    public void setEntitycode(String entitycode) {
+        this.entitycode = entitycode;
     }
 
     public String getEntity() {
@@ -204,12 +222,29 @@ public class FamerModel {
         this.transactedby = transactedby;
     }
 
-    public String getTransactiondate() {
-        return transactiondate;
+
+    public String getTransactiontime() {
+        return transactiontime;
     }
 
-    public void setTransactiondate(String transactiondate) {
-        this.transactiondate = transactiondate;
+    public void setTransactiontime(String transactiontime) {
+        this.transactiontime = transactiontime;
+    }
+
+    public String getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(String deleted) {
+        this.deleted = deleted;
+    }
+
+    public String getArchived() {
+        return archived;
+    }
+
+    public void setArchived(String archived) {
+        this.archived = archived;
     }
 
     public String getSynctime() {
@@ -228,21 +263,6 @@ public class FamerModel {
         this.transactioncode = transactioncode;
     }
 
-    public String getDelete() {
-        return delete;
-    }
-
-    public void setDelete(String delete) {
-        this.delete = delete;
-    }
-
-    public String getArchive() {
-        return archive;
-    }
-
-    public void setArchive(String archive) {
-        this.archive = archive;
-    }
 
     public String getStatus() {
         return status;

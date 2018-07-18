@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import com.dev.lishaboramobile.Admin.Adapters.ChartsAdapter;
 import com.dev.lishaboramobile.Admin.Models.ChartModel;
 import com.dev.lishaboramobile.Admin.Models.LVModel;
+import com.dev.lishaboramobile.Global.AppConstants;
 import com.dev.lishaboramobile.Global.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
 import com.google.gson.Gson;
@@ -99,17 +100,12 @@ public class FragmentAdminDashboard extends Fragment {
         listAdapter = new ChartsAdapter(getActivity(), chartModels, new OnclickRecyclerListener() {
             @Override
             public void onClickListener(int position) {
-                switch (chartModels.get(position).getId()) {
-                    case 2:
-                        fragment = new FragmentEntityList();
-                        Bundle args = new Bundle();
-                        fragment.setArguments(args);
-                        popOutFragments();
-                        setUpView();
-                        break;
-
-                    default:
-                }
+                fragment = new FragmentEntityList();
+                Bundle args = new Bundle();
+                args.putInt("Entity", AppConstants.TRADER);
+                fragment.setArguments(args);
+                popOutFragments();
+                setUpView();
             }
 
             @Override
