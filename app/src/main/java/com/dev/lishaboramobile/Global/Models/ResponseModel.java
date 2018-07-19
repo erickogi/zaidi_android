@@ -1,8 +1,10 @@
 package com.dev.lishaboramobile.Global.Models;
 
+import android.arch.lifecycle.LiveData;
+
 import java.util.LinkedList;
 
-public class ResponseModel {
+public class ResponseModel extends LiveData<ResponseModel> {
     //private Object Data;
     private LinkedList<Object> Data;
     private int ResultCode;

@@ -1,6 +1,8 @@
 package com.dev.lishaboramobile.Admin.Views;
 
 import android.app.ProgressDialog;
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,13 +29,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dev.lishaboramobile.Admin.Adapters.TradersAdapter;
-import com.dev.lishaboramobile.Admin.Callbacks.CreateTraderCallbacks;
-import com.dev.lishaboramobile.Admin.Callbacks.FabCallbacks;
 import com.dev.lishaboramobile.Admin.Callbacks.SearchViewCallbacks;
-import com.dev.lishaboramobile.Admin.Callbacks.TraderCallbacks;
 import com.dev.lishaboramobile.Admin.Controllers.TradersController;
+import com.dev.lishaboramobile.Admin.Controllers.TradersViewModel;
 import com.dev.lishaboramobile.Global.AppConstants;
-import com.dev.lishaboramobile.Global.Models.ResponseModel;
+import com.dev.lishaboramobile.Global.Models.FetchTraderModel;
 import com.dev.lishaboramobile.Global.Utils.NetworkUtils;
 import com.dev.lishaboramobile.Global.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
@@ -45,6 +45,8 @@ import com.google.gson.reflect.TypeToken;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.LinkedList;
@@ -55,7 +57,15 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class FragmentEntityList extends Fragment {
+
+    Chip chipAll;
+    Chip chipDummy;
+    Chip chipDelete;
+    Chip chipArchive;
+
+
     TradersAdapter listAdapter;
+    Gson gson = new Gson();
     TradersController tradersController;
     List<Object> objects;
     LinkedList<TraderModel> traderModels;
@@ -76,9 +86,11 @@ public class FragmentEntityList extends Fragment {
     private ChipGroup chipGroup;
     private Chip activeChip, allChip, deletedChip, archivedChip, syncedChip, dummyChip, unsyncedChip;
     private AVLoadingIndicatorView avi;
-    private int TraderDel, TraderDummy, TraderSynched, TraderArchive;
+    TradersViewModel tradersViewModel;
     private boolean isConnected;
     private String filterText = "";
+    ViewModel viewModel;
+    private int TraderDel, TraderDummy, TraderSynched, TraderArchive, All;
     private ActionMode.Callback callback = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -126,8 +138,6 @@ public class FragmentEntityList extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        // View view=R.layout.fragment_entities_list;
         if (getArguments() != null) {
             entity = getArguments().getInt("Entity");
         }
@@ -147,6 +157,20 @@ public class FragmentEntityList extends Fragment {
 
     }
 
+    private void disablechips() {
+        TraderDel = 0;
+        TraderArchive = 0;
+        TraderDummy = 0;
+        All = 0;
+
+    }
+
+    private void setDefault() {
+        //TraderDel=0;TraderArchive=0;TraderDummy=0;All=1;
+        //chipAll.setChecked(true);
+
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -158,13 +182,80 @@ public class FragmentEntityList extends Fragment {
         txt_network_state = view.findViewById(R.id.txt_network_state);
         chipGroup = view.findViewById(R.id.chip_group);
         swipe_refresh_layout = view.findViewById(R.id.swipeRefreshView);
+        chipAll = view.findViewById(R.id.chip_all);
+        chipDummy = view.findViewById(R.id.chip_dummy);
+        chipDelete = view.findViewById(R.id.chip_deleted);
+        chipArchive = view.findViewById(R.id.chip_archived);
+        chipAll.setChecked(true);
+        disablechips();
 
+        All = 1;
 
-        chipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(ChipGroup chipGroup, int i) {
+        chipDelete.setOnCheckedChangeListener((compoundButton, b) -> {
 
+            disablechips();
+
+            if (chipDelete.isChecked()) {
+                TraderDel = 1;
+            } else {
+                TraderDel = 0;
             }
+            if (tradersViewModel != null && tradersController != null) {
+                startAnim();
+                tradersViewModel.refresh(getSearchObject(), true);
+            }
+        });
+        chipArchive.setOnCheckedChangeListener((compoundButton, b) -> {
+            disablechips();
+
+            if (chipArchive.isChecked()) {
+                TraderArchive = 1;
+            } else {
+                TraderArchive = 0;
+            }
+            if (tradersViewModel != null && tradersController != null) {
+                startAnim();
+                tradersViewModel.refresh(getSearchObject(), true);
+            }
+        });
+        chipAll.setOnCheckedChangeListener((compoundButton, b) -> {
+            disablechips();
+
+            if (b) {
+
+                All = 1;
+
+
+            } else {
+
+                All = 0;
+            }
+
+            if (tradersViewModel != null && tradersController != null) {
+                startAnim();
+                /// emptyState(true,linearLayoutEmpty,);
+                tradersViewModel.refresh(getSearchObject(), true);
+            }
+        });
+        chipDummy.setOnCheckedChangeListener((compoundButton, b) -> {
+            disablechips();
+
+            if (chipDummy.isChecked()) {
+                TraderDummy = 1;
+            } else {
+                setDefault();
+                TraderDummy = 0;
+            }
+
+            if (tradersViewModel != null && tradersController != null) {
+                startAnim();
+                tradersViewModel.refresh(getSearchObject(), true);
+            }
+        });
+
+        chipGroup.setOnCheckedChangeListener((chipGroup, i) -> {
+
+
         });
 
 
@@ -197,53 +288,47 @@ public class FragmentEntityList extends Fragment {
 
     }
 
+
+    void getTradersv() {
+        if (avi != null) {
+            startAnim();
+        }
+        if (tradersViewModel != null) {
+
+
+            tradersViewModel.getTraderModels(getSearchObject(), true).observe(this, responseModel -> {
+
+                Gson gson = new Gson();
+                if (avi != null) {
+                    stopAnim();
+                }
+                if (swipe_refresh_layout.isRefreshing()) {
+                    swipe_refresh_layout.setRefreshing(false);
+                }
+
+                if (responseModel.getResultCode() == 1 && responseModel.getData() != null) {
+                    JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
+                    Type listType = new TypeToken<LinkedList<TraderModel>>() {
+                    }.getType();
+                    traderModels = gson.fromJson(jsonArray, listType);
+                    filterTraders();
+                    populateTraders();
+                } else if (responseModel.getResultCode() == 2) {
+                    traderModels.clear();
+                    populateTraders();
+                } else {
+
+
+                    snack(responseModel.getResultDescription());
+                }
+
+            });
+
+
+        }
+    }
+
     private void initTrader() {
-        swipe_refresh_layout.setOnRefreshListener(() -> {
-
-            if (NetworkUtils.Companion.isConnectionFast(Objects.requireNonNull(getActivity()))) {
-                listAdapter = new TradersAdapter(getActivity(), filteredTraderModels, new OnclickRecyclerListener() {
-                    @Override
-                    public void onClickListener(int position) {
-
-                    }
-
-                    @Override
-                    public void onLongClickListener(int position) {
-
-
-                    }
-
-                    @Override
-                    public void onCheckedClickListener(int position) {
-
-                    }
-
-                    @Override
-                    public void onMoreClickListener(int position) {
-
-                    }
-
-                    @Override
-                    public void onClickListener(int adapterPosition, @NotNull View view) {
-                        if (filteredTraderModels.get(adapterPosition).getDeleted() == 0) {
-                            popupMenu(adapterPosition, view, filteredTraderModels.get(adapterPosition));
-                        }
-                        {
-                            snack("Account is deleted .....");
-                        }
-                    }
-                });
-                swipe_refresh_layout.setRefreshing(false);
-
-                getTraders();
-
-
-            } else {
-                emptyState(false, "You are not connected to the internet ...", empty_layout, null, emptyTxt);
-            }
-
-
-        });
 
         if (NetworkUtils.Companion.isConnectionFast(Objects.requireNonNull(getActivity()))) {
             listAdapter = new TradersAdapter(getActivity(), filteredTraderModels, new OnclickRecyclerListener() {
@@ -270,57 +355,51 @@ public class FragmentEntityList extends Fragment {
 
                 @Override
                 public void onClickListener(int adapterPosition, @NotNull View view) {
-                    if (filteredTraderModels.get(adapterPosition).getDeleted() == 0) {
-                        popupMenu(adapterPosition, view, filteredTraderModels.get(adapterPosition));
-                    }
-                    {
-                        snack("Account is deleted .....");
-                    }
+                    popupMenu(adapterPosition, view, filteredTraderModels.get(adapterPosition));
+
                 }
             });
 
-            getTraders();
-
+            getTradersv();
 
         } else {
             emptyState(false, "You are not connected to the internet ...", empty_layout, null, emptyTxt);
         }
 
 
-        ((AdminActivity) getActivity()).fabButton(true, R.drawable.ic_add_black_24dp, new FabCallbacks() {
-            @Override
-            public void onClick() {
-                if (isConnected) {
+        swipe_refresh_layout.setOnRefreshListener(() -> {
+            startAnim();
+            tradersViewModel.refresh(getSearchObject(), true);
 
-                    tradersController.createTrader(new CreateTraderCallbacks() {
-                        @Override
-                        public void success(ResponseModel responseModel) {
-                            getTraders();
-                        }
+        });
 
-                        @Override
-                        public void error(String response) {
 
-                        }
+        ((AdminActivity) getActivity()).fabButton(true, R.drawable.ic_add_black_24dp, () -> {
+            if (isConnected) {
 
-                        @Override
-                        public void startProgressDialog() {
+                tradersController.createTrader(requestData -> {
 
-                        }
+                    if (tradersViewModel != null) {
+                        tradersViewModel.createTrader(requestData, true).observe(FragmentEntityList.this, responseModel -> {
+                            Log.d("2ReTrRe", gson.toJson(responseModel));
 
-                        @Override
-                        public void stopProgressDialog() {
+                            if (tradersController != null) {
+                                tradersController.stopAnim();
+                                if (responseModel != null) {
+                                    tradersController.snack(responseModel.getResultDescription());
+                                    if (responseModel.getResultCode() == 1) {
+                                        tradersController.dismissDialog();
 
-                        }
+                                        tradersViewModel.refresh(getSearchObject(), true);
+                                    }
+                                }
 
-                        @Override
-                        public void updateProgressDialog(String message) {
-
-                        }
-                    });
-                } else {
-                    snack("You have to be connected to the internet");
-                }
+                            }
+                        });
+                    }
+                });
+            } else {
+                snack("You have to be connected to the internet");
             }
         });
         ((AdminActivity) getActivity()).searchAble(true, "Search traders", new SearchViewCallbacks() {
@@ -351,6 +430,27 @@ public class FragmentEntityList extends Fragment {
 
     }
 
+    private JSONObject getSearchObject() {
+
+        FetchTraderModel f = new FetchTraderModel();
+
+
+        f.setArchived(TraderArchive);
+        f.setDeleted(TraderDel);
+        f.setAll(All);
+        f.setDummy(TraderDummy);
+        try {
+            return new JSONObject(gson.toJson(f));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return null;
+
+
+    }
+
     private void populateTraders() {
         mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(mStaggeredLayoutManager);
@@ -377,68 +477,6 @@ public class FragmentEntityList extends Fragment {
         }
     }
 
-    private LinkedList<TraderModel> getTraders() {
-
-        Gson gson = new Gson();
-        if (tradersController != null) {
-            tradersController.getTraderModels(0, 0, 0, 0, new TraderCallbacks() {
-                @Override
-                public void success(ResponseModel responseModel) {
-                    if (avi != null) {
-                        stopAnim();
-                    }
-                    JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
-
-
-                    //Log.d("sdf",jsonArray.getAsString());
-                    Type listType = new TypeToken<LinkedList<TraderModel>>() {
-                    }.getType();
-                    traderModels = gson.fromJson(jsonArray, listType);
-                    filterTraders();
-                    populateTraders();
-
-
-                    //snack("success");
-                }
-
-                @Override
-                public void error(String response) {
-
-                    if (avi != null) {
-                        stopAnim();
-                    }
-                    filterTraders();
-                    snack(response);
-                    populateTraders();
-                }
-
-                @Override
-                public void startProgressDialog() {
-
-                    if (avi != null) {
-                        startAnim();
-                    }
-                }
-
-                @Override
-                public void stopProgressDialog() {
-                    if (avi != null) {
-                        stopAnim();
-                    }
-                }
-
-                @Override
-                public void updateProgressDialog(String message) {
-
-                    //snack(message);
-                }
-            });
-        } else {
-
-        }
-        //populateTraders();
-        return traderModels;
-    }
 
     private void filterTraders() {
 
@@ -466,7 +504,11 @@ public class FragmentEntityList extends Fragment {
         tradersController = new TradersController(getContext());
         filteredTraderModels = new LinkedList<>();
 
-        getActivity().setTitle("Traders");
+        try {
+            Objects.requireNonNull(getActivity()).setTitle("Traders");
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
 
         if (getArguments() != null) {
             entity = getArguments().getInt("Entity");
@@ -474,6 +516,9 @@ public class FragmentEntityList extends Fragment {
 
         switch (entity) {
             case AppConstants.TRADER:
+
+                tradersViewModel = ViewModelProviders.of(this).get(TradersViewModel.class);
+
                 initTrader();
 
                 break;
@@ -482,7 +527,6 @@ public class FragmentEntityList extends Fragment {
                 initTrader();
         }
 
-        //Toast.makeText(getActivity(), "Started", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -514,37 +558,29 @@ public class FragmentEntityList extends Fragment {
     }
 
     private void snack(String msg) {
-        Snackbar.make(view, msg, Snackbar.LENGTH_SHORT)
-                .setAction("Action", null).show();
+        if (view != null) {
+            Snackbar.make(view, msg, Snackbar.LENGTH_SHORT)
+                    .setAction("Action", null).show();
 
+        }
         Log.d("SnackMessage", msg);
     }
 
-    private void createDialog() {
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setCancelable(false);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("Loading");
-        progressDialog.setIndeterminate(true);
-    }
+
 
     void startAnim() {
         avi.show();
-        // or avi.smoothToShow();
+
     }
 
     void stopAnim() {
         avi.hide();
-        // or avi.smoothToHide();
+
     }
 
     private void popupMenu(int pos, View view, TraderModel traderModel) {
         PopupMenu popupMenu = new PopupMenu(Objects.requireNonNull(getContext()), view);
         popupMenu.inflate(R.menu.traders_list_menu);
-
-//        popupMenu.getMenu().getItem(0).setVisible(false);
-//        popupMenu.getMenu().getItem(1).setVisible(false);
-//        popupMenu.getMenu().getItem(2).setVisible(false);
 
         if (traderModel.getDeleted() == 1) {
             popupMenu.getMenu().getItem(0).setVisible(false);
@@ -608,30 +644,22 @@ public class FragmentEntityList extends Fragment {
 
     private void editTrader(TraderModel traderModel) {
 
-        tradersController.editTrader(traderModel, new CreateTraderCallbacks() {
-            @Override
-            public void success(ResponseModel responseModel) {
-                getTraders();
-            }
+        tradersController.editTrader(traderModel, requestData -> {
+            if (tradersViewModel != null) {
+                tradersViewModel.updateTrader(requestData, true).observe(FragmentEntityList.this, responseModel -> {
+                    if (tradersController != null) {
+                        tradersController.stopAnim();
+                        if (responseModel != null) {
+                            tradersController.snack(responseModel.getResultDescription());
+                        }
+                        if (responseModel != null) {
+                            if (responseModel.getResultCode() != 0) {
+                                tradersController.dismissDialog();
+                            }
+                        }
+                    }
 
-            @Override
-            public void error(String response) {
-
-            }
-
-            @Override
-            public void startProgressDialog() {
-
-            }
-
-            @Override
-            public void stopProgressDialog() {
-
-            }
-
-            @Override
-            public void updateProgressDialog(String message) {
-
+                });
             }
         });
     }
@@ -639,42 +667,36 @@ public class FragmentEntityList extends Fragment {
     private void update(TraderModel traderModel) {
 
         listAdapter.notifyDataSetChanged();
-        startAnim();
-        tradersController.upTrader(traderModel, new TraderCallbacks() {
-            @Override
-            public void success(ResponseModel responseModel) {
-                stopAnim();
-                snack(responseModel.getResultDescription());
-                if (responseModel.getResultCode() == 1) {
-                    populateTraders();
-                }
+
+        if (tradersController != null) {
+            tradersController.startAnim();
+        }
+
+        if (tradersViewModel != null) {
+            try {
+                tradersViewModel.updateTrader(new JSONObject(gson.toJson(traderModel)), true).observe(this, responseModel -> {
+                    if (tradersController != null) {
+                        tradersController.stopAnim();
+                        if (responseModel != null) {
+                            tradersController.snack(responseModel.getResultDescription());
+                        }
+                        if (responseModel != null) {
+                            if (responseModel.getResultCode() != 0) {
+                                tradersController.dismissDialog();
+                                tradersViewModel.refresh(getSearchObject(), true);
+                            }
+                        }
+                    }
+
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+        }
 
-            @Override
-            public void error(String response) {
 
-                stopAnim();
-                snack(response);
 
-            }
 
-            @Override
-            public void startProgressDialog() {
-
-                startAnim();
-            }
-
-            @Override
-            public void stopProgressDialog() {
-
-                stopAnim();
-            }
-
-            @Override
-            public void updateProgressDialog(String message) {
-
-            }
-        });
     }
 
 

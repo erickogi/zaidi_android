@@ -12,49 +12,53 @@
         android:layout_height="match_parent">
 
         <android.support.design.chip.ChipGroup
+
+            app:singleSelection="true"
             android:id="@+id/chip_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="2dp">
 
             <android.support.design.chip.Chip
-                style="@style/Widget.MaterialComponents.Chip.Filter"
+
+                android:id="@+id/chip_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="All"
-                app:closeIconEnabled="true"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+
 
                 />
 
-            <android.support.design.chip.Chip
-                style="@style/Widget.MaterialComponents.Chip.Filter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Active"
-
-                />
 
             <android.support.design.chip.Chip
-                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:id="@+id/chip_deleted"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Deleted"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+
 
                 />
 
             <android.support.design.chip.Chip
-                style="@style/Widget.MaterialComponents.Chip.Filter"
+
+                android:id="@+id/chip_archived"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Archived"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+
 
                 />
 
             <android.support.design.chip.Chip
-                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:id="@+id/chip_dummy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Synched"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:text="Dummy"
+
 
                 />
 

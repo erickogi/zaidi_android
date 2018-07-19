@@ -2,6 +2,7 @@ package com.dev.lishaboramobile.Admin.Controllers;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Handler;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -22,12 +23,16 @@ import com.dev.lishaboramobile.Global.Network.RequestListener;
 import com.dev.lishaboramobile.Global.Utils.DateTimeUtils;
 import com.dev.lishaboramobile.Global.Utils.GeneralUtills;
 import com.dev.lishaboramobile.Global.Utils.MyToast;
+import com.dev.lishaboramobile.Global.Utils.RequestDataCallback;
+import com.dev.lishaboramobile.Global.Utils.ResponseCallback;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Trader.Models.TraderModel;
 import com.google.gson.Gson;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,9 +42,25 @@ import java.util.Objects;
 public class TradersController {
     public int ISCREATE = 12;
     public int ISUPDATE = 13;
+
+    private static int spalsh_time_out = 1000;
+    ResponseModel responseModel = new ResponseModel();
+    Gson gson = new Gson();
+
     private Context context;
     private CreateTraderCallbacks createTraderCallbacks;
     private AVLoadingIndicatorView avi;
+    private AlertDialog dialog;
+
+    private void handler() {
+        new Handler().postDelayed(() -> {
+
+                }
+
+
+                , spalsh_time_out);
+
+    }
 
     public TradersController(Context context) {
         this.context = context;
@@ -58,7 +79,8 @@ public class TradersController {
     }
 
     public List<TraderModel> getTraderModels(int del, int archive, int dummy, int synched, TraderCallbacks traderCallbacks) {
-//        private   int archived ;
+
+        handler();
 
         HashMap<String, String> params = new HashMap<>();
         params.put("deleted", "" + del);
@@ -162,7 +184,7 @@ public class TradersController {
         return true;
     }
 
-    public void createTrader(CreateTraderCallbacks createTraderCallbacks) {
+    public void createTrader(RequestDataCallback requestDataCallback) {
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_add_trader, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(context));
@@ -191,30 +213,11 @@ public class TradersController {
         alertDialogAndroid.show();
 
         Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
-        theButton.setOnClickListener(new CustomListener(alertDialogAndroid, createTraderCallbacks));
+        theButton.setOnClickListener(new CustomListener(alertDialogAndroid, requestDataCallback));
 
 
     }
 
-    void startAnim() {
-        avi.setVisibility(View.VISIBLE);
-        avi.show();
-        // or avi.smoothToShow();
-    }
-
-    void stopAnim() {
-        avi.setVisibility(View.GONE);
-        avi.hide();
-        // or avi.smoothToHide();
-    }
-
-    private void snack(String msg) {
-        MyToast.toast(msg, context, R.drawable.ic_launcher, Toast.LENGTH_LONG);
-//        Snackbar.make(view, msg, Snackbar.LENGTH_SHORT)
-//                .setAction("Action", null).show();
-
-        Log.d("SnackMessage", msg);
-    }
 
     public void upTrader(TraderModel traderModel, TraderCallbacks traderCallbacks) {
         HashMap<String, String> params = new HashMap<>();
@@ -275,7 +278,7 @@ public class TradersController {
 
     }
 
-    public void editTrader(TraderModel traderModel, CreateTraderCallbacks createTraderCallbacks) {
+    public void editTrader(TraderModel traderModel, RequestDataCallback requestDataCallback) {
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_add_trader, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(context));
@@ -314,20 +317,157 @@ public class TradersController {
         alertDialogAndroid.show();
 
         Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
-        theButton.setOnClickListener(new EditCustomListener(alertDialogAndroid, traderModel, createTraderCallbacks));
+        theButton.setOnClickListener(new EditCustomListener(alertDialogAndroid, traderModel, requestDataCallback));
 
 
     }
 
+    public void startAnim() {
+        if (avi != null) {
+            avi.setVisibility(View.VISIBLE);
+            avi.show();
+        }
+
+    }
+
+    public void dismissDialog() {
+        if (dialog != null) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+        }
+    }
+
+
+    //UpdateList
+
+
+    //View Actions
+
+    public void stopAnim() {
+        if (avi != null) {
+            avi.setVisibility(View.GONE);
+            avi.hide();
+        }
+        // or avi.smoothToHide();
+    }
+
+    public void snack(String msg) {
+        if (context != null) {
+            MyToast.toast(msg, context, R.drawable.ic_launcher, Toast.LENGTH_LONG);
+
+            Log.d("SnackMessage", msg);
+        }
+    }
+
+    public void getResponse(String url, JSONObject jsonObject, String token, ResponseCallback responseCallback) {
+        Request.Companion.postRequest(url, jsonObject, token, new RequestListener() {
+            @Override
+            public void onError(@NotNull ANError error) {
+                responseModel.setData(null);
+                responseModel.setResultCode(0);
+                responseModel.setResultDescription(error.getErrorBody());
+
+                responseCallback.response(responseModel);
+
+            }
+
+            @Override
+            public void onError(@NotNull String error) {
+                responseModel.setData(null);
+                responseModel.setResultCode(0);
+                responseModel.setResultDescription(error);
+
+                responseCallback.response(responseModel);
+
+            }
+
+            @Override
+            public void onSuccess(@NotNull String response) {
+                try {
+
+
+                    Gson gson = new Gson();
+                    responseModel = gson.fromJson(response, ResponseModel.class);
+                    Log.d("2ReTrRe", gson.toJson(responseModel));
+
+                    responseCallback.response(responseModel);
+
+
+                } catch (Exception e) {
+                    responseModel.setData(null);
+                    responseModel.setResultCode(0);
+                    responseModel.setResultDescription(e.getMessage());
+                    responseCallback.response(responseModel);
+
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
+
+    public ResponseModel getTraders(int del, int archive, int dummy, int synched, ResponseCallback responseCallback) {
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put("deleted", "" + del);
+        params.put("archived", "" + archive);
+        params.put("synced", "" + synched);
+        params.put("dummy", "" + dummy);
+        Request.Companion.postRequest(ApiConstants.Companion.getTraders(), params, "", new RequestListener() {
+            @Override
+            public void onError(@NotNull ANError error) {
+
+                responseModel.setData(null);
+                responseModel.setResultCode(0);
+                responseModel.setResultDescription(error.getErrorBody());
+
+                responseCallback.response(responseModel);
+
+
+            }
+
+            @Override
+            public void onError(@NotNull String error) {
+
+            }
+
+            @Override
+            public void onSuccess(@NotNull String response) {
+
+                try {
+
+                    Gson gson = new Gson();
+                    responseModel = gson.fromJson(response, ResponseModel.class);
+                    responseCallback.response(responseModel);
+
+
+                } catch (Exception e) {
+                    responseModel.setData(null);
+                    responseModel.setResultCode(0);
+                    responseModel.setResultDescription(e.getMessage());
+                    responseCallback.response(responseModel);
+
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+        return responseModel;
+    }
+
+    //Live
+
     private class CustomListener implements View.OnClickListener {
-        AlertDialog dialog;
+        // AlertDialog dialog;
         boolean isDummy = false;
         //int type;
-        CreateTraderCallbacks createTraderCallbacks;
+        RequestDataCallback requestDataCallback;
 
-        public CustomListener(AlertDialog alertDialogAndroid, CreateTraderCallbacks createTraderCallbacks) {
+        public CustomListener(AlertDialog alertDialogAndroid, RequestDataCallback requestDataCallback) {
             dialog = alertDialogAndroid;
-            this.createTraderCallbacks = createTraderCallbacks;
+            this.requestDataCallback = requestDataCallback;
             // this.type=type;
         }
 
@@ -344,6 +484,7 @@ public class TradersController {
             if (name.getText().toString().isEmpty()) {
                 name.setError("Required");
                 name.requestFocus();
+                stopAnim();
                 return;
             }
 
@@ -351,13 +492,16 @@ public class TradersController {
             if (phone.getText().toString().isEmpty()) {
                 phone.setError("Required");
                 phone.requestFocus();
+                stopAnim();
                 return;
             }
 
             if (!isValidPhoneNumber(phone.getText().toString())) {
+                stopAnim();
                 snack("Invalid phone number ");
                 phone.requestFocus();
                 phone.setError("Invalid Phone number");
+                return;
             }
 
 
@@ -369,70 +513,85 @@ public class TradersController {
             AdminPrefs adminPrefs = new AdminPrefs(context);
             TraderModel traderModel = new TraderModel();
             //if(type==ISCREATE) {
-            traderModel.setApikey("");
-            traderModel.setArchived(0);
-            traderModel.setEntityname("LishaBora");
-            traderModel.setBalance("0");
+            traderModel.setId(0);
             traderModel.setCode("" + new GeneralUtills(context).getRandon(9000, 1000));
-            traderModel.setDummy(0);
             traderModel.setEntity("Admin");
+            traderModel.setEntityname("LishaBora");
             traderModel.setEntitycode(adminPrefs.getAdmin().getCode());
+
+            traderModel.setTransactioncode(DateTimeUtils.Companion.getNow());
+            traderModel.setNames(name.getText().toString());
+            traderModel.setMobile(phone.getText().toString());
+            traderModel.setPassword("password");
+            traderModel.setBalance("0");
+            traderModel.setApikey("");
+            traderModel.setFirebasetoken("");
+            traderModel.setStatus("Active");
+            traderModel.setTransactiontime(DateTimeUtils.Companion.getNow());
+            traderModel.setSynctime(DateTimeUtils.Companion.getNow());
+            traderModel.setTransactedby(traderModel.getEntityname() + ", " + adminPrefs.getAdmin().getCode());
+
+
+
+            traderModel.setArchived(0);
             traderModel.setDeleted(0);
             traderModel.setSynced(0);
-            traderModel.setTransactiontime(DateTimeUtils.Companion.getNowslong());
-            traderModel.setTransactedby(adminPrefs.getAdmin().getCode());
+            traderModel.setDummy(0);
+
+
             traderModel.setIsdeleted(false);
             traderModel.setIsarchived(false);
             traderModel.setIsdummy(isDummy);
-            traderModel.setStatus("Active");
-            traderModel.setNames(name.getText().toString());
-            traderModel.setMobile(phone.getText().toString());
-            traderModel.setPassword("");
-            traderModel.setId(0);
-//            }else {
-//
-//            }
+
 
 
             startAnim();
-            saveTrader(traderModel, new CreateTraderCallbacks() {
-                @Override
-                public void success(ResponseModel responseModel) {
-                    dialog.dismiss();
-                    stopAnim();
-                    snack(responseModel.getResultDescription());
-                    createTraderCallbacks.success(responseModel);
 
-                }
-
-                @Override
-                public void error(String response) {
-
-                    stopAnim();
-                    snack(response);
-                    createTraderCallbacks.error(response);
-                    //dialog.dismiss();
-                }
-
-                @Override
-                public void startProgressDialog() {
-
-                    startAnim();
+            try {
+                requestDataCallback.data(new JSONObject(gson.toJson(traderModel)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
 
-                }
-
-                @Override
-                public void stopProgressDialog() {
-
-                    stopAnim();
-                }
-
-                @Override
-                public void updateProgressDialog(String message) {
-
-                }
-            });
+//            saveTrader(traderModel, new CreateTraderCallbacks() {
+//                @Override
+//                public void success(ResponseModel responseModel) {
+//                    dialog.dismiss();
+//                    stopAnim();
+//                    snack(responseModel.getResultDescription());
+//                    createTraderCallbacks.success(responseModel);
+//
+//                }
+//
+//                @Override
+//                public void error(String response) {
+//
+//                    stopAnim();
+//                    snack(response);
+//                    createTraderCallbacks.error(response);
+//                    //dialog.dismiss();
+//                }
+//
+//                @Override
+//                public void startProgressDialog() {
+//
+//                    startAnim();
+//
+//
+//                }
+//
+//                @Override
+//                public void stopProgressDialog() {
+//
+//                    stopAnim();
+//                }
+//
+//                @Override
+//                public void updateProgressDialog(String message) {
+//
+//                }
+//            });
 
 
         }
@@ -440,15 +599,15 @@ public class TradersController {
     }
 
     private class EditCustomListener implements View.OnClickListener {
-        AlertDialog dialog;
+        // AlertDialog dialog;
         boolean isDummy = false;
         TraderModel traderModel;
         //int type;
-        CreateTraderCallbacks createTraderCallbacks;
+        RequestDataCallback requestDataCallback;
 
-        public EditCustomListener(AlertDialog alertDialogAndroid, TraderModel traderModel, CreateTraderCallbacks createTraderCallbacks) {
+        public EditCustomListener(AlertDialog alertDialogAndroid, TraderModel traderModel, RequestDataCallback requestDataCallback) {
             dialog = alertDialogAndroid;
-            this.createTraderCallbacks = createTraderCallbacks;
+            this.requestDataCallback = requestDataCallback;
             this.traderModel = traderModel;
 
             // this.type=type;
@@ -467,6 +626,7 @@ public class TradersController {
             if (name.getText().toString().isEmpty()) {
                 name.setError("Required");
                 name.requestFocus();
+                stopAnim();
                 return;
             }
 
@@ -474,12 +634,14 @@ public class TradersController {
             if (phone.getText().toString().isEmpty()) {
                 phone.setError("Required");
                 phone.requestFocus();
+                stopAnim();
                 return;
             }
 
             if (!isValidPhoneNumber(phone.getText().toString())) {
                 snack("Invalid phone number ");
                 phone.requestFocus();
+                stopAnim();
                 phone.setError("Invalid Phone number");
             }
 
@@ -494,44 +656,49 @@ public class TradersController {
 
 
             startAnim();
-            upTrader(traderModel, new TraderCallbacks() {
-                @Override
-                public void success(ResponseModel responseModel) {
-                    dialog.dismiss();
-                    stopAnim();
-                    snack(responseModel.getResultDescription());
-                    createTraderCallbacks.success(responseModel);
-
-                }
-
-                @Override
-                public void error(String response) {
-
-                    stopAnim();
-                    snack(response);
-                    createTraderCallbacks.error(response);
-                    //dialog.dismiss();
-                }
-
-                @Override
-                public void startProgressDialog() {
-
-                    startAnim();
-
-
-                }
-
-                @Override
-                public void stopProgressDialog() {
-
-                    stopAnim();
-                }
-
-                @Override
-                public void updateProgressDialog(String message) {
-
-                }
-            });
+            try {
+                requestDataCallback.data(new JSONObject(gson.toJson(traderModel)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+//            upTrader(traderModel, new TraderCallbacks() {
+//                @Override
+//                public void success(ResponseModel responseModel) {
+//                    dialog.dismiss();
+//                    stopAnim();
+//                    snack(responseModel.getResultDescription());
+//                    createTraderCallbacks.success(responseModel);
+//
+//                }
+//
+//                @Override
+//                public void error(String response) {
+//
+//                    stopAnim();
+//                    snack(response);
+//                    createTraderCallbacks.error(response);
+//                    //dialog.dismiss();
+//                }
+//
+//                @Override
+//                public void startProgressDialog() {
+//
+//                    startAnim();
+//
+//
+//                }
+//
+//                @Override
+//                public void stopProgressDialog() {
+//
+//                    stopAnim();
+//                }
+//
+//                @Override
+//                public void updateProgressDialog(String message) {
+//
+//                }
+//            });
 
 
         }

@@ -48,6 +48,45 @@ class Request {
                     })
         }
 
+        fun postRequest(url: String, params: JSONObject, token: String?, listener: RequestListener) {
+
+            var mtoken = ""
+            if (token != null) {
+
+                mtoken = token
+
+            }
+            Log.d("ReTrReq", params.toString())
+
+
+            AndroidNetworking.post(url)
+                    .addJSONObjectBody(params)
+
+                    .addHeaders("Authorization", "Bearer $mtoken")
+                    .addHeaders("Accept", "application/json")
+
+
+                    .setTag("test")
+                    .setPriority(Priority.HIGH)
+                    .build()
+                    .getAsString(object : StringRequestListener {
+                        override fun onResponse(response: String) {
+                            // do anything with response
+                            Log.d("ReTrRe", response)
+                            listener.onSuccess(response)
+
+                        }
+
+                        override fun onError(error: ANError) {
+                            // handle error
+
+                            Log.d("ReTrRe", error.toString())
+                            listener.onError(error)
+                            //  listener.onError(error)
+                        }
+                    })
+        }
+
         fun getRequest(url: String, token: String?, listener: RequestListener) {
             var mtoken = ""
             if (token != null) {
@@ -101,6 +140,7 @@ class Request {
 
                     //.addBodyParameter(params)
                     // .addApplicationJsonBody(params)
+
                     .addJSONObjectBody(params)
                     //.setContentType(ContentT)
 
