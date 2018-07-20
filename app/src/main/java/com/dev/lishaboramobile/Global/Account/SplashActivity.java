@@ -1,13 +1,12 @@
 package com.dev.lishaboramobile.Global.Account;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
-import com.dev.lishaboramobile.Admin.Views.AdminActivity;
 import com.dev.lishaboramobile.Global.Data.GlobalPrefs;
-import com.dev.lishaboramobile.R;
-import com.dev.lishaboramobile.Trader.Views.TraderActivity;
+import com.dev.lishaboramobile.Views.Admin.AdminActivity;
+import com.dev.lishaboramobile.Views.Trader.TraderActivity;
 
 public class SplashActivity extends AppCompatActivity {
 

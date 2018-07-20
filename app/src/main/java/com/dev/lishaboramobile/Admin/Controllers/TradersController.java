@@ -279,46 +279,48 @@ public class TradersController {
     }
 
     public void editTrader(TraderModel traderModel, RequestDataCallback requestDataCallback) {
-        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
-        View mView = layoutInflaterAndroid.inflate(R.layout.dialog_add_trader, null);
-        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(context));
-        alertDialogBuilderUserInput.setView(mView);
-        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
-        alertDialogBuilderUserInput.setTitle("Trader");
+        if (context != null) {
+            LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
+            View mView = layoutInflaterAndroid.inflate(R.layout.dialog_add_trader, null);
+            AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(context));
+            alertDialogBuilderUserInput.setView(mView);
+            alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
+            alertDialogBuilderUserInput.setTitle("Trader");
 
 
-        avi = mView.findViewById(R.id.avi);
+            avi = mView.findViewById(R.id.avi);
 
 
-        TextInputEditText edtNames, edtMobile;
-        edtMobile = mView.findViewById(R.id.edt_traders_phone);
-        edtNames = mView.findViewById(R.id.edt_traders_names);
+            TextInputEditText edtNames, edtMobile;
+            edtMobile = mView.findViewById(R.id.edt_traders_phone);
+            edtNames = mView.findViewById(R.id.edt_traders_names);
 
-        edtMobile.setText(traderModel.getMobile());
-        edtNames.setText(traderModel.getNames());
+            edtMobile.setText(traderModel.getMobile());
+            edtNames.setText(traderModel.getNames());
 
-        CheckBox chk = mView.findViewById(R.id.chk_dummy);
-        chk.setVisibility(View.GONE);
-
-
-        alertDialogBuilderUserInput
-                .setCancelable(false)
-                .setPositiveButton("Update", (dialogBox, id) -> {
-                    // ToDo get user input here
+            CheckBox chk = mView.findViewById(R.id.chk_dummy);
+            chk.setVisibility(View.GONE);
 
 
-                })
+            alertDialogBuilderUserInput
+                    .setCancelable(false)
+                    .setPositiveButton("Update", (dialogBox, id) -> {
+                        // ToDo get user input here
 
-                .setNegativeButton("Dismiss",
-                        (dialogBox, id) -> dialogBox.cancel());
 
-        AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
-        alertDialogAndroid.setCancelable(false);
-        alertDialogAndroid.show();
+                    })
 
-        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
-        theButton.setOnClickListener(new EditCustomListener(alertDialogAndroid, traderModel, requestDataCallback));
+                    .setNegativeButton("Dismiss",
+                            (dialogBox, id) -> dialogBox.cancel());
 
+            AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
+            alertDialogAndroid.setCancelable(false);
+            alertDialogAndroid.show();
+
+            Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
+            theButton.setOnClickListener(new EditCustomListener(alertDialogAndroid, traderModel, requestDataCallback));
+
+        }
 
     }
 

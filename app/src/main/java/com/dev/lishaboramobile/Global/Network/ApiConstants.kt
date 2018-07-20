@@ -4,6 +4,8 @@ class ApiConstants {
 
 
     companion object {
+
+
         //KEY VALUES
         var resultCode: String = "ResultCode"
         var resultDescription: String = "ResultDescription"
@@ -20,6 +22,12 @@ class ApiConstants {
         var Traders: String = Trader + "List.php"
         var CreateTrader: String = Trader + "Create.php"
         var UpdateTrader: String = Trader + "Update.php"
+
+        //Farmers
+        var Farmer: String = baseUrl + "Farmers/"
+        var Farmers: String = Farmer + "List.php"
+        var CreateFarmer: String = Farmer + "Create.php"
+        var UpdateFarmer: String = Farmer + "Update.php"
 
 
 

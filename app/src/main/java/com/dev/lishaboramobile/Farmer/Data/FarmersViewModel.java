@@ -36,7 +36,8 @@ public class FarmersViewModel extends AndroidViewModel {
     public LiveData<FamerModel> getFramerModelByNames(String name) {
         return mRepository.getFramersByNames(name);
     }
-    public LiveData<FamerModel> getFramerModelByRoute(String route) {
+
+    public LiveData<List<FamerModel>> getFramerModelByRoute(String route) {
         return mRepository.getFramersByRoute(route);
     }
     public LiveData<FamerModel> getFramerModelByCode(String code) {

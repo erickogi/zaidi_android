@@ -1,4 +1,4 @@
-package com.dev.lishaboramobile.Admin.Views;
+package com.dev.lishaboramobile.Views.Admin;
 
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -26,20 +26,17 @@ public class AdminActivity extends AppCompatActivity {
     private static Fragment fragment = null;
     ViewPagerAdapter adapter;
     String id;
+    // private FragmentFarmersTab fragmentFarmersTab;
+    FloatingActionButton fab;
+    SearchView mSearchView;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private FragmentAdminDashboard fragmentAdminDashboard;
-
     private FragmentFarmersTab fragmentFarmersTab;
     private FragmentTradersTab fragmentTradersTab;
     private FragmentProductsTab fragmentProductsTab;
     private FragmentLoansTab fragmentLoansTab;
     private FragmentMilkTab fragmentMilkTab;
-   // private FragmentFarmersTab fragmentFarmersTab;
-   FloatingActionButton fab;
-    SearchView mSearchView;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,16 +61,15 @@ public class AdminActivity extends AppCompatActivity {
 
         tabLayout = findViewById(R.id.tabs);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-       // setupViewPager(viewPager);
+        // setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
 
         tabLayout.setVisibility(View.GONE);
 
-       // setupTabIcons();
-         setUpMainFragment();
+        // setupTabIcons();
+        setUpMainFragment();
 
         fab.setVisibility(View.GONE);
-
 
 
     }
@@ -89,6 +85,7 @@ public class AdminActivity extends AppCompatActivity {
 
 
     }
+
     private void setupViewPager(ViewPager viewPager) {
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 

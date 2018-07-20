@@ -38,6 +38,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:11.8.0'
     implementation 'com.google.firebase:firebase-crash:11.8.0'
     implementation 'com.google.firebase:firebase-messaging:11.8.0'
+    implementation 'androidx.appcompat:appcompat:1.0.0-alpha1'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-alpha1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
@@ -88,7 +91,6 @@ dependencies {
 
     //Jobs and sync
     implementation 'com.evernote:android-job:1.2.5'
-
 
     //Networking
     implementation 'com.amitshekhar.android:android-networking:1.0.1'

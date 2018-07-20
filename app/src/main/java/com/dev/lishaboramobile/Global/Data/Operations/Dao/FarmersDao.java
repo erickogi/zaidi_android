@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
@@ -11,19 +12,17 @@ import com.dev.lishaboramobile.Farmer.Models.FamerModel;
 
 import java.util.List;
 
-import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
-
 @Dao
 public interface FarmersDao {
 
 
-    @Insert(onConflict = REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertMultipleFramers(FamerModel... famerModels);
 
-    @Insert(onConflict = REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertMultipleFramers(List<FamerModel> famerModels);
 
-    @Insert(onConflict = REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertSingleFramer(FamerModel famerModel);
 
 
@@ -56,7 +55,7 @@ public interface FarmersDao {
     LiveData<FamerModel> getFramersByNames(String names);
 
     @Query("SELECT * FROM FARMERS WHERE route =:route")
-    LiveData<FamerModel> getFramersByRoute(String route);
+    LiveData<List<FamerModel>> getFramersByRoute(String route);
 
 
     @Query("SELECT * FROM FARMERS WHERE entitycode =:entitycode")

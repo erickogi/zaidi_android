@@ -6,13 +6,13 @@
     <item
         android:id="@+id/delete"
         android:orderInCategory="100"
-        android:title="Delete Trader"
+        android:title="Delete "
         app:showAsAction="never" />
 
     <item
         android:id="@+id/archive"
         android:orderInCategory="100"
-        android:title="Archive Trader"
+        android:title="Archive "
         app:showAsAction="never" />
     <item
         android:id="@+id/dummy"
@@ -23,7 +23,7 @@
     <item
         android:id="@+id/edit"
         android:orderInCategory="100"
-        android:title="Edit Trader"
+        android:title="Edit "
         app:showAsAction="never" />
 
 </menu>

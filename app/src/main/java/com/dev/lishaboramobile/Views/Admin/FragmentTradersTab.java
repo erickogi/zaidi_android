@@ -1,4 +1,4 @@
-package com.dev.lishaboramobile.Admin.Views;
+package com.dev.lishaboramobile.Views.Admin;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,12 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FragmentTradersTab extends Fragment {
-    private View view;
     PieChart chart;
     ChartModel chartModel;
     DashboardController dashboardController;
-
-
+    private View view;
 
     @Nullable
     @Override
@@ -39,9 +37,8 @@ public class FragmentTradersTab extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        this.view=view;
+        this.view = view;
         chart = view.findViewById(R.id.chartFarmers);
-
 
 
     }
@@ -49,8 +46,8 @@ public class FragmentTradersTab extends Fragment {
     private void initChart(ChartModel chartModel, PieChart chart) {
 
 
-       int colors[] = {R.color.colorPrimary, R.color.red, R.color.orange_color_picker, R.color.blue_color_picker};
-       int count = 0;
+        int colors[] = {R.color.colorPrimary, R.color.red, R.color.orange_color_picker, R.color.blue_color_picker};
+        int count = 0;
         List<PieEntry> entries = new ArrayList<>();
         for (int a = 0; a < chartModel.getLvModels().size(); a++) {
             LVModel lvModel = chartModel.getLvModels().get(a);
@@ -88,7 +85,6 @@ public class FragmentTradersTab extends Fragment {
         chart.setRotationEnabled(false);
 
 
-
         chart.invalidate(); // refresh
 
 
@@ -98,11 +94,11 @@ public class FragmentTradersTab extends Fragment {
     public void onStart() {
         super.onStart();
 
-         dashboardController=new DashboardController(getContext());
+        dashboardController = new DashboardController(getContext());
 
-        chartModel=dashboardController.getChartData(DashboardController.TRADERS);
-        if(chartModel!=null){
-            initChart(chartModel,chart);
+        chartModel = dashboardController.getChartData(DashboardController.TRADERS);
+        if (chartModel != null) {
+            initChart(chartModel, chart);
         }
     }
 

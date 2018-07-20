@@ -1,4 +1,4 @@
-package com.dev.lishaboramobile.Admin.Views;
+package com.dev.lishaboramobile.Views.Admin;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,12 +10,12 @@ import android.view.ViewGroup;
 
 import com.dev.lishaboramobile.R;
 
-public class FragmentMilkTab extends Fragment {
+public class FragmentProductsTab extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_milk_tab, container, false);
+        return inflater.inflate(R.layout.fragment_products_tab, container, false);
     }
 
     @Override

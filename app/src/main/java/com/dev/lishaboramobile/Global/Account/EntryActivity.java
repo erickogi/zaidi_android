@@ -21,11 +21,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dev.lishaboramobile.Admin.Models.AdminModel;
-import com.dev.lishaboramobile.Admin.Views.AdminActivity;
 import com.dev.lishaboramobile.Global.AppConstants;
 import com.dev.lishaboramobile.Global.Utils.NetworkUtils;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Trader.Models.TraderModel;
+import com.dev.lishaboramobile.Views.Admin.AdminActivity;
+import com.dev.lishaboramobile.Views.Trader.TraderActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hbb20.CountryCodePicker;
@@ -255,7 +256,6 @@ public class EntryActivity extends AppCompatActivity {
                 editTextCarrierNumber.setError(getString(R.string.reguired));
             }
         } else {
-            isPhone = false;
 
 
             if (!TextUtils.isEmpty(edtPassword.getText().toString())) {
@@ -270,89 +270,94 @@ public class EntryActivity extends AppCompatActivity {
     }
 
     private void checkPassword(String password) {
-//        entryController.authPassword(password, new EntryCallbacks() {
-//            @Override
-//            public void success(EntryModel entryModel) {
-//                if(entryModel.getResultCode()>0) {
-//                    String names="";
-//                    Type type;
-//                    Gson gson=new Gson();
-//                    switch (entryModel.getType()) {
-//                        case AppConstants.ADMIN:
-//                            type = new TypeToken<AdminModel>() {}.getType();
-//                            AdminModel adminModel=gson.fromJson(gson.toJson(entryModel.getData()),type);
-//                            names=adminModel.getNames();
-//
-//                            break;
-//                        case AppConstants.COLLECTOR:
-//
-//                            break;
-//
-//                        case AppConstants.DISTRIBUTER:
-//                            break;
-//
-//                        case AppConstants.FARMER:
-//
-//                            break;
-//                        case AppConstants.MASTER_TRADER:
-//
-//                            break;
-//
-//                        case AppConstants.TRADER:
-//                            type = new TypeToken<TraderModel>() {}.getType();
-//                            TraderModel traderModel=gson.fromJson(gson.toJson(entryModel.getData()),type);
-//                            names=traderModel.getNames();
-//                            break;
-//
-//                        default:
-//                    }
-//
-//                    setNames(names);
-//                    viewSwitchTo(PASSWORD_VIEW);
-//                }else {
-//                    if(progressDialog!=null&&progressDialog.isShowing()){
-//                        progressDialog.dismiss();
-//                    }
-//                    snack(entryModel.getResultDescription());
-//                }
-//
-//            }
-//
-//            @Override
-//            public void error(String response) {
-//
-//                snack(response);
-//
-//            }
-//
-//            @Override
-//            public void startProgressDialog() {
-//
-//                if(progressDialog!=null){
-//                    progressDialog.show();
-//                }else {
-//                    createDialog();
-//                    progressDialog.show();
-//                }
-//            }
-//
-//            @Override
-//            public void stopProgressDialog() {
-//                if(progressDialog!=null&&progressDialog.isShowing()){
-//                    progressDialog.dismiss();
-//                }
-//            }
-//
-//            @Override
-//            public void updateProgressDialog(String message) {
-//
-//                if(progressDialog!=null&&progressDialog.isShowing()){
-//                    progressDialog.setMessage(message);
-//                }
-//            }
-//        });
+        entryController.authPassword(password, new EntryCallbacks() {
+            @Override
+            public void success(EntryModel entryModel) {
+                if (entryModel.getResultCode() > 0) {
+                    String names = "";
+                    Type type;
+                    Gson gson = new Gson();
+                    switch (entryModel.getType()) {
+                        case AppConstants.ADMIN:
+                            type = new TypeToken<AdminModel>() {
+                            }.getType();
+                            AdminModel adminModel = gson.fromJson(gson.toJson(entryModel.getData()), type);
+                            names = adminModel.getNames();
+                            startActivity(new Intent(EntryActivity.this, AdminActivity.class));
 
-        startActivity(new Intent(this, AdminActivity.class));
+                            break;
+                        case AppConstants.COLLECTOR:
+
+                            break;
+
+                        case AppConstants.DISTRIBUTER:
+                            break;
+
+                        case AppConstants.FARMER:
+
+                            break;
+                        case AppConstants.MASTER_TRADER:
+
+                            break;
+
+                        case AppConstants.TRADER:
+                            type = new TypeToken<TraderModel>() {
+                            }.getType();
+                            TraderModel traderModel = gson.fromJson(gson.toJson(entryModel.getData()), type);
+                            names = traderModel.getNames();
+
+                            startActivity(new Intent(EntryActivity.this, TraderActivity.class));
+
+                            break;
+
+                        default:
+                    }
+
+                    //setNames(names);
+                    //viewSwitchTo(PASSWORD_VIEW);
+                } else {
+                    if (progressDialog != null && progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
+                    snack(entryModel.getResultDescription());
+                }
+
+            }
+
+            @Override
+            public void error(String response) {
+
+                snack(response);
+
+            }
+
+            @Override
+            public void startProgressDialog() {
+
+                if (progressDialog != null) {
+                    progressDialog.show();
+                } else {
+                    createDialog();
+                    progressDialog.show();
+                }
+            }
+
+            @Override
+            public void stopProgressDialog() {
+                if (progressDialog != null && progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void updateProgressDialog(String message) {
+
+                if (progressDialog != null && progressDialog.isShowing()) {
+                    progressDialog.setMessage(message);
+                }
+            }
+        });
+
 
     }
 

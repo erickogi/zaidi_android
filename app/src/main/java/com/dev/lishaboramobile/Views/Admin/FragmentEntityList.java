@@ -1,4 +1,4 @@
-package com.dev.lishaboramobile.Admin.Views;
+package com.dev.lishaboramobile.Views.Admin;
 
 import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModel;
@@ -71,13 +71,15 @@ public class FragmentEntityList extends Fragment {
     LinkedList<TraderModel> traderModels;
     LinkedList<TraderModel> filteredTraderModels;
     boolean isArchived = false;
+    boolean isDummy = false;
+    TradersViewModel tradersViewModel;
+    ViewModel viewModel;
     private View view;
     private Context context;
     private RecyclerView recyclerView;
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
     private LinearLayout linearLayoutEmpty;
     private int entity;
-    boolean isDummy = false;
     private ProgressDialog progressDialog;
     private ActionMode mActionMode;
     private SwipeRefreshLayout swipe_refresh_layout;
@@ -86,16 +88,14 @@ public class FragmentEntityList extends Fragment {
     private ChipGroup chipGroup;
     private Chip activeChip, allChip, deletedChip, archivedChip, syncedChip, dummyChip, unsyncedChip;
     private AVLoadingIndicatorView avi;
-    TradersViewModel tradersViewModel;
     private boolean isConnected;
     private String filterText = "";
-    ViewModel viewModel;
     private int TraderDel, TraderDummy, TraderSynched, TraderArchive, All;
     private ActionMode.Callback callback = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             MenuInflater menuInflater = mode.getMenuInflater();
-            menuInflater.inflate(R.menu.traders_list_menu, menu);
+            menuInflater.inflate(R.menu.entity_list_menu, menu);
             return true;
         }
 
@@ -377,27 +377,30 @@ public class FragmentEntityList extends Fragment {
         ((AdminActivity) getActivity()).fabButton(true, R.drawable.ic_add_black_24dp, () -> {
             if (isConnected) {
 
-                tradersController.createTrader(requestData -> {
+                if (tradersController != null) {
+                    tradersController.createTrader(requestData -> {
 
-                    if (tradersViewModel != null) {
-                        tradersViewModel.createTrader(requestData, true).observe(FragmentEntityList.this, responseModel -> {
-                            Log.d("2ReTrRe", gson.toJson(responseModel));
+                        if (tradersViewModel != null) {
+                            tradersViewModel.createTrader(requestData, true).observe(FragmentEntityList.this, responseModel -> {
+                                Log.d("2ReTrRe", gson.toJson(responseModel));
 
-                            if (tradersController != null) {
-                                tradersController.stopAnim();
-                                if (responseModel != null) {
-                                    tradersController.snack(responseModel.getResultDescription());
-                                    if (responseModel.getResultCode() == 1) {
-                                        tradersController.dismissDialog();
+                                if (tradersController != null) {
+                                    tradersController.stopAnim();
+                                    if (responseModel != null) {
+                                        tradersController.snack(responseModel.getResultDescription());
+                                        if (responseModel.getResultCode() == 1) {
+                                            tradersController.dismissDialog();
 
-                                        tradersViewModel.refresh(getSearchObject(), true);
+                                            tradersViewModel.refresh(getSearchObject(), true);
+                                        }
                                     }
-                                }
 
-                            }
-                        });
-                    }
-                });
+                                }
+                            });
+                        }
+                    });
+                }
+
             } else {
                 snack("You have to be connected to the internet");
             }
@@ -547,7 +550,7 @@ public class FragmentEntityList extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        tradersController = null;
+        // tradersController = null;
 
     }
 
@@ -555,6 +558,11 @@ public class FragmentEntityList extends Fragment {
     public void onStop() {
         super.onStop();
         tradersController = null;
+        ((AdminActivity) getActivity()).fabButton(false, R.drawable.ic_add_black_24dp, () -> {
+
+        });
+
+
     }
 
     private void snack(String msg) {
@@ -565,7 +573,6 @@ public class FragmentEntityList extends Fragment {
         }
         Log.d("SnackMessage", msg);
     }
-
 
 
     void startAnim() {
@@ -580,7 +587,7 @@ public class FragmentEntityList extends Fragment {
 
     private void popupMenu(int pos, View view, TraderModel traderModel) {
         PopupMenu popupMenu = new PopupMenu(Objects.requireNonNull(getContext()), view);
-        popupMenu.inflate(R.menu.traders_list_menu);
+        popupMenu.inflate(R.menu.entity_list_menu);
 
         if (traderModel.getDeleted() == 1) {
             popupMenu.getMenu().getItem(0).setVisible(false);
@@ -644,6 +651,7 @@ public class FragmentEntityList extends Fragment {
 
     private void editTrader(TraderModel traderModel) {
 
+
         tradersController.editTrader(traderModel, requestData -> {
             if (tradersViewModel != null) {
                 tradersViewModel.updateTrader(requestData, true).observe(FragmentEntityList.this, responseModel -> {
@@ -693,8 +701,6 @@ public class FragmentEntityList extends Fragment {
                 e.printStackTrace();
             }
         }
-
-
 
 
     }

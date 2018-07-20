@@ -1,4 +1,4 @@
-package com.dev.lishaboramobile.Admin.Views;
+package com.dev.lishaboramobile.Views.Admin;
 
 import android.content.Context;
 import android.os.Bundle;

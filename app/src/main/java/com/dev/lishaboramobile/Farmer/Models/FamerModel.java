@@ -1,6 +1,7 @@
 package com.dev.lishaboramobile.Farmer.Models;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 @Entity(tableName = "farmers",indices = {@Index(value = {"compositecode"}, unique = true)})
@@ -11,6 +12,7 @@ public class FamerModel {
     private String route;
 
     private String compositecode;
+
     private String code;
     private String entitycode;
     private String entity;
@@ -29,17 +31,50 @@ public class FamerModel {
     private String totalmilkcollection;
     private String totalorders;
     private String totalloans;
+    private String totalbalance;
     private String transactedby;
     private String transactiontime;
     private String synctime;
     private String transactioncode;
-    private String deleted;
-    private String archived;
+    private int deleted;
+    private int archived;
     private String status;
-    private String dummy;
+    private int dummy;
+
+
+    @Ignore
+    private String resultDescription;
+    @Ignore
+    private int responseCode;
+
+    @Ignore
+    public String getResultDescription() {
+        return resultDescription;
+    }
+
+    @Ignore
+    public void setResultDescription(String resultDescription) {
+        this.resultDescription = resultDescription;
+    }
+
+    public int getResponseCode() {
+        return responseCode;
+    }
+
+    public void setResponseCode(int responseCode) {
+        this.responseCode = responseCode;
+    }
 
     public String getApikey() {
         return apikey;
+    }
+
+    public String getTotalbalance() {
+        return totalbalance;
+    }
+
+    public void setTotalbalance(String totalbalance) {
+        this.totalbalance = totalbalance;
     }
 
     public void setApikey(String apikey) {
@@ -94,11 +129,27 @@ public class FamerModel {
         this.route = route;
     }
 
-    public String getDummy() {
+    public int getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(int deleted) {
+        this.deleted = deleted;
+    }
+
+    public int getArchived() {
+        return archived;
+    }
+
+    public void setArchived(int archived) {
+        this.archived = archived;
+    }
+
+    public int getDummy() {
         return dummy;
     }
 
-    public void setDummy(String dummy) {
+    public void setDummy(int dummy) {
         this.dummy = dummy;
     }
 
@@ -231,21 +282,6 @@ public class FamerModel {
         this.transactiontime = transactiontime;
     }
 
-    public String getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(String deleted) {
-        this.deleted = deleted;
-    }
-
-    public String getArchived() {
-        return archived;
-    }
-
-    public void setArchived(String archived) {
-        this.archived = archived;
-    }
 
     public String getSynctime() {
         return synctime;
