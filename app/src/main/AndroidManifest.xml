@@ -33,12 +33,12 @@
         <activity
             android:name=".Global.Account.EntryActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Global.Account.SplashActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme"></activity>
+            android:theme="@style/SplashTheme" />
 
         <service android:name=".Global.FireBase.Firebase">
             <intent-filter>
@@ -72,17 +72,22 @@
             android:name=".Views.Admin.AdminActivity"
             android:label="@string/title_activity_admin"
             android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+        <activity
+            android:name=".Views.Trader.TraderActivity"
+            android:label="@string/title_activity_trader"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Views.Trader.CreateFarmerActivity" />
+        <activity
+            android:name=".Login.LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Views.Trader.TraderActivity"
-            android:label="@string/title_activity_trader"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".Views.Trader.CreateFarmerActivity"></activity>
     </application>
 
 </manifest>

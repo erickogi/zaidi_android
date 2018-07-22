@@ -1,6 +1,7 @@
 package com.dev.lishaboramobile.Views.Trader.ui.createfarmer;
 
-import androidx.lifecycle.ViewModel;
+
+import android.arch.lifecycle.ViewModel;
 
 public class CreateFarmerViewModel extends ViewModel {
     // TODO: Implement the ViewModel

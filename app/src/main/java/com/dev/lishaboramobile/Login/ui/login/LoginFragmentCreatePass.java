@@ -1,4 +1,5 @@
-package com.dev.lishaboramobile.Views.Trader.ui.createfarmer;
+package com.dev.lishaboramobile.Login.ui.login;
+
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
@@ -12,25 +13,25 @@ import android.view.ViewGroup;
 import com.dev.lishaboramobile.R;
 
 
-public class CreateFarmerFragment extends Fragment {
+public class LoginFragmentCreatePass extends Fragment {
 
-    private CreateFarmerViewModel mViewModel;
+    private LoginViewModel mViewModel;
 
-    public static CreateFarmerFragment newInstance() {
-        return new CreateFarmerFragment();
+    public static LoginFragmentCreatePass newInstance() {
+        return new LoginFragmentCreatePass();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.create_farmer_fragment, container, false);
+        return inflater.inflate(R.layout.login_fragment, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(CreateFarmerViewModel.class);
+        mViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
         // TODO: Use the ViewModel
     }
 
