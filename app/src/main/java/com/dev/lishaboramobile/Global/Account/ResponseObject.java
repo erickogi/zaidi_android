@@ -1,11 +1,23 @@
 package com.dev.lishaboramobile.Global.Account;
 
-public class EntryModel {
-    //private Object DA
+import com.dev.lishaboramobile.Farmer.Models.FamerModel;
+import com.dev.lishaboramobile.Trader.Models.TraderModel;
+
+import java.io.Serializable;
+import java.util.List;
+
+public class ResponseObject implements Serializable {
     private Object Data;
     private int ResultCode;
     private String ResultDescription;
     private int Type;
+
+
+    private List<FamerModel> famerModels;
+    private FamerModel famerModel;
+
+    private TraderModel traderModel;
+    private List<TraderModel> traderModels;
 
 
     public Object getData() {

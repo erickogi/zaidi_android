@@ -39,6 +39,7 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
+
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
 
             android:layout_width="match_parent"
@@ -55,6 +56,18 @@
                 android:inputType="phone" />
 
         </android.support.design.widget.TextInputLayout>
+
+        <CheckBox
+            android:id="@+id/chk_dummy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Make Dummy Account" />
+
+        <CheckBox
+            android:id="@+id/chk_archive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Archive Account" />
 
         <CheckBox
             android:id="@+id/chk_dummy"

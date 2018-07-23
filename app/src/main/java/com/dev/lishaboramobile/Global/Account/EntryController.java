@@ -58,9 +58,9 @@ public class EntryController {
                 try {
 
                     Gson gson = new Gson();
-                    EntryModel entryModel = gson.fromJson(response, EntryModel.class);
+                    ResponseObject responseObject = gson.fromJson(response, ResponseObject.class);
                     entryCallbacks.stopProgressDialog();
-                    entryCallbacks.success(entryModel);
+                    entryCallbacks.success(responseObject);
 
 
                 } catch (Exception e) {
@@ -98,9 +98,9 @@ public class EntryController {
                 try {
 
                     Gson gson = new Gson();
-                    EntryModel entryModel = gson.fromJson(response, EntryModel.class);
+                    ResponseObject responseObject = gson.fromJson(response, ResponseObject.class);
                     entryCallbacks.stopProgressDialog();
-                    entryCallbacks.success(entryModel);
+                    entryCallbacks.success(responseObject);
 
 
                 } catch (Exception e) {

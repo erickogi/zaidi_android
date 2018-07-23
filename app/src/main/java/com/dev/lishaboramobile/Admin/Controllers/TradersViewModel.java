@@ -6,8 +6,10 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
+import com.dev.lishaboramobile.Global.Account.ResponseObject;
 import com.dev.lishaboramobile.Global.Models.ResponseModel;
 import com.dev.lishaboramobile.Global.Network.ApiConstants;
+import com.dev.lishaboramobile.Global.Utils.ResponseCallback;
 
 import org.json.JSONObject;
 
@@ -30,8 +32,18 @@ public class TradersViewModel extends AndroidViewModel {
         if (this.traders == null) {
             this.traders = new MutableLiveData();
             if (fetchFromOnline) {
-                tradersController.getResponse(ApiConstants.Companion.getTraders(), jsonObject, "", responseModel -> traders.setValue(responseModel));
+                tradersController.getResponse(ApiConstants.Companion.getTraders(), jsonObject, "", new ResponseCallback() {
+                    @Override
+                    public void response(ResponseModel responseModel) {
+                        traders.setValue(responseModel);
 
+                    }
+
+                    @Override
+                    public void response(ResponseObject responseModel) {
+
+                    }
+                });
             } else {
 
             }
@@ -49,8 +61,18 @@ public class TradersViewModel extends AndroidViewModel {
 
         }
         if (fetchFromOnline) {
-            tradersController.getResponse(ApiConstants.Companion.getTraders(), jsonObject, "", responseModel -> traders.setValue(responseModel));
+            tradersController.getResponse(ApiConstants.Companion.getTraders(), jsonObject, "", new ResponseCallback() {
+                @Override
+                public void response(ResponseModel responseModel) {
+                    traders.setValue(responseModel);
 
+                }
+
+                @Override
+                public void response(ResponseObject responseModel) {
+
+                }
+            });
         } else {
 
         }
@@ -67,8 +89,18 @@ public class TradersViewModel extends AndroidViewModel {
         //updateSuccess.setValue(new MutableLiveData<>());
 
         if (updateOnline) {
-            tradersController.getResponse(ApiConstants.Companion.getUpdateTrader(), jsonObject, "", responseModel -> updateSuccess.setValue(responseModel));
+            tradersController.getResponse(ApiConstants.Companion.getUpdateTrader(), jsonObject, "", new ResponseCallback() {
+                @Override
+                public void response(ResponseModel responseModel) {
+                    updateSuccess.setValue(responseModel);
 
+                }
+
+                @Override
+                public void response(ResponseObject responseModel) {
+
+                }
+            });
         } else {
 
         }
@@ -84,8 +116,19 @@ public class TradersViewModel extends AndroidViewModel {
         this.createSuccess = new MutableLiveData();
 
         if (createOnline) {
-            tradersController.getResponse(ApiConstants.Companion.getCreateTrader(), requestData, "", responseModel -> createSuccess.setValue(responseModel));
+            tradersController.getResponse(ApiConstants.Companion.getCreateTrader(), requestData, "",
+                    new ResponseCallback() {
+                        @Override
+                        public void response(ResponseModel responseModel) {
+                            createSuccess.setValue(responseModel);
 
+                        }
+
+                        @Override
+                        public void response(ResponseObject responseModel) {
+
+                        }
+                    });
         } else {
 
         }

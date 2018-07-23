@@ -7,6 +7,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import com.dev.lishaboramobile.Farmer.Models.FamerModel;
+import com.dev.lishaboramobile.Global.Account.ResponseObject;
 import com.dev.lishaboramobile.Global.Data.Operations.Repo.FarmerRepo;
 import com.dev.lishaboramobile.Global.Models.ResponseModel;
 import com.dev.lishaboramobile.Global.Network.ApiConstants;
@@ -47,13 +48,22 @@ public class FarmerViewModel extends AndroidViewModel {
         if (this.farmers == null) {
             this.farmers = new MutableLiveData();
             farmers = (farmerRepo.fetchAllData(false));
-            farmerController.getResponse(ApiConstants.Companion.getFarmers(), jsonObject, "", responseModel -> {
 
-                if (responseModel.getResultCode() == 1 && responseModel.getData() != null) {
-                    JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
-                    Type listType = new TypeToken<LinkedList<FamerModel>>() {
-                    }.getType();
-                    farmerRepo.insertMultipleTraders(gson.fromJson(jsonArray, listType));
+
+            farmerController.getResponse(ApiConstants.Companion.getFarmers(), jsonObject, "", new ResponseCallback() {
+                @Override
+                public void response(ResponseModel responseModel) {
+                    if (responseModel.getResultCode() == 1 && responseModel.getData() != null) {
+                        JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
+                        Type listType = new TypeToken<LinkedList<FamerModel>>() {
+                        }.getType();
+                        farmerRepo.insertMultipleTraders(gson.fromJson(jsonArray, listType));
+
+                    }
+                }
+
+                @Override
+                public void response(ResponseObject responseModel) {
 
                 }
             });
@@ -103,7 +113,8 @@ public class FarmerViewModel extends AndroidViewModel {
 
         }
         if (fetchFromOnline) {
-            farmerController.getResponse(ApiConstants.Companion.getTraders(), jsonObject, "", new ResponseCallback() {
+
+            farmerController.getResponse(ApiConstants.Companion.getFarmers(), jsonObject, "", new ResponseCallback() {
                 @Override
                 public void response(ResponseModel responseModel) {
                     JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
@@ -111,6 +122,11 @@ public class FarmerViewModel extends AndroidViewModel {
                     }.getType();
                     farmerRepo.insertMultipleTraders(gson.fromJson(jsonArray, listType));
                     farmers = (farmerRepo.fetchAllData(false));
+                }
+
+                @Override
+                public void response(ResponseObject responseModel) {
+
                 }
             });
 
@@ -133,7 +149,20 @@ public class FarmerViewModel extends AndroidViewModel {
         //updateSuccess.setValue(new MutableLiveData<>());
 
         if (updateOnline) {
-            farmerController.getResponse(ApiConstants.Companion.getUpdateTrader(), jsonObject, "", responseModel -> updateSuccess.setValue(responseModel));
+            farmerController.getResponse(ApiConstants.Companion.getUpdateTrader(), jsonObject, "", new ResponseCallback() {
+                        @Override
+                        public void response(ResponseModel responseModel) {
+                            updateSuccess.setValue(responseModel);
+                        }
+
+                        @Override
+                        public void response(ResponseObject responseModel) {
+
+                        }
+                    }
+
+            );
+
 
         } else {
             farmerRepo.upDateRecord(famerModel);
@@ -152,7 +181,18 @@ public class FarmerViewModel extends AndroidViewModel {
         this.createSuccess = new MutableLiveData();
 
         if (createOnline) {
-            farmerController.getResponse(ApiConstants.Companion.getCreateTrader(), requestData, "", responseModel -> createSuccess.setValue(responseModel));
+            farmerController.getResponse(ApiConstants.Companion.getCreateTrader(), requestData, "", new ResponseCallback() {
+                        @Override
+                        public void response(ResponseModel responseModel) {
+                            createSuccess.setValue(responseModel);
+                        }
+
+                        @Override
+                        public void response(ResponseObject responseModel) {
+
+                        }
+                    }
+            );
 
         } else {
             farmerRepo.insert(famerModel);

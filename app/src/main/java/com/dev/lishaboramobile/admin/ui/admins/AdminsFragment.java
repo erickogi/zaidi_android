@@ -1,4 +1,4 @@
-package com.dev.lishaboramobile.Login.ui.login;
+package com.dev.lishaboramobile.admin.ui.admins;
 
 
 import android.arch.lifecycle.ViewModelProviders;
@@ -13,25 +13,25 @@ import android.view.ViewGroup;
 import com.dev.lishaboramobile.R;
 
 
-public class LoginFragmentCreatePass extends Fragment {
+public class AdminsFragment extends Fragment {
 
-    private LoginViewModel mViewModel;
+    private AdminsViewModel mViewModel;
 
-    public static LoginFragmentCreatePass newInstance() {
-        return new LoginFragmentCreatePass();
+    public static AdminsFragment newInstance() {
+        return new AdminsFragment();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.login_fragment, container, false);
+        return inflater.inflate(R.layout.admins_fragment, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
+        mViewModel = ViewModelProviders.of(this).get(AdminsViewModel.class);
         // TODO: Use the ViewModel
     }
 

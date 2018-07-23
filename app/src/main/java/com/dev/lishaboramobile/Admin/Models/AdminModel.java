@@ -12,6 +12,16 @@ public class AdminModel  {
     private   String firebasetoken ;
     private   String status ;
     private   String transactiontime ;
+    private int passwordstatus;
+
+
+    public int getPasswordstatus() {
+        return passwordstatus;
+    }
+
+    public void setPasswordstatus(int passwordstatus) {
+        this.passwordstatus = passwordstatus;
+    }
 
     public String getCode() {
         return code;

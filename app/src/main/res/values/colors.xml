@@ -17,7 +17,9 @@
     <color name="background_color">#009688</color>
 
     <color name="button_selectorcolor">#9E9E9E</color>
-
+    <color name="resend">#e65e52</color>
+    <color name="keyboard">#fdfdfd</color>
+    <color name="back">#c0c3c8</color>
 
 
     <color name="drawertext">#000000</color>

@@ -5,10 +5,11 @@ import android.arch.lifecycle.LiveData;
 import com.dev.lishaboramobile.Farmer.Models.FamerModel;
 import com.dev.lishaboramobile.Trader.Models.TraderModel;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ResponseModel extends LiveData<ResponseModel> {
+public class ResponseModel extends LiveData<ResponseModel> implements Serializable {
     //private Object Data;
     private LinkedList<Object> Data;
     private int ResultCode;

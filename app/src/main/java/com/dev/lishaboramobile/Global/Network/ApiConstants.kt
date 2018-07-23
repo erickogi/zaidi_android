@@ -10,12 +10,14 @@ class ApiConstants {
         var resultCode: String = "ResultCode"
         var resultDescription: String = "ResultDescription"
 
-        var baseUrl: String = "http://lishabora.net/512/APIS/"
+        var baseUrl: String = "http://lishabora.net/512/Apis/"
 
         //Accounts
         var Accounts: String = baseUrl + "Accounts/"
         var PhoneAuth: String = Accounts + "AuthPhone.php"
         var PasswordAuth: String = Accounts + "AuthPassword.php"
+        var newPassordConfirm: String = Accounts + "ChangePassword.php"
+        var otpRequest: String = Accounts + "ForgotPassword.php"
 
         //Traders
         var Trader: String = baseUrl + "Traders/"

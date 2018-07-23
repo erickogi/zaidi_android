@@ -32,6 +32,7 @@ public class TraderModel {
     private   String synctime ;
     @NonNull
     private   String transactedby ;
+    private int passwordstatus;
 
     private   boolean isarchived ;
     private   boolean isdeleted ;
@@ -43,6 +44,14 @@ public class TraderModel {
     private   int deleted ;
     private   int synced ;
     private   int dummy ;
+
+    public int getPasswordstatus() {
+        return passwordstatus;
+    }
+
+    public void setPasswordstatus(int passwordstatus) {
+        this.passwordstatus = passwordstatus;
+    }
 
     public String getEntityname() {
         return entityname;

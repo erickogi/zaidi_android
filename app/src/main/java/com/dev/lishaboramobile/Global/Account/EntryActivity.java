@@ -272,16 +272,16 @@ public class EntryActivity extends AppCompatActivity {
     private void checkPassword(String password) {
         entryController.authPassword(password, new EntryCallbacks() {
             @Override
-            public void success(EntryModel entryModel) {
-                if (entryModel.getResultCode() > 0) {
+            public void success(ResponseObject responseObject) {
+                if (responseObject.getResultCode() > 0) {
                     String names = "";
                     Type type;
                     Gson gson = new Gson();
-                    switch (entryModel.getType()) {
+                    switch (responseObject.getType()) {
                         case AppConstants.ADMIN:
                             type = new TypeToken<AdminModel>() {
                             }.getType();
-                            AdminModel adminModel = gson.fromJson(gson.toJson(entryModel.getData()), type);
+                            AdminModel adminModel = gson.fromJson(gson.toJson(responseObject.getData()), type);
                             names = adminModel.getNames();
                             startActivity(new Intent(EntryActivity.this, AdminActivity.class));
 
@@ -303,7 +303,7 @@ public class EntryActivity extends AppCompatActivity {
                         case AppConstants.TRADER:
                             type = new TypeToken<TraderModel>() {
                             }.getType();
-                            TraderModel traderModel = gson.fromJson(gson.toJson(entryModel.getData()), type);
+                            TraderModel traderModel = gson.fromJson(gson.toJson(responseObject.getData()), type);
                             names = traderModel.getNames();
 
                             startActivity(new Intent(EntryActivity.this, TraderActivity.class));
@@ -319,7 +319,7 @@ public class EntryActivity extends AppCompatActivity {
                     if (progressDialog != null && progressDialog.isShowing()) {
                         progressDialog.dismiss();
                     }
-                    snack(entryModel.getResultDescription());
+                    snack(responseObject.getResultDescription());
                 }
 
             }
@@ -366,16 +366,16 @@ public class EntryActivity extends AppCompatActivity {
 
         entryController.authPhone(phone, new EntryCallbacks() {
             @Override
-            public void success(EntryModel entryModel) {
-                if (entryModel.getResultCode() > 0) {
+            public void success(ResponseObject responseObject) {
+                if (responseObject.getResultCode() > 0) {
                     String names = "";
                     Type type;
                     Gson gson = new Gson();
-                    switch (entryModel.getType()) {
+                    switch (responseObject.getType()) {
                         case AppConstants.ADMIN:
                             type = new TypeToken<AdminModel>() {
                             }.getType();
-                            AdminModel adminModel = gson.fromJson(gson.toJson(entryModel.getData()), type);
+                            AdminModel adminModel = gson.fromJson(gson.toJson(responseObject.getData()), type);
                             names = adminModel.getNames();
 
                             break;
@@ -396,7 +396,7 @@ public class EntryActivity extends AppCompatActivity {
                         case AppConstants.TRADER:
                             type = new TypeToken<TraderModel>() {
                             }.getType();
-                            TraderModel traderModel = gson.fromJson(gson.toJson(entryModel.getData()), type);
+                            TraderModel traderModel = gson.fromJson(gson.toJson(responseObject.getData()), type);
                             names = traderModel.getNames();
                             break;
 
@@ -409,7 +409,7 @@ public class EntryActivity extends AppCompatActivity {
                     if (progressDialog != null && progressDialog.isShowing()) {
                         progressDialog.dismiss();
                     }
-                    snack(entryModel.getResultDescription());
+                    snack(responseObject.getResultDescription());
                 }
 
             }

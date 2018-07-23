@@ -5,6 +5,10 @@ import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.StringRequestListener
+import com.dev.lishaboramobile.Global.Account.ResponseObject
+import com.dev.lishaboramobile.Global.Models.ResponseModel
+import com.dev.lishaboramobile.Global.Utils.ResponseCallback
+import com.google.gson.Gson
 import org.json.JSONObject
 import java.util.*
 
@@ -12,6 +16,101 @@ class Request {
 
 
     companion object {
+        internal var responseModel = ResponseModel()
+        internal var responseModelSingle = ResponseObject()
+
+        fun getResponse(url: String, jsonObject: JSONObject, token: String, responseCallback: ResponseCallback) {
+            postRequest(url, jsonObject, token, object : RequestListener {
+                override fun onError(error: ANError) {
+                    responseModel.data = null
+                    responseModel.resultCode = 0
+                    responseModel.resultDescription = error.toString()
+
+                    responseCallback.response(responseModel)
+
+                }
+
+                override fun onError(error: String) {
+
+                    responseModel.data = null
+                    responseModel.resultCode = 0
+                    responseModel.resultDescription = error
+
+                    responseCallback.response(responseModel)
+
+                }
+
+                override fun onSuccess(response: String) {
+                    try {
+
+
+                        val gson = Gson()
+                        responseModel = gson.fromJson(response, ResponseModel::class.java)
+                        Log.d("2ReTrRe", gson.toJson(responseModel))
+
+                        responseCallback.response(responseModel)
+
+
+                    } catch (e: Exception) {
+                        responseModel.data = null
+                        responseModel.resultCode = 0
+                        responseModel.resultDescription = e.message
+                        responseCallback.response(responseModel)
+
+                        e.printStackTrace()
+                    }
+
+                }
+            })
+
+        }
+
+        fun getResponseSingle(url: String, jsonObject: JSONObject, token: String, responseCallback: ResponseCallback) {
+            postRequest(url, jsonObject, token, object : RequestListener {
+                override fun onError(error: ANError) {
+                    responseModelSingle.data = null
+                    responseModelSingle.resultCode = 0
+                    responseModelSingle.resultDescription = error.toString()
+
+                    responseCallback.response(responseModelSingle)
+
+                }
+
+                override fun onError(error: String) {
+
+                    responseModelSingle.data = null
+                    responseModelSingle.resultCode = 0
+                    responseModelSingle.resultDescription = error
+
+                    responseCallback.response(responseModelSingle)
+
+                }
+
+                override fun onSuccess(response: String) {
+                    try {
+
+
+                        val gson = Gson()
+                        responseModelSingle = gson.fromJson(response, ResponseObject::class.java)
+                        Log.d("2ReTrRe", gson.toJson(responseModelSingle))
+
+                        responseCallback.response(responseModelSingle)
+
+
+                    } catch (e: Exception) {
+                        responseModelSingle.data = null
+                        responseModelSingle.resultCode = 0
+                        responseModelSingle.resultDescription = e.message
+                        responseCallback.response(responseModelSingle)
+
+                        e.printStackTrace()
+                    }
+
+                }
+            })
+
+        }
+
         fun postRequest(url: String, params: HashMap<String, String>, token: String?, listener: RequestListener) {
 
             var mtoken = ""
