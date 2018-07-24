@@ -31,6 +31,7 @@ import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Trader.Models.TraderModel;
 import com.dev.lishaboramobile.Views.Admin.AdminActivity;
 import com.dev.lishaboramobile.Views.Trader.TraderActivity;
+import com.dev.lishaboramobile.admin.AdminsActivity;
 import com.dev.lishaboramobile.login.Models.AuthModel;
 import com.dev.lishaboramobile.login.PrefrenceManager;
 import com.google.gson.Gson;
@@ -206,12 +207,14 @@ public class LoginFragmentPassword extends Fragment implements View.OnClickListe
 
                     adminModel = gson.fromJson(gson.toJson(responseModel.getData()), AdminModel.class);
                     txtPasswordViewTitle.setText("Welcome | Karibu  Admin - " + adminModel.getNames());
+                    this.phoneNumber = adminModel.getMobile();
 
                     break;
                 case LoginController.TRADER:
 
                     traderModel = gson.fromJson(gson.toJson(responseModel.getData()), TraderModel.class);
                     txtPasswordViewTitle.setText("Welcome | Karibu Trader - " + traderModel.getNames());
+                    this.phoneNumber = traderModel.getMobile();
 //                    if(traderModel.getPasswordstatus()==0){
 //                        newPassword(responseModel);
 //                        snack("Create Pass");
@@ -394,8 +397,8 @@ public class LoginFragmentPassword extends Fragment implements View.OnClickListe
 
                 if (responseModel != null && responseModel.getResultCode() == 1) {
                     snack(responseModel.getResultDescription());
-                    aviPhone.setVisibility(View.GONE);
-                    aviPhone.smoothToHide();
+                    //aviPhone.setVisibility(View.GONE);
+                    //aviPhone.smoothToHide();
                     Type type;
                     Gson gson = new Gson();
                     TraderModel traderModel = new TraderModel();
@@ -424,6 +427,12 @@ public class LoginFragmentPassword extends Fragment implements View.OnClickListe
 
 
         } else {
+            aviPhone.setVisibility(View.GONE);
+            aviPhone.smoothToHide();
+
+            aviPass.setVisibility(View.GONE);
+            aviPass.smoothToHide();
+
             snack("Please enter  password");
             edtPassword.requestFocus();
             edtPassword.setError("Required");
@@ -446,7 +455,7 @@ public class LoginFragmentPassword extends Fragment implements View.OnClickListe
         prefrenceManager.setIsLoggedIn(true, LoginController.ADMIN);
         prefrenceManager.setLoggedUser(adminModel);
 
-        startActivity(new Intent(getActivity(), AdminActivity.class));
+        startActivity(new Intent(getActivity(), AdminsActivity.class));
     }
 
     private void handlerPass() {

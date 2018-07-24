@@ -52,6 +52,7 @@ public class AdminsViewModel extends AndroidViewModel {
                             @Override
                             public void response(ResponseObject responseModel) {
 
+                                traders.setValue(responseModel);
                             }
                         }
                 );
@@ -81,6 +82,7 @@ public class AdminsViewModel extends AndroidViewModel {
 
                         @Override
                         public void response(ResponseObject responseModel) {
+                            traders.setValue(responseModel);
 
                         }
                     }
@@ -111,6 +113,7 @@ public class AdminsViewModel extends AndroidViewModel {
 
                         @Override
                         public void response(ResponseObject responseModel) {
+                            traders.setValue(responseModel);
 
                         }
                     });
@@ -138,6 +141,7 @@ public class AdminsViewModel extends AndroidViewModel {
 
                 @Override
                 public void response(ResponseObject responseModel) {
+                    traders.setValue(responseModel);
 
                 }
             });

@@ -34,7 +34,7 @@ class AdminDrawerClass {
 
     companion object {
 
-        fun getDrawer(email: String?, name: String?, activity: Activity, toolbar: Toolbar, itemListener: DrawerItemListener) {
+        fun getDrawer(email: String?, name: String?, activity: Activity, toolbar: Toolbar, itemListener: AdminDrawerItemListener) {
             lateinit var result: Drawer
             val drawerEmptyItem = PrimaryDrawerItem().withIdentifier(0).withName("")
             drawerEmptyItem.withEnabled(false)
@@ -91,7 +91,9 @@ class AdminDrawerClass {
             result = DrawerBuilder()
 
                     .withActivity(activity)
-                    .withFooter(R.layout.footer)
+                    .withAccountHeader(headerResult)
+                    //.withFooter(R.layout.footer)
+
 
                     //.withFooter(R.layout.footer)
 
@@ -140,12 +142,12 @@ class AdminDrawerClass {
                             }
 
                             2 -> {
-                                itemListener.routesSettingsClicked()
+                                itemListener.notificationsClicked()
                                 result.closeDrawer()
                             }
 
                             3 -> {
-                                itemListener.payoutsClicked()
+                                // itemListener.()
                                 result.closeDrawer()
                             }
                             4 -> {

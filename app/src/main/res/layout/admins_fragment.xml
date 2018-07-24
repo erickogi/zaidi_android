@@ -1,20 +1,196 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/admins"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.admins.AdminsFragment">
+    android:layout_marginBottom="@dimen/bottom_navigation_height"
+    android:padding="2dp">
 
-    <TextView
-        android:id="@+id/message"
+    <android.support.design.chip.ChipGroup
+
+        android:id="@+id/chip_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="AdminsFragment"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_margin="2dp"
+        android:padding="4dp"
+        app:singleSelection="true">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <android.support.design.chip.Chip
+
+            android:id="@+id/chip_all"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="All"
+
+
+            />
+
+
+        <android.support.design.chip.Chip
+            android:id="@+id/chip_deleted"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Deleted"
+
+
+            />
+
+        <android.support.design.chip.Chip
+
+            android:id="@+id/chip_archived"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Archived"
+
+
+            />
+
+        <android.support.design.chip.Chip
+            android:id="@+id/chip_dummy"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dummy"
+
+
+            />
+
+    </android.support.design.chip.ChipGroup>
+
+    <android.support.v7.widget.RecyclerView
+
+        android:id="@+id/recyclerView"
+
+        android:layout_width="match_parent"
+
+
+        android:layout_height="match_parent"
+        android:layout_below="@+id/chip_group"
+
+        android:layout_centerHorizontal="true"
+        android:nestedScrollingEnabled="false"
+        android:scrollIndicators="start|end"
+        android:scrollbarSize="6dp"
+        android:scrollbars="vertical"
+        android:visibility="visible"
+
+        >
+
+
+    </android.support.v7.widget.RecyclerView>
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/avi"
+        style="@style/AVLoadingIndicatorView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        app:indicatorColor="@color/colorPrimaryDark"
+        app:indicatorName="BallSpinFadeLoaderIndicator" />
+
+    <LinearLayout
+
+        android:id="@+id/empty_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/empty"
+            android:visibility="visible" />
+
+        <TextView
+
+            android:id="@+id/empty_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="4dp"
+            android:text="hello"
+
+            android:textSize="15sp"
+            android:textStyle="italic|bold" />
+
+
+    </LinearLayout>
+    <!--<android.support.v7.widget.CardView-->
+    <!--app:cardElevation="@dimen/cardview_default_elevation"-->
+    <!--app:cardUseCompatPadding="true"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_weight="1"-->
+    <!--android:layout_height="0dp">-->
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent">-->
+    <!--<com.github.mikephil.charting.charts.PieChart-->
+    <!--android:id="@+id/chartTraders"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent" />-->
+    <!--</LinearLayout>-->
+    <!--</android.support.v7.widget.CardView>-->
+    <!--<android.support.v7.widget.CardView-->
+    <!--app:cardUseCompatPadding="true"-->
+    <!--app:cardElevation="@dimen/cardview_default_elevation"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_weight="1"-->
+    <!--android:layout_height="0dp">-->
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent">-->
+    <!--<com.github.mikephil.charting.charts.PieChart-->
+    <!--android:id="@+id/chartMilk"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent" />-->
+    <!--</LinearLayout>-->
+    <!--</android.support.v7.widget.CardView>-->
+
+    <RelativeLayout
+        android:id="@+id/network_state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/transparent"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/txt_network_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal"
+            android:padding="1dp"
+            android:text="No internet"
+            android:textAlignment="center" />
+
+    </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:visibility="visible"
+        app:srcCompat="@android:drawable/ic_input_add" />
+
+</RelativeLayout>
+

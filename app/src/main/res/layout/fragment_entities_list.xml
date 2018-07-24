@@ -75,7 +75,6 @@
             android:layout_below="@+id/chip_group"
 
             android:layout_centerHorizontal="true"
-            android:background="@color/divider"
             android:nestedScrollingEnabled="false"
             android:scrollIndicators="start|end"
             android:scrollbarSize="6dp"

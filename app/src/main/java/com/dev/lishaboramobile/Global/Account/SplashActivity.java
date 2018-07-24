@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.dev.lishaboramobile.Global.Data.GlobalPrefs;
-import com.dev.lishaboramobile.Views.Admin.AdminActivity;
 import com.dev.lishaboramobile.Views.Trader.TraderActivity;
+import com.dev.lishaboramobile.admin.AdminsActivity;
+import com.dev.lishaboramobile.login.LoginActivity;
+import com.dev.lishaboramobile.login.PrefrenceManager;
+import com.dev.lishaboramobile.login.ui.login.LoginController;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -19,40 +21,30 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        GlobalPrefs globalPrefs=new GlobalPrefs(this);
+        PrefrenceManager globalPrefs = new PrefrenceManager(this);
         Intent intent;
-        switch (globalPrefs.userLoggedIn()){
-            case 0:
-                intent=new Intent(this,EntryActivity.class);
-                startActivity(intent);
-                finish();
-                break;
-            case 1:
-                intent=new Intent(this,TraderActivity.class);
-                startActivity(intent);
-                break;
-            case 2:
-                intent=new Intent(this,EntryActivity.class);
-                startActivity(intent);
-                break;
-            case 3:
-                intent=new Intent(this,EntryActivity.class);
-                startActivity(intent);
-                break;
-            case 4:
-                intent=new Intent(this,EntryActivity.class);
-                startActivity(intent);
-                break;
-            case 5:
-                intent=new Intent(this,EntryActivity.class);
-                startActivity(intent);
-                break;
-            case 6:
-                intent=new Intent(this,AdminActivity.class);
-                startActivity(intent);
-                break;
+        if (globalPrefs.isLoggedIn()) {
+            switch (globalPrefs.getTypeLoggedIn()) {
+                case LoginController.ADMIN:
+                    intent = new Intent(this, AdminsActivity.class);
+                    startActivity(intent);
+                    finish();
+                    break;
+                case LoginController.TRADER:
+                    intent = new Intent(this, TraderActivity.class);
+                    startActivity(intent);
+                    break;
+
 
                 default:
+                    intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+
+            }
+        } else {
+            intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+
         }
 
 

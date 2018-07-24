@@ -40,4 +40,5 @@
     <string name="verify">VERIFY</string>
     <string name="resend">RESEND</string>
     <string name="ind">+91</string>
+    <string name="title_activity_admin_trader_profile">AdminTraderProfile</string>
 </resources>

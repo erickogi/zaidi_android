@@ -25,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.dev.lishaboramobile.Admin.Callbacks.SearchViewCallbacks;
 import com.dev.lishaboramobile.Farmer.Models.FamerModel;
 import com.dev.lishaboramobile.Global.Models.FetchTraderModel;
 import com.dev.lishaboramobile.Global.Utils.NetworkUtils;
@@ -120,6 +119,7 @@ public class FragementFarmersList extends Fragment {
                     }
                 });
 
+
     }
 
     void getFarmers(boolean isOnline) {
@@ -201,35 +201,35 @@ public class FragementFarmersList extends Fragment {
 //
 //        });
 
-
-        ((TraderActivity) getActivity()).fabButton(true, R.drawable.ic_add_black_24dp, () -> {
-            if (isConnected) {
-
-                if (farmersController != null) {
-
-                }
-
-            } else {
-                snack("You have to be connected to the internet");
-            }
-        });
-        ((TraderActivity) getActivity()).searchAble(true, "Search farmers", new SearchViewCallbacks() {
-            @Override
-            public void onQueryTextChange(String search) {
-                // snack(search);
-                filterText = search;
-                filterFarmers();
-
-            }
-
-            @Override
-            public void onQueryTextSubmit(String search) {
-                // snack(search);
-                filterText = search;
-                filterFarmers();
-            }
-        });
-
+//
+//        ((TraderActivity) getActivity()).fabButton(true, R.drawable.ic_add_black_24dp, () -> {
+//            if (isConnected) {
+//
+//                if (farmersController != null) {
+//
+//                }
+//
+//            } else {
+//                snack("You have to be connected to the internet");
+//            }
+//        });
+//        ((TraderActivity) getActivity()).searchAble(true, "Search farmers", new SearchViewCallbacks() {
+//            @Override
+//            public void onQueryTextChange(String search) {
+//                // snack(search);
+//                filterText = search;
+//                filterFarmers();
+//
+//            }
+//
+//            @Override
+//            public void onQueryTextSubmit(String search) {
+//                // snack(search);
+//                filterText = search;
+//                filterFarmers();
+//            }
+//        });
+//
 
     }
 
@@ -347,9 +347,9 @@ public class FragementFarmersList extends Fragment {
     public void onStop() {
         super.onStop();
         farmersController = null;
-        ((TraderActivity) Objects.requireNonNull(getActivity())).fabButton(false, R.drawable.ic_add_black_24dp, () -> {
+//        ((TraderActivity) Objects.requireNonNull(getActivity())).fabButton(false, R.drawable.ic_add_black_24dp, () -> {
 
-        });
+        //   });
 
 
     }

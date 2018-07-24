@@ -20,7 +20,7 @@ public class LoginController {
 
     }
 
-    static boolean isValidPhoneNumber(String mobile) {
+    public static boolean isValidPhoneNumber(String mobile) {
         Log.d("enteredPhone", mobile);
         String regEx = "^[0-9]{9}$";
         return mobile.matches(regEx);

@@ -85,11 +85,12 @@ public class FragmentEntityList extends Fragment {
     private SwipeRefreshLayout swipe_refresh_layout;
     private LinearLayout empty_layout;
     private TextView emptyTxt, txt_network_state;
+    private String filterText = "";
     private ChipGroup chipGroup;
     private Chip activeChip, allChip, deletedChip, archivedChip, syncedChip, dummyChip, unsyncedChip;
     private AVLoadingIndicatorView avi;
     private boolean isConnected;
-    private String filterText = "";
+
     private int TraderDel, TraderDummy, TraderSynched, TraderArchive, All;
     private ActionMode.Callback callback = new ActionMode.Callback() {
         @Override
