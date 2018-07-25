@@ -33,7 +33,7 @@
                 android:id="@+id/edt_traders_names"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Traders name "
+                android:hint="Farmers name "
                 android:inputType="text" />
 
         </android.support.design.widget.TextInputLayout>
@@ -50,7 +50,7 @@
                 android:id="@+id/edt_traders_phone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Traders Phone
+                android:hint="Farmers Phone
 "
                 android:inputType="phone" />
 

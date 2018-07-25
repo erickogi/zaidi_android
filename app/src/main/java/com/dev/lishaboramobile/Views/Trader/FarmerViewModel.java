@@ -11,6 +11,7 @@ import com.dev.lishaboramobile.Global.Account.ResponseObject;
 import com.dev.lishaboramobile.Global.Data.Operations.Repo.FarmerRepo;
 import com.dev.lishaboramobile.Global.Models.ResponseModel;
 import com.dev.lishaboramobile.Global.Network.ApiConstants;
+import com.dev.lishaboramobile.Global.Network.Request;
 import com.dev.lishaboramobile.Global.Utils.ResponseCallback;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -199,6 +200,38 @@ public class FarmerViewModel extends AndroidViewModel {
 
         }
         return createSuccess;
+    }
+
+    public LiveData<ResponseModel> updateTrader(JSONObject jsonObject, boolean updateOnline) {
+
+        if (this.updateSuccess == null) {
+
+        }
+        this.updateSuccess = new MutableLiveData();
+
+
+        //updateSuccess.setValue(new MutableLiveData<>());
+
+        if (updateOnline) {
+            Request.Companion.getResponse(ApiConstants.Companion.getUpdateTrader(), jsonObject, "",
+                    new ResponseCallback() {
+                        @Override
+                        public void response(ResponseModel responseModel) {
+                            updateSuccess.setValue(responseModel);
+                        }
+
+                        @Override
+                        public void response(ResponseObject responseModel) {
+                            updateSuccess.setValue(responseModel);
+
+                        }
+                    });
+
+        } else {
+
+        }
+        return updateSuccess;
+
     }
 
 

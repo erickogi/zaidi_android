@@ -30,10 +30,10 @@
             android:textColorHint="@color/black">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/edt_traders_names"
+                android:id="@+id/edt_product_names"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Traders name "
+                android:hint="Products name "
                 android:inputType="text" />
 
         </android.support.design.widget.TextInputLayout>
@@ -47,12 +47,12 @@
             android:textColorHint="@color/black">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/edt_traders_phone"
+                android:id="@+id/edt_product_cost_price"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Traders Phone
+                android:hint=" Cost Price(Ksh)
 "
-                android:inputType="phone" />
+                android:inputType="number" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -65,27 +65,21 @@
             android:textColorHint="@color/black">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/edt_traders_business_name"
+                android:id="@+id/edt_product_selling_prices"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Business Name
+                android:hint=" Selling Price(Ksh)
 "
-                android:inputType="text" />
+                android:inputType="number" />
 
         </android.support.design.widget.TextInputLayout>
 
-
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:entries="@array/payments"></Spinner>
 
         <CheckBox
-            android:id="@+id/chk_dummy"
+            android:id="@+id/chk_active"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dummy Account" />
+            android:text="Active" />
     </LinearLayout>
 
 </RelativeLayout>

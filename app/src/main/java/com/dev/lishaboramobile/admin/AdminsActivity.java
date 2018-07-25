@@ -1,33 +1,56 @@
 package com.dev.lishaboramobile.admin;
 
 
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.dev.lishaboramobile.Admin.Models.AdminModel;
 import com.dev.lishaboramobile.BottomNav.AHBottomNavigation;
 import com.dev.lishaboramobile.BottomNav.AHBottomNavigationItem;
+import com.dev.lishaboramobile.Global.Utils.MyToast;
+import com.dev.lishaboramobile.Global.Utils.RequestDataCallback;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Views.Admin.FragmentAdminDashboard;
 import com.dev.lishaboramobile.Views.Trader.AdminDrawerClass;
 import com.dev.lishaboramobile.Views.Trader.AdminDrawerItemListener;
-import com.dev.lishaboramobile.Views.Trader.FragementFarmersList;
+import com.dev.lishaboramobile.admin.ui.ResetPassword;
+import com.dev.lishaboramobile.admin.ui.admins.AdminProductsFragment;
 import com.dev.lishaboramobile.admin.ui.admins.AdminsTradersListFragment;
+import com.dev.lishaboramobile.admin.ui.admins.AdminsViewModel;
+import com.dev.lishaboramobile.login.LoginActivity;
 import com.dev.lishaboramobile.login.PrefrenceManager;
+import com.google.gson.Gson;
+import com.wang.avi.AVLoadingIndicatorView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Objects;
 
 public class AdminsActivity extends AppCompatActivity {
     AHBottomNavigationItem item2;
     AHBottomNavigation bottomNavigation;
     SearchView mSearchView;
     private Fragment fragment;
+    AVLoadingIndicatorView avi;
+    private AdminsViewModel mViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +58,7 @@ public class AdminsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mViewModel = ViewModelProviders.of(this).get(AdminsViewModel.class);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -47,11 +71,85 @@ public class AdminsActivity extends AppCompatActivity {
         bottomNav();
     }
 
+    public void AdminProile(AdminModel adminModel) {
+        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(this);
+        View mView = layoutInflaterAndroid.inflate(R.layout.dialog_admin_profile, null);
+        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(this));
+        alertDialogBuilderUserInput.setView(mView);
+        alertDialogBuilderUserInput.setCancelable(false);
+        alertDialogBuilderUserInput.setIcon(R.drawable.ic_account_circle_black_24dp);
+        alertDialogBuilderUserInput.setTitle(adminModel.getNames());
+
+
+        avi = mView.findViewById(R.id.avi);
+
+
+        TextInputEditText edtNames, edtMobile, edtDepartment, edtCode, edtEmail;
+        edtNames = mView.findViewById(R.id.edt_admin_names);
+        edtCode = mView.findViewById(R.id.edt_admin_code);
+        edtMobile = mView.findViewById(R.id.edt_admin_phone);
+        edtDepartment = mView.findViewById(R.id.edt_admin_department);
+        edtEmail = mView.findViewById(R.id.edt_admin_email);
+
+        edtNames.setText(adminModel.getNames());
+        edtMobile.setText(adminModel.getMobile());
+        edtDepartment.setText(adminModel.getDepartment());
+        edtEmail.setText(adminModel.getEmail());
+        edtCode.setText(adminModel.getCode());
+
+        edtCode.setEnabled(false);
+        edtDepartment.setEnabled(false);
+        edtEmail.setEnabled(false);
+        edtNames.setEnabled(false);
+        edtMobile.setEnabled(false);
+
+        alertDialogBuilderUserInput
+                .setCancelable(false)
+                .setPositiveButton("Update", (dialogBox, id) -> {
+                    // ToDo get user input here
+
+
+                })
+                .setNeutralButton("Edit", (dialogBox, id) -> {
+                    // ToDo get user input here
+                    //  edtDepartment.setEnabled(true);edtEmail.setEnabled(true);edtNames.setEnabled(true);edtMobile.setEnabled(true);
+
+
+                })
+
+                .setNegativeButton("Dismiss",
+                        (dialogBox, id) -> dialogBox.cancel());
+
+        AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
+        alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.show();
+
+        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
+        Button neutral = alertDialogAndroid.getButton(DialogInterface.BUTTON_NEUTRAL);
+        neutral.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                edtDepartment.setEnabled(true);
+                edtEmail.setEnabled(true);
+                edtNames.setEnabled(true);
+                edtMobile.setEnabled(true);
+
+
+            }
+        });
+        theButton.setOnClickListener(new CustomListener(alertDialogAndroid, adminModel));
+
+
+    }
+
     void setUpDrawer(Toolbar toolbar, String name, String email) {
         AdminDrawerClass.Companion.getDrawer(email, name, this, toolbar, new AdminDrawerItemListener() {
             @Override
             public void logOutClicked() {
 
+                new PrefrenceManager(AdminsActivity.this).setIsLoggedIn(false, 0);
+                startActivity(new Intent(AdminsActivity.this, LoginActivity.class));
+                finish();
             }
 
             @Override
@@ -62,6 +160,8 @@ public class AdminsActivity extends AppCompatActivity {
             @Override
             public void profileSettingsClicked() {
 
+
+                AdminProile(new PrefrenceManager(AdminsActivity.this).getAdmin());
             }
 
 
@@ -94,19 +194,6 @@ public class AdminsActivity extends AppCompatActivity {
 
     }
 
-    void popOutFragments() {
-        FragmentManager fragmentManager = this.getSupportFragmentManager();
-        for (int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
-            fragmentManager.popBackStack();
-        }
-    }
-
-    void setFragment() {
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container, fragment, "fragmentMain").addToBackStack("").commit();
-    }
-
     private void bottomNav() {
         bottomNavigation = findViewById(R.id.bottom_navigation);
 
@@ -121,7 +208,7 @@ public class AdminsActivity extends AppCompatActivity {
         bottomNavigation.addItem(item1);
         bottomNavigation.addItem(item2);
         bottomNavigation.addItem(item3);
-        bottomNavigation.addItem(item4);
+        // bottomNavigation.addItem(item4);
 
 // Set background color
         bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#09413b"));
@@ -198,7 +285,7 @@ public class AdminsActivity extends AppCompatActivity {
                         break;
                     case 1:
                         popOutFragments();
-                        fragment = new FragementFarmersList();
+                        fragment = new AdminProductsFragment();
                         bundle.putInt("type", 1);
                         fragment.setArguments(bundle);
                         setFragment();
@@ -221,9 +308,41 @@ public class AdminsActivity extends AppCompatActivity {
             }
         });
 
-        bottomNavigation.setNotification("4", 3);
+//        bottomNavigation.setNotification("4", 3);
 
 
+    }
+
+    void popOutFragments() {
+        FragmentManager fragmentManager = this.getSupportFragmentManager();
+        for (int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
+            fragmentManager.popBackStack();
+        }
+    }
+
+    void setFragment() {
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container, fragment, "fragmentMain").addToBackStack("").commit();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            startActivity(new Intent(AdminsActivity.this, ResetPassword.class));
+            return true;
+        }
+        if (id == R.id.action_search) {
+            return false;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -238,22 +357,100 @@ public class AdminsActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    private class CustomListener implements View.OnClickListener {
+        AlertDialog dialog;
+        boolean isDummy = false;
+        //int type;
+        RequestDataCallback requestDataCallback;
+        private AdminModel adminModel;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        if (id == R.id.action_search) {
-            return false;
+        public CustomListener(AlertDialog alertDialogAndroid, AdminModel adminModel) {
+            dialog = alertDialogAndroid;
+            this.adminModel = adminModel;
+
         }
 
-        return super.onOptionsItemSelected(item);
+        @Override
+        public void onClick(View v) {
+            TextInputEditText edtNames, edtMobile, edtDepartment, edtCode, edtEmail;
+            edtNames = dialog.findViewById(R.id.edt_admin_names);
+            edtCode = dialog.findViewById(R.id.edt_admin_code);
+            edtMobile = dialog.findViewById(R.id.edt_admin_phone);
+            edtDepartment = dialog.findViewById(R.id.edt_admin_department);
+            edtEmail = dialog.findViewById(R.id.edt_admin_email);
+
+
+            if (edtNames.getText().toString().isEmpty()) {
+                edtNames.setError("Required");
+                edtNames.requestFocus();
+                avi.smoothToHide();
+                return;
+            }
+
+
+            if (edtCode.getText().toString().isEmpty()) {
+                edtCode.setError("Required");
+                edtCode.requestFocus();
+                avi.smoothToHide();
+                return;
+            }
+
+            if (edtDepartment.getText().toString().isEmpty()) {
+                edtDepartment.setError("Required");
+                edtDepartment.requestFocus();
+                avi.smoothToHide();
+                return;
+            }
+
+            if (edtEmail.getText().toString().isEmpty()) {
+                edtEmail.setError("Required");
+                edtEmail.requestFocus();
+                avi.smoothToHide();
+                return;
+            }
+
+            if (edtMobile.getText().toString().isEmpty()) {
+                edtMobile.setError("Required");
+                edtMobile.requestFocus();
+                avi.smoothToHide();
+                return;
+            }
+
+
+            AdminModel adminModel;
+            adminModel = this.adminModel;
+            adminModel.setDepartment(edtDepartment.getText().toString());
+            adminModel.setMobile(edtMobile.getText().toString());
+            adminModel.setEmail(edtEmail.getText().toString());
+            adminModel.setNames(edtNames.getText().toString());
+
+
+            Gson gson = new Gson();
+            avi.smoothToShow();
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = new JSONObject(gson.toJson(adminModel));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            new PrefrenceManager(AdminsActivity.this).setLoggedUser(adminModel);
+
+            mViewModel.updateAdmin(jsonObject, true).observe(AdminsActivity.this, responseModel -> {
+
+                avi.smoothToHide();
+                if (responseModel.getResultCode() == 1) {
+                    dialog.dismiss();
+                    ///AdminModel adminModel1 = gson.fromJson(gson.toJson(responseModel.getData()), AdminModel.class);
+                    MyToast.toast("" + responseModel.getResultDescription(), AdminsActivity.this, R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                } else {
+                    MyToast.toast("" + responseModel.getResultDescription(), AdminsActivity.this, R.drawable.ic_launcher, Toast.LENGTH_LONG);
+
+                }
+            });
+
+
+        }
+
     }
 
 }

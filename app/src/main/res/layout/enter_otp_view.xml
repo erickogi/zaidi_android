@@ -64,7 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                app:count="5"
+                app:count="4"
                 app:hintColor="@android:color/darker_gray"
                 app:inputType="number"
                 app:otpHint="*"

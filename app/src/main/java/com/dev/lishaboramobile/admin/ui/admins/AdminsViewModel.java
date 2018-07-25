@@ -25,8 +25,11 @@ public class AdminsViewModel extends AndroidViewModel {
 
 
     private MutableLiveData traders;
+    private MutableLiveData products;
     private MutableLiveData updateSuccess;
+    private MutableLiveData updateAdminSuccess;
     private MutableLiveData createSuccess;
+    private MutableLiveData createProductSuccess;
     private MutableLiveData editSuccess;
 
 
@@ -67,6 +70,37 @@ public class AdminsViewModel extends AndroidViewModel {
 
         return traders;
     }
+
+    public LiveData<ResponseModel> getProductsModels(JSONObject jsonObject, boolean fetchFromOnline) {
+
+        if (this.products == null) {
+            this.products = new MutableLiveData();
+            if (fetchFromOnline) {
+                Request.Companion.getResponse(ApiConstants.Companion.getProducts(), jsonObject, "", new ResponseCallback() {
+                            @Override
+                            public void response(ResponseModel responseModel) {
+                                products.setValue(responseModel);
+                            }
+
+                            @Override
+                            public void response(ResponseObject responseModel) {
+
+                                products.setValue(responseModel);
+                            }
+                        }
+                );
+
+            } else {
+
+            }
+
+
+        }
+
+
+        return products;
+    }
+
 
     public void refresh(JSONObject jsonObject, boolean fetchFromOnline) {
         if (this.traders == null) {
@@ -150,6 +184,86 @@ public class AdminsViewModel extends AndroidViewModel {
 
         }
         return createSuccess;
+    }
+
+    public LiveData<ResponseModel> updateAdmin(JSONObject jsonObject, boolean b) {
+        if (this.updateAdminSuccess == null) {
+
+        }
+        this.updateAdminSuccess = new MutableLiveData();
+
+
+        //updateSuccess.setValue(new MutableLiveData<>());
+
+        if (b) {
+            Request.Companion.getResponse(ApiConstants.Companion.getUpdateAdmin(), jsonObject, "",
+                    new ResponseCallback() {
+                        @Override
+                        public void response(ResponseModel responseModel) {
+                            updateAdminSuccess.setValue(responseModel);
+                        }
+
+                        @Override
+                        public void response(ResponseObject responseModel) {
+                            updateAdminSuccess.setValue(responseModel);
+
+                        }
+                    });
+
+        } else {
+
+        }
+        return updateAdminSuccess;
+    }
+
+    public LiveData<ResponseModel> createProduct(JSONObject jsonObject, boolean b) {
+        if (this.createProductSuccess == null) {
+        }
+        this.createProductSuccess = new MutableLiveData();
+
+        if (b) {
+            Request.Companion.getResponse(ApiConstants.Companion.getCreateProducts(), jsonObject, "", new ResponseCallback() {
+                @Override
+                public void response(ResponseModel responseModel) {
+                    createProductSuccess.setValue(responseModel);
+                }
+
+                @Override
+                public void response(ResponseObject responseModel) {
+                    createProductSuccess.setValue(responseModel);
+
+                }
+            });
+
+        } else {
+
+        }
+        return createProductSuccess;
+    }
+
+    public void refreshProducts(JSONObject jsonObject, boolean fetchFromOnline) {
+        if (this.products == null) {
+            this.products = new MutableLiveData();
+
+        }
+        if (fetchFromOnline) {
+            Request.Companion.getResponse(ApiConstants.Companion.getProducts(), jsonObject, "", new ResponseCallback() {
+                        @Override
+                        public void response(ResponseModel responseModel) {
+                            products.setValue(responseModel);
+                        }
+
+                        @Override
+                        public void response(ResponseObject responseModel) {
+                            products.setValue(responseModel);
+
+                        }
+                    }
+            );
+
+        } else {
+
+        }
     }
 
 }

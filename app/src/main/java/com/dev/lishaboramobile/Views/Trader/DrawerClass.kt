@@ -55,7 +55,8 @@ class DrawerClass {
 
 
             val notifications = PrimaryDrawerItem().withIdentifier(5)
-                    .withName("Notifications").withTextColorRes(R.color.white).withIcon(R.drawable.ic_notifications_black_24dp).withBadge("3")
+                    .withName("Notifications").withTextColorRes(R.color.white)
+                    .withIcon(R.drawable.ic_notifications_black_24dp).withBadge("3")
 
 
             val transactions = PrimaryDrawerItem().withIdentifier(6)
@@ -70,7 +71,7 @@ class DrawerClass {
                     .withName("Settings").withTextColorRes(R.color.white)
 
             val account = SecondaryDrawerItem().withIdentifier(9)
-                    .withName("Account").withTextColorRes(R.color.white)
+                    .withName("Profile").withTextColorRes(R.color.white)
                     .withIcon(R.drawable.ic_account_circle_black_24dp)
 
             val help = PrimaryDrawerItem().withIdentifier(10).withIcon(R.drawable.ic_help)
@@ -99,8 +100,9 @@ class DrawerClass {
 
             result = DrawerBuilder()
 
+                    .withAccountHeader(headerResult)
                     .withActivity(activity)
-                    .withFooter(R.layout.footer)
+                    //.withFooter(R.layout.footer)
 
                     //.withFooter(R.layout.footer)
 
@@ -120,10 +122,11 @@ class DrawerClass {
                     .withCloseOnClick(true)
                     //.withSelectedItem(-1)
                     .addDrawerItems(
-                            home, routes, payout, notifications, transactions,
+                            home,
+                            routes, notifications, transactions,
                             DividerDrawerItem(),
                             account,
-                            settings,
+                            // settings,
 
 
                             // invalidate,
@@ -149,12 +152,11 @@ class DrawerClass {
                             }
 
                             2 -> {
-                                itemListener.routesSettingsClicked()
-                                result.closeDrawer()
+
                             }
 
                             3 -> {
-                                itemListener.payoutsClicked()
+                                itemListener.routesSettingsClicked()
                                 result.closeDrawer()
                             }
                             4 -> {
@@ -162,7 +164,7 @@ class DrawerClass {
                                 result.closeDrawer()
                             }
                             5 -> {
-                                itemListener.analyticsReportsTransactionsClicked()
+                                itemListener.notificationsClicked()
                                 result.closeDrawer()
                             }
                             6 -> {
@@ -171,16 +173,16 @@ class DrawerClass {
                             }
 
                             7 -> {
-                                itemListener.appSettingsClicked()
+                                itemListener.logOutClicked()
                                 result.closeDrawer()
                             }
 
-                            8 -> {
+                            10 -> {
                                 itemListener.helpClicked()
                                 result.closeDrawer()
                             }
                             9 -> {
-                                itemListener.logOutClicked()
+                                itemListener.profileSettingsClicked()
                                 result.closeDrawer()
                             }
 

@@ -23,12 +23,13 @@ import com.dev.lishaboramobile.R;
 import java.util.Objects;
 
 public class AdminActivity extends AppCompatActivity {
-    private static Fragment fragment = null;
-    ViewPagerAdapter adapter;
     String id;
     // private FragmentFarmersTab fragmentFarmersTab;
     FloatingActionButton fab;
     SearchView mSearchView;
+    private static Fragment fragment = null;
+    ViewPagerAdapter adapter;
+
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private FragmentAdminDashboard fragmentAdminDashboard;

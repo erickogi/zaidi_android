@@ -41,6 +41,7 @@ public class LoginViewModel extends AndroidViewModel {
             @Override
             public void response(ResponseModel responseModel) {
 
+                phoneAuth.setValue(responseModel);
 
             }
 
@@ -78,7 +79,7 @@ public class LoginViewModel extends AndroidViewModel {
         if (this.otpRequest == null) {
             this.otpRequest = new MutableLiveData();
         }
-        Request.Companion.getResponseSingle(ApiConstants.Companion.getPasswordAuth(), jsonObject, "", new ResponseCallback() {
+        Request.Companion.getResponseSingle(ApiConstants.Companion.getOtpRequest(), jsonObject, "", new ResponseCallback() {
             @Override
             public void response(ResponseModel responseModel) {
 

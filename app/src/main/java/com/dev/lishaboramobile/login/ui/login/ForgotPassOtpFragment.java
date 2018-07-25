@@ -216,13 +216,13 @@ public class ForgotPassOtpFragment extends Fragment implements View.OnClickListe
                 default:
             }
 
-            card0tp.setVisibility(View.GONE);
-            cardForgotPassPhoneView.setVisibility(View.GONE);
-            cardEnterPassword.setVisibility(View.VISIBLE);
-
-            otpCardState = ISGONE;
-            forgotPassState = ISGONE;
-            enterPassCardState = ISVISIBLE;
+//            card0tp.setVisibility(View.GONE);
+//            cardForgotPassPhoneView.setVisibility(View.GONE);
+//            cardEnterPassword.setVisibility(View.VISIBLE);
+//
+//            otpCardState = ISGONE;
+//            forgotPassState = ISGONE;
+//            enterPassCardState = ISVISIBLE;
 
         }
 
@@ -248,27 +248,23 @@ public class ForgotPassOtpFragment extends Fragment implements View.OnClickListe
         handlerOnOtpVerify();
     }
 
-    private void handlerOnOtpVerify() {
-        new Handler().postDelayed(() -> {
+    public void newPassword(ResponseObject responseModel) {
+        // getChildFragmentManager()
 
-                    aviEnterOtp.setVisibility(View.GONE);
+
+    }
+    private void handlerOnOtpVerify() {
+        aviEnterOtp.setVisibility(View.GONE);
                     aviEnterOtp.smoothToHide();
 
-                    snack("Otp verify simulation success");
-
-                    card0tp.setVisibility(View.GONE);
-                    cardForgotPassPhoneView.setVisibility(View.GONE);
-                    cardEnterPassword.setVisibility(View.VISIBLE);
-
-                    otpCardState = ISGONE;
-                    forgotPassState = ISGONE;
-                    enterPassCardState = ISVISIBLE;
+        // getChildFragmentManager()
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, ForgotPassConfirmFragment.newInstance(responseModel))
+                // .addToBackStack("null")
+                .commitNow();
 
 
-                }
 
-
-                , spalsh_time_out);
 
     }
 
@@ -353,7 +349,7 @@ public class ForgotPassOtpFragment extends Fragment implements View.OnClickListe
     }
 
     private void verifyOtplicked() {
-        //TODO HANDLE VERIFYOTP REQUEST
+
     }
 
     private void resendOtpClicked() {
@@ -508,5 +504,9 @@ public class ForgotPassOtpFragment extends Fragment implements View.OnClickListe
 
     private void snack(String msg) {
         Snackbar.make(view, msg, Snackbar.LENGTH_LONG).show();
+    }
+
+    public void setCode(String code) {
+        otpView.setOtp(code);
     }
 }

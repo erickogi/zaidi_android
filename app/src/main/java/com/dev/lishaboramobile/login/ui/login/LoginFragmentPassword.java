@@ -143,6 +143,7 @@ public class LoginFragmentPassword extends Fragment implements View.OnClickListe
         aviPass = view.findViewById(R.id.avi_pass);
         aviPhone = view.findViewById(R.id.avi_phone);
 
+        edtPassword.requestFocus();
 
         //edtPhone.setOnClickListener(this);
         edtPassword.setOnClickListener(this);
@@ -394,8 +395,10 @@ public class LoginFragmentPassword extends Fragment implements View.OnClickListe
 
             mViewModel.passwordAuth(jsonObject).observe(this, responseModel -> {
                 snack(responseModel.getResultDescription());
+                aviPass.smoothToHide();
+                aviPhone.smoothToHide();
 
-                if (responseModel != null && responseModel.getResultCode() == 1) {
+                if (responseModel.getResultCode() == 1) {
                     snack(responseModel.getResultDescription());
                     //aviPhone.setVisibility(View.GONE);
                     //aviPhone.smoothToHide();
@@ -448,6 +451,7 @@ public class LoginFragmentPassword extends Fragment implements View.OnClickListe
         prefrenceManager.setLoggedUser(traderModel);
 
         startActivity(new Intent(getActivity(), TraderActivity.class));
+        getActivity().finish();
     }
 
     private void loginAdmin(AdminModel adminModel) {
@@ -456,6 +460,7 @@ public class LoginFragmentPassword extends Fragment implements View.OnClickListe
         prefrenceManager.setLoggedUser(adminModel);
 
         startActivity(new Intent(getActivity(), AdminsActivity.class));
+        getActivity().finish();
     }
 
     private void handlerPass() {

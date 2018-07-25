@@ -113,17 +113,17 @@ class AdminDrawerClass {
                     .withCloseOnClick(true)
                     //.withSelectedItem(-1)
                     .addDrawerItems(
-                            home, notifications, transactions,
+                            home, notifications, //transactions,
                             DividerDrawerItem(),
                             account,
-                            settings,
+                            // settings,
 
 
                             // invalidate,
                             DividerDrawerItem(),
                             //logout,
                             //share
-                            help,
+                            //help,
                             logout
                             // about
 
@@ -155,25 +155,29 @@ class AdminDrawerClass {
                                 result.closeDrawer()
                             }
                             5 -> {
-                                itemListener.analyticsReportsTransactionsClicked()
+                                itemListener.notificationsClicked()
                                 result.closeDrawer()
                             }
                             6 -> {
-                                itemListener.profileSettingsClicked()
+                                itemListener.analyticsReportsTransactionsClicked()
                                 result.closeDrawer()
                             }
 
                             7 -> {
-                                itemListener.appSettingsClicked()
+                                itemListener.logOutClicked()
                                 result.closeDrawer()
                             }
 
                             8 -> {
-                                itemListener.helpClicked()
+                                itemListener.appSettingsClicked()
                                 result.closeDrawer()
                             }
                             9 -> {
-                                itemListener.logOutClicked()
+                                itemListener.profileSettingsClicked()
+                                result.closeDrawer()
+                            }
+                            10 -> {
+                                itemListener.helpClicked()
                                 result.closeDrawer()
                             }
 

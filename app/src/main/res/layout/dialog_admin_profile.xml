@@ -30,10 +30,30 @@
             android:textColorHint="@color/black">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/edt_traders_names"
+                android:id="@+id/edt_admin_code"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Traders name "
+                android:enabled="false"
+                android:hint=" Code "
+                android:inputType="text" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+        <android.support.design.widget.TextInputLayout
+
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:textColorHint="@color/black">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/edt_admin_names"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint=" Names "
                 android:inputType="text" />
 
         </android.support.design.widget.TextInputLayout>
@@ -47,10 +67,10 @@
             android:textColorHint="@color/black">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/edt_traders_phone"
+                android:id="@+id/edt_admin_phone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Traders Phone
+                android:hint=" Phone
 "
                 android:inputType="phone" />
 
@@ -65,27 +85,33 @@
             android:textColorHint="@color/black">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/edt_traders_business_name"
+                android:id="@+id/edt_admin_email"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Business Name
+                android:hint=" Email
 "
+                android:inputType="textEmailAddress" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:textColorHint="@color/black">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/edt_admin_department"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Department"
                 android:inputType="text" />
 
         </android.support.design.widget.TextInputLayout>
 
 
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:entries="@array/payments"></Spinner>
-
-        <CheckBox
-            android:id="@+id/chk_dummy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Dummy Account" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -1,4 +1,15 @@
 <resources>
+
+
+    <string-array name="payments">
+        <item>Default Payment Type</item>
+        <item>Cash</item>
+        <item>Mpesa</item>
+        <item>Bank</item>
+
+
+    </string-array>
+
     <string name="app_name">LishaBora Mobile</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_admin">Welcome To Admin</string>
@@ -41,4 +52,6 @@
     <string name="resend">RESEND</string>
     <string name="ind">+91</string>
     <string name="title_activity_admin_trader_profile">AdminTraderProfile</string>
+    <string name="title_activity_reset_password">ResetPassword</string>
+    <string name="title_activity_adim_profile">AdimProfile</string>
 </resources>

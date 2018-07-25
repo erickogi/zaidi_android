@@ -16,7 +16,7 @@ import com.dev.lishaboramobile.Trader.Models.RoutesModel;
 import com.dev.lishaboramobile.Trader.Models.TraderModel;
 import com.dev.lishaboramobile.Trader.Models.UnitsModel;
 
-@Database(entities =  {TraderModel.class, FamerModel.class, RoutesModel.class, UnitsModel.class}, version = 2)
+@Database(entities = {TraderModel.class, FamerModel.class, RoutesModel.class, UnitsModel.class}, version = 4)
 @TypeConverters(DateConverter.class)
 
 public abstract class LMDatabase extends RoomDatabase {

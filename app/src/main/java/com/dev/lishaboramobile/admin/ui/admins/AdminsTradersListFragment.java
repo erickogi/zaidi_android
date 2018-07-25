@@ -5,6 +5,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -31,6 +32,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.dev.lishaboramobile.Admin.Adapters.TradersAdapter;
@@ -45,6 +47,7 @@ import com.dev.lishaboramobile.Global.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.Global.Utils.RequestDataCallback;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Trader.Models.TraderModel;
+import com.dev.lishaboramobile.login.PrefrenceManager;
 import com.dev.lishaboramobile.login.ui.login.LoginController;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.google.gson.Gson;
@@ -295,6 +298,9 @@ public class AdminsTradersListFragment extends Fragment {
                 @Override
                 public void onClickListener(int position) {
 
+                    Intent intent = new Intent(getActivity(), AdimTraderProfile.class);
+                    intent.putExtra("data", filteredTraderModels.get(position));
+                    startActivity(intent);
                 }
 
                 @Override
@@ -615,15 +621,38 @@ public class AdminsTradersListFragment extends Fragment {
             avi = mView.findViewById(R.id.avi);
 
 
-            TextInputEditText edtNames, edtMobile;
+            TextInputEditText edtNames, edtMobile, edtBussinesName;
+            Spinner spinner;
+            spinner = mView.findViewById(R.id.spinner);
             edtMobile = mView.findViewById(R.id.edt_traders_phone);
             edtNames = mView.findViewById(R.id.edt_traders_names);
+            edtBussinesName = mView.findViewById(R.id.edt_traders_business_name);
+
+            edtBussinesName.setText(traderModel.getBusinessname());
 
             edtMobile.setText(traderModel.getMobile());
             edtNames.setText(traderModel.getNames());
 
             CheckBox chk = mView.findViewById(R.id.chk_dummy);
             chk.setVisibility(View.GONE);
+
+
+            switch (traderModel.getDefaultpaymenttype().toLowerCase()) {
+                case "mpesa":
+                    spinner.setSelection(2, true);
+                    break;
+
+                case "cash":
+                    spinner.setSelection(1, true);
+
+                    break;
+
+                case "bank":
+                    spinner.setSelection(3, true);
+
+                    break;
+
+            }
 
 
             alertDialogBuilderUserInput
@@ -661,8 +690,12 @@ public class AdminsTradersListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            TextInputEditText name, phone;
+            TextInputEditText name, phone, bussinessname;
             CheckBox chkDummy;
+            Spinner spinnerPayment;
+            spinnerPayment = dialog.findViewById(R.id.spinner);
+            bussinessname = dialog.findViewById(R.id.edt_traders_business_name);
+
 
             name = dialog.findViewById(R.id.edt_traders_names);
             phone = dialog.findViewById(R.id.edt_traders_phone);
@@ -691,6 +724,22 @@ public class AdminsTradersListFragment extends Fragment {
                 phone.setError("Invalid Phone number");
                 return;
             }
+            String defaultPayment = "";
+            String bussines = "";
+
+
+            if (!bussinessname.getText().toString().isEmpty()) {
+                bussines = bussinessname.getText().toString();
+            }
+
+            if (spinnerPayment != null && spinnerPayment.getSelectedItemPosition() == 0) {
+
+                snack("Invalid payment option ");
+                spinnerPayment.requestFocus();
+
+                stopAnim();
+                //phone.setError("Invalid Phone number");
+            }
 
 
             if (chkDummy.isChecked()) {
@@ -705,7 +754,11 @@ public class AdminsTradersListFragment extends Fragment {
             traderModel.setCode("" + new GeneralUtills(context).getRandon(9000, 1000));
             traderModel.setEntity("Admin");
             traderModel.setEntityname("LishaBora");
-            traderModel.setEntitycode(adminPrefs.getAdmin().getCode());
+            traderModel.setBusinessname(bussines);
+            traderModel.setDefaultpaymenttype(spinnerPayment.getSelectedItem().toString());
+
+
+            traderModel.setEntitycode(new PrefrenceManager(context).getAdmin().getCode());
 
             traderModel.setTransactioncode(DateTimeUtils.Companion.getNow());
             traderModel.setNames(name.getText().toString());
@@ -717,7 +770,7 @@ public class AdminsTradersListFragment extends Fragment {
             traderModel.setStatus("Active");
             traderModel.setTransactiontime(DateTimeUtils.Companion.getNow());
             traderModel.setSynctime(DateTimeUtils.Companion.getNow());
-            traderModel.setTransactedby(traderModel.getEntityname() + ", " + adminPrefs.getAdmin().getCode());
+            traderModel.setTransactedby(new PrefrenceManager(context).getAdmin().getApikey());
 
 
             traderModel.setArchived(0);
@@ -771,13 +824,16 @@ public class AdminsTradersListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            TextInputEditText name, phone;
+            TextInputEditText name, phone, bussinessname;
+            Spinner spinnerPayment;
             CheckBox chkDummy;
+
+            spinnerPayment = dialog.findViewById(R.id.spinner);
+            bussinessname = dialog.findViewById(R.id.edt_traders_business_name);
 
             name = dialog.findViewById(R.id.edt_traders_names);
             phone = dialog.findViewById(R.id.edt_traders_phone);
             chkDummy = dialog.findViewById(R.id.chk_dummy);
-
 
             if (name.getText().toString().isEmpty()) {
                 name.setError("Required");
@@ -793,6 +849,12 @@ public class AdminsTradersListFragment extends Fragment {
                 stopAnim();
                 return;
             }
+            String bussines = "";
+
+
+            if (!bussinessname.getText().toString().isEmpty()) {
+                bussines = bussinessname.getText().toString();
+            }
 
             if (!LoginController.isValidPhoneNumber(phone.getText().toString())) {
                 snack("Invalid phone number ");
@@ -801,14 +863,28 @@ public class AdminsTradersListFragment extends Fragment {
                 phone.setError("Invalid Phone number");
             }
 
+            String defaultPayment = "";
+
+            if (spinnerPayment != null && spinnerPayment.getSelectedItemPosition() == 0) {
+
+                snack("Invalid payment option ");
+                spinnerPayment.requestFocus();
+
+                stopAnim();
+                //phone.setError("Invalid Phone number");
+            }
+
 
             if (chkDummy.isChecked()) {
                 isDummy = true;
             }
 
+
+            traderModel.setDefaultpaymenttype(spinnerPayment.getSelectedItem().toString());
             traderModel.setNames(name.getText().toString());
             traderModel.setMobile(phone.getText().toString());
             traderModel.setTransactiontime(DateTimeUtils.Companion.getNowslong());
+            traderModel.setBusinessname(bussines);
 
 
             startAnim();

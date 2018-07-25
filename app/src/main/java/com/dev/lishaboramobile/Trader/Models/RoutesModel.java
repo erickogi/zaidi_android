@@ -17,7 +17,8 @@ public class RoutesModel {
     private String transactedby;
     private String synctime;
     private String transactioncode;
-    private String status;
+    private int farmers;
+    private int status;
 
 
     public String getEntityname() {
@@ -100,11 +101,19 @@ public class RoutesModel {
         this.transactioncode = transactioncode;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
+    }
+
+    public int getFarmers() {
+        return this.farmers;
+    }
+
+    public void setFarmers(int farmers) {
+        this.farmers = farmers;
     }
 }

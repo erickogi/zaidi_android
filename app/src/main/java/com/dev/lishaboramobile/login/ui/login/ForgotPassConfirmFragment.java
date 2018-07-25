@@ -153,12 +153,12 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
         edtForgotPassPhone = view.findViewById(R.id.edt_forgot_pass_phone);
         edtNewPassword = view.findViewById(R.id.edt_new_password);
         edtConfirmPassword = view.findViewById(R.id.edt_new_confirm_password);
+        btnNewPass = view.findViewById(R.id.btn_new_pass_next);
 
 
         btnNextFogort = view.findViewById(R.id.btn_next_forgot_pass);
         btnNextOtpVerify = view.findViewById(R.id.btn_next_verify);
         btnNextOtpResend = view.findViewById(R.id.btn_next_resend);
-        btnNewPass = view.findViewById(R.id.btn_new_pass_next);
 
         aviForgotPass = view.findViewById(R.id.avi_forgot_pass);
         aviEnterOtp = view.findViewById(R.id.avi_otp);

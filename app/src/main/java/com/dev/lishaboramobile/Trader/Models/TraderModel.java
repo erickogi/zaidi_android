@@ -6,10 +6,12 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
+
 
 @Entity(tableName = "traders",indices = {@Index(value = {"code"}, unique = true)})
 
-public class TraderModel {
+public class TraderModel implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private   int id ;
 
@@ -18,11 +20,14 @@ public class TraderModel {
     private   String entitycode ;
     private String entityname;
     private String transactioncode;
+
     @NonNull
     private   String names ;
     private   String mobile ;
     private   String password ;
     private String balance;
+    private String businessname;
+    private String defaultpaymenttype;
     @NonNull
     private   String apikey ;
     private   String firebasetoken ;
@@ -44,6 +49,22 @@ public class TraderModel {
     private   int deleted ;
     private   int synced ;
     private   int dummy ;
+
+    public String getBusinessname() {
+        return businessname;
+    }
+
+    public void setBusinessname(String businessname) {
+        this.businessname = businessname;
+    }
+
+    public String getDefaultpaymenttype() {
+        return defaultpaymenttype;
+    }
+
+    public void setDefaultpaymenttype(String defaultpaymenttype) {
+        this.defaultpaymenttype = defaultpaymenttype;
+    }
 
     public int getPasswordstatus() {
         return passwordstatus;
