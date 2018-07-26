@@ -25,9 +25,6 @@ import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.dev.lishaboramobile.Admin.Adapters.ViewPagerAdapter;
-import com.dev.lishaboramobile.Admin.Callbacks.FabCallbacks;
-import com.dev.lishaboramobile.Admin.Callbacks.SearchViewCallbacks;
 import com.dev.lishaboramobile.Global.Models.ResponseModel;
 import com.dev.lishaboramobile.Global.Utils.DateTimeUtils;
 import com.dev.lishaboramobile.Global.Utils.MyToast;
@@ -35,6 +32,7 @@ import com.dev.lishaboramobile.Global.Utils.RequestDataCallback;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Trader.Data.TraderPrefs;
 import com.dev.lishaboramobile.Trader.Models.TraderModel;
+import com.dev.lishaboramobile.admin.adapters.ViewPagerAdapter;
 import com.dev.lishaboramobile.admin.ui.ResetPassword;
 import com.dev.lishaboramobile.admin.ui.admins.AdminsViewModel;
 import com.dev.lishaboramobile.login.LoginActivity;
@@ -199,50 +197,6 @@ public class TraderActivity extends AppCompatActivity {
     }
 
 
-    void searchAble(boolean shouldShow, String hint, SearchViewCallbacks searchViewCallbacks) {
-        if (mSearchView != null) {
-            if (shouldShow) {
-                mSearchView.setVisibility(View.VISIBLE);
-                if (hint != null) {
-                    mSearchView.setQueryHint(hint);
-                    mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                        @Override
-                        public boolean onQueryTextSubmit(String query) {
-                            searchViewCallbacks.onQueryTextSubmit(query);
-                            return true;
-                        }
-
-                        @Override
-                        public boolean onQueryTextChange(String newText) {
-                            searchViewCallbacks.onQueryTextChange(newText);
-                            return true;
-                        }
-                    });
-                }
-            } else {
-                mSearchView.setVisibility(View.GONE);
-            }
-        }
-
-
-    }
-
-    void fabButton(boolean shouldShow, Integer resource, FabCallbacks fabCallbacks) {
-        if (!shouldShow) {
-            fab.hide();
-        } else {
-            fab.show();
-            fab.setImageResource(resource);
-
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    fabCallbacks.onClick();
-                }
-            });
-
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

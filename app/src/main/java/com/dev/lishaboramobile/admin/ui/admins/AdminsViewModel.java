@@ -26,7 +26,10 @@ public class AdminsViewModel extends AndroidViewModel {
 
     private MutableLiveData traders;
     private MutableLiveData products;
+    private MutableLiveData traderRoutes;
+    private MutableLiveData traderProducts;
     private MutableLiveData updateSuccess;
+    private MutableLiveData updateProductSuccess;
     private MutableLiveData updateAdminSuccess;
     private MutableLiveData createSuccess;
     private MutableLiveData createProductSuccess;
@@ -86,6 +89,66 @@ public class AdminsViewModel extends AndroidViewModel {
                             public void response(ResponseObject responseModel) {
 
                                 products.setValue(responseModel);
+                            }
+                        }
+                );
+
+            } else {
+
+            }
+
+
+        }
+
+
+        return products;
+    }
+
+    public LiveData<ResponseModel> getTraderRoutesModels(JSONObject jsonObject, boolean fetchFromOnline) {
+
+        if (this.traderRoutes == null) {
+            this.traderRoutes = new MutableLiveData();
+            if (fetchFromOnline) {
+                Request.Companion.getResponse(ApiConstants.Companion.getTraderRoutes(), jsonObject, "", new ResponseCallback() {
+                            @Override
+                            public void response(ResponseModel responseModel) {
+                                traderRoutes.setValue(responseModel);
+                            }
+
+                            @Override
+                            public void response(ResponseObject responseModel) {
+
+                                traderRoutes.setValue(responseModel);
+                            }
+                        }
+                );
+
+            } else {
+
+            }
+
+
+        }
+
+
+        return traderRoutes;
+    }
+
+    public LiveData<ResponseModel> getTraderProductsModels(JSONObject jsonObject, boolean fetchFromOnline) {
+
+        if (this.traderProducts == null) {
+            this.traderProducts = new MutableLiveData();
+            if (fetchFromOnline) {
+                Request.Companion.getResponse(ApiConstants.Companion.getTraderProducts(), jsonObject, "", new ResponseCallback() {
+                            @Override
+                            public void response(ResponseModel responseModel) {
+                                traderProducts.setValue(responseModel);
+                            }
+
+                            @Override
+                            public void response(ResponseObject responseModel) {
+
+                                traderProducts.setValue(responseModel);
                             }
                         }
                 );
@@ -266,4 +329,27 @@ public class AdminsViewModel extends AndroidViewModel {
         }
     }
 
+    public LiveData<ResponseModel> updateProduct(JSONObject jsonObject, boolean b) {
+
+        this.updateProductSuccess = new MutableLiveData();
+
+        if (b) {
+            Request.Companion.getResponse(ApiConstants.Companion.getUpdateProducts(), jsonObject, "", new ResponseCallback() {
+                @Override
+                public void response(ResponseModel responseModel) {
+                    updateProductSuccess.setValue(responseModel);
+                }
+
+                @Override
+                public void response(ResponseObject responseModel) {
+                    updateProductSuccess.setValue(responseModel);
+
+                }
+            });
+
+        } else {
+
+        }
+        return updateProductSuccess;
+    }
 }

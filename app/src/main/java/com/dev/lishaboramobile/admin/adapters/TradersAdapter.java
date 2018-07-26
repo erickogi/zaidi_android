@@ -1,4 +1,4 @@
-package com.dev.lishaboramobile.Admin.Adapters;
+package com.dev.lishaboramobile.admin.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,10 +8,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.dev.lishaboramobile.Admin.Adapters.ViewHolders.TraderViewHolder;
 import com.dev.lishaboramobile.Global.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Trader.Models.TraderModel;
+import com.dev.lishaboramobile.admin.adapters.viewHolders.TraderViewHolder;
 import com.github.mikephil.charting.charts.PieChart;
 
 import java.lang.ref.WeakReference;

@@ -1,4 +1,4 @@
-package com.dev.lishaboramobile.Admin.Adapters;
+package com.dev.lishaboramobile.admin.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.dev.lishaboramobile.Admin.Models.ChartModel;
-import com.dev.lishaboramobile.Admin.Models.LVModel;
 import com.dev.lishaboramobile.Global.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
+import com.dev.lishaboramobile.admin.models.ChartModel;
+import com.dev.lishaboramobile.admin.models.LVModel;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.PieData;

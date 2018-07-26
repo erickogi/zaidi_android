@@ -9,24 +9,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dev.lishaboramobile.R;
-import com.dev.lishaboramobile.Trader.Models.TraderModel;
-import com.dev.lishaboramobile.Views.Trader.ui.Routes;
-import com.dev.lishaboramobile.admin.models.ProductsModel;
+import com.dev.lishaboramobile.Trader.Models.RoutesModel;
 
-public class FragmentTradersProducts extends Fragment {
+public class FragmentTradersRoutes extends Fragment {
     private View view;
     private AdminsViewModel mViewModel;
-    private TraderModel traderModel;
-    private Routes routes;
-    private ProductsModel productsModel;
 
-
-    public static FragmentTradersProducts newInstance(ProductsModel productsModel) {
-        FragmentTradersProducts fragmentTradersProducts = new FragmentTradersProducts();
+    public static FragmentTradersRoutes newInstance(RoutesModel routes) {
+        FragmentTradersRoutes fragmentTradersRoutes = new FragmentTradersRoutes();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("routes", productsModel);
-        fragmentTradersProducts.setArguments(bundle);
-        return fragmentTradersProducts;
+        bundle.putSerializable("routes", routes);
+        fragmentTradersRoutes.setArguments(bundle);
+        return fragmentTradersRoutes;
     }
 
     @Override
@@ -37,7 +31,7 @@ public class FragmentTradersProducts extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_trader_products, container, false);
+        return inflater.inflate(R.layout.fragment_trader_routes, container, false);
     }
 
     @Override
@@ -66,6 +60,6 @@ public class FragmentTradersProducts extends Fragment {
         super.onStop();
     }
 
-    public void update(ProductsModel productsModel) {
+    public void update(RoutesModel routesModel) {
     }
 }

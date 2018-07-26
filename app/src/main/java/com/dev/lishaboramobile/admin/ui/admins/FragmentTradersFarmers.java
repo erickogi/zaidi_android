@@ -8,23 +8,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.dev.lishaboramobile.Farmer.Models.FamerModel;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Trader.Models.TraderModel;
 import com.dev.lishaboramobile.Views.Trader.ui.Routes;
 import com.dev.lishaboramobile.admin.models.ProductsModel;
 
-public class FragmentTradersProducts extends Fragment {
+public class FragmentTradersFarmers extends Fragment {
     private View view;
     private AdminsViewModel mViewModel;
     private TraderModel traderModel;
     private Routes routes;
     private ProductsModel productsModel;
+    private FamerModel famerModel;
 
 
-    public static FragmentTradersProducts newInstance(ProductsModel productsModel) {
-        FragmentTradersProducts fragmentTradersProducts = new FragmentTradersProducts();
+    public static FragmentTradersFarmers newInstance(FamerModel famerModel) {
+        FragmentTradersFarmers fragmentTradersProducts = new FragmentTradersFarmers();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("routes", productsModel);
+        bundle.putSerializable("farmers", famerModel);
         fragmentTradersProducts.setArguments(bundle);
         return fragmentTradersProducts;
     }

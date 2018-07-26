@@ -1,4 +1,4 @@
-package com.dev.lishaboramobile.Admin.Adapters;
+package com.dev.lishaboramobile.admin.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -6,10 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.dev.lishaboramobile.Admin.Adapters.ViewHolders.ProductsViewHolder;
 import com.dev.lishaboramobile.Global.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Trader.Models.RoutesModel;
+import com.dev.lishaboramobile.admin.adapters.viewHolders.ProductsViewHolder;
 
 import java.util.List;
 

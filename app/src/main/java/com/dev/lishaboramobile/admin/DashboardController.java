@@ -1,9 +1,9 @@
-package com.dev.lishaboramobile.Admin.Controllers;
+package com.dev.lishaboramobile.admin;
 
 import android.content.Context;
 
-import com.dev.lishaboramobile.Admin.Models.ChartModel;
-import com.dev.lishaboramobile.Admin.Models.LVModel;
+import com.dev.lishaboramobile.admin.models.ChartModel;
+import com.dev.lishaboramobile.admin.models.LVModel;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;

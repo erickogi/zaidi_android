@@ -28,16 +28,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.dev.lishaboramobile.Admin.Adapters.TradersAdapter;
-import com.dev.lishaboramobile.Admin.Callbacks.SearchViewCallbacks;
-import com.dev.lishaboramobile.Admin.Controllers.TradersController;
-import com.dev.lishaboramobile.Admin.Controllers.TradersViewModel;
 import com.dev.lishaboramobile.Global.AppConstants;
 import com.dev.lishaboramobile.Global.Models.FetchTraderModel;
 import com.dev.lishaboramobile.Global.Utils.NetworkUtils;
 import com.dev.lishaboramobile.Global.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Trader.Models.TraderModel;
+import com.dev.lishaboramobile.admin.TradersController;
+import com.dev.lishaboramobile.admin.TradersViewModel;
+import com.dev.lishaboramobile.admin.adapters.TradersAdapter;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -375,53 +374,6 @@ public class FragmentEntityList extends Fragment {
         });
 
 
-        ((AdminActivity) getActivity()).fabButton(true, R.drawable.ic_add_black_24dp, () -> {
-            if (isConnected) {
-
-                if (tradersController != null) {
-                    tradersController.createTrader(requestData -> {
-
-                        if (tradersViewModel != null) {
-                            tradersViewModel.createTrader(requestData, true).observe(FragmentEntityList.this, responseModel -> {
-                                Log.d("2ReTrRe", gson.toJson(responseModel));
-
-                                if (tradersController != null) {
-                                    tradersController.stopAnim();
-                                    if (responseModel != null) {
-                                        tradersController.snack(responseModel.getResultDescription());
-                                        if (responseModel.getResultCode() == 1) {
-                                            tradersController.dismissDialog();
-
-                                            tradersViewModel.refresh(getSearchObject(), true);
-                                        }
-                                    }
-
-                                }
-                            });
-                        }
-                    });
-                }
-
-            } else {
-                snack("You have to be connected to the internet");
-            }
-        });
-        ((AdminActivity) getActivity()).searchAble(true, "Search traders", new SearchViewCallbacks() {
-            @Override
-            public void onQueryTextChange(String search) {
-                // snack(search);
-                filterText = search;
-                filterTraders();
-
-            }
-
-            @Override
-            public void onQueryTextSubmit(String search) {
-                // snack(search);
-                filterText = search;
-                filterTraders();
-            }
-        });
 
         chipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
             @Override
@@ -559,9 +511,7 @@ public class FragmentEntityList extends Fragment {
     public void onStop() {
         super.onStop();
         tradersController = null;
-        ((AdminActivity) getActivity()).fabButton(false, R.drawable.ic_add_black_24dp, () -> {
 
-        });
 
 
     }
@@ -652,25 +602,25 @@ public class FragmentEntityList extends Fragment {
 
     private void editTrader(TraderModel traderModel) {
 
-
-        tradersController.editTrader(traderModel, requestData -> {
-            if (tradersViewModel != null) {
-                tradersViewModel.updateTrader(requestData, true).observe(FragmentEntityList.this, responseModel -> {
-                    if (tradersController != null) {
-                        tradersController.stopAnim();
-                        if (responseModel != null) {
-                            tradersController.snack(responseModel.getResultDescription());
-                        }
-                        if (responseModel != null) {
-                            if (responseModel.getResultCode() != 0) {
-                                tradersController.dismissDialog();
-                            }
-                        }
-                    }
-
-                });
-            }
-        });
+//
+//        tradersController.editTrader(traderModel, requestData -> {
+//            if (tradersViewModel != null) {
+//                tradersViewModel.updateTrader(requestData, true).observe(FragmentEntityList.this, responseModel -> {
+//                    if (tradersController != null) {
+//                        tradersController.stopAnim();
+//                        if (responseModel != null) {
+//                            tradersController.snack(responseModel.getResultDescription());
+//                        }
+//                        if (responseModel != null) {
+//                            if (responseModel.getResultCode() != 0) {
+//                                tradersController.dismissDialog();
+//                            }
+//                        }
+//                    }
+//
+//                });
+//            }
+//        });
     }
 
     private void update(TraderModel traderModel) {

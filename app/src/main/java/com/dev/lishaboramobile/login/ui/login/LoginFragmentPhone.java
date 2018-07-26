@@ -3,9 +3,7 @@ package com.dev.lishaboramobile.login.ui.login;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.card.MaterialCardView;
@@ -20,61 +18,40 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.dev.lishaboramobile.Admin.Models.AdminModel;
 import com.dev.lishaboramobile.Global.Account.ResponseObject;
-import com.dev.lishaboramobile.Global.Utils.MyToast;
 import com.dev.lishaboramobile.Global.Utils.NetworkUtils;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Trader.Models.TraderModel;
-import com.dev.lishaboramobile.Views.Admin.AdminActivity;
-import com.dev.lishaboramobile.Views.Trader.TraderActivity;
 import com.dev.lishaboramobile.login.Models.AuthModel;
-import com.dev.lishaboramobile.login.PrefrenceManager;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
-
 
 public class LoginFragmentPhone extends Fragment implements View.OnClickListener {
-    private static int spalsh_time_out = 1000;
     private String TAG = "lsbLoginTag";
     private LoginViewModel mViewModel;
     private Gson gson = new Gson();
 
     //CARDS
 
-    private MaterialCardView headerCard, phoneCard, passwordCard;
+    int ISVISIBLE = 0;
 
     //WIDGETS
-
-    private AVLoadingIndicatorView aviPass, aviPhone;
-    private TextInputEditText edtPhone, edtPassword;
-    private TextView txtTagline, txtPasswordViewTitle;
-    private Button btnNextPhoneView, btnNextPasswordView;
-
-    //CARD STATES
-
-    private int headerCardState, phoneCardState, passwordcardState;
-
-    //STATES
-
-    private int ISVISIBLE = 0;
-    private int ISGONE = 1;
-    private int INVISIBLE = 2;
-
+    int ISGONE = 1;
+    private MaterialCardView headerCard, phoneCard;
+    private AVLoadingIndicatorView aviPhone;
 
     private Context context;
     private View view;
 
     private String phoneNumber = "";
+    private TextInputEditText edtPhone;
+    private Button btnNextPhoneView;
+    private int headerCardState = 0;
 
 
     public static LoginFragmentPhone newInstance() {
@@ -107,15 +84,6 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
         //Find views
         headerCard = view.findViewById(R.id.card_header);
         phoneCard = view.findViewById(R.id.card_phone_view);
-        passwordCard = view.findViewById(R.id.card_password_view);
-
-        //Set password view gone
-        passwordCard.setVisibility(View.GONE);
-
-        //initialize states
-        headerCardState = ISVISIBLE;
-        phoneCardState = ISVISIBLE;
-        passwordcardState = ISGONE;
 
         initWidgets();
 
@@ -123,25 +91,13 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
     }
 
     void initWidgets() {
-
-        //edtPassword=view.findViewById(R.id.edt_password);
         edtPhone = view.findViewById(R.id.edt_phone);
-
-        txtTagline = view.findViewById(R.id.txt_tagline);
-        //txtPasswordViewTitle=view.findViewById(R.id.txt_password_view_title);
-
-        //btnNextPasswordView=view.findViewById(R.id.btn_next_password_view);
         btnNextPhoneView = view.findViewById(R.id.btn_next_phone_view);
-
-        //aviPass=view.findViewById(R.id.avi_pass);
         aviPhone = view.findViewById(R.id.avi_phone);
 
 
         edtPhone.setOnClickListener(this);
-        //edtPassword.setOnClickListener(this);
         btnNextPhoneView.setOnClickListener(this);
-        //btnNextPasswordView.setOnClickListener(this);
-        //txtPasswordViewTitle.setOnClickListener(this);
         final char space = ' ';
 
         edtPhone.addTextChangedListener(new TextWatcher() {
@@ -209,11 +165,6 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
                 }
                 break;
 
-            case R.id.btn_next_password_view:
-
-                nextOnPasswordInputClicked();
-
-                break;
 
             case R.id.edt_phone:
 
@@ -221,11 +172,6 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
 
                 break;
 
-            case R.id.edt_password:
-
-                passwordInputClicked();
-
-                break;
 
             default:
                 Log.d(TAG, " No action on click");
@@ -237,15 +183,6 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
         aviPhone.setVisibility(View.GONE);
         aviPhone.smoothToHide();
 
-        //snack("Phone Auth simulation success");
-//
-//                    phoneCard.setVisibility(View.GONE);
-//                    //passwordCard.setVisibility(View.VISIBLE);
-//
-//                    passwordcardState=ISVISIBLE;
-//                    phoneCardState=ISGONE;
-
-
     }
 
     private void nextOnPhoneInputClicked() {
@@ -256,9 +193,6 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
 
                 aviPhone.setVisibility(View.VISIBLE);
                 aviPhone.smoothToShow();
-                //TODO AUTHPHONE
-
-                // handler();
 
                 AuthModel authModel = new AuthModel();
                 authModel.setMobile(phoneNumber);
@@ -274,15 +208,11 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
                 Log.d("authl", jsonObject.toString());
 
                 mViewModel.phoneAuth(jsonObject).observe(this, (ResponseObject responseModel) -> {
-                    snack(responseModel.getResultDescription());
 
                     if (responseModel.getResultCode() == 1) {
-                        snack(responseModel.getResultDescription());
                         handler();
-                        Type type;
                         Gson gson = new Gson();
-                        TraderModel traderModel = new TraderModel();
-                        AdminModel adminModel = new AdminModel();
+                        TraderModel traderModel;
 
                         switch (responseModel.getType()) {
                             case LoginController.ADMIN:
@@ -293,7 +223,6 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
                             case LoginController.TRADER:
 
                                 traderModel = gson.fromJson(gson.toJson(responseModel.getData()), TraderModel.class);
-                                //txtPasswordViewTitle.setText("Welcome | Karibu Trader - "+traderModel.getNames());
                                 if (traderModel.getPasswordstatus() == 0) {
                                     newPassword(responseModel);
                                     snack("Create Pass");
@@ -327,106 +256,6 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
         }
     }
 
-    private void nextOnPasswordInputClicked() {
-        if (!TextUtils.isEmpty(edtPassword.getText().toString())) {
-
-            aviPass.setVisibility(View.VISIBLE);
-            aviPass.smoothToShow();
-            //TODO AUTHPHONE
-
-            handlerPass();
-            AuthModel authModel = new AuthModel();
-            authModel.setMobile(phoneNumber);
-            authModel.setPassword(edtPassword.getText().toString());
-            JSONObject jsonObject = null;
-            try {
-                jsonObject = new JSONObject(gson.toJson(authModel));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-            mViewModel.phoneAuth(jsonObject).observe(this, responseModel -> {
-                snack(responseModel.getResultDescription());
-
-                if (responseModel != null && responseModel.getResultCode() == 1) {
-                    snack(responseModel.getResultDescription());
-                    aviPhone.setVisibility(View.GONE);
-                    aviPhone.smoothToHide();
-                    Type type;
-                    Gson gson = new Gson();
-                    TraderModel traderModel = new TraderModel();
-                    AdminModel adminModel = new AdminModel();
-
-                    switch (responseModel.getType()) {
-                        case LoginController.ADMIN:
-                            type = new TypeToken<TraderModel>() {
-                            }.getType();
-                            adminModel = gson.fromJson(gson.toJson(responseModel.getData()), AdminModel.class);
-
-                            loginAdmin(adminModel);
-
-                            break;
-                        case LoginController.TRADER:
-                            type = new TypeToken<TraderModel>() {
-                            }.getType();
-                            traderModel = gson.fromJson(gson.toJson(responseModel.getData()), TraderModel.class);
-
-                            loginTrader(traderModel);
-                            break;
-                        default:
-                    }
-                }
-            });
-
-
-        } else {
-            snack("Please enter  password");
-            edtPassword.requestFocus();
-            edtPassword.setError("Required");
-
-        }
-
-    }
-
-    private void loginTrader(TraderModel traderModel) {
-        PrefrenceManager prefrenceManager = new PrefrenceManager(context);
-
-        prefrenceManager.setIsLoggedIn(true, LoginController.TRADER);
-        prefrenceManager.setLoggedUser(traderModel);
-
-        startActivity(new Intent(getActivity(), TraderActivity.class));
-    }
-
-    private void loginAdmin(AdminModel adminModel) {
-        PrefrenceManager prefrenceManager = new PrefrenceManager(context);
-        prefrenceManager.setIsLoggedIn(true, LoginController.ADMIN);
-        prefrenceManager.setLoggedUser(adminModel);
-
-        startActivity(new Intent(getActivity(), AdminActivity.class));
-    }
-
-    private void handlerPass() {
-        new Handler().postDelayed(() -> {
-
-                    aviPass.setVisibility(View.GONE);
-                    aviPass.smoothToHide();
-
-                    snack("Pass Auth simulation success");
-
-                    startActivity(new Intent(getActivity(), AdminActivity.class));
-                    getActivity().finish();
-
-                }
-
-
-                , spalsh_time_out);
-
-    }
-
-    private void passwordInputClicked() {
-        //TODO
-    }
 
     private void phoneInputClicked() {
         if (headerCardState == ISVISIBLE) {
@@ -438,24 +267,20 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
     private void snack(String msg) {
         Snackbar.make(view, msg, Snackbar.LENGTH_LONG).show();
         if (context != null) {
-            MyToast.toast(msg, context, R.drawable.ic_launcher, Toast.LENGTH_SHORT);
+            // MyToast.toast(msg, context, R.drawable.ic_launcher, Toast.LENGTH_SHORT);
         }
     }
 
     public void passWordFragment(ResponseObject responseModel) {
-        // getChildFragmentManager()
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, LoginFragmentPassword.newInstance(responseModel))
-                // .addToBackStack("null")
                 .commitNow();
 
     }
 
     public void newPassword(ResponseObject responseModel) {
-        // getChildFragmentManager()
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, ForgotPassPhoneFragment.newInstance(responseModel))
-                // .addToBackStack("null")
+                .replace(R.id.container, ForgotPassConfirmFragment.newInstance(responseModel))
                 .commitNow();
 
     }

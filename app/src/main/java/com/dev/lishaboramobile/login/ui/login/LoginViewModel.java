@@ -76,12 +76,14 @@ public class LoginViewModel extends AndroidViewModel {
 
     public LiveData<ResponseObject> otpRequest(JSONObject jsonObject) {
 
-        if (this.otpRequest == null) {
-            this.otpRequest = new MutableLiveData();
-        }
+//        if (this.otpRequest == null) {
+//            this.otpRequest = new MutableLiveData();
+//        }
+        this.otpRequest = new MutableLiveData();
         Request.Companion.getResponseSingle(ApiConstants.Companion.getOtpRequest(), jsonObject, "", new ResponseCallback() {
             @Override
             public void response(ResponseModel responseModel) {
+                otpRequest.setValue(responseModel);
 
             }
 

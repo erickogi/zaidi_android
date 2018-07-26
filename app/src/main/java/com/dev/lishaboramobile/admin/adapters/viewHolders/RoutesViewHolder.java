@@ -1,4 +1,4 @@
-package com.dev.lishaboramobile.Admin.Adapters.ViewHolders;
+package com.dev.lishaboramobile.admin.adapters.viewHolders;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

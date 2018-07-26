@@ -1,4 +1,4 @@
-package com.dev.lishaboramobile.Admin.Adapters;
+package com.dev.lishaboramobile.admin.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

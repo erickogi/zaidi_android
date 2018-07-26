@@ -13,6 +13,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -30,8 +31,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dev.lishaboramobile.Admin.Adapters.ProductsAdapter;
-import com.dev.lishaboramobile.Admin.Models.ProductsModel;
 import com.dev.lishaboramobile.Global.Models.ResponseModel;
 import com.dev.lishaboramobile.Global.Utils.DateTimeUtils;
 import com.dev.lishaboramobile.Global.Utils.MyToast;
@@ -39,6 +38,8 @@ import com.dev.lishaboramobile.Global.Utils.NetworkUtils;
 import com.dev.lishaboramobile.Global.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.Global.Utils.RequestDataCallback;
 import com.dev.lishaboramobile.R;
+import com.dev.lishaboramobile.admin.adapters.ProductsAdapter;
+import com.dev.lishaboramobile.admin.models.ProductsModel;
 import com.dev.lishaboramobile.login.PrefrenceManager;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.google.gson.Gson;
@@ -229,10 +230,60 @@ public class AdminProductsFragment extends Fragment {
         alertDialogAndroid.show();
 
         Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
-        theButton.setOnClickListener(new CustomListener(alertDialogAndroid));
+        theButton.setOnClickListener(new CustomListener(alertDialogAndroid, true));
 
 
     }
+
+    public void updateProduct(ProductsModel productsModel) {
+        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
+        View mView = layoutInflaterAndroid.inflate(R.layout.dialog_add_product, null);
+        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(context));
+        alertDialogBuilderUserInput.setView(mView);
+        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
+        alertDialogBuilderUserInput.setTitle("Product");
+
+
+        avi = mView.findViewById(R.id.avi);
+
+
+        TextInputEditText name, cost, selling;
+        CheckBox chkDummy;
+        cost = mView.findViewById(R.id.edt_product_cost_price);
+        name = mView.findViewById(R.id.edt_product_names);
+        selling = mView.findViewById(R.id.edt_product_selling_prices);
+        chkDummy = mView.findViewById(R.id.chk_active);
+
+        name.setText(productsModel.getNames());
+        cost.setText(productsModel.getCostprice());
+        selling.setText(productsModel.getSellingprice());
+
+        if (productsModel.getStatus() == 2) {
+            chkDummy.setChecked(true);
+        }
+
+
+        alertDialogBuilderUserInput
+                .setCancelable(false)
+                .setPositiveButton("Save", (dialogBox, id) -> {
+                    // ToDo get user input here
+
+
+                })
+
+                .setNegativeButton("Dismiss",
+                        (dialogBox, id) -> dialogBox.cancel());
+
+        AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
+        alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.show();
+
+        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
+        theButton.setOnClickListener(new CustomListener(alertDialogAndroid, false));
+
+
+    }
+
 
     void initConnectivityListener() {
         ReactiveNetwork.observeInternetConnectivity()
@@ -289,7 +340,7 @@ public class AdminProductsFragment extends Fragment {
 
                 @Override
                 public void onClickListener(int adapterPosition, @NotNull View view) {
-                    // popupMenu(adapterPosition, view, filteredProductsModels.get(adapterPosition));
+                    popupMenu(adapterPosition, view, filteredProductsModels.get(adapterPosition));
 
                 }
             });
@@ -301,6 +352,44 @@ public class AdminProductsFragment extends Fragment {
         }
 
     }
+
+    private void popupMenu(int pos, View view, ProductsModel productsModel) {
+        PopupMenu popupMenu = new PopupMenu(Objects.requireNonNull(getContext()), view);
+        popupMenu.inflate(R.menu.product_list_menu);
+
+
+        popupMenu.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.delete:
+
+
+                    productsModel.setStatus(0);
+                    updateProductstatus(productsModel);
+
+                    break;
+
+                case R.id.archive:
+
+                    productsModel.setStatus(2);
+                    updateProductstatus(productsModel);
+
+                    break;
+
+
+                case R.id.edit:
+
+                    updateProduct(productsModel);
+                    break;
+                default:
+            }
+            return false;
+        });
+        popupMenu.show();
+
+
+    }
+
+
 
     private JSONObject getSearchObject() {
         Gson gson = new Gson();
@@ -405,14 +494,35 @@ public class AdminProductsFragment extends Fragment {
 
     }
 
+    private void updateProductstatus(ProductsModel productsModel) {
+        startAnim();
+        Gson gson = new Gson();
+
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(gson.toJson(productsModel));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        mViewModel.updateProduct(jsonObject, true).observe(AdminProductsFragment.this, responseModel -> {
+            stopAnim();
+            snack(responseModel.getResultDescription());
+            if (responseModel.getResultCode() == 1) {
+                mViewModel.refreshProducts(getSearchObject(), true);
+            }
+        });
+    }
+
     private class CustomListener implements View.OnClickListener {
         AlertDialog dialog;
         boolean isDummy = false;
         //int type;
         RequestDataCallback requestDataCallback;
+        private boolean isNew;
 
-        public CustomListener(AlertDialog alertDialogAndroid) {
+        public CustomListener(AlertDialog alertDialogAndroid, boolean isNew) {
             dialog = alertDialogAndroid;
+            this.isNew = isNew;
 
         }
 
@@ -473,17 +583,32 @@ public class AdminProductsFragment extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            mViewModel.createProduct(jsonObject, true).observe(AdminProductsFragment.this, new Observer<ResponseModel>() {
-                @Override
-                public void onChanged(@Nullable ResponseModel responseModel) {
-                    stopAnim();
-                    snack(responseModel.getResultDescription());
-                    if (responseModel.getResultCode() == 1) {
-                        dialog.dismiss();
-                        mViewModel.refreshProducts(getSearchObject(), true);
+
+            if (isNew) {
+                mViewModel.createProduct(jsonObject, true).observe(AdminProductsFragment.this, new Observer<ResponseModel>() {
+                    @Override
+                    public void onChanged(@Nullable ResponseModel responseModel) {
+                        stopAnim();
+                        snack(responseModel.getResultDescription());
+                        if (responseModel.getResultCode() == 1) {
+                            dialog.dismiss();
+                            mViewModel.refreshProducts(getSearchObject(), true);
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                mViewModel.updateProduct(jsonObject, true).observe(AdminProductsFragment.this, new Observer<ResponseModel>() {
+                    @Override
+                    public void onChanged(@Nullable ResponseModel responseModel) {
+                        stopAnim();
+                        snack(responseModel.getResultDescription());
+                        if (responseModel.getResultCode() == 1) {
+                            dialog.dismiss();
+                            mViewModel.refreshProducts(getSearchObject(), true);
+                        }
+                    }
+                });
+            }
 
 
         }

@@ -1,4 +1,4 @@
-package com.dev.lishaboramobile.Admin.Adapters;
+package com.dev.lishaboramobile.admin.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -6,10 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.dev.lishaboramobile.Admin.Adapters.ViewHolders.ProductsViewHolder;
-import com.dev.lishaboramobile.Admin.Models.ProductsModel;
 import com.dev.lishaboramobile.Global.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
+import com.dev.lishaboramobile.admin.adapters.viewHolders.ProductsViewHolder;
+import com.dev.lishaboramobile.admin.models.ProductsModel;
 
 import java.util.List;
 
@@ -54,10 +54,13 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsViewHolder> {
             holder.status.setText("Active");
             holder.status.setTextColor(context.getResources().getColor(R.color.green_color_picker));
 //
-        } else {
+        } else if (productsModel.getStatus() == 0) {
 
-            holder.status.setText("In Active");
+            holder.status.setText("Deleted");
             holder.status.setTextColor(context.getResources().getColor(R.color.red));
+        } else {
+            holder.status.setText("In-Active");
+            holder.status.setTextColor(context.getResources().getColor(R.color.blue_color_picker));
         }
 
 

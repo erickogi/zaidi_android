@@ -8,10 +8,10 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
+import com.dev.lishaboramobile.BasePermissionAppCompatActivity;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.login.ui.login.ForgotPassOtpFragment;
 import com.dev.lishaboramobile.login.ui.login.ForgotPassPhoneFragment;
@@ -20,25 +20,18 @@ import com.dev.lishaboramobile.login.ui.login.LoginFragmentPhone;
 import static android.Manifest.permission.READ_SMS;
 import static android.Manifest.permission.RECEIVE_SMS;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BasePermissionAppCompatActivity {
 
-    private ForgotPassOtpFragment forgotPassOtpFragment;
     private BroadcastReceiver codeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d("closeoperation", "truecode received");
             if (intent.getAction().equals("com.lisha.codereceived")) {
                 try {
-                    // Intent hhtpIntent = new Intent(LoginActivity.this, HttpService.class);
-                    // hhtpIntent.putExtra("otp", intent.getExtras().getString("code"));
 
-                    //startService(hhtpIntent);
-
-                    forgotPassOtpFragment = (ForgotPassOtpFragment) getSupportFragmentManager().findFragmentById(R.id.container);
+                    ForgotPassOtpFragment forgotPassOtpFragment = (ForgotPassOtpFragment) getSupportFragmentManager().findFragmentById(R.id.container);
                     forgotPassOtpFragment.setCode(intent.getExtras().getString("code"));
 
-
-                    //signUpFragment.setText("23432");
                 } catch (NullPointerException nm) {
                     nm.printStackTrace();
                 }
@@ -59,7 +52,23 @@ public class LoginActivity extends AppCompatActivity {
                     .commitNow();
         }
         registerReceiver(codeReceiver, new IntentFilter("com.lisha.codereceived"));
+        getReadSMSPermission(new RequestPermissionAction() {
+            @Override
+            public void permissionDenied() {
+                // Call Back, when permission is Denied
+                // TODO, task after permission is not greante
+                Log.d("myPermissions", "not granted");
 
+            }
+
+            @Override
+            public void permissionGranted() {
+                Log.d("myPermissions", "granted");
+
+                // Call Back, when permission is Granted
+                // TODO, task after permission is greante
+            }
+        });
 
     }
 

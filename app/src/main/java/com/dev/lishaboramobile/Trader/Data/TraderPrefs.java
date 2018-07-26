@@ -2,9 +2,7 @@ package com.dev.lishaboramobile.Trader.Data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
 
-import com.dev.lishaboramobile.Admin.Models.AdminModel;
 import com.dev.lishaboramobile.Trader.Models.TraderModel;
 
 public class TraderPrefs {

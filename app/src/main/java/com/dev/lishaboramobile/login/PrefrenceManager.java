@@ -3,8 +3,8 @@ package com.dev.lishaboramobile.login;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.dev.lishaboramobile.Admin.Models.AdminModel;
 import com.dev.lishaboramobile.Trader.Models.TraderModel;
+import com.dev.lishaboramobile.admin.models.AdminModel;
 
 public class PrefrenceManager {
 

@@ -9,10 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.dev.lishaboramobile.Admin.Controllers.DashboardController;
-import com.dev.lishaboramobile.Admin.Models.ChartModel;
-import com.dev.lishaboramobile.Admin.Models.LVModel;
 import com.dev.lishaboramobile.R;
+import com.dev.lishaboramobile.admin.DashboardController;
+import com.dev.lishaboramobile.admin.models.ChartModel;
+import com.dev.lishaboramobile.admin.models.LVModel;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.PieData;

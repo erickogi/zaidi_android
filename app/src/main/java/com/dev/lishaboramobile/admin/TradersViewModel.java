@@ -1,4 +1,4 @@
-package com.dev.lishaboramobile.Admin.Controllers;
+package com.dev.lishaboramobile.admin;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;

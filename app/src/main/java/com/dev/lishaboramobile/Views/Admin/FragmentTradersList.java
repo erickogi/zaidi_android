@@ -12,9 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.dev.lishaboramobile.Admin.Adapters.TradersAdapter;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Trader.Models.TraderModel;
+import com.dev.lishaboramobile.admin.adapters.TradersAdapter;
 
 import java.util.List;
 

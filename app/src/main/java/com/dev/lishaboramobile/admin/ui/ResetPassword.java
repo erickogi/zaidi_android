@@ -12,9 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
-import com.dev.lishaboramobile.Admin.Models.AdminModel;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Trader.Models.TraderModel;
+import com.dev.lishaboramobile.admin.models.AdminModel;
 import com.dev.lishaboramobile.login.Models.AuthModel;
 import com.dev.lishaboramobile.login.PrefrenceManager;
 import com.dev.lishaboramobile.login.ui.login.LoginController;

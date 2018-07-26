@@ -1,4 +1,4 @@
-package com.dev.lishaboramobile.Views.Trader;
+package com.dev.lishaboramobile.admin;
 
 import android.content.Context;
 import android.os.Handler;
@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
 import com.dev.lishaboramobile.Global.Models.ResponseModel;
+import com.dev.lishaboramobile.Global.Network.ApiConstants;
 import com.dev.lishaboramobile.Global.Network.Request;
 import com.dev.lishaboramobile.Global.Network.RequestListener;
 import com.dev.lishaboramobile.Global.Utils.MyToast;
@@ -20,7 +21,11 @@ import com.wang.avi.AVLoadingIndicatorView;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
-public class FarmerController {
+import java.util.HashMap;
+
+public class TradersController {
+    public int ISCREATE = 12;
+    public int ISUPDATE = 13;
 
     private static int spalsh_time_out = 1000;
     ResponseModel responseModel = new ResponseModel();
@@ -29,10 +34,6 @@ public class FarmerController {
     private Context context;
     private AVLoadingIndicatorView avi;
     private AlertDialog dialog;
-
-    public FarmerController(Context context) {
-        this.context = context;
-    }
 
     private void handler() {
         new Handler().postDelayed(() -> {
@@ -43,6 +44,25 @@ public class FarmerController {
                 , spalsh_time_out);
 
     }
+
+    public TradersController(Context context) {
+        this.context = context;
+    }
+
+    boolean isValidPhoneNumber(String mobile) {
+        StringBuilder sb = new StringBuilder(mobile);
+
+        if (sb.toString().startsWith("0")) {
+            sb.deleteCharAt(0);
+        }
+
+        Log.d("enteredPhone", mobile);
+        String regEx = "^[0-9]{9}$";
+        return mobile.matches(regEx);
+    }
+
+
+
 
     public void startAnim() {
         if (avi != null) {
@@ -128,6 +148,59 @@ public class FarmerController {
         });
 
     }
+
+    public ResponseModel getTraders(int del, int archive, int dummy, int synched, ResponseCallback responseCallback) {
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put("deleted", "" + del);
+        params.put("archived", "" + archive);
+        params.put("synced", "" + synched);
+        params.put("dummy", "" + dummy);
+        Request.Companion.postRequest(ApiConstants.Companion.getTraders(), params, "", new RequestListener() {
+            @Override
+            public void onError(@NotNull ANError error) {
+
+                responseModel.setData(null);
+                responseModel.setResultCode(0);
+                responseModel.setResultDescription(error.getErrorBody());
+
+                responseCallback.response(responseModel);
+
+
+            }
+
+            @Override
+            public void onError(@NotNull String error) {
+
+            }
+
+            @Override
+            public void onSuccess(@NotNull String response) {
+
+                try {
+
+                    Gson gson = new Gson();
+                    responseModel = gson.fromJson(response, ResponseModel.class);
+                    responseCallback.response(responseModel);
+
+
+                } catch (Exception e) {
+                    responseModel.setData(null);
+                    responseModel.setResultCode(0);
+                    responseModel.setResultDescription(e.getMessage());
+                    responseCallback.response(responseModel);
+
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+        return responseModel;
+    }
+
+    //Live
+
 
 
 }

@@ -13,9 +13,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.dev.lishaboramobile.Admin.Adapters.ViewPagerAdapter;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Trader.Models.TraderModel;
+import com.dev.lishaboramobile.admin.adapters.ViewPagerAdapter;
 
 import java.util.Objects;
 
@@ -83,10 +83,10 @@ public class AdimTraderProfile extends AppCompatActivity {
 
         Objects.requireNonNull(tabLayout.getTabAt(0)).setText("Profile");
         Objects.requireNonNull(tabLayout.getTabAt(1)).setText("Payouts");
-        Objects.requireNonNull(tabLayout.getTabAt(2)).setText("Products");
+        Objects.requireNonNull(tabLayout.getTabAt(2)).setText("Transactions");
         Objects.requireNonNull(tabLayout.getTabAt(3)).setText("Milk");
         Objects.requireNonNull(tabLayout.getTabAt(4)).setText("Loans");
-        Objects.requireNonNull(tabLayout.getTabAt(4)).setText("Orders");
+        Objects.requireNonNull(tabLayout.getTabAt(5)).setText("Orders");
         //tabLayout.getTabAt(2).setText("Chart");
 
 
@@ -96,7 +96,7 @@ public class AdimTraderProfile extends AppCompatActivity {
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
 
-        basicProfile = new FragmentTradersBasicProfile();
+        basicProfile = FragmentTradersBasicProfile.newInstance(traderModel);
         payouts = new FragmentTradersPayouts();
         products = new FragmentTradersProducts();
         milkCollections = new FragmentTraderMilkCollections();

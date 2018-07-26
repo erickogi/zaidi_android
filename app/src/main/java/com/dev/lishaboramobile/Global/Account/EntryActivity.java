@@ -20,13 +20,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.dev.lishaboramobile.Admin.Models.AdminModel;
 import com.dev.lishaboramobile.Global.AppConstants;
 import com.dev.lishaboramobile.Global.Utils.NetworkUtils;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Trader.Models.TraderModel;
 import com.dev.lishaboramobile.Views.Admin.AdminActivity;
 import com.dev.lishaboramobile.Views.Trader.TraderActivity;
+import com.dev.lishaboramobile.admin.models.AdminModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hbb20.CountryCodePicker;

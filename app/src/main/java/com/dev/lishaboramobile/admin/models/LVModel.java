@@ -1,4 +1,4 @@
-package com.dev.lishaboramobile.Admin.Models;
+package com.dev.lishaboramobile.admin.models;
 
 public class LVModel {
     private String label;

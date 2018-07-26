@@ -20,7 +20,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.dev.lishaboramobile.Admin.Models.AdminModel;
 import com.dev.lishaboramobile.BottomNav.AHBottomNavigation;
 import com.dev.lishaboramobile.BottomNav.AHBottomNavigationItem;
 import com.dev.lishaboramobile.Global.Utils.MyToast;
@@ -29,6 +28,7 @@ import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Views.Admin.FragmentAdminDashboard;
 import com.dev.lishaboramobile.Views.Trader.AdminDrawerClass;
 import com.dev.lishaboramobile.Views.Trader.AdminDrawerItemListener;
+import com.dev.lishaboramobile.admin.models.AdminModel;
 import com.dev.lishaboramobile.admin.ui.ResetPassword;
 import com.dev.lishaboramobile.admin.ui.admins.AdminProductsFragment;
 import com.dev.lishaboramobile.admin.ui.admins.AdminsTradersListFragment;
@@ -126,16 +126,13 @@ public class AdminsActivity extends AppCompatActivity {
 
         Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
         Button neutral = alertDialogAndroid.getButton(DialogInterface.BUTTON_NEUTRAL);
-        neutral.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                edtDepartment.setEnabled(true);
-                edtEmail.setEnabled(true);
-                edtNames.setEnabled(true);
-                edtMobile.setEnabled(true);
+        neutral.setOnClickListener(view -> {
+            edtDepartment.setEnabled(true);
+            edtEmail.setEnabled(true);
+            edtNames.setEnabled(true);
+            edtMobile.setEnabled(true);
 
 
-            }
         });
         theButton.setOnClickListener(new CustomListener(alertDialogAndroid, adminModel));
 

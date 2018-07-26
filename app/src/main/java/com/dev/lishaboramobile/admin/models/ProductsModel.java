@@ -1,4 +1,4 @@
-package com.dev.lishaboramobile.Admin.Models;
+package com.dev.lishaboramobile.admin.models;
 
 import java.io.Serializable;
 

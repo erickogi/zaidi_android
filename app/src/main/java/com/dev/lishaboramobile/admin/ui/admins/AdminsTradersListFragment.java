@@ -35,9 +35,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.dev.lishaboramobile.Admin.Adapters.TradersAdapter;
-import com.dev.lishaboramobile.Admin.Controllers.TradersController;
-import com.dev.lishaboramobile.Admin.Data.AdminPrefs;
 import com.dev.lishaboramobile.Global.Models.FetchTraderModel;
 import com.dev.lishaboramobile.Global.Models.ResponseModel;
 import com.dev.lishaboramobile.Global.Utils.DateTimeUtils;
@@ -47,6 +44,8 @@ import com.dev.lishaboramobile.Global.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.Global.Utils.RequestDataCallback;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Trader.Models.TraderModel;
+import com.dev.lishaboramobile.admin.TradersController;
+import com.dev.lishaboramobile.admin.adapters.TradersAdapter;
 import com.dev.lishaboramobile.login.PrefrenceManager;
 import com.dev.lishaboramobile.login.ui.login.LoginController;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
@@ -747,7 +746,7 @@ public class AdminsTradersListFragment extends Fragment {
             }
 
 
-            AdminPrefs adminPrefs = new AdminPrefs(context);
+            //  AdminPrefs adminPrefs = new AdminPrefs(context);
             TraderModel traderModel = new TraderModel();
             //if(type==ISCREATE) {
             traderModel.setId(0);
