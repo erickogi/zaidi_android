@@ -9,13 +9,13 @@ import android.view.ViewGroup;
 import com.dev.lishaboramobile.Global.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Trader.Models.RoutesModel;
-import com.dev.lishaboramobile.admin.adapters.viewHolders.ProductsViewHolder;
+import com.dev.lishaboramobile.admin.adapters.viewHolders.RoutesViewHolder;
 
 import java.util.List;
 
 //import com.dev.lishaboramobile.Trader.Models.RoutesModel;
 
-public class RoutesAdapter extends RecyclerView.Adapter<ProductsViewHolder> {
+public class RoutesAdapter extends RecyclerView.Adapter<RoutesViewHolder> {
 
     private Context context;
     private List<RoutesModel> modelList;
@@ -29,17 +29,17 @@ public class RoutesAdapter extends RecyclerView.Adapter<ProductsViewHolder> {
     }
 
     @Override
-    public ProductsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RoutesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = null;
 
         itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.route_card, parent, false);
 
-        return new ProductsViewHolder(itemView, listener);
+        return new RoutesViewHolder(itemView, listener);
     }
 
 
     @Override
-    public void onBindViewHolder(ProductsViewHolder holder, int position) {
+    public void onBindViewHolder(RoutesViewHolder holder, int position) {
         RoutesModel routesModel = modelList.get(position);
 
         holder.name.setText(routesModel.getRoute());

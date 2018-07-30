@@ -50,6 +50,10 @@ public class PrefrenceManager {
     private static final String isdummy = "isdummy";
 
 
+    private static final String routesSettingsDone = "isroutesdone";
+    private static final String productsSettingsDone = "isProductSettingsDone";
+    private static final String cycleSettingsDone = "isCycleSettingsDone";
+    private static final String unitSettingsDone = "isCycleSettingsDone";
     // Shared Preferences
 
     SharedPreferences pref;
@@ -160,6 +164,36 @@ public class PrefrenceManager {
 
         return traderModel;
 
+    }
+
+    public void setRoutesSettingsDone(boolean status) {
+        editor.putBoolean(routesSettingsDone, status);
+        editor.commit();
+    }
+
+    public void setProductsSettingsDone(boolean status) {
+        editor.putBoolean(productsSettingsDone, status);
+        editor.commit();
+    }
+
+    public void setUnitSettingsDone(boolean status) {
+        editor.putBoolean(unitSettingsDone, status);
+        editor.commit();
+    }
+
+    public void setCycleSettingsDone(boolean status) {
+        editor.putBoolean(cycleSettingsDone, status);
+        editor.commit();
+    }
+
+    public boolean[] getSettingStatus() {
+        boolean[] settings = new boolean[4];
+        settings[0] = pref.getBoolean(routesSettingsDone, false);
+        settings[1] = pref.getBoolean(productsSettingsDone, false);
+        settings[2] = pref.getBoolean(unitSettingsDone, false);
+        settings[3] = pref.getBoolean(cycleSettingsDone, false);
+
+        return settings;
     }
 
 

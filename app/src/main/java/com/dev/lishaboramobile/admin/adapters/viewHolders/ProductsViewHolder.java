@@ -2,6 +2,7 @@ package com.dev.lishaboramobile.admin.adapters.viewHolders;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.dev.lishaboramobile.Global.Utils.OnclickRecyclerListener;
@@ -13,6 +14,7 @@ public class ProductsViewHolder extends RecyclerView.ViewHolder implements View.
     //  public RelativeLayout engineer_background;
 
     public TextView status, id, name, selling, cost, famerscount;
+    public CheckBox chk;
     private WeakReference<OnclickRecyclerListener> listenerWeakReference;
 
 
@@ -26,6 +28,8 @@ public class ProductsViewHolder extends RecyclerView.ViewHolder implements View.
         name = itemView.findViewById(R.id.txt_name);
         selling = itemView.findViewById(R.id.txt_selling_price);
         cost = itemView.findViewById(R.id.txt_cost_price);
+        chk = itemView.findViewById(R.id.chk_add);
+        chk.setOnClickListener(this::onClick);
 
     }
 

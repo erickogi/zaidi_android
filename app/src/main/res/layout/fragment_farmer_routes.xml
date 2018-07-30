@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipeRefreshView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="visible">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.chip.ChipGroup
+
+            android:id="@+id/chip_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            app:singleSelection="true">
+
+
+        </android.support.design.chip.ChipGroup>
+
+        <android.support.v7.widget.RecyclerView
+
+            android:id="@+id/recyclerView"
+
+            android:layout_width="match_parent"
+
+
+            android:layout_height="match_parent"
+            android:layout_below="@+id/chip_group"
+
+            android:layout_centerHorizontal="true"
+            android:background="@color/divider"
+            android:nestedScrollingEnabled="false"
+            android:scrollIndicators="start|end"
+            android:scrollbarSize="6dp"
+            android:scrollbars="vertical"
+            android:visibility="visible"
+
+            >
+
+
+        </android.support.v7.widget.RecyclerView>
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/avi"
+            style="@style/AVLoadingIndicatorView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            app:indicatorColor="@color/colorPrimaryDark"
+            app:indicatorName="BallSpinFadeLoaderIndicator" />
+
+        <LinearLayout
+
+            android:id="@+id/empty_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="50dp"
+                android:src="@drawable/empty"
+                android:visibility="visible" />
+
+            <TextView
+
+                android:id="@+id/empty_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp"
+                android:text="hello"
+
+                android:textSize="15sp"
+                android:textStyle="italic|bold" />
+
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/network_state"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/transparent"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/txt_network_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:padding="1dp"
+                android:text=""
+                android:textAlignment="center" />
+
+        </RelativeLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:visibility="visible"
+            app:srcCompat="@android:drawable/ic_input_add" />
+
+    </RelativeLayout>
+
+</android.support.v4.widget.SwipeRefreshLayout>

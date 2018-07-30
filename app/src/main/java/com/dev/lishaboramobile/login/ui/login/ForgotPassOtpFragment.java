@@ -19,6 +19,7 @@ import com.dev.lishaboramobile.Global.Account.ResponseObject;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Trader.Models.TraderModel;
 import com.dev.lishaboramobile.admin.models.AdminModel;
+import com.dev.lishaboramobile.login.LoginConsts;
 import com.google.gson.Gson;
 import com.hololo.library.otpview.OTPView;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -102,14 +103,14 @@ public class ForgotPassOtpFragment extends Fragment implements View.OnClickListe
         btnNextOtpVerify = view.findViewById(R.id.btn_next_verify);
         aviEnterOtp = view.findViewById(R.id.avi_otp);
         btnNextOtpVerify.setOnClickListener(this);
-        btnNextOtpResend.setOnClickListener(this);
+        //btnNextOtpResend.setOnClickListener(this);
 
         otpView.setListener(s -> {
 
             Log.d("ReTrReq", "Sucees " + s);
             btnNextOtpVerify.setEnabled(true);
-            btnNextOtpResend.setEnabled(false);
-            // startVerify(s);
+//            btnNextOtpResend.setEnabled(false);
+            startVerify(s);
         });
 
 
@@ -123,6 +124,9 @@ public class ForgotPassOtpFragment extends Fragment implements View.OnClickListe
 
         if (getArguments() != null) {
             responseModel = (ResponseObject) getArguments().getSerializable("response");
+            Log.d("responsemodel", responseModel.getResultDescription());
+        } else {
+            responseModel = LoginConsts.getResponseObject();
         }
 
         if (responseModel != null) {
@@ -140,6 +144,8 @@ public class ForgotPassOtpFragment extends Fragment implements View.OnClickListe
 
                     break;
                 default:
+
+                    phoneNumber = LoginConsts.getPhone();
             }
 
         }
@@ -163,7 +169,11 @@ public class ForgotPassOtpFragment extends Fragment implements View.OnClickListe
     }
 
     private void startVerify(String s) {
-        handlerOnOtpVerify();
+        if (s.toLowerCase().equals(responseModel.getCode())) {
+            handlerOnOtpVerify();
+        } else {
+            snack("Code mismatch");
+        }
     }
 
 
@@ -172,7 +182,8 @@ public class ForgotPassOtpFragment extends Fragment implements View.OnClickListe
                     aviEnterOtp.smoothToHide();
         //TODO VERIFY THIS CODE
 
-        getActivity().getSupportFragmentManager().beginTransaction()
+        getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_enter, R.anim.left_out)
+
                 .replace(R.id.container, ForgotPassConfirmFragment.newInstance(responseModel))
                 .commitNow();
 
@@ -209,6 +220,11 @@ public class ForgotPassOtpFragment extends Fragment implements View.OnClickListe
 
     private void verifyOtplicked() {
 
+        if (otpView.getOtp() != null && otpView.getOtp().length() == 4) {
+            startVerify(otpView.getOtp());
+        } else {
+            snack("Wrong code");
+        }
     }
 
     private void resendOtpClicked() {

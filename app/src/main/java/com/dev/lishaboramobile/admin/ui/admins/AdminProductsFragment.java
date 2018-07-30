@@ -62,11 +62,12 @@ public class AdminProductsFragment extends Fragment {
     LinkedList<ProductsModel> productsModel;
     LinkedList<ProductsModel> filteredProductsModels;
     FloatingActionButton fab;
-    ProductsAdapter listAdapter;
+
     private boolean isConnected;
     private View view;
     private Context context;
     private RecyclerView recyclerView;
+    ProductsAdapter listAdapter;
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
     private LinearLayout linearLayoutEmpty;
     private LinearLayout empty_layout;

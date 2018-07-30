@@ -9,7 +9,17 @@ public class ProductsModel implements Serializable {
     private String sellingprice;
     private String transactiontime;
     private String transactedby;
+    private String subscribed;
     private int status;
+    private boolean isSelected = false;
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
 
     public int getId() {
         return id;
@@ -65,5 +75,13 @@ public class ProductsModel implements Serializable {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getSubscribed() {
+        return subscribed;
+    }
+
+    public void setSubscribed(String subscribed) {
+        this.subscribed = subscribed;
     }
 }

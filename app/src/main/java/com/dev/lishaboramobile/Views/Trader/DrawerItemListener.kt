@@ -22,6 +22,8 @@ interface DrawerItemListener {
     fun analyticsReportsTransactionsClicked()
 
     fun payoutsClicked()
+    fun productsClicked()
+
 
 
 }

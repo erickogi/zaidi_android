@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 public class FragmentTradersBasicProfile extends Fragment {
@@ -49,9 +51,10 @@ public class FragmentTradersBasicProfile extends Fragment {
     private FragmentTradersProducts fragmentTradersProducts;
     private FragmentTradersRoutes fragmentTradersRoutes;
     private FragmentTradersFarmers fragmentTradersFarmers;
-    private RoutesModel routesModel;
-    private ProductsModel productsModel;
+    private List<RoutesModel> routesModel;
+    private List<ProductsModel> productsModel;
     private TraderModel traderModel;
+    private List<FamerModel> famerModel;
 
     public static FragmentTradersBasicProfile newInstance(TraderModel traderModel) {
         FragmentTradersBasicProfile fragmentTradersBasicProfile = new FragmentTradersBasicProfile();
@@ -68,13 +71,7 @@ public class FragmentTradersBasicProfile extends Fragment {
 
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(AdminsViewModel.class);
 
-        // TODO: Use the ViewModel
-    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -123,13 +120,27 @@ public class FragmentTradersBasicProfile extends Fragment {
 
 
         }
+        checkNullubility();
+        setupViewPager(viewPager);
 
-        //getRoutes();
-        //getProducts();
-        setupViewPager(viewPager, routesModel, productsModel);
+
+        getRoutes();
+        getProducts();
+        getFarmers();
 
     }
 
+    void checkNullubility() {
+        if (routesModel == null) {
+            routesModel = new LinkedList<>();
+        }
+        if (productsModel == null) {
+            productsModel = new LinkedList<>();
+        }
+        if (famerModel == null) {
+            famerModel = new LinkedList<>();
+        }
+    }
     public void initPager() {
 
 
@@ -165,8 +176,26 @@ public class FragmentTradersBasicProfile extends Fragment {
         return jsonObject;
     }
 
+    private JSONObject getTraderFarmeroductsObject() {
+        RPFSearchModel rpfSearchModel = new RPFSearchModel();
+        rpfSearchModel.setEntitycode(traderModel.getCode());
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(gson.toJson(rpfSearchModel));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+
     private void getProducts() {
         avi.smoothToShow();
+        avi.setVisibility(View.VISIBLE);
+        if (mViewModel == null) {
+            mViewModel = ViewModelProviders.of(this).get(AdminsViewModel.class);
+
+        }
         mViewModel.getTraderProductsModels(getTraderProductsObject(), true).observe(FragmentTradersBasicProfile.this, new Observer<ResponseModel>() {
             @Override
             public void onChanged(@Nullable ResponseModel responseModel) {
@@ -177,6 +206,7 @@ public class FragmentTradersBasicProfile extends Fragment {
                 }.getType();
                 productsModel = gson.fromJson(jsonArray, listType);
 
+                Log.d("ReTrUp", "Product update called" + responseModel.getResultDescription());
 
                 fragmentTradersProducts.update(productsModel);
 
@@ -184,8 +214,41 @@ public class FragmentTradersBasicProfile extends Fragment {
         });
     }
 
+    private void getFarmers() {
+        avi.smoothToShow();
+        avi.setVisibility(View.VISIBLE);
+
+        if (mViewModel == null) {
+            mViewModel = ViewModelProviders.of(this).get(AdminsViewModel.class);
+
+        }
+        mViewModel.getTraderFarmersModels(getTraderFarmeroductsObject(), true).observe(FragmentTradersBasicProfile.this, new Observer<ResponseModel>() {
+            @Override
+            public void onChanged(@Nullable ResponseModel responseModel) {
+                avi.smoothToHide();
+                snack(responseModel.getResultDescription());
+                JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
+                Type listType = new TypeToken<LinkedList<FamerModel>>() {
+                }.getType();
+                famerModel = gson.fromJson(jsonArray, listType);
+
+
+                Log.d("ReTrUp", "farmers update called");
+                fragmentTradersFarmers.update(famerModel);
+
+            }
+        });
+    }
+
+
     private void getRoutes() {
         avi.smoothToShow();
+        avi.setVisibility(View.VISIBLE);
+
+        if (mViewModel == null) {
+            mViewModel = ViewModelProviders.of(this).get(AdminsViewModel.class);
+
+        }
         mViewModel.getTraderRoutesModels(getTraderRoutesObject(), true).observe(FragmentTradersBasicProfile.this, new Observer<ResponseModel>() {
             @Override
             public void onChanged(@Nullable ResponseModel responseModel) {
@@ -195,7 +258,7 @@ public class FragmentTradersBasicProfile extends Fragment {
                 Type listType = new TypeToken<LinkedList<RoutesModel>>() {
                 }.getType();
                 routesModel = gson.fromJson(jsonArray, listType);
-
+                Log.d("ReTrUp", "routes update called");
                 fragmentTradersRoutes.update(routesModel);
 
 
@@ -213,20 +276,20 @@ public class FragmentTradersBasicProfile extends Fragment {
 
     }
 
-    private void setupViewPager(ViewPager viewPager, RoutesModel routesModel, ProductsModel productsModel) {
+    private void setupViewPager(ViewPager viewPager) {
         adapter = new ViewPagerAdapter(getChildFragmentManager());
 
 
         fragmentTradersProducts = FragmentTradersProducts.newInstance(productsModel);
         fragmentTradersRoutes = FragmentTradersRoutes.newInstance(routesModel);
-        fragmentTradersFarmers = FragmentTradersFarmers.newInstance(new FamerModel());
+        fragmentTradersFarmers = FragmentTradersFarmers.newInstance(famerModel);
 
 
         adapter.addFragment(fragmentTradersProducts, "Products");
-        adapter.addFragment(fragmentTradersRoutes, "Routes");
+        adapter.addFragment(fragmentTradersRoutes, "FragmentRoutes");
         adapter.addFragment(fragmentTradersFarmers, "Farmers");
 
-        viewPager.setOffscreenPageLimit(1);
+        viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(adapter);
 
         View root = tabLayout.getChildAt(0);

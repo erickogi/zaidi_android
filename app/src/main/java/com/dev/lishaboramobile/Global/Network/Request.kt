@@ -9,6 +9,7 @@ import com.dev.lishaboramobile.Global.Account.ResponseObject
 import com.dev.lishaboramobile.Global.Models.ResponseModel
 import com.dev.lishaboramobile.Global.Utils.ResponseCallback
 import com.google.gson.Gson
+import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
 
@@ -46,7 +47,7 @@ class Request {
 
                         val gson = Gson()
                         responseModel = gson.fromJson(response, ResponseModel::class.java)
-                        Log.d("2ReTrRe", gson.toJson(responseModel))
+                        // Log.d("2ReTrRe", gson.toJson(responseModel))
 
                         responseCallback.response(responseModel)
 
@@ -64,6 +65,53 @@ class Request {
             })
 
         }
+
+        fun getResponse(url: String, jsonObject: JSONArray, token: String, responseCallback: ResponseCallback) {
+            postRequest(url, jsonObject, token, object : RequestListener {
+                override fun onError(error: ANError) {
+                    responseModel.data = null
+                    responseModel.resultCode = 0
+                    responseModel.resultDescription = error.toString()
+
+                    responseCallback.response(responseModel)
+
+                }
+
+                override fun onError(error: String) {
+
+                    responseModel.data = null
+                    responseModel.resultCode = 0
+                    responseModel.resultDescription = error
+
+                    responseCallback.response(responseModel)
+
+                }
+
+                override fun onSuccess(response: String) {
+                    try {
+
+
+                        val gson = Gson()
+                        responseModel = gson.fromJson(response, ResponseModel::class.java)
+                        // Log.d("2ReTrRe", gson.toJson(responseModel))
+
+                        responseCallback.response(responseModel)
+
+
+                    } catch (e: Exception) {
+                        responseModel.data = null
+                        responseModel.resultCode = 0
+                        responseModel.resultDescription = e.message
+                        responseCallback.response(responseModel)
+
+                        e.printStackTrace()
+                    }
+
+                }
+            })
+
+        }
+
 
         fun getResponseSingle(url: String, jsonObject: JSONObject, token: String, responseCallback: ResponseCallback) {
             postRequest(url, jsonObject, token, object : RequestListener {
@@ -155,11 +203,12 @@ class Request {
                 mtoken = token
 
             }
-            Log.d("ReTrReq", params.toString())
+            Log.d("ReTrReq", params.toString() + " Url : " + url)
 
 
             AndroidNetworking.post(url)
                     .addJSONObjectBody(params)
+
 
                     .addHeaders("Authorization", "Bearer $mtoken")
                     .addHeaders("Accept", "application/json")
@@ -185,6 +234,47 @@ class Request {
                         }
                     })
         }
+
+        fun postRequest(url: String, params: JSONArray, token: String?, listener: RequestListener) {
+
+            var mtoken = ""
+            if (token != null) {
+
+                mtoken = token
+
+            }
+            Log.d("ReTrReq", params.toString() + " Url : " + url)
+
+
+            AndroidNetworking.post(url)
+                    .addJSONArrayBody(params)
+
+
+                    .addHeaders("Authorization", "Bearer $mtoken")
+                    .addHeaders("Accept", "application/json")
+
+
+                    .setTag("test")
+                    .setPriority(Priority.HIGH)
+                    .build()
+                    .getAsString(object : StringRequestListener {
+                        override fun onResponse(response: String) {
+                            // do anything with response
+                            Log.d("ReTrRe", response)
+                            listener.onSuccess(response)
+
+                        }
+
+                        override fun onError(error: ANError) {
+                            // handle error
+
+                            Log.d("ReTrRe", error.toString())
+                            listener.onError(error)
+                            //  listener.onError(error)
+                        }
+                    })
+        }
+
 
         fun getRequest(url: String, token: String?, listener: RequestListener) {
             var mtoken = ""

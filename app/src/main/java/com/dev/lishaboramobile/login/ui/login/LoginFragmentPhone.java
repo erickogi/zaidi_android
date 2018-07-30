@@ -10,6 +10,7 @@ import android.support.design.card.MaterialCardView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -23,6 +24,7 @@ import com.dev.lishaboramobile.Global.Account.ResponseObject;
 import com.dev.lishaboramobile.Global.Utils.NetworkUtils;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Trader.Models.TraderModel;
+import com.dev.lishaboramobile.login.LoginConsts;
 import com.dev.lishaboramobile.login.Models.AuthModel;
 import com.google.gson.Gson;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -52,6 +54,7 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
     private TextInputEditText edtPhone;
     private Button btnNextPhoneView;
     private int headerCardState = 0;
+    private Fragment fragment;
 
 
     public static LoginFragmentPhone newInstance() {
@@ -213,7 +216,7 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
                         handler();
                         Gson gson = new Gson();
                         TraderModel traderModel;
-
+                        LoginConsts.setResponseObject(responseModel);
                         switch (responseModel.getType()) {
                             case LoginController.ADMIN:
 
@@ -272,16 +275,29 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
     }
 
     public void passWordFragment(ResponseObject responseModel) {
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, LoginFragmentPassword.newInstance(responseModel))
-                .commitNow();
+//        getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_enter, R.anim.left_out)
+//
+//                .replace(R.id.container, LoginFragmentPassword.newInstance(responseModel))
+//                .commitNow();
+
+        fragment = LoginFragmentPassword.newInstance(responseModel);
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.beginTransaction().setCustomAnimations(R.anim.left_enter, R.anim.right_out)
+                .replace(R.id.container, fragment, "fragmentWelcome").commit();
 
     }
 
     public void newPassword(ResponseObject responseModel) {
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, ForgotPassConfirmFragment.newInstance(responseModel))
-                .commitNow();
+
+        fragment = ForgotPassConfirmFragment.newInstance(responseModel);
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.beginTransaction().setCustomAnimations(R.anim.left_enter, R.anim.right_out)
+                .replace(R.id.container, fragment, "fragmentWelcome").commit();
+
+//        getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_enter, R.anim.left_out)
+//
+//                .replace(R.id.container, ForgotPassConfirmFragment.newInstance(responseModel))
+//                .commitNow();
 
     }
 

@@ -20,11 +20,21 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsViewHolder> {
     private Context context;
     private List<ProductsModel> modelList;
     private OnclickRecyclerListener listener;
+    private boolean isChk = false;
 
     public ProductsAdapter(Context context, List<ProductsModel> modelList, OnclickRecyclerListener listener) {
         this.context = context;
         this.modelList = modelList;
         this.listener = listener;
+        this.isChk = false;
+
+    }
+
+    public ProductsAdapter(Context context, List<ProductsModel> modelList, OnclickRecyclerListener listener, boolean isChk) {
+        this.context = context;
+        this.modelList = modelList;
+        this.listener = listener;
+        this.isChk = isChk;
 
     }
 
@@ -47,6 +57,16 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsViewHolder> {
         holder.name.setText(productsModel.getNames());
         holder.cost.setText(productsModel.getCostprice());
         holder.status.setText("" + productsModel.getStatus());
+        if (productsModel.isSelected()) {
+            holder.chk.setChecked(true);
+        } else {
+            holder.chk.setChecked(false);
+        }
+        if (isChk) {
+            holder.chk.setVisibility(View.VISIBLE);
+        } else {
+            holder.chk.setVisibility(View.GONE);
+        }
 
         String status = "";
 

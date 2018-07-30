@@ -5,6 +5,10 @@
     android:layout_height="match_parent">
 
 
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -18,299 +22,286 @@
                 app:cardElevation="3dp"
                 app:cardUseCompatPadding="true">
 
-                <RelativeLayout
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="4dp">
 
-
-                    <LinearLayout
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:padding="4dp">
+                        android:layout_height="wrap_content">
 
-                        <RelativeLayout
+                        <View
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="1dp"
+                            android:layout_below="@+id/layout1"
 
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="1dp"
-                                android:layout_below="@+id/layout1"
+                            android:background="@color/drawertext" />
 
-                                android:background="@color/drawertext" />
+                        <LinearLayout
+                            android:id="@+id/layout1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            android:layout_marginStart="12dp"
+                            android:layout_marginLeft="12dp"
+
+                            android:orientation="horizontal">
 
                             <LinearLayout
-                                android:id="@+id/layout1"
-                                android:layout_width="match_parent"
+
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="3dp"
+                                    android:text="Names"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold" />
+
+                                <TextView
+
+                                    android:id="@+id/txt_trader_name"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+
+                                    android:padding="3dp"
+                                    android:text="Traders Full Names Here"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="3dp"
+                                    android:text="Code"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txt_trader_code"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="3dp"
+
+                                    android:text="23781"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_below="@+id/layout9"
+                            android:layout_marginTop="2dp"
+
+                            android:background="@color/drawertext" />
+
+                        <LinearLayout
+                            android:id="@+id/layout9"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:id="@+id/layout2"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+
+                                android:layout_marginLeft="12dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="3dp"
+                                    android:text="Business Name"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txt_business_name"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="3dp"
+
+                                    android:text="Business Name"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:layout_marginLeft="12dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="3dp"
+                                    android:text="Default Payment"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txt_default"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+
+                                    android:padding="3dp"
+                                    android:text="Cash"
+
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_below="@+id/layout3"
+                            android:background="@color/drawertext" />
+
+                        <LinearLayout
+                            android:id="@+id/layout3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+
+                                android:layout_width="0dp"
+
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:layout_marginLeft="12dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="3dp"
+                                    android:text="Account Status"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/txt_status"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="3dp"
+
+                                    android:text="Active"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
 
                                 android:layout_marginStart="12dp"
                                 android:layout_marginLeft="12dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
 
-                                android:orientation="horizontal">
-
-                                <LinearLayout
-
-                                    android:layout_width="0dp"
+                                <TextView
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="3"
-                                    android:orientation="vertical">
+                                    android:padding="3dp"
+                                    android:text="Last Synched"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold" />
 
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:padding="3dp"
-                                        android:text="Names"
-                                        android:textColor="@color/black"
-                                        android:textStyle="bold" />
-
-                                    <TextView
-
-                                        android:id="@+id/txt_trader_name"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-
-                                        android:padding="3dp"
-                                        android:text="Traders Full Names Here"
-                                        android:textStyle="bold" />
-                                </LinearLayout>
-
-                                <LinearLayout
-
-                                    android:layout_width="0dp"
+                                <TextView
+                                    android:id="@+id/txt_last_synched"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:orientation="vertical">
+                                    android:padding="3dp"
 
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:padding="3dp"
-                                        android:text="Code"
-                                        android:textColor="@color/black"
-                                        android:textStyle="bold" />
-
-                                    <TextView
-                                        android:id="@+id/txt_trader_code"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:padding="3dp"
-
-                                        android:text="23781"
-                                        android:textStyle="bold" />
-                                </LinearLayout>
+                                    android:text="12-12-2017"
+                                    android:textStyle="bold" />
                             </LinearLayout>
+                        </LinearLayout>
 
 
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="1dp"
-                                android:layout_below="@+id/layout9"
-                                android:layout_marginTop="2dp"
-
-                                android:background="@color/drawertext" />
-
-                            <LinearLayout
-                                android:id="@+id/layout9"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-
-                                <LinearLayout
-                                    android:id="@+id/layout2"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="12dp"
-
-                                    android:layout_marginLeft="12dp"
-                                    android:layout_weight="2"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:padding="3dp"
-                                        android:text="Business Name"
-                                        android:textColor="@color/black"
-                                        android:textStyle="bold" />
-
-                                    <TextView
-                                        android:id="@+id/txt_business_name"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:padding="3dp"
-
-                                        android:text="Business Name"
-                                        android:textStyle="bold" />
-                                </LinearLayout>
+                    </RelativeLayout>
 
 
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="12dp"
-                                    android:layout_marginLeft="12dp"
-                                    android:layout_weight="1"
-                                    android:orientation="vertical">
+                    <android.support.design.widget.TabLayout
+                        android:id="@+id/tabs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:background="@color/white"
+                        android:visibility="visible"
 
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:padding="3dp"
-                                        android:text="Default Payment"
-                                        android:textColor="@color/black"
-                                        android:textStyle="bold" />
+                        app:tabIndicatorColor="@android:color/darker_gray"
+                        app:tabMode="fixed"
+                        app:tabSelectedTextColor="@color/colorPrimaryDark"
+                        app:tabTextColor="@color/black" />
 
-                                    <TextView
-                                        android:id="@+id/txt_default"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
+                    <com.wang.avi.AVLoadingIndicatorView
+                        android:id="@+id/avi"
 
-                                        android:padding="3dp"
-                                        android:text="Cash"
-
-                                        android:textStyle="bold" />
-                                </LinearLayout>
-
-                            </LinearLayout>
-
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="1dp"
-                                android:layout_below="@+id/layout3"
-                                android:background="@color/drawertext" />
-
-                            <LinearLayout
-                                android:id="@+id/layout3"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-
-                                <LinearLayout
-
-                                    android:layout_width="0dp"
-
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="12dp"
-                                    android:layout_marginLeft="12dp"
-                                    android:layout_weight="3"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:padding="3dp"
-                                        android:text="Account Status"
-                                        android:textColor="@color/black"
-                                        android:textStyle="bold" />
-
-                                    <TextView
-                                        android:id="@+id/txt_status"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:padding="3dp"
-
-                                        android:text="Active"
-                                        android:textStyle="bold" />
-                                </LinearLayout>
-
-                                <LinearLayout
-
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-
-                                    android:layout_marginStart="12dp"
-                                    android:layout_marginLeft="12dp"
-                                    android:layout_weight="1"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:padding="3dp"
-                                        android:text="Last Synched"
-                                        android:textColor="@color/black"
-                                        android:textStyle="bold" />
-
-                                    <TextView
-                                        android:id="@+id/txt_last_synched"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:padding="3dp"
-
-                                        android:text="12-12-2017"
-                                        android:textStyle="bold" />
-                                </LinearLayout>
-                            </LinearLayout>
+                        style="@style/AVLoadingIndicatorView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:visibility="gone"
+                        app:indicatorColor="@color/colorPrimaryDark"
+                        app:indicatorName="BallSpinFadeLoaderIndicator" />
 
 
-                        </RelativeLayout>
+                    <android.support.v4.view.ViewPager
 
 
-                        <android.support.design.widget.TabLayout
-                            android:id="@+id/tabs"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="top"
-                            android:background="@color/white"
-                            android:visibility="visible"
+                        android:id="@+id/viewpager"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="1dp"
+                        android:visibility="visible" />
 
-                            app:tabIndicatorColor="@android:color/darker_gray"
-                            app:tabMode="fixed"
-                            app:tabSelectedTextColor="@color/colorPrimaryDark"
-                            app:tabTextColor="@color/black" />
-
-                        <com.wang.avi.AVLoadingIndicatorView
-                            android:id="@+id/avi"
-
-                            style="@style/AVLoadingIndicatorView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:visibility="gone"
-                            app:indicatorColor="@color/colorPrimaryDark"
-                            app:indicatorName="BallSpinFadeLoaderIndicator" />
+                </LinearLayout>
 
 
-                        <android.support.v4.view.ViewPager
-
-
-                            android:id="@+id/viewpager"
-                            android:layout_height="match_parent"
-                            android:layout_width="match_parent"
-                            android:layout_margin="1dp"
-                            android:visibility="visible" />
-
-                    </LinearLayout>
-
-                </RelativeLayout>
             </android.support.v7.widget.CardView>
 
-
-            <!--<android.support.v7.widget.CardView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-
-            <!--app:cardCornerRadius="2dp"-->
-            <!--app:cardElevation="3dp"-->
-            <!--app:cardUseCompatPadding="true">-->
-
-
-            <!--</android.support.v7.widget.CardView>-->
         </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
 
 
 </RelativeLayout>

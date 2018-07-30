@@ -32,6 +32,9 @@ import com.dev.lishaboramobile.Global.Utils.RequestDataCallback;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Trader.Data.TraderPrefs;
 import com.dev.lishaboramobile.Trader.Models.TraderModel;
+import com.dev.lishaboramobile.Views.Trader.ui.FragementFarmersList;
+import com.dev.lishaboramobile.Views.Trader.ui.FragmentProductList;
+import com.dev.lishaboramobile.Views.Trader.ui.FragmentRoutes;
 import com.dev.lishaboramobile.admin.adapters.ViewPagerAdapter;
 import com.dev.lishaboramobile.admin.ui.ResetPassword;
 import com.dev.lishaboramobile.admin.ui.admins.AdminsViewModel;
@@ -70,6 +73,13 @@ public class TraderActivity extends AppCompatActivity {
     void setUpDrawer(Toolbar toolbar, String name, String email) {
         DrawerClass.Companion.getDrawer(email, name, this, toolbar, new DrawerItemListener() {
             @Override
+            public void productsClicked() {
+                fragment = new FragmentProductList();
+                popOutFragments();
+                setUpView();
+            }
+
+            @Override
             public void logOutClicked() {
                 new PrefrenceManager(TraderActivity.this).setIsLoggedIn(false, 0);
                 startActivity(new Intent(TraderActivity.this, LoginActivity.class));
@@ -90,6 +100,11 @@ public class TraderActivity extends AppCompatActivity {
             @Override
             public void routesSettingsClicked() {
 
+                fragment = new FragmentRoutes();
+                popOutFragments();
+                setUpView();
+
+
             }
 
             @Override
@@ -105,6 +120,7 @@ public class TraderActivity extends AppCompatActivity {
             @Override
             public void homeClicked() {
 
+                popOutFragments();
             }
 
             @Override
@@ -118,6 +134,24 @@ public class TraderActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    void setUpView() {
+        if (fragment != null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().setCustomAnimations(R.anim.left_out, R.anim.right_enter)
+                    .
+                            replace(R.id.frame_layout, fragment)
+                    .addToBackStack(null).commit();
+        }
+
+    }
+
+    void popOutFragments() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        for (int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
+            fragmentManager.popBackStack();
+        }
     }
 
     private void setUpMainFragment() {
@@ -140,6 +174,7 @@ public class TraderActivity extends AppCompatActivity {
         setUpDrawer(toolbar, traderPrefs.getTraderModel().getMobile(), traderPrefs.getTraderModel().getNames());
 
         fab = findViewById(R.id.fab);
+        fab.hide();
 //
         setUpMainFragment();
 //        viewPager = findViewById(R.id.viewpager);
@@ -155,6 +190,19 @@ public class TraderActivity extends AppCompatActivity {
 //
 //        setupViewPager(viewPager);
 //        setupTabIcons();
+
+        boolean[] settings = new PrefrenceManager(TraderActivity.this).getSettingStatus();
+        for (boolean n : settings) {
+            if (!n) {
+                setUpSettingsDialog();
+                return;
+            }
+        }
+
+
+    }
+
+    private void setUpSettingsDialog() {
 
 
     }
@@ -378,6 +426,7 @@ public class TraderActivity extends AppCompatActivity {
 
 
         }
+
 
     }
 

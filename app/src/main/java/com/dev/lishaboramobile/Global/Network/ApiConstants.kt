@@ -49,15 +49,30 @@ class ApiConstants {
         //Trader Products
         var TraderProduct: String = baseUrl + "Traders/"
         var TraderProducts: String = TraderProduct + "Products.php"
+        var Subscribed: String = TraderProduct + "ProductSubscribe.php"
+
         //var TraderCreateProducts: String = TraderProduct + "Create.php"
         //var TraderUpdateProducts: String = TraderProduct + "Update.php"
 
 
-        //Trader Routes
+        //Trader FragmentRoutes
         var TraderRoute: String = baseUrl + "Traders/"
         var TraderRoutes: String = TraderRoute + "Routes.php"
-        //var TraderCreateRoutes: String = TraderRoute + "Create.php"
-        //var TraderUpdateRoutes: String = TraderRoute + "Update.php"
+        var TraderCreateRoutes: String = TraderRoute + "Create.php"
+        var TraderUpdateRoutes: String = TraderRoute + "Update.php"
+
+
+        //Trader Farmers
+        var TraderFarmer: String = baseUrl + "Traders/"
+        var TraderFarmers: String = TraderFarmer + "Farmers.php"
+        var TraderCreateFarmers: String = TraderFarmer + "Create.php"
+        var TraderUpdateFarmers: String = TraderFarmer + "Update.php"
+
+
+        //Routes
+        var Route: String = baseUrl + "Routes/"
+        var CreateRoutes: String = Route + "Create.php"
+        var UpdateRoutes: String = Route + "Update.php"
 
 
 

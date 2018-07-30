@@ -18,6 +18,7 @@ public class SplashActivity extends AppCompatActivity {
         //setContentView(R.layout.activity_splash);
     }
 
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -33,17 +34,20 @@ public class SplashActivity extends AppCompatActivity {
                 case LoginController.TRADER:
                     intent = new Intent(this, TraderActivity.class);
                     startActivity(intent);
+                    finish();
                     break;
 
 
                 default:
                     intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
+                    finish();
 
             }
         } else {
             intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
+            finish();
 
         }
 

@@ -11,6 +11,7 @@ import android.support.design.card.MaterialCardView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ import com.dev.lishaboramobile.Trader.Models.TraderModel;
 import com.dev.lishaboramobile.Views.Trader.TraderActivity;
 import com.dev.lishaboramobile.admin.AdminsActivity;
 import com.dev.lishaboramobile.admin.models.AdminModel;
+import com.dev.lishaboramobile.login.LoginConsts;
 import com.dev.lishaboramobile.login.Models.AuthModel;
 import com.dev.lishaboramobile.login.PrefrenceManager;
 import com.google.gson.Gson;
@@ -61,6 +63,8 @@ public class LoginFragmentPassword extends Fragment implements View.OnClickListe
     private View view;
     private Button btnNextPasswordView;
     private String phoneNumber = "";
+
+    private Fragment fragment;
 
 
     public static LoginFragmentPassword newInstance(ResponseObject responseObject) {
@@ -214,6 +218,7 @@ public class LoginFragmentPassword extends Fragment implements View.OnClickListe
             mViewModel.passwordAuth(jsonObject).observe(this, responseModel -> {
                 snack(responseModel.getResultDescription());
                 aviPass.smoothToHide();
+                LoginConsts.setResponseObject(responseModel);
 
                 if (responseModel.getResultCode() == 1) {
                     snack(responseModel.getResultDescription());
@@ -256,10 +261,13 @@ public class LoginFragmentPassword extends Fragment implements View.OnClickListe
     }
 
     private void forgotPassword() {
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, ForgotPassPhoneFragment.newInstance(responseModel))
-                // .addToBackStack("nulo")
-                .commitNow();
+
+
+        fragment = ForgotPassPhoneFragment.newInstance(responseModel);
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.beginTransaction().setCustomAnimations(R.anim.left_enter, R.anim.right_out)
+                .replace(R.id.container, fragment, "fragmentWelcome").commit();
+
     }
 
     private void loginTrader(TraderModel traderModel) {

@@ -186,8 +186,16 @@
 
                 </LinearLayout>
 
+                <CheckBox
+                    android:id="@+id/chk_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add"
+                    android:visibility="gone" />
+
 
             </LinearLayout>
+
 
             <View
                 android:layout_width="match_parent"

@@ -534,6 +534,8 @@ public class AdminsTradersListFragment extends Fragment {
                 } else {
 
 
+                    traderModels.clear();
+                    populateTraders();
                     snack(responseModel.getResultDescription());
                 }
 
@@ -604,75 +606,6 @@ public class AdminsTradersListFragment extends Fragment {
         Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
         theButton.setOnClickListener(new CustomListener(alertDialogAndroid));
 
-
-    }
-
-    public void editTrader(TraderModel traderModel) {
-        if (context != null) {
-            LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
-            View mView = layoutInflaterAndroid.inflate(R.layout.dialog_add_trader, null);
-            AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(context));
-            alertDialogBuilderUserInput.setView(mView);
-            alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
-            alertDialogBuilderUserInput.setTitle("Trader");
-
-
-            avi = mView.findViewById(R.id.avi);
-
-
-            TextInputEditText edtNames, edtMobile, edtBussinesName;
-            Spinner spinner;
-            spinner = mView.findViewById(R.id.spinner);
-            edtMobile = mView.findViewById(R.id.edt_traders_phone);
-            edtNames = mView.findViewById(R.id.edt_traders_names);
-            edtBussinesName = mView.findViewById(R.id.edt_traders_business_name);
-
-            edtBussinesName.setText(traderModel.getBusinessname());
-
-            edtMobile.setText(traderModel.getMobile());
-            edtNames.setText(traderModel.getNames());
-
-            CheckBox chk = mView.findViewById(R.id.chk_dummy);
-            chk.setVisibility(View.GONE);
-
-
-            switch (traderModel.getDefaultpaymenttype().toLowerCase()) {
-                case "mpesa":
-                    spinner.setSelection(2, true);
-                    break;
-
-                case "cash":
-                    spinner.setSelection(1, true);
-
-                    break;
-
-                case "bank":
-                    spinner.setSelection(3, true);
-
-                    break;
-
-            }
-
-
-            alertDialogBuilderUserInput
-                    .setCancelable(false)
-                    .setPositiveButton("Update", (dialogBox, id) -> {
-                        // ToDo get user input here
-
-
-                    })
-
-                    .setNegativeButton("Dismiss",
-                            (dialogBox, id) -> dialogBox.cancel());
-
-            AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
-            alertDialogAndroid.setCancelable(false);
-            alertDialogAndroid.show();
-
-            Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
-            theButton.setOnClickListener(new EditCustomListener(alertDialogAndroid, traderModel));
-
-        }
 
     }
 
@@ -807,6 +740,76 @@ public class AdminsTradersListFragment extends Fragment {
         }
 
     }
+
+    public void editTrader(TraderModel traderModel) {
+        if (context != null) {
+            LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
+            View mView = layoutInflaterAndroid.inflate(R.layout.dialog_add_trader, null);
+            AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(context));
+            alertDialogBuilderUserInput.setView(mView);
+            alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
+            alertDialogBuilderUserInput.setTitle("Trader");
+
+
+            avi = mView.findViewById(R.id.avi);
+
+
+            TextInputEditText edtNames, edtMobile, edtBussinesName;
+            Spinner spinner;
+            spinner = mView.findViewById(R.id.spinner);
+            edtMobile = mView.findViewById(R.id.edt_traders_phone);
+            edtNames = mView.findViewById(R.id.edt_traders_names);
+            edtBussinesName = mView.findViewById(R.id.edt_traders_business_name);
+
+            edtBussinesName.setText(traderModel.getBusinessname());
+
+            edtMobile.setText(traderModel.getMobile());
+            edtNames.setText(traderModel.getNames());
+
+            CheckBox chk = mView.findViewById(R.id.chk_dummy);
+            chk.setVisibility(View.GONE);
+
+
+            switch (traderModel.getDefaultpaymenttype().toLowerCase()) {
+                case "mpesa":
+                    spinner.setSelection(2, true);
+                    break;
+
+                case "cash":
+                    spinner.setSelection(1, true);
+
+                    break;
+
+                case "bank":
+                    spinner.setSelection(3, true);
+
+                    break;
+
+            }
+
+
+            alertDialogBuilderUserInput
+                    .setCancelable(false)
+                    .setPositiveButton("Update", (dialogBox, id) -> {
+                        // ToDo get user input here
+
+
+                    })
+
+                    .setNegativeButton("Dismiss",
+                            (dialogBox, id) -> dialogBox.cancel());
+
+            AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
+            alertDialogAndroid.setCancelable(false);
+            alertDialogAndroid.show();
+
+            Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
+            theButton.setOnClickListener(new EditCustomListener(alertDialogAndroid, traderModel));
+
+        }
+
+    }
+
 
     private class EditCustomListener implements View.OnClickListener {
         AlertDialog dialog;

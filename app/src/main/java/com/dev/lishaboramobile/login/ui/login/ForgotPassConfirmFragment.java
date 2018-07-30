@@ -24,6 +24,7 @@ import com.dev.lishaboramobile.Trader.Models.TraderModel;
 import com.dev.lishaboramobile.Views.Trader.TraderActivity;
 import com.dev.lishaboramobile.admin.AdminsActivity;
 import com.dev.lishaboramobile.admin.models.AdminModel;
+import com.dev.lishaboramobile.login.LoginConsts;
 import com.dev.lishaboramobile.login.Models.AuthModel;
 import com.dev.lishaboramobile.login.PrefrenceManager;
 import com.google.gson.Gson;
@@ -31,6 +32,8 @@ import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Objects;
 
 
 public class ForgotPassConfirmFragment extends Fragment implements View.OnClickListener {
@@ -130,6 +133,8 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
 
         if (getArguments() != null) {
             responseModel = (ResponseObject) getArguments().getSerializable("response");
+        } else {
+            responseModel = LoginConsts.getResponseObject();
         }
 
         if (responseModel != null) {
@@ -149,6 +154,7 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
 
                     break;
                 default:
+                    phoneNumber = LoginConsts.getPhone();
             }
 
 
@@ -196,7 +202,7 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
 
             if (edtNewPassword.getText().toString().equals(edtConfirmPassword.getText().toString())) {
                 AuthModel authModel = new AuthModel();
-                authModel.setMobile(phoneNumber);
+                authModel.setMobile(LoginConsts.getPhone());
                 authModel.setPassword(edtConfirmPassword.getText().toString());
                 JSONObject jsonObject = null;
                 try {
@@ -262,7 +268,7 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
         prefrenceManager.setLoggedUser(traderModel);
 
         startActivity(new Intent(getActivity(), TraderActivity.class));
-        getActivity().finish();
+        Objects.requireNonNull(getActivity()).finish();
     }
 
     private void loginAdmin(AdminModel adminModel) {
@@ -271,7 +277,7 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
         prefrenceManager.setLoggedUser(adminModel);
 
         startActivity(new Intent(getActivity(), AdminsActivity.class));
-        getActivity().finish();
+        Objects.requireNonNull(getActivity()).finish();
     }
 
 

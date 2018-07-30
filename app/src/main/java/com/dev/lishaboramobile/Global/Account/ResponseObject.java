@@ -11,6 +11,7 @@ public class ResponseObject implements Serializable {
     private int ResultCode;
     private String ResultDescription;
     private int Type;
+    private String Code;
 
 
     private List<FamerModel> famerModels;
@@ -19,6 +20,13 @@ public class ResponseObject implements Serializable {
     private TraderModel traderModel;
     private List<TraderModel> traderModels;
 
+    public String getCode() {
+        return Code;
+    }
+
+    public void setCode(String code) {
+        Code = code;
+    }
 
     public Object getData() {
         return Data;

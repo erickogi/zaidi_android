@@ -25,6 +25,9 @@ public class FamerModel implements Serializable {
     private String firebasetoken;
     private String cyclecode;
     private String cyclename;
+    private String cycleStartDay;
+    private String cycleStartEndDay;
+    private String cycleStartDate;
     private String routecode;
     private String routename;
     private String unitcode;
@@ -45,10 +48,45 @@ public class FamerModel implements Serializable {
     private int dummy;
 
 
+    private boolean isSynched = false;
+
+
     @Ignore
     private String resultDescription;
     @Ignore
     private int responseCode;
+
+    public boolean isSynched() {
+        return isSynched;
+    }
+
+    public void setSynched(boolean synched) {
+        isSynched = synched;
+    }
+
+    public String getCycleStartDay() {
+        return cycleStartDay;
+    }
+
+    public void setCycleStartDay(String cycleStartDay) {
+        this.cycleStartDay = cycleStartDay;
+    }
+
+    public String getCycleStartEndDay() {
+        return cycleStartEndDay;
+    }
+
+    public void setCycleStartEndDay(String cycleStartEndDay) {
+        this.cycleStartEndDay = cycleStartEndDay;
+    }
+
+    public String getCycleStartDate() {
+        return cycleStartDate;
+    }
+
+    public void setCycleStartDate(String cycleStartDate) {
+        this.cycleStartDate = cycleStartDate;
+    }
 
     @Ignore
     public String getResultDescription() {

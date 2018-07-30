@@ -50,8 +50,12 @@ class DrawerClass {
             val routes = PrimaryDrawerItem().withIdentifier(3)
                     .withName("Routes").withTextColorRes(R.color.white).withIcon(R.drawable.ic_route)
 
-            val payout = PrimaryDrawerItem().withIdentifier(4)
-                    .withName("Payout").withTextColorRes(R.color.white).withIcon(R.drawable.ic_route)
+            val products = PrimaryDrawerItem().withIdentifier(20)
+                    .withName("Products").withTextColorRes(R.color.white).withIcon(R.drawable.ic_route)
+
+
+            val payout = PrimaryDrawerItem().withIdentifier(21)
+                    .withName("Payouts").withTextColorRes(R.color.white).withIcon(R.drawable.ic_route)
 
 
             val notifications = PrimaryDrawerItem().withIdentifier(5)
@@ -123,7 +127,7 @@ class DrawerClass {
                     //.withSelectedItem(-1)
                     .addDrawerItems(
                             home,
-                            routes, notifications, transactions,
+                            routes, products, payout, notifications, transactions,
                             DividerDrawerItem(),
                             account,
                             // settings,
@@ -181,8 +185,14 @@ class DrawerClass {
                                 itemListener.helpClicked()
                                 result.closeDrawer()
                             }
-                            9 -> {
-                                itemListener.profileSettingsClicked()
+
+
+                            20 -> {
+                                itemListener.productsClicked()
+                                result.closeDrawer()
+                            }
+                            21 -> {
+                                itemListener.payoutsClicked()
                                 result.closeDrawer()
                             }
 

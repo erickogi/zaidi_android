@@ -8,15 +8,17 @@ import android.content.Context;
 
 import com.dev.lishaboramobile.Farmer.Models.FamerModel;
 import com.dev.lishaboramobile.Global.Data.Operations.Converters.DateConverter;
+import com.dev.lishaboramobile.Global.Data.Operations.Dao.CyclesDao;
 import com.dev.lishaboramobile.Global.Data.Operations.Dao.FarmersDao;
 import com.dev.lishaboramobile.Global.Data.Operations.Dao.RoutesDao;
 import com.dev.lishaboramobile.Global.Data.Operations.Dao.TradersDao;
 import com.dev.lishaboramobile.Global.Data.Operations.Dao.UnitsDao;
+import com.dev.lishaboramobile.Trader.Models.Cycles;
 import com.dev.lishaboramobile.Trader.Models.RoutesModel;
 import com.dev.lishaboramobile.Trader.Models.TraderModel;
 import com.dev.lishaboramobile.Trader.Models.UnitsModel;
 
-@Database(entities = {TraderModel.class, FamerModel.class, RoutesModel.class, UnitsModel.class}, version = 5)
+@Database(entities = {TraderModel.class, FamerModel.class, RoutesModel.class, UnitsModel.class, Cycles.class}, version = 6)
 @TypeConverters(DateConverter.class)
 
 public abstract class LMDatabase extends RoomDatabase {
@@ -41,5 +43,7 @@ public abstract class LMDatabase extends RoomDatabase {
     public abstract FarmersDao farmersDao();
     public abstract RoutesDao routesDao();
     public abstract UnitsDao unitsDao();
+
+    public abstract CyclesDao cyclesDao();
 
 }

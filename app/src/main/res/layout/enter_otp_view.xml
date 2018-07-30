@@ -53,6 +53,7 @@
             android:textColor="@android:color/black" />
 
         <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -72,6 +73,11 @@
                 app:textColor="@android:color/black"
                 app:textSize="5"
                 app:viewsPadding="30" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorPrimaryDark" />
 
         </LinearLayout>
 

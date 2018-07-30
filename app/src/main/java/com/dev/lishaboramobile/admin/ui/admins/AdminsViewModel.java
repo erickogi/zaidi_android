@@ -16,6 +16,7 @@ import com.dev.lishaboramobile.Global.Network.ApiConstants;
 import com.dev.lishaboramobile.Global.Network.Request;
 import com.dev.lishaboramobile.Global.Utils.ResponseCallback;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class AdminsViewModel extends AndroidViewModel {
@@ -28,11 +29,15 @@ public class AdminsViewModel extends AndroidViewModel {
     private MutableLiveData products;
     private MutableLiveData traderRoutes;
     private MutableLiveData traderProducts;
+    private MutableLiveData traderFarmers;
     private MutableLiveData updateSuccess;
     private MutableLiveData updateProductSuccess;
     private MutableLiveData updateAdminSuccess;
     private MutableLiveData createSuccess;
     private MutableLiveData createProductSuccess;
+    private MutableLiveData subscribeProductSuccess;
+    private MutableLiveData createRouteSuccess;
+    private MutableLiveData updateRouteSuccess;
     private MutableLiveData editSuccess;
 
 
@@ -161,8 +166,39 @@ public class AdminsViewModel extends AndroidViewModel {
         }
 
 
-        return products;
+        return traderProducts;
     }
+
+    public LiveData<ResponseModel> getTraderFarmersModels(JSONObject jsonObject, boolean fetchFromOnline) {
+
+        if (this.traderFarmers == null) {
+            this.traderFarmers = new MutableLiveData();
+            if (fetchFromOnline) {
+                Request.Companion.getResponse(ApiConstants.Companion.getTraderFarmers(), jsonObject, "", new ResponseCallback() {
+                            @Override
+                            public void response(ResponseModel responseModel) {
+                                traderFarmers.setValue(responseModel);
+                            }
+
+                            @Override
+                            public void response(ResponseObject responseModel) {
+
+                                traderFarmers.setValue(responseModel);
+                            }
+                        }
+                );
+
+            } else {
+
+            }
+
+
+        }
+
+
+        return traderFarmers;
+    }
+
 
 
     public void refresh(JSONObject jsonObject, boolean fetchFromOnline) {
@@ -304,6 +340,56 @@ public class AdminsViewModel extends AndroidViewModel {
         return createProductSuccess;
     }
 
+    public LiveData<ResponseModel> createRoute(JSONObject jsonObject, boolean b) {
+        if (this.createRouteSuccess == null) {
+        }
+        this.createRouteSuccess = new MutableLiveData();
+
+        if (b) {
+            Request.Companion.getResponse(ApiConstants.Companion.getCreateRoutes(), jsonObject, "", new ResponseCallback() {
+                @Override
+                public void response(ResponseModel responseModel) {
+                    createRouteSuccess.setValue(responseModel);
+                }
+
+                @Override
+                public void response(ResponseObject responseModel) {
+                    createRouteSuccess.setValue(responseModel);
+
+                }
+            });
+
+        } else {
+
+        }
+        return createRouteSuccess;
+    }
+
+    public LiveData<ResponseModel> subscribeProducts(JSONArray jsonObject, boolean b) {
+        if (this.subscribeProductSuccess == null) {
+        }
+        this.subscribeProductSuccess = new MutableLiveData();
+
+        if (b) {
+            Request.Companion.getResponse(ApiConstants.Companion.getSubscribed(), jsonObject, "", new ResponseCallback() {
+                @Override
+                public void response(ResponseModel responseModel) {
+                    subscribeProductSuccess.setValue(responseModel);
+                }
+
+                @Override
+                public void response(ResponseObject responseModel) {
+                    subscribeProductSuccess.setValue(responseModel);
+
+                }
+            });
+
+        } else {
+
+        }
+        return subscribeProductSuccess;
+    }
+
     public void refreshProducts(JSONObject jsonObject, boolean fetchFromOnline) {
         if (this.products == null) {
             this.products = new MutableLiveData();
@@ -319,6 +405,31 @@ public class AdminsViewModel extends AndroidViewModel {
                         @Override
                         public void response(ResponseObject responseModel) {
                             products.setValue(responseModel);
+
+                        }
+                    }
+            );
+
+        } else {
+
+        }
+    }
+
+    public void refreshRoutes(JSONObject traderRoutesObject, boolean b) {
+        if (this.traderRoutes == null) {
+            this.traderRoutes = new MutableLiveData();
+
+        }
+        if (b) {
+            Request.Companion.getResponse(ApiConstants.Companion.getTraderRoutes(), traderRoutesObject, "", new ResponseCallback() {
+                        @Override
+                        public void response(ResponseModel responseModel) {
+                            traderRoutes.setValue(responseModel);
+                        }
+
+                        @Override
+                        public void response(ResponseObject responseModel) {
+                            traderRoutes.setValue(responseModel);
 
                         }
                     }
@@ -352,4 +463,6 @@ public class AdminsViewModel extends AndroidViewModel {
         }
         return updateProductSuccess;
     }
+
+
 }

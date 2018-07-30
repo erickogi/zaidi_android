@@ -10,6 +10,7 @@ import android.support.design.card.MaterialCardView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import com.dev.lishaboramobile.Global.Account.ResponseObject;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Trader.Models.TraderModel;
 import com.dev.lishaboramobile.admin.models.AdminModel;
+import com.dev.lishaboramobile.login.LoginConsts;
 import com.dev.lishaboramobile.login.Models.AuthModel;
 import com.google.gson.Gson;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -43,6 +45,7 @@ public class ForgotPassPhoneFragment extends Fragment implements View.OnClickLis
     //CARDS
 
     private MaterialCardView cardForgotPassPhoneView;
+    private Fragment fragment;
 
 
     private AVLoadingIndicatorView aviForgotPass;
@@ -131,6 +134,8 @@ public class ForgotPassPhoneFragment extends Fragment implements View.OnClickLis
 
         if (getArguments() != null) {
             responseModel = (ResponseObject) getArguments().getSerializable("response");
+        } else {
+            responseModel = LoginConsts.getResponseObject();
         }
 
         if (responseModel != null) {
@@ -150,6 +155,7 @@ public class ForgotPassPhoneFragment extends Fragment implements View.OnClickLis
 
                     break;
                 default:
+                    phoneNumber = LoginConsts.getPhone();
             }
 
 
@@ -218,6 +224,7 @@ public class ForgotPassPhoneFragment extends Fragment implements View.OnClickLis
                     aviForgotPass.smoothToHide();
 
                     if (responseModel != null && responseModel.getResultCode() == 1) {
+                        LoginConsts.setPhone(phoneNumber);
                         otpFragment(responseModel);
                     } else {
                         if (responseModel != null) {
@@ -249,10 +256,18 @@ public class ForgotPassPhoneFragment extends Fragment implements View.OnClickLis
 
     public void otpFragment(ResponseObject responseModel) {
         // getChildFragmentManager()
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, ForgotPassOtpFragment.newInstance(responseModel))
-                // .addToBackStack("null")
-                .commitNow();
+//        getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_enter, R.anim.left_out)
+//
+//                .replace(R.id.container, ForgotPassOtpFragment.newInstance(responseModel))
+//                // .addToBackStack("null")
+//                .commitNow();
+//
+
+        fragment = ForgotPassOtpFragment.newInstance(responseModel);
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.beginTransaction().setCustomAnimations(R.anim.left_enter, R.anim.right_out)
+                .replace(R.id.container, fragment, "fragmentWelcome").commit();
+
 
     }
 

@@ -22,7 +22,27 @@
 
         </android.support.design.chip.ChipGroup>
 
+        <LinearLayout
+            android:id="@+id/spinners"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/spinner1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/spinner2"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
         <android.support.v7.widget.RecyclerView
+
 
             android:id="@+id/recyclerView"
 
@@ -30,7 +50,7 @@
 
 
             android:layout_height="match_parent"
-            android:layout_below="@+id/chip_group"
+            android:layout_below="@+id/spinners"
 
             android:layout_centerHorizontal="true"
             android:background="@color/divider"
@@ -106,10 +126,24 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
                 android:padding="1dp"
-                android:text="No internet"
+                android:text=""
                 android:textAlignment="center" />
 
         </RelativeLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:visibility="visible"
+            app:srcCompat="@android:drawable/ic_input_add" />
+
     </RelativeLayout>
 
 </android.support.v4.widget.SwipeRefreshLayout>
