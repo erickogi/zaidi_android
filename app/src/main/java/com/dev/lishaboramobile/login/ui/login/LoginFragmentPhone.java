@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.card.MaterialCardView;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,8 +18,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.dev.lishaboramobile.Global.Account.ResponseObject;
+import com.dev.lishaboramobile.Global.Utils.MyToast;
 import com.dev.lishaboramobile.Global.Utils.NetworkUtils;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Trader.Models.TraderModel;
@@ -268,9 +269,9 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
     }
 
     private void snack(String msg) {
-        Snackbar.make(view, msg, Snackbar.LENGTH_LONG).show();
+        // Snackbar.make(view, msg, Snackbar.LENGTH_LONG).show();
         if (context != null) {
-            // MyToast.toast(msg, context, R.drawable.ic_launcher, Toast.LENGTH_SHORT);
+            MyToast.toast(msg, context, R.drawable.ic_launcher, Toast.LENGTH_SHORT);
         }
     }
 

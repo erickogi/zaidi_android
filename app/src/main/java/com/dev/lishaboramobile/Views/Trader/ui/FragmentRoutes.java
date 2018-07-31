@@ -26,29 +26,24 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dev.lishaboramobile.Global.Models.ResponseModel;
 import com.dev.lishaboramobile.Global.Utils.DateTimeUtils;
 import com.dev.lishaboramobile.Global.Utils.GeneralUtills;
-import com.dev.lishaboramobile.Global.Utils.MyToast;
 import com.dev.lishaboramobile.Global.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Trader.Models.RPFSearchModel;
 import com.dev.lishaboramobile.Trader.Models.RoutesModel;
+import com.dev.lishaboramobile.Views.Trader.TraderViewModel;
 import com.dev.lishaboramobile.admin.adapters.RoutesAdapter;
-import com.dev.lishaboramobile.admin.ui.admins.AdminsViewModel;
 import com.dev.lishaboramobile.login.PrefrenceManager;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.reflect.TypeToken;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -59,7 +54,7 @@ public class FragmentRoutes extends Fragment {
     RoutesAdapter listAdapter;
     FloatingActionButton fab;
     private View view;
-    private AdminsViewModel mViewModel;
+    private TraderViewModel mViewModel;
     private LinkedList<RoutesModel> routesModels;
     private AVLoadingIndicatorView avi;
     private String filterText = "";
@@ -109,22 +104,14 @@ public class FragmentRoutes extends Fragment {
         avi.setVisibility(View.VISIBLE);
 
         if (mViewModel == null) {
-            mViewModel = ViewModelProviders.of(this).get(AdminsViewModel.class);
+            mViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
 
         }
-        mViewModel.getTraderRoutesModels(getTraderRoutesObject(), true).observe(FragmentRoutes.this, new Observer<ResponseModel>() {
+        mViewModel.getRoutes(new PrefrenceManager(getContext()).isRoutesListFirstTime()).observe(FragmentRoutes.this, new Observer<List<RoutesModel>>() {
             @Override
-            public void onChanged(@Nullable ResponseModel responseModel) {
+            public void onChanged(@Nullable List<RoutesModel> routesModels) {
                 avi.smoothToHide();
-                //snack(responseModel.getResultDescription());
-                JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
-                Type listType = new TypeToken<LinkedList<RoutesModel>>() {
-                }.getType();
-                // routesModel = ;
-                Log.d("ReTrUp", "routes update called");
-                update(gson.fromJson(jsonArray, listType));
-
-
+                update(routesModels);
             }
         });
     }
@@ -155,7 +142,7 @@ public class FragmentRoutes extends Fragment {
             , @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.view = view;
-        mViewModel = ViewModelProviders.of(this).get(AdminsViewModel.class);
+        mViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
 
 
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -282,6 +269,7 @@ public class FragmentRoutes extends Fragment {
             public void onLongClickListener(int position) {
 
 
+
             }
 
             @Override
@@ -331,6 +319,7 @@ public class FragmentRoutes extends Fragment {
 
             }
             listAdapter.notifyDataSetChanged();
+            recyclerView.scrollToPosition(listAdapter.getItemCount() - 1);
         }
 
     }
@@ -424,17 +413,11 @@ public class FragmentRoutes extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            mViewModel.createRoute(jsonObject, true).observe(FragmentRoutes.this, new Observer<ResponseModel>() {
+            mViewModel.createRoute(routesModel, jsonObject, false).observe(FragmentRoutes.this, new Observer<ResponseModel>() {
                 @Override
                 public void onChanged(@Nullable ResponseModel responseModel) {
                     avi.smoothToHide();
-                    //  snack(responseModel.getResultDescription());
-                    if (responseModel.getResultCode() == 1) {
-                        dialog.dismiss();
-                        mViewModel.refreshRoutes(getTraderRoutesObject(), true);
-                    } else {
-                        MyToast.toast(responseModel.getResultDescription(), getActivity(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
-                    }
+                    dialog.dismiss();
                 }
             });
 

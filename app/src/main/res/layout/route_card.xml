@@ -7,16 +7,18 @@
     android:background="@android:drawable/picture_frame"
     app:cardUseCompatPadding="true"
     app:strokeColor="@color/divider"
-    app:strokeWidth="2dp"
+    app:strokeWidth="0dp"
 
     >
 
     <RelativeLayout
-        android:id="@+id/engineer_background"
+        android:id="@+id/background"
+        android:background="@color/green_color_picker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:layout_marginStart="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
@@ -48,6 +50,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
 
+                            android:visibility="gone"
                             android:text="Names  "
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                             android:textColor="#000000"
@@ -63,7 +66,7 @@
                             android:layout_weight="1"
                             android:text="Route Names"
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                            android:textSize="13.5sp"
+                            android:textSize="15.5sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -81,7 +84,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
 
-                            android:text="Farmers  "
+                            android:text="No of farmers  "
 
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                             android:textColor="#000000"
@@ -118,19 +121,19 @@
                 android:padding="3dp">
 
                 <LinearLayout
+                    android:layout_gravity="center"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1">
 
-                    <com.dev.customfonts.MyTextView_Roboto_Bold
+                    <View
 
-                        android:id="@+id/txt_status_lbl"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Status  "
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                        android:textSize="13.5sp"
-                        android:textStyle="italic|bold" />
+                        android:id="@+id/status_view"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="5dp"
+                        android:background="@color/green_color_picker" />
 
                     <TextView
                         android:id="@+id/txt_status"

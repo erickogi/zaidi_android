@@ -51,11 +51,17 @@ public class RoutesAdapter extends RecyclerView.Adapter<RoutesViewHolder> {
         if (routesModel.getStatus() == 1) {
             holder.status.setText("Active");
             holder.status.setTextColor(context.getResources().getColor(R.color.green_color_picker));
+            holder.background.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
+            holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
+//
 //
         } else {
 
             holder.status.setText("In Active");
             holder.status.setTextColor(context.getResources().getColor(R.color.red));
+            holder.background.setBackgroundColor(context.getResources().getColor(R.color.red));
+            holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.red));
+//
         }
 
 

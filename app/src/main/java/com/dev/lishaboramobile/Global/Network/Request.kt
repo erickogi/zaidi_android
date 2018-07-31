@@ -25,7 +25,7 @@ class Request {
                 override fun onError(error: ANError) {
                     responseModel.data = null
                     responseModel.resultCode = 0
-                    responseModel.resultDescription = error.toString()
+                    responseModel.resultDescription = ""
 
                     responseCallback.response(responseModel)
 

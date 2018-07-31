@@ -25,7 +25,7 @@ class FarmetRecruitAdapter(fm: FragmentManager, context: Context) : AbstractFrag
                 return step1
             }
             1 -> {
-                val step2 = FragmentCycleDetails()
+                val step2 = FragmentRoutesUnitDetails()
                 val b2 = Bundle()
                 b2.putInt(CURRENT_STEP_POSITION_KEY, position)
 
@@ -33,7 +33,7 @@ class FarmetRecruitAdapter(fm: FragmentManager, context: Context) : AbstractFrag
                 return step2
             }
             2 -> {
-                val step3 = FragmentRoutesUnitDetails()
+                val step3 = FragmentCycleDetails()
                 val b3 = Bundle()
                 b3.putInt(CURRENT_STEP_POSITION_KEY, position)
 

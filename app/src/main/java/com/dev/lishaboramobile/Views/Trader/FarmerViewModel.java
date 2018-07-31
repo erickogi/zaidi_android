@@ -108,36 +108,6 @@ public class FarmerViewModel extends AndroidViewModel {
         return farmers;
     }
 
-    public void refreshAll(JSONObject jsonObject, boolean fetchFromOnline) {
-        if (this.farmers == null) {
-            this.farmers = new MutableLiveData();
-
-        }
-        if (fetchFromOnline) {
-
-            farmerController.getResponse(ApiConstants.Companion.getFarmers(), jsonObject, "", new ResponseCallback() {
-                @Override
-                public void response(ResponseModel responseModel) {
-                    JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
-                    Type listType = new TypeToken<LinkedList<FamerModel>>() {
-                    }.getType();
-                    farmerRepo.insertMultipleTraders(gson.fromJson(jsonArray, listType));
-                    farmers = (farmerRepo.fetchAllData(false));
-                }
-
-                @Override
-                public void response(ResponseObject responseModel) {
-
-                }
-            });
-
-        } else {
-            famerModels = farmerRepo.fetchAllData(false);
-
-            farmers = (famerModels);
-
-        }
-    }
 
     public LiveData<ResponseModel> updateFarmer(JSONObject jsonObject, boolean updateOnline, FamerModel famerModel) {
 

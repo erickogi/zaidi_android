@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -8,7 +9,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="12dp">
-
         <android.support.design.widget.TextInputLayout
 
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -27,29 +27,62 @@
 
         </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
-
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:textColorHint="@color/black">
+            android:orientation="horizontal">
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/edt_farmer_phone"
+            <ImageView
+                android:id="@+id/img_flag"
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/flag_kenya" />
+
+            <com.dev.customfonts.MyTextView_Roboto_Bold
+                android:id="@+id/txt_ke"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="1dp"
+                android:text="@string/ke"
+                android:textSize="18.5sp" />
+
+            <android.support.design.widget.TextInputLayout
+
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="Phone Number "
-                android:inputType="text" />
+                android:layout_height="wrap_content"
+                android:layout_margin="3dp"
+                android:textColorHint="@color/black">
 
-        </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edt_farmer_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/phone_hint"
+                    android:inputType="phone"
 
-        <Spinner
+                    app:counterEnabled="true"
+                    app:counterMaxLength="10"
+
+
+                    app:helperText="7** *** ***"
+                    app:helperTextEnabled="true" />
+
+            </android.support.design.widget.TextInputLayout>
+
+
+        </LinearLayout>
+
+
+        <com.jaredrummler.materialspinner.MaterialSpinner
+            android:id="@+id/spinnerPayments"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:entries="@array/payments"></Spinner>
+            android:visibility="gone" />
 
 
     </LinearLayout>
-</RelativeLayout>
+</ScrollView>

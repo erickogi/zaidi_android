@@ -5,6 +5,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,8 +14,10 @@ import android.support.design.chip.Chip;
 import android.support.design.chip.ChipGroup;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -28,24 +31,26 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dev.lishaboramobile.Farmer.Models.FamerModel;
-import com.dev.lishaboramobile.Global.Models.ResponseModel;
 import com.dev.lishaboramobile.Global.Utils.OnclickRecyclerListener;
+import com.dev.lishaboramobile.Global.Utils.RequestDataCallback;
 import com.dev.lishaboramobile.R;
+import com.dev.lishaboramobile.Trader.Models.Cycles;
 import com.dev.lishaboramobile.Trader.Models.RPFSearchModel;
+import com.dev.lishaboramobile.Trader.Models.RoutesModel;
+import com.dev.lishaboramobile.Trader.Models.UnitsModel;
 import com.dev.lishaboramobile.Views.Trader.CreateFarmerActivity;
 import com.dev.lishaboramobile.Views.Trader.FarmerController;
 import com.dev.lishaboramobile.Views.Trader.FarmerViewModel;
 import com.dev.lishaboramobile.Views.Trader.FarmersAdapter;
-import com.dev.lishaboramobile.admin.ui.admins.AdminsViewModel;
+import com.dev.lishaboramobile.Views.Trader.TraderViewModel;
 import com.dev.lishaboramobile.login.PrefrenceManager;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.reflect.TypeToken;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -53,7 +58,7 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -87,8 +92,15 @@ public class FragementFarmersList extends Fragment {
     private String filterText = "";
     FloatingActionButton fab;
     MaterialSpinner spinner1, spinner2;
-    private AdminsViewModel mViewModel;
+    List<UnitsModel> getUnits = new LinkedList<>();
     private SearchView searchView;
+    List<RoutesModel> getRoutess = new LinkedList<>();
+    List<Cycles> getCycles = new LinkedList<>();
+    // private AdminsViewModel mViewModel;
+    private TraderViewModel mViewModel;
+    private PrefrenceManager prefrenceManager;
+    private List<RoutesModel> routesModels;
+
 
 
     private int FarmerDel, FarmerDummy, TraderSynched, FarmerArchive, All;
@@ -143,6 +155,7 @@ public class FragementFarmersList extends Fragment {
 
             @Override
             public void onClickListener(int adapterPosition, @NotNull View view) {
+                popupMenu(adapterPosition, view, filteredFamerModels.get(adapterPosition));
 
             }
         });
@@ -171,6 +184,7 @@ public class FragementFarmersList extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        context = getContext();
     }
 
     @Override
@@ -215,8 +229,9 @@ public class FragementFarmersList extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.view = view;
-        mViewModel = ViewModelProviders.of(this).get(AdminsViewModel.class);
+        mViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
 
+        prefrenceManager = new PrefrenceManager(getContext());
 
         recyclerView = view.findViewById(R.id.recyclerView);
         empty_layout = view.findViewById(R.id.empty_layout);
@@ -247,47 +262,38 @@ public class FragementFarmersList extends Fragment {
             }
         });
 
-//
-//        ReactiveNetwork.observeInternetConnectivity()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(isConnectedToInternet -> {
-//                    // do something with isConnectedToInternet value
-//                    isConnected = isConnectedToInternet;
-//
-//                    if (isConnectedToInternet) {
-//                        try {
-//                            txt_network_state.setText("Connected to internet");
-//                            txt_network_state.setTextColor(getActivity().getResources().getColor(R.color.green_color_picker));
-//                        } catch (Exception nm) {
-//                            nm.printStackTrace();
-//                        }
-//
-//                    } else {
-//
-//                        try {
-//                            txt_network_state.setText("Not connected to internet");
-//                            txt_network_state.setTextColor(getActivity().getResources().getColor(R.color.red));
-//                        } catch (Exception vb) {
-//                            vb.printStackTrace();
-//                        }
-//
-//                    }
-//                });
+        if (prefrenceManager.isRoutesListFirstTime() || prefrenceManager.isCycleListFirstTime() || prefrenceManager.isUnitListFirstTime()) {
+            initDataOffline(false, false, false);
+        }
+
 
 
     }
 
     private void setUpSpinner2(int pos) {
         switch (pos) {
+            case 0:
+                filterFarmers();
+                break;
+            case 2:
+                filterFarmers();
+                break;
+            case 3:
+                filterFarmers();
+                break;
+
             case 1:
-                spinner2.setItems(getRoutes());
+                getRoutes();
+                //spinner2.setItems(getRoutes());
                 setUpSpinner2Listner();
                 break;
             case 5:
                 spinner2.setItems("All", "Active", "Archived", "In-Active", "Dummy");
                 setUpSpinner2Listner();
                 break;
+
+            case 4:
+                filterFarmersAlpahbetically();
             default:
 
 
@@ -297,11 +303,54 @@ public class FragementFarmersList extends Fragment {
     private void setUpSpinner2Listner() {
         spinner2.setOnItemSelectedListener((MaterialSpinner.OnItemSelectedListener<String>) (view1, position, id, item) -> {
 
+            filterFarmers();
         });
     }
 
-    private String[] getRoutes() {
-        return new String[]{"All", "Emali", "Athi river", "Kibwezi"};
+    private void getRoutes() {
+        if (mViewModel != null) {
+            mViewModel.getRoutes(false).observe(this, routesModels -> {
+                prefrenceManager.setIsRoutesListFirst(false);
+                if (routesModels != null && routesModels.size() > 0) {
+                    FragementFarmersList.this.routesModels = routesModels;
+                    String routes[] = new String[routesModels.size()];
+                    // routes[0] = "Choose Route";
+
+                    for (int a = 0; a < routesModels.size(); a++) {
+                        routes[a] = routesModels.get(a).getRoute();
+
+                    }
+
+                    spinner2.setItems(routes);
+                    filterFarmers();
+                } else {
+                    getRoutesOnline();
+                }
+                //spinner2.setItems(routesModels);
+            });
+        }
+    }
+
+    private void getRoutesOnline() {
+        if (mViewModel != null) {
+            mViewModel.getRoutes(true).observe(this, routesModels -> {
+                prefrenceManager.setIsRoutesListFirst(false);
+                if (routesModels != null && routesModels.size() > 0) {
+                    FragementFarmersList.this.routesModels = routesModels;
+                    String routes[] = new String[routesModels.size()];
+                    // routes[0] = "Choose Route";
+
+                    for (int a = 0; a < routesModels.size(); a++) {
+                        routes[a] = routesModels.get(a).getRoute();
+
+                    }
+
+                    spinner2.setItems(routes);
+                    filterFarmers();
+                }
+                //spinner2.setItems(routesModels);
+            });
+        }
     }
 
     private void createFarmers() {
@@ -313,29 +362,6 @@ public class FragementFarmersList extends Fragment {
             startAnim();
         }
         if (famersViewModel != null) {
-
-
-//            famersViewModel.getFarmerModels(getSearchObject(), isOnline).observe(this, responseModel -> {
-//
-//                if (avi != null) {
-//                    stopAnim();
-//                }
-//
-//
-//                if (responseModel != null) {
-//
-//                    famerModels.clear();
-//                    famerModels.addAll(responseModel);
-//                    filterFarmers();
-//                    populateTraders();
-//                } else {
-//                    //famerModels.clear();
-//                    populateTraders();
-//                }
-//
-//
-//            });
-
 
         } else {
             snack("FamersViewModel is null");
@@ -359,23 +385,16 @@ public class FragementFarmersList extends Fragment {
         avi.setVisibility(View.VISIBLE);
 
         if (mViewModel == null) {
-            mViewModel = ViewModelProviders.of(this).get(AdminsViewModel.class);
+            mViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
 
         }
-        mViewModel.getTraderFarmersModels(getTraderFarmeroductsObject(), true).observe(FragementFarmersList.this, new Observer<ResponseModel>() {
+
+        mViewModel.getFarmers(getTraderFarmeroductsObject(), prefrenceManager.isFarmerListFirstTime()).observe(FragementFarmersList.this, new Observer<List<FamerModel>>() {
             @Override
-            public void onChanged(@Nullable ResponseModel responseModel) {
+            public void onChanged(@Nullable List<FamerModel> famerModels) {
                 avi.smoothToHide();
-                snack(responseModel.getResultDescription());
-                JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
-                Type listType = new TypeToken<LinkedList<FamerModel>>() {
-                }.getType();
-                // famerModels = gson.fromJson(jsonArray, listType);
-
-
-                Log.d("ReTrUp", "farmers update called");
-                update(gson.fromJson(jsonArray, listType));
-
+                prefrenceManager.setIsFarmerListFirst(false);
+                update(famerModels);
             }
         });
     }
@@ -412,18 +431,54 @@ public class FragementFarmersList extends Fragment {
 
     private void filterFarmers() {
 
+        String route = "";
+        if (spinner1.getSelectedIndex() == 1) {
+            if (spinner2.getItems() != null) {
+                route = spinner2.getItems().get(spinner2.getSelectedIndex()).toString();
+            }
+            if (route != null && route.length() > 0) {
+
+            } else {
+                route = "";
+            }
+        }
+
+
+
+
         filteredFamerModels.clear();
         if (famerModels != null && famerModels.size() > 0) {
             for (FamerModel famerModel : famerModels) {
                 if (famerModel.getCode().toLowerCase().contains(filterText) ||
                         famerModel.getMobile().toLowerCase().contains(filterText) ||
                         famerModel.getNames().toLowerCase().contains(filterText)) {
-                    filteredFamerModels.add(famerModel);
+                    if (famerModel.getRoutename() != null) {
+                        if (famerModel.getRoutename().toLowerCase().contains(route.toLowerCase())) {
+                            filteredFamerModels.add(famerModel);
+                        }
+                    } else {
+                        filteredFamerModels.add(famerModel);
+
+                    }
                 }
 
             }
             listAdapter.notifyDataSetChanged();
         }
+
+    }
+
+    private void filterFarmersAlpahbetically() {
+
+
+        filteredFamerModels = famerModels;
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//          //  Collections.sort(filteredFamerModels, Comparator.comparing(FamerModel::getNames));
+//        }else {
+        Collections.sort(filteredFamerModels, (v1, v2) -> v1.getNames().compareTo(v2.getNames()));
+        // }
+        listAdapter.notifyDataSetChanged();
+
 
     }
 
@@ -503,7 +558,7 @@ public class FragementFarmersList extends Fragment {
 
     private void popupMenu(int pos, View view, FamerModel famerModel) {
         PopupMenu popupMenu = new PopupMenu(Objects.requireNonNull(getContext()), view);
-        popupMenu.inflate(R.menu.entity_list_menu);
+        popupMenu.inflate(R.menu.farmer_list_menu);
 
         if (famerModel.getDeleted() == 1) {
             popupMenu.getMenu().getItem(0).setVisible(false);
@@ -516,6 +571,7 @@ public class FragementFarmersList extends Fragment {
             isDummy = true;
             popupMenu.getMenu().getItem(2).setTitle("Remove from dummy");
         }
+
 
         popupMenu.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
@@ -556,7 +612,14 @@ public class FragementFarmersList extends Fragment {
                     break;
                 case R.id.edit:
 
-                    editTrader(famerModel);
+
+                    Log.d("farmerdialog", "edit clicked");
+                    editTrader(famerModel, getUnits(), getCycles(), getRoutess(), true);
+                    break;
+                case R.id.view:
+
+                    editTrader(famerModel, getUnits(), getCycles(), getRoutess(), false);
+
                     break;
                 default:
             }
@@ -565,27 +628,180 @@ public class FragementFarmersList extends Fragment {
         popupMenu.show();
     }
 
-    private void editTrader(FamerModel famerModel) {
-
-//        farmersController.editTrader(traderModel, requestData -> {
-//            if (famersViewModel != null) {
-//                famersViewModel.updateTrader(requestData, true).observe(FragmentEntityList.this, responseModel -> {
-//                    if (farmersController != null) {
-//                        farmersController.stopAnim();
-//                        if (responseModel != null) {
-//                            farmersController.snack(responseModel.getResultDescription());
-//                        }
-//                        if (responseModel != null) {
-//                            if (responseModel.getResultCode() != 0) {
-//                                farmersController.dismissDialog();
-//                            }
-//                        }
-//                    }
-//
-//                });
-//            }
-//        });
+    private List<RoutesModel> getRoutess() {
+        return getRoutess;
     }
+
+    private List<Cycles> getCycles() {
+        return getCycles;
+    }
+
+    private List<UnitsModel> getUnits() {
+        return getUnits;
+    }
+
+    public void editTrader(FamerModel famerModel, List<UnitsModel> unitsModels,
+                           List<Cycles> cycles, List<RoutesModel> routesModels, boolean isEditale) {
+        Log.d("farmerdialog", "in edit");
+
+        if (context != null) {
+            LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
+            View mView = layoutInflaterAndroid.inflate(R.layout.dialog_edit_farmer, null);
+            AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(context));
+            alertDialogBuilderUserInput.setView(mView);
+            alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
+            alertDialogBuilderUserInput.setTitle(famerModel.getNames() + " " + famerModel.getCode());
+
+
+            UnitsModel unitsModel = new UnitsModel();
+            RoutesModel routesModel = new RoutesModel();
+            Cycles cyclesM = new Cycles();
+            avi = mView.findViewById(R.id.avi);
+
+            MaterialSpinner spinnerRoute, spinnerUnit;
+
+            TextInputEditText edtNames, edtMobile;
+            MaterialSpinner defaultPayment;
+            TraderViewModel mViewModel;
+            MaterialSpinner spinner;
+            TextInputEditText edtRouteName, edtRouteCode, edtUnitName, edtUnitPrice, edtUnitMeasurement;
+
+            edtNames = mView.findViewById(R.id.edt_farmer_names);
+            edtMobile = mView.findViewById(R.id.edt_farmer_phone);
+            defaultPayment = mView.findViewById(R.id.spinnerPayments);
+
+            spinnerUnit = mView.findViewById(R.id.spinnerUnit);
+            spinnerRoute = mView.findViewById(R.id.spinnerRoute);
+            edtUnitName = mView.findViewById(R.id.edt_unit_names);
+            edtUnitPrice = mView.findViewById(R.id.edt_unit_price);
+            edtUnitMeasurement = mView.findViewById(R.id.edt_unit_size);
+            edtRouteName = mView.findViewById(R.id.edt_route_names);
+            edtRouteCode = mView.findViewById(R.id.edt_route_code);
+            spinner = mView.findViewById(R.id.spinnerCycle);
+
+            if (!isEditale) {
+                edtNames.setEnabled(false);
+                edtMobile.setEnabled(false);
+                //defaultPayment.setEnabled(false);
+
+                spinnerUnit.setEnabled(false);
+                spinnerRoute.setEnabled(false);
+                edtUnitName.setEnabled(false);
+                edtUnitPrice.setEnabled(false);
+                edtUnitMeasurement.setEnabled(false);
+                edtRouteName.setEnabled(false);
+                edtRouteCode.setEnabled(false);
+                spinner.setSelected(false);
+                spinner.setEnabled(false);
+
+            }
+
+
+            edtNames.setText(famerModel.getNames());
+            edtMobile.setText(famerModel.getMobile());
+            edtUnitPrice.setText("" + famerModel.getUnitprice());
+            edtUnitMeasurement.setText("" + famerModel.getUnitcapacity());
+            edtRouteName.setText("" + famerModel.getRoutename());
+            edtUnitName.setText("" + famerModel.getUnitname());
+            edtRouteCode.setText("" + famerModel.getRoutecode());
+
+//Units
+            if (unitsModels != null && unitsModels.size() > 0) {
+                prefrenceManager.setIsRoutesListFirst(false);
+                String units[] = new String[unitsModels.size() + 1];
+
+                units[0] = "Choose Unit ";
+                for (int a = 0; a < unitsModels.size(); a++) {
+                    units[a + 1] = unitsModels.get(a).getUnit();
+
+                }
+                spinnerUnit.setItems(units);
+
+            }
+
+//Routes
+            if (routesModels != null && routesModels.size() > 0) {
+                prefrenceManager.setIsRoutesListFirst(false);
+
+                String routes[] = new String[routesModels.size() + 1];
+
+                routes[0] = "Choose Route";
+                for (int a = 0; a < routesModels.size(); a++) {
+                    routes[a + 1] = routesModels.get(a).getRoute();
+
+                }
+                spinnerRoute.setItems(routes);
+            }
+
+//Cycles
+            if (cycles != null && cycles.size() > 0) {
+                new PrefrenceManager(getContext()).setIsCyclesListFirst(false);
+                String units[] = new String[cycles.size()];
+
+                // units[0]="Choose Unit ";
+                for (int a = 0; a < cycles.size(); a++) {
+                    units[a] = cycles.get(a).getCycle();
+
+                }
+                spinner.setItems(units);
+
+            }
+
+
+            alertDialogBuilderUserInput
+                    .setCancelable(false)
+                    .setPositiveButton("Update", (dialogBox, id) -> {
+                        // ToDo get user input here
+
+
+                    })
+
+                    .setNegativeButton("Dismiss",
+                            (dialogBox, id) -> dialogBox.cancel());
+
+            AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
+            alertDialogAndroid.setCancelable(false);
+            alertDialogAndroid.show();
+
+            Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
+            theButton.setOnClickListener(new EditCustomListener(alertDialogAndroid, famerModel, unitsModel, routesModel, cyclesM));
+
+        } else {
+            Log.d("farmerdialog", "context nulll edit clicked");
+
+        }
+
+    }
+
+    private void initDataOffline(boolean isRoutesFirst, boolean isUnitFirst, boolean isCycles) {
+
+        TraderViewModel mViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
+        mViewModel.getRoutes(isRoutesFirst).observe(this, routesModels -> {
+            if (routesModels != null && routesModels.size() > 0) {
+                prefrenceManager.setIsRoutesListFirst(false);
+                this.getRoutess = routesModels;
+
+            }
+
+        });
+        mViewModel.getUnits(isUnitFirst).observe(this, unitsModels -> {
+            if (unitsModels != null && unitsModels.size() > 0) {
+                prefrenceManager.setIsRoutesListFirst(false);
+                FragementFarmersList.this.getUnits = unitsModels;
+
+
+            }
+        });
+        mViewModel.getCycles(isCycles).observe(this, cycles -> {
+            if (cycles != null && cycles.size() > 0) {
+                prefrenceManager.setIsCyclesListFirst(false);
+                FragementFarmersList.this.getCycles = cycles;
+
+
+            }
+        });
+    }
+
 
 //    private void update(FamerModel famerModel) {
 //
@@ -619,5 +835,32 @@ public class FragementFarmersList extends Fragment {
 //
 //
 //    }
+
+    private class EditCustomListener implements View.OnClickListener {
+        AlertDialog dialog;
+        boolean isDummy = false;
+        FamerModel farmer;
+        UnitsModel unitsModel;
+        RoutesModel routesModel;
+        Cycles cycles;
+
+        //int type;
+        RequestDataCallback requestDataCallback;
+
+        public EditCustomListener(AlertDialog alertDialogAndroid, FamerModel famerModel, UnitsModel u, RoutesModel r, Cycles c) {
+            dialog = alertDialogAndroid;
+            this.farmer = famerModel;
+            this.unitsModel = u;
+            this.routesModel = r;
+            this.cycles = c;
+
+        }
+
+        @Override
+        public void onClick(View v) {
+
+
+        }
+    }
 
 }

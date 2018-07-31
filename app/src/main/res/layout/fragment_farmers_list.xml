@@ -30,11 +30,21 @@
 
             <com.jaredrummler.materialspinner.MaterialSpinner
                 android:id="@+id/spinner1"
+                android:layout_marginBottom="2dp"
+                app:ms_arrow_tint="@color/green_color_picker"
+                app:ms_hint="Filter"
+                app:ms_hint_color="@color/green_color_picker"
+
+                app:ms_text_color="@color/black"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <com.jaredrummler.materialspinner.MaterialSpinner
                 android:id="@+id/spinner2"
+                app:ms_arrow_tint="@color/green_color_picker"
+                app:ms_hint="Select Route"
+                app:ms_hint_color="@color/green_color_picker"
+                app:ms_text_color="@color/black"
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -53,7 +63,6 @@
             android:layout_below="@+id/spinners"
 
             android:layout_centerHorizontal="true"
-            android:background="@color/divider"
             android:nestedScrollingEnabled="false"
             android:scrollIndicators="start|end"
             android:scrollbarSize="6dp"

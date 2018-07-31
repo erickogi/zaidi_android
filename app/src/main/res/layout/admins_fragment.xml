@@ -10,6 +10,7 @@
     <android.support.design.chip.ChipGroup
 
         android:id="@+id/chip_group"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
@@ -61,6 +62,11 @@
 
     </android.support.design.chip.ChipGroup>
 
+    <com.jaredrummler.materialspinner.MaterialSpinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <android.support.v7.widget.RecyclerView
 
         android:id="@+id/recyclerView"
@@ -69,7 +75,7 @@
 
 
         android:layout_height="match_parent"
-        android:layout_below="@+id/chip_group"
+        android:layout_below="@+id/spinner"
 
         android:layout_centerHorizontal="true"
         android:nestedScrollingEnabled="false"

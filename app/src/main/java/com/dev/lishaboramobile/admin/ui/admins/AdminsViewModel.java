@@ -206,11 +206,14 @@ public class AdminsViewModel extends AndroidViewModel {
             this.traders = new MutableLiveData();
 
         }
+        this.traders = new MutableLiveData();
+
         if (fetchFromOnline) {
             Request.Companion.getResponse(ApiConstants.Companion.getTraders(), jsonObject, "", new ResponseCallback() {
                         @Override
                         public void response(ResponseModel responseModel) {
                             traders.setValue(responseModel);
+                            //traderRepo.insertMultipleTraders();
                         }
 
                         @Override

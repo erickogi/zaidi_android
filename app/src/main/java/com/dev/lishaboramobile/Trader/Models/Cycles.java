@@ -8,11 +8,20 @@ import android.arch.persistence.room.PrimaryKey;
 public class Cycles {
     @PrimaryKey(autoGenerate = true)
     private int id;
+    private int code;
     private String cycle;
     private String period;
     private String transactedby;
     private String transactiontime;
     private String status;
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
 
     public int getId() {
         return id;

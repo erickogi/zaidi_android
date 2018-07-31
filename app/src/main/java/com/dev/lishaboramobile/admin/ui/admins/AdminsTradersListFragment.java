@@ -52,6 +52,7 @@ import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.jetbrains.annotations.NotNull;
@@ -96,6 +97,7 @@ public class AdminsTradersListFragment extends Fragment {
     private AVLoadingIndicatorView avi;
 
     private boolean isConnected;
+    private MaterialSpinner spinner;
 
     private int TraderDel, TraderDummy, TraderSynched, TraderArchive, All;
 
@@ -137,7 +139,7 @@ public class AdminsTradersListFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 filterText = s;
-                filterTraders();
+                filterTraders(spinner.getSelectedIndex());
 
                 return true;
             }
@@ -145,7 +147,7 @@ public class AdminsTradersListFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String s) {
                 filterText = s;
-                filterTraders();
+                filterTraders(spinner.getSelectedIndex());
 
                 return true;
             }
@@ -174,6 +176,7 @@ public class AdminsTradersListFragment extends Fragment {
         emptyTxt = view.findViewById(R.id.empty_text);
         avi = view.findViewById(R.id.avi);
         txt_network_state = view.findViewById(R.id.txt_network_state);
+        spinner = view.findViewById(R.id.spinner);
 
 
         chipGroup = view.findViewById(R.id.chip_group);
@@ -186,78 +189,86 @@ public class AdminsTradersListFragment extends Fragment {
         fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(view -> createTrader());
 
+        spinner.setItems("All", "Active", "Deleted", "Archived", "Dummy");
+        spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+                filterTraders(position);
+            }
+        });
+
 
         chipAll.setChecked(true);
         disablechips();
 
         All = 1;
 
-        chipDelete.setOnCheckedChangeListener((compoundButton, b) -> {
+//        chipDelete.setOnCheckedChangeListener((compoundButton, b) -> {
+//
+//            disablechips();
+//
+//            if (chipDelete.isChecked()) {
+//                TraderDel = 1;
+//            } else {
+//                TraderDel = 0;
+//            }
+//            if (mViewModel != null) {
+//                startAnim();
+//                mViewModel.refresh(getSearchObject(), true);
+//            }
+//        });
+//        chipArchive.setOnCheckedChangeListener((compoundButton, b) -> {
+//            disablechips();
+//
+//            if (chipArchive.isChecked()) {
+//                TraderArchive = 1;
+//            } else {
+//                TraderArchive = 0;
+//            }
+//            if (mViewModel != null) {
+//                startAnim();
+//                mViewModel.refresh(getSearchObject(), true);
+//            }
+//        });
+//        chipAll.setOnCheckedChangeListener((compoundButton, b) -> {
+//            disablechips();
+//
+//            if (b) {
+//
+//                All = 1;
+//
+//
+//            } else {
+//
+//                All = 0;
+//            }
+//
+//            if (mViewModel != null) {
+//                startAnim();
+//                /// emptyState(true,linearLayoutEmpty,);
+//                mViewModel.refresh(getSearchObject(), true);
+//            }
+//        });
+//        chipDummy.setOnCheckedChangeListener((compoundButton, b) -> {
+//            disablechips();
+//
+//            if (chipDummy.isChecked()) {
+//                TraderDummy = 1;
+//            } else {
+//                // setDefault();
+//                TraderDummy = 0;
+//            }
+//
+//            if (mViewModel != null && tradersController != null) {
+//                startAnim();
+//                mViewModel.refresh(getSearchObject(), true);
+//            }
+//        });
+//
+//        chipGroup.setOnCheckedChangeListener((chipGroup, i) -> {
 
-            disablechips();
 
-            if (chipDelete.isChecked()) {
-                TraderDel = 1;
-            } else {
-                TraderDel = 0;
-            }
-            if (mViewModel != null) {
-                startAnim();
-                mViewModel.refresh(getSearchObject(), true);
-            }
-        });
-        chipArchive.setOnCheckedChangeListener((compoundButton, b) -> {
-            disablechips();
-
-            if (chipArchive.isChecked()) {
-                TraderArchive = 1;
-            } else {
-                TraderArchive = 0;
-            }
-            if (mViewModel != null) {
-                startAnim();
-                mViewModel.refresh(getSearchObject(), true);
-            }
-        });
-        chipAll.setOnCheckedChangeListener((compoundButton, b) -> {
-            disablechips();
-
-            if (b) {
-
-                All = 1;
-
-
-            } else {
-
-                All = 0;
-            }
-
-            if (mViewModel != null) {
-                startAnim();
-                /// emptyState(true,linearLayoutEmpty,);
-                mViewModel.refresh(getSearchObject(), true);
-            }
-        });
-        chipDummy.setOnCheckedChangeListener((compoundButton, b) -> {
-            disablechips();
-
-            if (chipDummy.isChecked()) {
-                TraderDummy = 1;
-            } else {
-                // setDefault();
-                TraderDummy = 0;
-            }
-
-            if (mViewModel != null && tradersController != null) {
-                startAnim();
-                mViewModel.refresh(getSearchObject(), true);
-            }
-        });
-
-        chipGroup.setOnCheckedChangeListener((chipGroup, i) -> {
-
-
-        });
+        //  });
 
 
     }
@@ -338,10 +349,10 @@ public class AdminsTradersListFragment extends Fragment {
         FetchTraderModel f = new FetchTraderModel();
 
 
-        f.setArchived(TraderArchive);
-        f.setDeleted(TraderDel);
-        f.setAll(All);
-        f.setDummy(TraderDummy);
+        f.setArchived(0);
+        f.setDeleted(0);
+        f.setAll(1);
+        f.setDummy(0);
         try {
             return new JSONObject(gson.toJson(f));
         } catch (JSONException e) {
@@ -382,22 +393,66 @@ public class AdminsTradersListFragment extends Fragment {
     }
 
 
-    private void filterTraders() {
+    private void filterTraders(int a) {
+        //spinner.setItems("All","Active","Deleted","Archived","Dummy");
+
+        int alll = 0, deleted = 0, archived = 0, all = 0, dumy = 0;
+
+
+        if (a == 0) {
+            alll = 1;
+            deleted = 0;
+            archived = 0;
+            dumy = 0;
+
+        } else if (a == 1) {
+            alll = 0;
+            deleted = 0;
+            archived = 0;
+            dumy = 0;
+
+        } else if (a == 2) {
+            alll = 0;
+            deleted = 1;
+            archived = 0;
+            dumy = 0;
+
+        } else if (a == 3) {
+            alll = 0;
+            deleted = 0;
+            archived = 1;
+            dumy = 0;
+
+        } else if (a == 4) {
+            alll = 0;
+            deleted = 0;
+            archived = 0;
+            dumy = 1;
+
+        }
+
 
         filteredTraderModels.clear();
-//        if(traderModels!=null&&traderModels.size()>0){
         for (TraderModel traderModel : traderModels) {
             if (traderModel.getCode().toLowerCase().contains(filterText) ||
                     traderModel.getMobile().toLowerCase().contains(filterText) ||
                     traderModel.getNames().toLowerCase().contains(filterText)) {
+
+                if (alll == 1) {
+                    filteredTraderModels.add(traderModel);
+
+                } else {
+                    if (traderModel.getDeleted() == deleted && traderModel.getArchived() == archived && traderModel.getDummy() == dumy) {
+                        filteredTraderModels.add(traderModel);
+                    }
+                }
+
 //
-//                       if(traderModel.getDeleted()==TraderDel&&traderModel.getArchived()==TraderArchive&&traderModel.getDummy()==TraderDummy) {
-                filteredTraderModels.add(traderModel);
-//                       }
             }
 //            }
         }
         listAdapter.notifyDataSetChanged();
+
 
     }
 
@@ -490,6 +545,19 @@ public class AdminsTradersListFragment extends Fragment {
 
     private void update(TraderModel traderModel) {
         listAdapter.notifyDataSetChanged();
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(gson.toJson(traderModel));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        mViewModel.updateTrader(jsonObject, true).observe(this, new Observer<ResponseModel>() {
+            @Override
+            public void onChanged(@Nullable ResponseModel responseModel) {
+                mViewModel.refresh(getSearchObject(), true);
+            }
+        });
     }
 
     @Override
@@ -526,7 +594,7 @@ public class AdminsTradersListFragment extends Fragment {
                     Type listType = new TypeToken<LinkedList<TraderModel>>() {
                     }.getType();
                     traderModels = gson.fromJson(jsonArray, listType);
-                    filterTraders();
+                    filterTraders(spinner.getSelectedIndex());
                     populateTraders();
                 } else if (responseModel.getResultCode() == 2) {
                     traderModels.clear();

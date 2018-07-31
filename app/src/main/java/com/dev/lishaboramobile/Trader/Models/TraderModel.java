@@ -14,13 +14,11 @@ import java.io.Serializable;
 public class TraderModel implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private   int id ;
-
     private   String code ;
     private   String entity ;
     private   String entitycode ;
     private String entityname;
     private String transactioncode;
-
     @NonNull
     private   String names ;
     private   String mobile ;

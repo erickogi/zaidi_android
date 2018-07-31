@@ -3,26 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:drawable/picture_frame"
+
+
+    android:background="@color/green_color_picker"
     style="@style/Widget.MaterialComponents.CardView"
     app:cardUseCompatPadding="true"
     app:strokeColor="@color/divider"
-    app:strokeWidth="2dp"
+    app:strokeWidth="0dp"
 
     >
 
     <RelativeLayout
-        android:id="@+id/engineer_background"
+        android:id="@+id/background"
+        android:background="@color/green_color_picker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+
         <LinearLayout
+            android:id="@+id/linear"
+            android:layout_marginEnd="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:background="@color/white"
-            android:orientation="vertical"
-            android:padding="4dp">
+            android:orientation="vertical">
 
 
             <LinearLayout
@@ -49,6 +53,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
 
+                            android:visibility="gone"
                             android:text="Names  "
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                             android:textColor="#000000"
@@ -60,11 +65,12 @@
                             android:layout_width="wrap_content"
 
 
+                            android:textColor="@color/black"
                             android:layout_height="wrap_content"
                             android:layout_weight="2"
                             android:text="Engineer's Names"
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                            android:textSize="13.5sp"
+                            android:textSize="15.5sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -163,15 +169,15 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1">
 
-                    <com.dev.customfonts.MyTextView_Roboto_Bold
+                    <View
 
-                        android:id="@+id/txt_status_lbl"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Status  "
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                        android:textSize="13.5sp"
-                        android:textStyle="italic|bold" />
+                        android:id="@+id/status_view"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="5dp"
+                        android:background="@color/green_color_picker"
+                        android:src="@drawable/round" />
 
                     <TextView
                         android:id="@+id/txt_status"
@@ -200,7 +206,7 @@
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textColor="#000000"
                         android:textSize="13.5sp"
-                        android:textStyle="italic|bold" />
+                        android:textStyle="bold" />
 
                     <com.dev.customfonts.MyTextView_Roboto_Bold
                         android:id="@+id/txt_id"
@@ -211,7 +217,7 @@
                         android:text="55293788239"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textSize="13.5sp"
-                        android:textStyle="italic|bold" />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -224,6 +230,7 @@
 
 
         </LinearLayout>
+
     </RelativeLayout>
 
 

@@ -1,9 +1,18 @@
 package com.dev.lishaboramobile.admin.models;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Index;
+import android.arch.persistence.room.PrimaryKey;
+
 import java.io.Serializable;
 
+@Entity(tableName = "products", indices = {@Index(value = {"names", "id"}, unique = true)})
+
 public class ProductsModel implements Serializable {
+    @PrimaryKey(autoGenerate = true)
+
     private int id;
+    private int code;
     private String names;
     private String costprice;
     private String sellingprice;
@@ -12,6 +21,14 @@ public class ProductsModel implements Serializable {
     private String subscribed;
     private int status;
     private boolean isSelected = false;
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
 
     public boolean isSelected() {
         return isSelected;

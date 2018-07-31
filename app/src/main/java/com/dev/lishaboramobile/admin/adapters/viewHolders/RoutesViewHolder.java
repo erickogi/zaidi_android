@@ -2,6 +2,7 @@ package com.dev.lishaboramobile.admin.adapters.viewHolders;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dev.lishaboramobile.Global.Utils.OnclickRecyclerListener;
@@ -14,6 +15,8 @@ public class RoutesViewHolder extends RecyclerView.ViewHolder implements View.On
 
     public TextView status, name, famerscount;
     private WeakReference<OnclickRecyclerListener> listenerWeakReference;
+    public RelativeLayout background;
+    public View statusview;
 
 
     public RoutesViewHolder(View itemView, OnclickRecyclerListener onclickRecyclerListener) {
@@ -21,6 +24,9 @@ public class RoutesViewHolder extends RecyclerView.ViewHolder implements View.On
         listenerWeakReference = new WeakReference<>(onclickRecyclerListener);
         itemView.setOnClickListener(this);
         itemView.setOnLongClickListener(this);
+        statusview = itemView.findViewById(R.id.status_view);
+        background = itemView.findViewById(R.id.background);
+
         status = itemView.findViewById(R.id.txt_status);
         name = itemView.findViewById(R.id.txt_name);
         famerscount = itemView.findViewById(R.id.txt_route_farmers);

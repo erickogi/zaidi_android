@@ -75,6 +75,14 @@ class ApiConstants {
         var UpdateRoutes: String = Route + "Update.php"
 
 
+        //Cycles
+        var Cycle: String = baseUrl + "Cycles/"
+        var Cycles: String = Cycle + "List.php"
+
+
+        //Units
+        var Unit: String = baseUrl + "Units/"
+        var Units: String = Unit + "List.php"
 
 
 

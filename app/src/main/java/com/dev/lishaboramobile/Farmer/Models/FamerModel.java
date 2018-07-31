@@ -7,7 +7,7 @@ import android.arch.persistence.room.PrimaryKey;
 
 import java.io.Serializable;
 
-@Entity(tableName = "farmers",indices = {@Index(value = {"compositecode"}, unique = true)})
+@Entity(tableName = "farmers", indices = {@Index(value = {"compositecode", "mobile", "apikey"}, unique = true)})
 
 public class FamerModel implements Serializable {
     @PrimaryKey(autoGenerate = true)

@@ -54,6 +54,11 @@ public class PrefrenceManager {
     private static final String productsSettingsDone = "isProductSettingsDone";
     private static final String cycleSettingsDone = "isCycleSettingsDone";
     private static final String unitSettingsDone = "isCycleSettingsDone";
+    private static final String isFarmerListFirst = "isFarmerListFirst";
+    private static final String isRoutesListFirst = "isRouteListFirst";
+    private static final String isUnitsListFirst = "isUnitListFirst";
+    private static final String isCyclesListFirst = "isCycleListFirst";
+    private static final String isProductsListFirst = "isProductListFirst";
     // Shared Preferences
 
     SharedPreferences pref;
@@ -196,5 +201,55 @@ public class PrefrenceManager {
         return settings;
     }
 
+
+    public boolean isFarmerListFirstTime() {
+        return pref.getBoolean(isFarmerListFirst, true);
+
+    }
+
+    public void setIsFarmerListFirst(boolean s) {
+        editor.putBoolean(isFarmerListFirst, s);
+        editor.commit();
+    }
+
+    public boolean isRoutesListFirstTime() {
+        return pref.getBoolean(isRoutesListFirst, true);
+
+    }
+
+    public void setIsRoutesListFirst(boolean s) {
+        editor.putBoolean(isRoutesListFirst, s);
+        editor.commit();
+    }
+
+    public boolean isUnitListFirstTime() {
+        return pref.getBoolean(isUnitsListFirst, true);
+
+    }
+
+    public void setIsUnitsListFirst(boolean s) {
+        editor.putBoolean(isUnitsListFirst, s);
+        editor.commit();
+    }
+
+    public boolean isProductListFirstTime() {
+        return pref.getBoolean(isProductsListFirst, true);
+
+    }
+
+    public void setIsProductsListFirst(boolean s) {
+        editor.putBoolean(isProductsListFirst, s);
+        editor.commit();
+    }
+
+    public boolean isCycleListFirstTime() {
+        return pref.getBoolean(isCyclesListFirst, true);
+
+    }
+
+    public void setIsCyclesListFirst(boolean s) {
+        editor.putBoolean(isCyclesListFirst, s);
+        editor.commit();
+    }
 
 }

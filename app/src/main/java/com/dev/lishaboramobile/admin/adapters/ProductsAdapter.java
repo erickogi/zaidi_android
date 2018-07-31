@@ -73,14 +73,23 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsViewHolder> {
         if (productsModel.getStatus() == 1) {
             holder.status.setText("Active");
             holder.status.setTextColor(context.getResources().getColor(R.color.green_color_picker));
+            holder.background.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
+            holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
+//
 //
         } else if (productsModel.getStatus() == 0) {
 
             holder.status.setText("Deleted");
             holder.status.setTextColor(context.getResources().getColor(R.color.red));
+            holder.background.setBackgroundColor(context.getResources().getColor(R.color.red));
+            holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.red));
+//
         } else {
             holder.status.setText("In-Active");
             holder.status.setTextColor(context.getResources().getColor(R.color.blue_color_picker));
+            holder.background.setBackgroundColor(context.getResources().getColor(R.color.blue_color_picker));
+            holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.blue_color_picker));
+//
         }
 
 

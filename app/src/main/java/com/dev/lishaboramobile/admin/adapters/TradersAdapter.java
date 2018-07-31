@@ -54,6 +54,8 @@ public class TradersAdapter extends RecyclerView.Adapter<TraderViewHolder> {
 
         if (trader.getArchived() == 0 && trader.getDeleted() == 0 && trader.getDummy() == 0) {
             holder.status.setTextColor(context.getResources().getColor(R.color.green_color_picker));
+            holder.background.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
+            holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
 //
         } else {
             StringBuilder stringBuilder = new StringBuilder(status);
@@ -70,6 +72,8 @@ public class TradersAdapter extends RecyclerView.Adapter<TraderViewHolder> {
             }
             holder.status.setText(stringBuilder.toString());
             holder.status.setTextColor(context.getResources().getColor(R.color.red));
+            holder.background.setBackgroundColor(context.getResources().getColor(R.color.red));
+            holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.red));
         }
 //
 //        if(trader.getSynced()==0){

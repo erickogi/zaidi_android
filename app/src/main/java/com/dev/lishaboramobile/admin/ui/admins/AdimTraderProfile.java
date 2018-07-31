@@ -95,6 +95,7 @@ public class AdimTraderProfile extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        fab.hide();
         viewPager = findViewById(R.id.viewpager);
         viewPager.setVisibility(View.VISIBLE);
         viewPager.setOffscreenPageLimit(4);

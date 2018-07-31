@@ -47,12 +47,17 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> {
         holder.id.setText(farmer.getCode());
         holder.name.setText(farmer.getNames());
         holder.cycle.setText(farmer.getCyclename());
-        holder.status.setText(farmer.getStatus());
+        holder.route.setText("" + farmer.getRoutename());
 
         String status = "";
 
         if (farmer.getArchived() == 0 && farmer.getDeleted() == 0 && farmer.getDummy() == 0) {
+            status = "Active";
+            holder.status.setText(status);
             holder.status.setTextColor(context.getResources().getColor(R.color.green_color_picker));
+            holder.background.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
+            holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
+//
 //
         } else {
             StringBuilder stringBuilder = new StringBuilder(status);
@@ -67,8 +72,13 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> {
                 stringBuilder.append("|Dummy");
 
             }
+
+
             holder.status.setText(stringBuilder.toString());
             holder.status.setTextColor(context.getResources().getColor(R.color.red));
+            holder.background.setBackgroundColor(context.getResources().getColor(R.color.red));
+            holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.red));
+//
         }
 //
 //        if(farmer.getSynced()==0){

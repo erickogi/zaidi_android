@@ -10,7 +10,7 @@ import java.util.*
 class DateTimeUtils {
     companion object {
         fun getNowslong(): String {
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             val date = Date()
 
             //Date d = .parse(string_date);
