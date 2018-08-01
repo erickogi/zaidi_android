@@ -14,78 +14,92 @@
         app:indicatorColor="@color/colorPrimaryDark"
         app:indicatorName="BallSpinFadeLoaderIndicator" />
 
-    <LinearLayout
+    <include layout="@layout/layout_custom_alert_button" />
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="8dp">
+        android:layout_marginBottom="50dp">
 
-        <android.support.design.widget.TextInputLayout
-
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:textColorHint="@color/black">
+            android:orientation="vertical"
+            android:padding="2dp">
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/edt_traders_names"
+            <android.support.design.widget.TextInputLayout
+
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="Traders name "
-                android:inputType="text" />
+                android:layout_height="wrap_content"
+                android:layout_margin="3dp"
+                android:textColorHint="@color/black">
 
-        </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edt_traders_names"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Traders name "
+                    android:inputType="text" />
 
-        <android.support.design.widget.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            </android.support.design.widget.TextInputLayout>
 
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:textColorHint="@color/black">
+            <android.support.design.widget.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/edt_traders_phone"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="Traders Phone
+                android:layout_height="wrap_content"
+                android:layout_margin="3dp"
+                android:textColorHint="@color/black">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edt_traders_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Phone(7** *** ***)"
+                    android:inputType="phone"
+
+                    app:counterEnabled="true"
+                    app:counterMaxLength="10"
+
+
+                    app:helperText="7** *** ***"
+                    app:helperTextEnabled="true" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="3dp"
+                android:textColorHint="@color/black">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edt_traders_business_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Business Name
 "
-                android:inputType="phone" />
+                    android:inputType="text" />
 
-        </android.support.design.widget.TextInputLayout>
+            </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
 
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:textColorHint="@color/black">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/edt_traders_business_name"
+            <Spinner
+                android:id="@+id/spinner"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="Business Name
-"
-                android:inputType="text" />
+                android:layout_height="50dp"
+                android:entries="@array/payments"></Spinner>
 
-        </android.support.design.widget.TextInputLayout>
-
-
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:entries="@array/payments"></Spinner>
-
-        <CheckBox
-            android:id="@+id/chk_dummy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Dummy Account" />
-    </LinearLayout>
+            <CheckBox
+                android:id="@+id/chk_dummy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dummy Account" />
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

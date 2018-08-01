@@ -39,7 +39,9 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
 
     public static void hideKeyboardFrom(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     @Override
@@ -80,6 +82,7 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
         FarmerConst.getFamerModel().setUnitname(spinnerUnit.getItems().get(spinnerUnit.getSelectedIndex()).toString());
         FarmerConst.getFamerModel().setUnitcode(edtUnitName.getText().toString());
         FarmerConst.getFamerModel().setUnitcapacity(edtUnitMeasurement.getText().toString());
+        FarmerConst.getFamerModel().setUnitprice(edtUnitPrice.getText().toString());
 
         callback.goToNextStep();
 
@@ -110,6 +113,7 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
     public void onSelected() {
 
         initViews();
+        hideKeyboardFrom(getContext(), view);
     }
 
 
@@ -131,6 +135,7 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
         edtUnitMeasurement = view.findViewById(R.id.edt_unit_size);
         edtRouteName = view.findViewById(R.id.edt_route_names);
         edtRouteCode = view.findViewById(R.id.edt_route_code);
+        hideKeyboardFrom(Objects.requireNonNull(getContext()), view);
 
         initData();
         initActions();

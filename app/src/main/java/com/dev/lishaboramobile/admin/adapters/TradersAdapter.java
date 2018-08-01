@@ -49,6 +49,7 @@ public class TradersAdapter extends RecyclerView.Adapter<TraderViewHolder> {
         holder.name.setText(trader.getNames());
         holder.phone.setText(trader.getMobile());
         holder.status.setText(trader.getStatus());
+        holder.txtDate.setText(trader.getTransactiontime());
 
         String status = "";
 

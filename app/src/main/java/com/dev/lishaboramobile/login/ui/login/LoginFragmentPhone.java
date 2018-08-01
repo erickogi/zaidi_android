@@ -218,6 +218,7 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
                         Gson gson = new Gson();
                         TraderModel traderModel;
                         LoginConsts.setResponseObject(responseModel);
+                        LoginConsts.setPhone(phoneNumber);
                         switch (responseModel.getType()) {
                             case LoginController.ADMIN:
 

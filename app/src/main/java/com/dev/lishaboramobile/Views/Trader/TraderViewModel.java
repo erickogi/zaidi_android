@@ -42,11 +42,15 @@ public class TraderViewModel extends AndroidViewModel
     CyclesRepo cyclesRepo;
     Gson gson = new Gson();
     private MutableLiveData createRouteSuccess;
+    private MutableLiveData updateRouteSuccess;
+    private MutableLiveData deleteRouteSuccess;
 
 
 
     private MutableLiveData farmer;
     private MutableLiveData createFarmerSuccess;
+    private MutableLiveData updateFarmerSuccess;
+    private MutableLiveData deleteFarmerSuccess;
     private MutableLiveData unit;
     private LiveData<List<FamerModel>> farmers;
     private MutableLiveData route;
@@ -380,6 +384,76 @@ public class TraderViewModel extends AndroidViewModel
         return createRouteSuccess;
     }
 
+    public LiveData<ResponseModel> updateRoute(RoutesModel routesModel, JSONObject jsonObject, boolean b) {
+        if (this.updateRouteSuccess == null) {
+        }
+        this.updateRouteSuccess = new MutableLiveData();
+
+        if (b) {
+            Request.Companion.getResponse(ApiConstants.Companion.getCreateRoutes(), jsonObject, "", new ResponseCallback() {
+                @Override
+                public void response(ResponseModel responseModel) {
+                    updateRouteSuccess.setValue(responseModel);
+                    routesRepo.insert(routesModel);
+
+                }
+
+                @Override
+                public void response(ResponseObject responseModel) {
+                    updateRouteSuccess.setValue(responseModel);
+
+                    routesRepo.insert(routesModel);
+
+                }
+            });
+
+        } else {
+            routesRepo.upDateRecord(routesModel);
+            ResponseModel responseModel = new ResponseModel();
+            responseModel.setResultCode(1);
+            responseModel.setResultDescription("Updated");
+            responseModel.setData(null);
+            updateRouteSuccess.setValue(responseModel);
+
+        }
+        return updateRouteSuccess;
+    }
+
+    public LiveData<ResponseModel> deleteRoute(RoutesModel routesModel, JSONObject jsonObject, boolean b) {
+        if (this.deleteRouteSuccess == null) {
+        }
+        this.deleteRouteSuccess = new MutableLiveData();
+
+        if (b) {
+            Request.Companion.getResponse(ApiConstants.Companion.getCreateRoutes(), jsonObject, "", new ResponseCallback() {
+                @Override
+                public void response(ResponseModel responseModel) {
+                    deleteRouteSuccess.setValue(responseModel);
+                    routesRepo.insert(routesModel);
+
+                }
+
+                @Override
+                public void response(ResponseObject responseModel) {
+                    deleteRouteSuccess.setValue(responseModel);
+
+                    routesRepo.insert(routesModel);
+
+                }
+            });
+
+        } else {
+            routesRepo.deleteRecord(routesModel);
+            ResponseModel responseModel = new ResponseModel();
+            responseModel.setResultCode(1);
+            responseModel.setResultDescription("Deleted");
+            responseModel.setData(null);
+            deleteRouteSuccess.setValue(responseModel);
+
+        }
+        return deleteRouteSuccess;
+    }
+
 
     public LiveData<ResponseModel> createFarmer(FamerModel famerModel, boolean b) {
         if (this.createFarmerSuccess == null) {
@@ -416,8 +490,80 @@ public class TraderViewModel extends AndroidViewModel
         return createFarmerSuccess;
     }
 
+    public LiveData<ResponseModel> deleteFarmer(FamerModel famerModel, boolean b) {
+        if (this.deleteFarmerSuccess == null) {
+        }
+        this.deleteFarmerSuccess = new MutableLiveData();
+
+        if (b) {
+            Request.Companion.getResponse(ApiConstants.Companion.getCreateFarmer(), getFarmerJson(), "", new ResponseCallback() {
+                @Override
+                public void response(ResponseModel responseModel) {
+                    deleteFarmerSuccess.setValue(responseModel);
+                    farmerRepo.insert(famerModel);
+
+                }
+
+                @Override
+                public void response(ResponseObject responseModel) {
+                    deleteFarmerSuccess.setValue(responseModel);
+
+                    farmerRepo.insert(famerModel);
+
+                }
+            });
+
+        } else {
+            farmerRepo.deleteRecord(famerModel);
+            ResponseModel responseModel = new ResponseModel();
+            responseModel.setResultCode(1);
+            responseModel.setResultDescription("Farmer deleted successfully");
+            responseModel.setData(null);
+            deleteFarmerSuccess.setValue(responseModel);
+
+        }
+        return deleteFarmerSuccess;
+    }
+
+    public LiveData<ResponseModel> updateFarmer(FamerModel famerModel, boolean b) {
+        if (this.updateFarmerSuccess == null) {
+        }
+        this.updateFarmerSuccess = new MutableLiveData();
+
+        if (b) {
+            Request.Companion.getResponse(ApiConstants.Companion.getCreateFarmer(), getFarmerJson(), "", new ResponseCallback() {
+                @Override
+                public void response(ResponseModel responseModel) {
+                    updateFarmerSuccess.setValue(responseModel);
+                    farmerRepo.insert(famerModel);
+
+                }
+
+                @Override
+                public void response(ResponseObject responseModel) {
+                    updateFarmerSuccess.setValue(responseModel);
+
+                    farmerRepo.insert(famerModel);
+
+                }
+            });
+
+        } else {
+            farmerRepo.upDateRecord(famerModel);
+            ResponseModel responseModel = new ResponseModel();
+            responseModel.setResultCode(1);
+            responseModel.setResultDescription("Farmer deleted successfully");
+            responseModel.setData(null);
+            updateFarmerSuccess.setValue(responseModel);
+
+        }
+        return updateFarmerSuccess;
+    }
+
     private JSONObject getFarmerJson() {
 
         return null;
     }
+
+
 }

@@ -13,7 +13,7 @@ import java.lang.ref.WeakReference;
 public class FarmerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
     //  public RelativeLayout engineer_background;
 
-    public TextView status, id, name, cycle, balance, famerscount, route;
+    public TextView status, id, name, cycle, balance, famerscount, route, txtDate;
     private WeakReference<OnclickRecyclerListener> listenerWeakReference;
     public RelativeLayout background;
     public View statusview;
@@ -26,6 +26,8 @@ public class FarmerViewHolder extends RecyclerView.ViewHolder implements View.On
         itemView.setOnLongClickListener(this);
         statusview = itemView.findViewById(R.id.status_view);
         background = itemView.findViewById(R.id.background);
+
+        txtDate = itemView.findViewById(R.id.txt_date);
 
         status = itemView.findViewById(R.id.txt_status);
         id = itemView.findViewById(R.id.txt_id);

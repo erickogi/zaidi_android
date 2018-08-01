@@ -121,7 +121,7 @@
             android:layout_centerHorizontal="true"
             android:gravity="center_horizontal"
             android:padding="1dp"
-            android:text="No internet"
+            android:text=""
             android:textAlignment="center" />
 
     </RelativeLayout>

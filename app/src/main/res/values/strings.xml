@@ -54,4 +54,5 @@
     <string name="title_activity_admin_trader_profile">AdminTraderProfile</string>
     <string name="title_activity_reset_password">ResetPassword</string>
     <string name="title_activity_adim_profile">AdimProfile</string>
+    <string name="sunday">Sunday</string>
 </resources>

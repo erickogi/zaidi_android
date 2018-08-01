@@ -3,10 +3,10 @@ package com.dev.lishaboramobile.admin.ui.admins;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.button.MaterialButton;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
@@ -24,7 +24,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -207,8 +207,8 @@ public class AdminProductsFragment extends Fragment {
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_add_product, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(context));
         alertDialogBuilderUserInput.setView(mView);
-        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
-        alertDialogBuilderUserInput.setTitle("Product");
+//        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
+//        alertDialogBuilderUserInput.setTitle("Product");
 
 
         avi = mView.findViewById(R.id.avi);
@@ -216,22 +216,48 @@ public class AdminProductsFragment extends Fragment {
 
         TextInputEditText edtNames, edtMobile;
         alertDialogBuilderUserInput
-                .setCancelable(false)
-                .setPositiveButton("Save", (dialogBox, id) -> {
-                    // ToDo get user input here
-
-
-                })
-
-                .setNegativeButton("Dismiss",
-                        (dialogBox, id) -> dialogBox.cancel());
+                .setCancelable(false);
+//                .setPositiveButton("Save", (dialogBox, id) -> {
+//                    // ToDo get user input here
+//
+//
+//                })
+//
+//                .setNegativeButton("Dismiss",
+//                        (dialogBox, id) -> dialogBox.cancel());
 
         AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
         alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
         alertDialogAndroid.show();
 
-        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
-        theButton.setOnClickListener(new CustomListener(alertDialogAndroid, true));
+//        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
+//        theButton.setOnClickListener(new CustomListener(alertDialogAndroid, true));
+
+        MaterialButton btnPositive, btnNegative, btnNeutral;
+        TextView txtTitle;
+        LinearLayout lTitle;
+        ImageView imgIcon;
+        btnPositive = mView.findViewById(R.id.btn_positive);
+        btnNegative = mView.findViewById(R.id.btn_negative);
+        btnNeutral = mView.findViewById(R.id.btn_neutral);
+        txtTitle = mView.findViewById(R.id.txt_title);
+        lTitle = mView.findViewById(R.id.linear_title);
+        imgIcon = mView.findViewById(R.id.img_icon);
+
+
+        btnNeutral.setVisibility(View.GONE);
+        lTitle.setVisibility(View.GONE);
+        txtTitle.setVisibility(View.VISIBLE);
+        imgIcon.setVisibility(View.VISIBLE);
+        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
+        txtTitle.setText("Product");
+
+        btnPositive.setOnClickListener(new CustomListener(alertDialogAndroid, true));
+        btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
+
+
 
 
     }
@@ -241,8 +267,8 @@ public class AdminProductsFragment extends Fragment {
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_add_product, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(context));
         alertDialogBuilderUserInput.setView(mView);
-        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
-        alertDialogBuilderUserInput.setTitle("Product");
+//        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
+//        alertDialogBuilderUserInput.setTitle("Product");
 
 
         avi = mView.findViewById(R.id.avi);
@@ -265,22 +291,47 @@ public class AdminProductsFragment extends Fragment {
 
 
         alertDialogBuilderUserInput
-                .setCancelable(false)
-                .setPositiveButton("Save", (dialogBox, id) -> {
-                    // ToDo get user input here
-
-
-                })
-
-                .setNegativeButton("Dismiss",
-                        (dialogBox, id) -> dialogBox.cancel());
+                .setCancelable(false);
+//                .setPositiveButton("Save", (dialogBox, id) -> {
+//                    // ToDo get user input here
+//
+//
+//                })
+//
+//                .setNegativeButton("Dismiss",
+//                        (dialogBox, id) -> dialogBox.cancel());
 
         AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
         alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
         alertDialogAndroid.show();
 
-        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
-        theButton.setOnClickListener(new CustomListener(alertDialogAndroid, false));
+//        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
+//        theButton.setOnClickListener(new CustomListener(alertDialogAndroid, false));
+
+        MaterialButton btnPositive, btnNegative, btnNeutral;
+        TextView txtTitle;
+        LinearLayout lTitle;
+        ImageView imgIcon;
+        btnPositive = mView.findViewById(R.id.btn_positive);
+        btnNegative = mView.findViewById(R.id.btn_negative);
+        btnNeutral = mView.findViewById(R.id.btn_neutral);
+        txtTitle = mView.findViewById(R.id.txt_title);
+        lTitle = mView.findViewById(R.id.linear_title);
+        imgIcon = mView.findViewById(R.id.img_icon);
+
+
+        btnNeutral.setVisibility(View.GONE);
+        lTitle.setVisibility(View.GONE);
+        txtTitle.setVisibility(View.VISIBLE);
+        imgIcon.setVisibility(View.VISIBLE);
+        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
+        txtTitle.setText("Edit Product");
+
+        btnPositive.setOnClickListener(new CustomListener(alertDialogAndroid, false));
+        btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
+
 
 
     }
@@ -296,8 +347,10 @@ public class AdminProductsFragment extends Fragment {
 
                     if (isConnectedToInternet) {
                         try {
-                            txt_network_state.setText("Connected to internet");
-                            txt_network_state.setTextColor(getActivity().getResources().getColor(R.color.green_color_picker));
+                            fab.setImageResource(android.R.drawable.ic_input_add);
+
+                            //txt_network_state.setText("Connected to internet");
+                            //txt_network_state.setTextColor(getActivity().getResources().getColor(R.color.green_color_picker));
                         } catch (Exception nm) {
                             nm.printStackTrace();
                         }
@@ -305,8 +358,10 @@ public class AdminProductsFragment extends Fragment {
                     } else {
 
                         try {
-                            txt_network_state.setText("Not connected to internet");
-                            txt_network_state.setTextColor(getActivity().getResources().getColor(R.color.red));
+                            fab.setImageResource(R.drawable.ic_add_red_24dp);
+
+                            // txt_network_state.setText("Not connected to internet");
+                            // txt_network_state.setTextColor(getActivity().getResources().getColor(R.color.red));
                         } catch (Exception vb) {
                             vb.printStackTrace();
                         }

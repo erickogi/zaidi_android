@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_custom_alert_button"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/linear_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/img_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:padding="2dp"
+            android:visibility="gone" />
+
+        <TextView
+
+            android:id="@+id/txt_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:padding="2dp"
+            android:text=""
+            android:textColor="@color/colorAccent"
+            android:textSize="14.5sp"
+            android:textStyle="bold"
+            android:visibility="visible" />
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <android.support.design.button.MaterialButton
+            android:id="@+id/btn_neutral"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:gravity="start|center"
+
+            android:text="Edit"
+            android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <android.support.design.button.MaterialButton
+            android:id="@+id/btn_negative"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center"
+            android:layout_weight="1"
+
+            android:background="@color/transparent"
+            android:gravity="end|center"
+            android:text="Dismiss"
+            android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <android.support.design.button.MaterialButton
+            android:id="@+id/btn_positive"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:text="Save"
+            android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

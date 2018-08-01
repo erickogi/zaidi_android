@@ -26,10 +26,19 @@
             android:id="@+id/spinners"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <com.jaredrummler.materialspinner.MaterialSpinner
+            <LinearLayout
+                android:id="@+id/lspinner1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                android:background="@color/colorAccent">
+
+                <com.jaredrummler.materialspinner.MaterialSpinner
                 android:id="@+id/spinner1"
+                    android:layout_height="40dp"
                 android:layout_marginBottom="2dp"
                 app:ms_arrow_tint="@color/green_color_picker"
                 app:ms_hint="Filter"
@@ -37,18 +46,31 @@
 
                 app:ms_text_color="@color/black"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                    android:layout_margin="2dp" />
 
-            <com.jaredrummler.materialspinner.MaterialSpinner
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lspinner2"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                android:background="@color/colorAccent">
+
+                <com.jaredrummler.materialspinner.MaterialSpinner
                 android:id="@+id/spinner2"
+                    android:layout_height="40dp"
                 app:ms_arrow_tint="@color/green_color_picker"
                 app:ms_hint="Select Route"
                 app:ms_hint_color="@color/green_color_picker"
                 app:ms_text_color="@color/black"
 
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                    android:layout_margin="2dp" />
 
+            </LinearLayout>
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView

@@ -2,10 +2,10 @@ package com.dev.lishaboramobile.Views.Trader;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.button.MaterialButton;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TextInputEditText;
@@ -20,9 +20,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.view.WindowManager;
 import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dev.lishaboramobile.Global.Models.ResponseModel;
@@ -81,9 +84,23 @@ public class TraderActivity extends AppCompatActivity {
 
             @Override
             public void logOutClicked() {
-                new PrefrenceManager(TraderActivity.this).setIsLoggedIn(false, 0);
-                startActivity(new Intent(TraderActivity.this, LoginActivity.class));
-                finish();
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(TraderActivity.this);
+                alertDialog.setMessage("Are sure you want to log out").setCancelable(false).setTitle("Log Out");
+
+
+                alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    new PrefrenceManager(TraderActivity.this).setIsLoggedIn(false, 0);
+                    startActivity(new Intent(TraderActivity.this, LoginActivity.class));
+                    finish();
+                }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
+
+                AlertDialog alertDialogAndroid = alertDialog.create();
+                alertDialogAndroid.setCancelable(false);
+                alertDialogAndroid.show();
+
+
+
             }
 
             @Override
@@ -280,8 +297,8 @@ public class TraderActivity extends AppCompatActivity {
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_add_trader, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(TraderActivity.this));
         alertDialogBuilderUserInput.setView(mView);
-        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
-        alertDialogBuilderUserInput.setTitle("Trader");
+//        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
+//        alertDialogBuilderUserInput.setTitle("Trader");
 
 
         avi = mView.findViewById(R.id.avi);
@@ -299,22 +316,51 @@ public class TraderActivity extends AppCompatActivity {
 
 
         alertDialogBuilderUserInput
-                .setCancelable(false)
-                .setPositiveButton("Update", (dialogBox, id) -> {
-                    // ToDo get user input here
-
-
-                })
-
-                .setNegativeButton("Dismiss",
-                        (dialogBox, id) -> dialogBox.cancel());
+                .setCancelable(false);
+//                .setPositiveButton("Update", (dialogBox, id) -> {
+//                    // ToDo get user input here
+//
+//
+//                })
+//
+//                .setNegativeButton("Dismiss",
+//                        (dialogBox, id) -> dialogBox.cancel());
 
         AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
         alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
         alertDialogAndroid.show();
 
-        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
-        theButton.setOnClickListener(new EditCustomListener(alertDialogAndroid, traderModel));
+//        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
+//        theButton.setOnClickListener(new EditCustomListener(alertDialogAndroid, traderModel));
+
+        MaterialButton btnPositive, btnNegative, btnNeutral;
+        TextView txtTitle;
+        LinearLayout lTitle;
+        ImageView imgIcon;
+        btnPositive = mView.findViewById(R.id.btn_positive);
+        btnNegative = mView.findViewById(R.id.btn_negative);
+        btnNeutral = mView.findViewById(R.id.btn_neutral);
+        txtTitle = mView.findViewById(R.id.txt_title);
+        lTitle = mView.findViewById(R.id.linear_title);
+        imgIcon = mView.findViewById(R.id.img_icon);
+
+
+        btnNeutral.setVisibility(View.GONE);
+        lTitle.setVisibility(View.GONE);
+        txtTitle.setVisibility(View.VISIBLE);
+        imgIcon.setVisibility(View.VISIBLE);
+        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
+        txtTitle.setText("Trader");
+
+        btnPositive.setOnClickListener(new EditCustomListener(alertDialogAndroid, traderModel));
+        btnNeutral.setOnClickListener(view -> {
+
+        });
+        btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
+
+
 
 
     }

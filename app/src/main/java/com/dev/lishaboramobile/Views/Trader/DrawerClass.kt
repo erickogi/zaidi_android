@@ -51,7 +51,7 @@ class DrawerClass {
                     .withName("Routes").withTextColorRes(R.color.white).withIcon(R.drawable.ic_route)
 
             val products = PrimaryDrawerItem().withIdentifier(20)
-                    .withName("Products").withTextColorRes(R.color.white).withIcon(R.drawable.ic_route)
+                    .withName("Products").withTextColorRes(R.color.white).withIcon(R.drawable.ic_add_white_24dp)
 
 
             val payout = PrimaryDrawerItem().withIdentifier(21)

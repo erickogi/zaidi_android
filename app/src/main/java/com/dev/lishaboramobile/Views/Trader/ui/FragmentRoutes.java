@@ -2,15 +2,16 @@ package com.dev.lishaboramobile.Views.Trader.ui;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.button.MaterialButton;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -21,15 +22,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dev.lishaboramobile.Global.Models.ResponseModel;
 import com.dev.lishaboramobile.Global.Utils.DateTimeUtils;
 import com.dev.lishaboramobile.Global.Utils.GeneralUtills;
+import com.dev.lishaboramobile.Global.Utils.MyToast;
 import com.dev.lishaboramobile.Global.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Trader.Models.RPFSearchModel;
@@ -167,31 +170,58 @@ public class FragmentRoutes extends Fragment {
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_add_route, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         alertDialogBuilderUserInput.setView(mView);
-        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
-        alertDialogBuilderUserInput.setTitle("Route");
+//        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
+//        alertDialogBuilderUserInput.setTitle("Route");
 
 
         avi = mView.findViewById(R.id.avi);
 
 
         alertDialogBuilderUserInput
-                .setCancelable(false)
-                .setPositiveButton("Save", (dialogBox, id) -> {
-                    // ToDo get user input here
-
-
-                })
-
-                .setNegativeButton("Dismiss",
-                        (dialogBox, id) -> dialogBox.cancel());
+                .setCancelable(false);
+//                .setPositiveButton("Save", (dialogBox, id) -> {
+//                    // ToDo get user input here
+//
+//
+//                })
+//
+//                .setNegativeButton("Dismiss",
+//                        (dialogBox, id) -> dialogBox.cancel());
 
         AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
         alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
         alertDialogAndroid.show();
 
-        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
-        theButton.setOnClickListener(new CustomListener(alertDialogAndroid));
+//        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
+//        theButton.setOnClickListener(new CustomListener(alertDialogAndroid));
 
+
+        MaterialButton btnPositive, btnNegative, btnNeutral;
+        TextView txtTitle;
+        LinearLayout lTitle;
+        ImageView imgIcon;
+        btnPositive = mView.findViewById(R.id.btn_positive);
+        btnNegative = mView.findViewById(R.id.btn_negative);
+        btnNeutral = mView.findViewById(R.id.btn_neutral);
+        txtTitle = mView.findViewById(R.id.txt_title);
+        lTitle = mView.findViewById(R.id.linear_title);
+        imgIcon = mView.findViewById(R.id.img_icon);
+
+
+        btnNeutral.setVisibility(View.GONE);
+        lTitle.setVisibility(View.GONE);
+        txtTitle.setVisibility(View.VISIBLE);
+        imgIcon.setVisibility(View.VISIBLE);
+        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
+        txtTitle.setText("Route");
+
+        btnPositive.setOnClickListener(new CustomListener(alertDialogAndroid));
+        btnNeutral.setOnClickListener(view -> {
+
+        });
+        btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
 
     }
 
@@ -285,11 +315,130 @@ public class FragmentRoutes extends Fragment {
             @Override
             public void onClickListener(int adapterPosition, @NotNull View view) {
 
+                popupMenu(adapterPosition, view, filteredRoutesModels.get(adapterPosition));
             }
         });
 
 
     }
+
+    private void popupMenu(int pos, View view, RoutesModel routesModel) {
+        PopupMenu popupMenu = new PopupMenu(Objects.requireNonNull(getContext()), view);
+        popupMenu.inflate(R.menu.route_list_menu);
+
+
+        popupMenu.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.delete:
+
+
+                    routesModel.setStatus(0);
+
+                    avi.smoothToShow();
+                    mViewModel.deleteRoute(routesModel, null, false).observe(FragmentRoutes.this, new Observer<ResponseModel>() {
+                        @Override
+                        public void onChanged(@Nullable ResponseModel responseModel) {
+                            avi.smoothToHide();
+                            MyToast.toast(responseModel.getResultDescription(), getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                        }
+                    });
+
+                    break;
+
+                case R.id.archive:
+
+
+                    break;
+
+                case R.id.dummy:
+
+
+                    // update(famerModel);
+                    break;
+                case R.id.edit:
+
+
+                    Log.d("farmerdialog", "edit clicked");
+                    editRoute(routesModel, pos);
+                    break;
+
+                default:
+            }
+            return false;
+        });
+        popupMenu.show();
+    }
+
+    private void editRoute(RoutesModel routesModel, int pos) {
+        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
+        View mView = layoutInflaterAndroid.inflate(R.layout.dialog_add_route, null);
+        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+        alertDialogBuilderUserInput.setView(mView);
+//        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
+//        alertDialogBuilderUserInput.setTitle("Route");
+
+
+        avi = mView.findViewById(R.id.avi);
+
+        TextInputEditText name;
+        CheckBox chkDummy;
+
+        name = mView.findViewById(R.id.edt_rout_names);
+        chkDummy = mView.findViewById(R.id.chk_dummy);
+        chkDummy.setVisibility(View.GONE);
+
+        name.setText(routesModel.getRoute());
+
+
+        alertDialogBuilderUserInput
+                .setCancelable(false);
+//                .setPositiveButton("Save", (dialogBox, id) -> {
+//                    // ToDo get user input here
+//
+//
+//                })
+//
+//                .setNegativeButton("Dismiss",
+//                        (dialogBox, id) -> dialogBox.cancel());
+
+        AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
+        alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
+        alertDialogAndroid.show();
+
+//        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
+//        theButton.setOnClickListener(new EditCustomListener(alertDialogAndroid,routesModel));
+
+
+        MaterialButton btnPositive, btnNegative, btnNeutral;
+        TextView txtTitle;
+        LinearLayout lTitle;
+        ImageView imgIcon;
+        btnPositive = mView.findViewById(R.id.btn_positive);
+        btnNegative = mView.findViewById(R.id.btn_negative);
+        btnNeutral = mView.findViewById(R.id.btn_neutral);
+        txtTitle = mView.findViewById(R.id.txt_title);
+        lTitle = mView.findViewById(R.id.linear_title);
+        imgIcon = mView.findViewById(R.id.img_icon);
+
+
+        btnNeutral.setVisibility(View.GONE);
+        lTitle.setVisibility(View.GONE);
+        txtTitle.setVisibility(View.VISIBLE);
+        imgIcon.setVisibility(View.VISIBLE);
+        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
+        txtTitle.setText("Route");
+
+        btnPositive.setOnClickListener(new EditCustomListener(alertDialogAndroid, routesModel));
+        btnNeutral.setOnClickListener(view -> {
+
+        });
+        btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
+
+
+    }
+
 
     public void update(List<RoutesModel> routesModels) {
 
@@ -302,6 +451,11 @@ public class FragmentRoutes extends Fragment {
             this.routesModels.addAll(routesModels);
             filterRoutes();
             //listAdapter.notifyDataSetChanged();
+
+
+        } else {
+            filteredRoutesModels.clear();
+            routesModels.clear();
 
 
         }
@@ -320,6 +474,8 @@ public class FragmentRoutes extends Fragment {
             }
             listAdapter.notifyDataSetChanged();
             recyclerView.scrollToPosition(listAdapter.getItemCount() - 1);
+        } else {
+            listAdapter.notifyDataSetChanged();
         }
 
     }
@@ -426,5 +582,61 @@ public class FragmentRoutes extends Fragment {
 
     }
 
+    private class EditCustomListener implements View.OnClickListener {
+        AlertDialog dialog;
+        boolean isActive = true;
+        int isAct = 1;
+        RoutesModel routesModel;
+
+        public EditCustomListener(AlertDialog alertDialogAndroid, RoutesModel routesModel) {
+            dialog = alertDialogAndroid;
+            this.routesModel = routesModel;
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            TextInputEditText name;
+            CheckBox chkDummy;
+
+            name = dialog.findViewById(R.id.edt_rout_names);
+            chkDummy = dialog.findViewById(R.id.chk_dummy);
+
+
+            if (name.getText().toString().isEmpty()) {
+                name.setError("Required");
+                name.requestFocus();
+                avi.smoothToHide();
+                return;
+            }
+
+
+            if (chkDummy != null && !chkDummy.isChecked()) {
+                isActive = false;
+                isAct = 2;
+            }
+            PrefrenceManager prefrenceManager = new PrefrenceManager(getContext());
+
+            routesModel.setRoute(name.getText().toString());
+
+            avi.smoothToShow();
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = new JSONObject(gson.toJson(routesModel));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            mViewModel.updateRoute(routesModel, jsonObject, false).observe(FragmentRoutes.this, new Observer<ResponseModel>() {
+                @Override
+                public void onChanged(@Nullable ResponseModel responseModel) {
+                    avi.smoothToHide();
+                    dialog.dismiss();
+                }
+            });
+
+
+        }
+
+    }
 
 }

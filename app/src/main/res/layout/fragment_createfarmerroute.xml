@@ -5,202 +5,230 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.design.card.MaterialCardView
+    <ScrollView
         android:layout_width="match_parent"
-
-        android:layout_height="wrap_content"
-        app:cardUseCompatPadding="true">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="6dp">
+            android:orientation="vertical">
 
-
-            <com.dev.customfonts.MyTextView_Roboto_Bold
+            <android.support.design.card.MaterialCardView
                 android:layout_width="match_parent"
+
                 android:layout_height="wrap_content"
-                android:text="Choose Route"
+                app:cardUseCompatPadding="true">
 
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="6dp">
 
-            <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/spinnerRoute"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:focusable="true"
-                app:ms_arrow_tint="@color/green_color_picker"
-                app:ms_background_color="@color/divider"
-                app:ms_hint="Select Route"
-                app:ms_hint_color="@color/green_color_picker"
-                app:ms_text_color="@color/black" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <android.support.design.widget.TextInputLayout
-
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="3dp"
-                    android:layout_weight="1"
-
-                    android:textColorHint="@color/black">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/edt_route_names"
+                    <com.dev.customfonts.MyTextView_Roboto_Bold
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:enabled="false"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
+                        android:layout_height="wrap_content"
+                        android:text="Choose Route"
+
+                        android:textAlignment="center"
                         android:textColor="@color/black"
-                        android:hint="Route Name "
-                        android:inputType="text" />
+                        android:textStyle="bold" />
 
-                </android.support.design.widget.TextInputLayout>
-
-                <android.support.design.widget.TextInputLayout
-
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="3dp"
-                    android:layout_weight="1"
-                    android:textColorHint="@color/black">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/edt_route_code"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:enabled="false"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:background="@color/colorAccent">
+
+                        <com.jaredrummler.materialspinner.MaterialSpinner
+                            android:id="@+id/spinnerRoute"
+
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="2dp"
+                            android:focusable="true"
+                            app:ms_arrow_tint="@color/green_color_picker"
+                            app:ms_hint="Select Route"
+                            app:ms_hint_color="@color/green_color_picker"
+                            app:ms_text_color="@color/black" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <android.support.design.widget.TextInputLayout
+
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="3dp"
+                            android:layout_weight="1"
+
+                            android:textColorHint="@color/black">
+
+                            <android.support.design.widget.TextInputEditText
+                                android:id="@+id/edt_route_names"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:enabled="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:hint="Route Name "
+                                android:inputType="text"
+                                android:textColor="@color/black" />
+
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="3dp"
+                            android:layout_weight="1"
+                            android:textColorHint="@color/black">
+
+                            <android.support.design.widget.TextInputEditText
+                                android:id="@+id/edt_route_code"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:enabled="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:hint="Route Code "
+
+                                android:inputType="text"
+                                android:textColor="@color/black" />
+
+                        </android.support.design.widget.TextInputLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </android.support.design.card.MaterialCardView>
+
+            <android.support.design.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="6dp">
+
+
+                    <com.dev.customfonts.MyTextView_Roboto_Bold
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Choose Unit"
+                        android:textAlignment="center"
                         android:textColor="@color/black"
+                        android:textStyle="bold" />
 
-                        android:hint="Route Code "
-                        android:inputType="text" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:background="@color/colorAccent">
 
-                </android.support.design.widget.TextInputLayout>
+                        <com.jaredrummler.materialspinner.MaterialSpinner
+                            android:id="@+id/spinnerUnit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="2dp"
+                            app:ms_arrow_tint="@color/green_color_picker"
+                            app:ms_hint="Select Unit"
+                            app:ms_hint_color="@color/green_color_picker" />
 
-            </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <android.support.design.widget.TextInputLayout
+
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+
+                            android:textColorHint="@color/black">
+
+                            <android.support.design.widget.TextInputEditText
+                                android:id="@+id/edt_unit_names"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:enabled="false"
+                                android:hint="Unit Code "
+
+                                android:inputType="text"
+                                android:textColor="@color/black" />
+
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+
+                            android:layout_weight="1"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:textColorHint="@color/black">
+
+                            <android.support.design.widget.TextInputEditText
+                                android:id="@+id/edt_unit_size"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:enabled="false"
+                                android:hint="Size(Mils)"
+                                android:inputType="text"
+                                android:textColor="@color/black" />
+
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColorHint="@color/black">
+
+                            <android.support.design.widget.TextInputEditText
+                                android:id="@+id/edt_unit_price"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:enabled="true"
+                                android:focusable="true"
+                                android:focusableInTouchMode="true"
+                                android:hint="Price(Ksh)"
+
+                                android:inputType="text"
+                                android:textColor="@color/black" />
+
+                        </android.support.design.widget.TextInputLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </android.support.design.card.MaterialCardView>
 
         </LinearLayout>
-    </android.support.design.card.MaterialCardView>
-
-    <android.support.design.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardUseCompatPadding="true">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="6dp">
-
-
-            <com.dev.customfonts.MyTextView_Roboto_Bold
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Choose Unit"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
-
-            <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/spinnerUnit"
-                app:ms_arrow_tint="@color/green_color_picker"
-                app:ms_background_color="@color/divider"
-                app:ms_hint="Select Unit"
-                app:ms_hint_color="@color/green_color_picker"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <android.support.design.widget.TextInputLayout
-
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-
-                    android:textColorHint="@color/black">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/edt_unit_names"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:enabled="false"
-                        android:hint="Unit Code "
-
-                        android:textColor="@color/black"
-                        android:inputType="text" />
-
-                </android.support.design.widget.TextInputLayout>
-
-                <android.support.design.widget.TextInputLayout
-
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColorHint="@color/black">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/edt_unit_size"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:enabled="false"
-                        android:textColor="@color/black"
-                        android:hint="Size(Mils)"
-                        android:inputType="text" />
-
-                </android.support.design.widget.TextInputLayout>
-
-                <android.support.design.widget.TextInputLayout
-
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColorHint="@color/black">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/edt_unit_price"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:enabled="false"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        android:textColor="@color/black"
-
-                        android:hint="Price(Ksh)"
-                        android:inputType="text" />
-
-                </android.support.design.widget.TextInputLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
-    </android.support.design.card.MaterialCardView>
+    </ScrollView>
 
 
 </LinearLayout>

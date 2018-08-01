@@ -5,11 +5,11 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.button.MaterialButton;
 import android.support.design.chip.Chip;
 import android.support.design.chip.ChipGroup;
 import android.support.design.widget.FloatingActionButton;
@@ -31,12 +31,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dev.lishaboramobile.Farmer.Models.FamerModel;
+import com.dev.lishaboramobile.Global.Models.ResponseModel;
+import com.dev.lishaboramobile.Global.Utils.MyToast;
 import com.dev.lishaboramobile.Global.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.Global.Utils.RequestDataCallback;
 import com.dev.lishaboramobile.R;
@@ -92,6 +95,7 @@ public class FragementFarmersList extends Fragment {
     private String filterText = "";
     FloatingActionButton fab;
     MaterialSpinner spinner1, spinner2;
+    LinearLayout lspinner1, lspinner2;
     List<UnitsModel> getUnits = new LinkedList<>();
     private SearchView searchView;
     List<RoutesModel> getRoutess = new LinkedList<>();
@@ -177,6 +181,9 @@ public class FragementFarmersList extends Fragment {
             //listAdapter.notifyDataSetChanged();
 
 
+        } else {
+            this.famerModels.clear();
+            filterFarmers();
         }
     }
 
@@ -243,22 +250,33 @@ public class FragementFarmersList extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View viehw) {
-                FragementFarmersList.this.createFarmers();
+                if (isSetUp()) {
+                    FragementFarmersList.this.createFarmers();
+                } else {
+                    initDataOffline(true, true, true);
+                    MyToast.toast("Routes, Units and Cycles Not set Up", getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                }
             }
         });
 
 
         spinner1 = view.findViewById(R.id.spinner1);
+        lspinner1 = view.findViewById(R.id.lspinner1);
         spinner2 = view.findViewById(R.id.spinner2);
+        lspinner2 = view.findViewById(R.id.lspinner2);
         spinner2.setVisibility(View.GONE);
+        lspinner2.setVisibility(View.GONE);
+
 
         spinner1.setItems("Filter Automatically", "By Route", "Chronologically", "Manually", "Alphabetically", "By Account Status");
         spinner1.setOnItemSelectedListener((MaterialSpinner.OnItemSelectedListener<String>) (view1, position, id, item) -> {
             if (position == 1 || position == 5) {
                 spinner2.setVisibility(View.VISIBLE);
+                lspinner2.setVisibility(View.VISIBLE);
                 setUpSpinner2(position);
             } else {
                 spinner2.setVisibility(View.GONE);
+                lspinner2.setVisibility(View.GONE);
             }
         });
 
@@ -268,6 +286,16 @@ public class FragementFarmersList extends Fragment {
 
 
 
+    }
+
+    private boolean isSetUp() {
+        if (getCycles == null && getCycles.size() < 1) {
+            return false;
+        }
+        if (getUnits == null && getUnits.size() < 1) {
+            return false;
+        }
+        return getRoutess != null || getRoutess.size() >= 1;
     }
 
     private void setUpSpinner2(int pos) {
@@ -441,31 +469,50 @@ public class FragementFarmersList extends Fragment {
             } else {
                 route = "";
             }
-        }
 
-
-
-
-        filteredFamerModels.clear();
-        if (famerModels != null && famerModels.size() > 0) {
-            for (FamerModel famerModel : famerModels) {
-                if (famerModel.getCode().toLowerCase().contains(filterText) ||
-                        famerModel.getMobile().toLowerCase().contains(filterText) ||
-                        famerModel.getNames().toLowerCase().contains(filterText)) {
-                    if (famerModel.getRoutename() != null) {
-                        if (famerModel.getRoutename().toLowerCase().contains(route.toLowerCase())) {
+            filteredFamerModels.clear();
+            if (famerModels != null && famerModels.size() > 0) {
+                for (FamerModel famerModel : famerModels) {
+                    if (famerModel.getCode().toLowerCase().contains(filterText) ||
+                            famerModel.getMobile().toLowerCase().contains(filterText) ||
+                            famerModel.getNames().toLowerCase().contains(filterText)) {
+                        if (famerModel.getRoutename() != null) {
+                            if (famerModel.getRoutename().toLowerCase().contains(route.toLowerCase())) {
+                                filteredFamerModels.add(famerModel);
+                            }
+                        } else {
                             filteredFamerModels.add(famerModel);
+
                         }
-                    } else {
+                    }
+
+                }
+                listAdapter.notifyDataSetChanged();
+            } else {
+                listAdapter.notifyDataSetChanged();
+            }
+        } else {
+
+            filteredFamerModels.clear();
+            if (famerModels != null && famerModels.size() > 0) {
+                for (FamerModel famerModel : famerModels) {
+                    if (famerModel.getCode().toLowerCase().contains(filterText) ||
+                            famerModel.getMobile().toLowerCase().contains(filterText) ||
+                            famerModel.getNames().toLowerCase().contains(filterText)) {
+
                         filteredFamerModels.add(famerModel);
 
                     }
-                }
 
+                }
+                listAdapter.notifyDataSetChanged();
+            } else {
+                listAdapter.notifyDataSetChanged();
             }
-            listAdapter.notifyDataSetChanged();
         }
 
+
+        listAdapter.notifyDataSetChanged();
     }
 
     private void filterFarmersAlpahbetically() {
@@ -580,6 +627,14 @@ public class FragementFarmersList extends Fragment {
 
                     famerModel.setStatus("Deleted");
                     famerModel.setDeleted(1);
+                    avi.smoothToShow();
+                    mViewModel.deleteFarmer(famerModel, false).observe(FragementFarmersList.this, new Observer<ResponseModel>() {
+                        @Override
+                        public void onChanged(@Nullable ResponseModel responseModel) {
+                            avi.smoothToHide();
+
+                        }
+                    });
                     //update(famerModel);
 
 
@@ -594,6 +649,13 @@ public class FragementFarmersList extends Fragment {
                         famerModel.setStatus("Archived");
                         famerModel.setArchived(1);
                     }
+                    avi.smoothToShow();
+                    mViewModel.updateFarmer(famerModel, false).observe(FragementFarmersList.this, new Observer<ResponseModel>() {
+                        @Override
+                        public void onChanged(@Nullable ResponseModel responseModel) {
+                            avi.smoothToHide();
+                        }
+                    });
                     // update(famerModel);
 
                     break;
@@ -607,6 +669,13 @@ public class FragementFarmersList extends Fragment {
                         famerModel.setStatus("Dummy");
                         famerModel.setDummy(1);
                     }
+                    avi.smoothToShow();
+                    mViewModel.updateFarmer(famerModel, false).observe(FragementFarmersList.this, new Observer<ResponseModel>() {
+                        @Override
+                        public void onChanged(@Nullable ResponseModel responseModel) {
+                            avi.smoothToHide();
+                        }
+                    });
 
                     // update(famerModel);
                     break;
@@ -649,8 +718,8 @@ public class FragementFarmersList extends Fragment {
             View mView = layoutInflaterAndroid.inflate(R.layout.dialog_edit_farmer, null);
             AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(context));
             alertDialogBuilderUserInput.setView(mView);
-            alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
-            alertDialogBuilderUserInput.setTitle(famerModel.getNames() + " " + famerModel.getCode());
+//            alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
+//            alertDialogBuilderUserInput.setTitle(famerModel.getNames() + " " + famerModel.getCode());
 
 
             UnitsModel unitsModel = new UnitsModel();
@@ -665,6 +734,22 @@ public class FragementFarmersList extends Fragment {
             TraderViewModel mViewModel;
             MaterialSpinner spinner;
             TextInputEditText edtRouteName, edtRouteCode, edtUnitName, edtUnitPrice, edtUnitMeasurement;
+            LinearLayout lcycle;
+            TextView txtStartDay, txtEndDay, txtCycle;
+
+            txtStartDay = mView.findViewById(R.id.starts);
+            txtEndDay = mView.findViewById(R.id.ends);
+            txtCycle = mView.findViewById(R.id.txt_cycle);
+
+
+            try {
+                txtStartDay.setText(famerModel.getCycleStartDay());
+                txtEndDay.setText(famerModel.getCycleStartEndDay());
+                txtCycle.setText(famerModel.getCyclename());
+            } catch (Exception nm) {
+                nm.printStackTrace();
+            }
+
 
             edtNames = mView.findViewById(R.id.edt_farmer_names);
             edtMobile = mView.findViewById(R.id.edt_farmer_phone);
@@ -685,13 +770,16 @@ public class FragementFarmersList extends Fragment {
                 //defaultPayment.setEnabled(false);
 
                 spinnerUnit.setEnabled(false);
+                spinnerUnit.setVisibility(View.GONE);
                 spinnerRoute.setEnabled(false);
+                spinnerRoute.setVisibility(View.GONE);
                 edtUnitName.setEnabled(false);
                 edtUnitPrice.setEnabled(false);
                 edtUnitMeasurement.setEnabled(false);
                 edtRouteName.setEnabled(false);
                 edtRouteCode.setEnabled(false);
                 spinner.setSelected(false);
+                spinner.setVisibility(View.GONE);
                 spinner.setEnabled(false);
 
             }
@@ -749,22 +837,50 @@ public class FragementFarmersList extends Fragment {
 
 
             alertDialogBuilderUserInput
-                    .setCancelable(false)
-                    .setPositiveButton("Update", (dialogBox, id) -> {
-                        // ToDo get user input here
-
-
-                    })
-
-                    .setNegativeButton("Dismiss",
-                            (dialogBox, id) -> dialogBox.cancel());
+                    .setCancelable(false);
+//                    .setPositiveButton("Update", (dialogBox, id) -> {
+//                        // ToDo get user input here
+//
+//
+//                    })
+//
+//                    .setNegativeButton("Dismiss",
+//                            (dialogBox, id) -> dialogBox.cancel());
 
             AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
             alertDialogAndroid.setCancelable(false);
-            alertDialogAndroid.show();
+            alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
-            Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
-            theButton.setOnClickListener(new EditCustomListener(alertDialogAndroid, famerModel, unitsModel, routesModel, cyclesM));
+            alertDialogAndroid.show();
+//
+//            Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
+//            theButton.setOnClickListener(new EditCustomListener(alertDialogAndroid, famerModel, unitsModel, routesModel, cyclesM));
+
+            MaterialButton btnPositive, btnNegative, btnNeutral;
+            TextView txtTitle;
+            LinearLayout lTitle;
+            ImageView imgIcon;
+            btnPositive = mView.findViewById(R.id.btn_positive);
+            btnNegative = mView.findViewById(R.id.btn_negative);
+            btnNeutral = mView.findViewById(R.id.btn_neutral);
+            txtTitle = mView.findViewById(R.id.txt_title);
+            lTitle = mView.findViewById(R.id.linear_title);
+            imgIcon = mView.findViewById(R.id.img_icon);
+
+
+            btnNeutral.setVisibility(View.GONE);
+            btnPositive.setVisibility(View.GONE);
+            lTitle.setVisibility(View.GONE);
+            txtTitle.setVisibility(View.VISIBLE);
+            imgIcon.setVisibility(View.VISIBLE);
+            imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
+            txtTitle.setText(famerModel.getNames() + " " + famerModel.getCode());
+
+            btnPositive.setOnClickListener(new EditCustomListener(alertDialogAndroid, famerModel, unitsModel, routesModel, cyclesM));
+            btnNeutral.setOnClickListener(view -> {
+
+            });
+            btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
 
         } else {
             Log.d("farmerdialog", "context nulll edit clicked");
@@ -775,15 +891,21 @@ public class FragementFarmersList extends Fragment {
 
     private void initDataOffline(boolean isRoutesFirst, boolean isUnitFirst, boolean isCycles) {
 
+        if (isRoutesFirst && isUnitFirst && isCycles) {
+            avi.smoothToShow();
+        }
         TraderViewModel mViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
         mViewModel.getRoutes(isRoutesFirst).observe(this, routesModels -> {
             if (routesModels != null && routesModels.size() > 0) {
                 prefrenceManager.setIsRoutesListFirst(false);
                 this.getRoutess = routesModels;
 
+                avi.smoothToHide();
+
             }
 
         });
+
         mViewModel.getUnits(isUnitFirst).observe(this, unitsModels -> {
             if (unitsModels != null && unitsModels.size() > 0) {
                 prefrenceManager.setIsRoutesListFirst(false);

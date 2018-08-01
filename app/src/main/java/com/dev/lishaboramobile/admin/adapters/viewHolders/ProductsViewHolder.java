@@ -14,7 +14,7 @@ import java.lang.ref.WeakReference;
 public class ProductsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
     //  public RelativeLayout engineer_background;
 
-    public TextView status, id, name, selling, cost, famerscount;
+    public TextView status, id, name, selling, cost, famerscount, txtDate;
     public CheckBox chk;
     private WeakReference<OnclickRecyclerListener> listenerWeakReference;
     public RelativeLayout background;
@@ -28,6 +28,7 @@ public class ProductsViewHolder extends RecyclerView.ViewHolder implements View.
         itemView.setOnLongClickListener(this);
         statusview = itemView.findViewById(R.id.status_view);
         background = itemView.findViewById(R.id.background);
+        txtDate = itemView.findViewById(R.id.txt_date);
 
         status = itemView.findViewById(R.id.txt_status);
         id = itemView.findViewById(R.id.txt_id);

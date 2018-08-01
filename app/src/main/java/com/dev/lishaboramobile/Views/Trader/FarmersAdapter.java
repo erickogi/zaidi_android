@@ -48,6 +48,8 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> {
         holder.name.setText(farmer.getNames());
         holder.cycle.setText(farmer.getCyclename());
         holder.route.setText("" + farmer.getRoutename());
+        holder.txtDate.setText(farmer.getTransactiontime());
+
 
         String status = "";
 

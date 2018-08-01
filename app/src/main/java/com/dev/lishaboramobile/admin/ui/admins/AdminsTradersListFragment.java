@@ -4,11 +4,11 @@ package com.dev.lishaboramobile.admin.ui.admins;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.button.MaterialButton;
 import android.support.design.chip.Chip;
 import android.support.design.chip.ChipGroup;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +21,9 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,13 +31,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.dev.lishaboramobile.Global.Models.FetchTraderModel;
 import com.dev.lishaboramobile.Global.Models.ResponseModel;
 import com.dev.lishaboramobile.Global.Utils.DateTimeUtils;
@@ -170,6 +174,8 @@ public class AdminsTradersListFragment extends Fragment {
         // TODO: Use the ViewModel
     }
 
+    MaterialDialog materialDialog;
+
     void initWIdgets() {
         recyclerView = view.findViewById(R.id.recyclerView);
         empty_layout = view.findViewById(R.id.empty_layout);
@@ -196,6 +202,7 @@ public class AdminsTradersListFragment extends Fragment {
                 filterTraders(position);
             }
         });
+        spinner.setSelectedIndex(1);
 
 
         chipAll.setChecked(true);
@@ -271,35 +278,6 @@ public class AdminsTradersListFragment extends Fragment {
         //  });
 
 
-    }
-
-    void initConnectivityListener() {
-        ReactiveNetwork.observeInternetConnectivity()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(isConnectedToInternet -> {
-                    // do something with isConnectedToInternet value
-                    isConnected = isConnectedToInternet;
-
-                    if (isConnectedToInternet) {
-                        try {
-                            txt_network_state.setText("Connected to internet");
-                            txt_network_state.setTextColor(getActivity().getResources().getColor(R.color.green_color_picker));
-                        } catch (Exception nm) {
-                            nm.printStackTrace();
-                        }
-
-                    } else {
-
-                        try {
-                            txt_network_state.setText("Not connected to internet");
-                            txt_network_state.setTextColor(getActivity().getResources().getColor(R.color.red));
-                        } catch (Exception vb) {
-                            vb.printStackTrace();
-                        }
-
-                    }
-                });
     }
 
     void initTradersList() {
@@ -465,10 +443,36 @@ public class AdminsTradersListFragment extends Fragment {
         Log.d("SnackMessage", msg);
     }
 
+    void initConnectivityListener() {
+        ReactiveNetwork.observeInternetConnectivity()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(isConnectedToInternet -> {
+                    // do something with isConnectedToInternet value
+                    isConnected = isConnectedToInternet;
 
-    void startAnim() {
-        avi.show();
+                    if (isConnectedToInternet) {
+                        try {
+                            fab.setImageResource(android.R.drawable.ic_input_add);
+//txt_network_state.setText("Connected to internet");
+                            //txt_network_state.setTextColor(getActivity().getResources().getColor(R.color.green_color_picker));
+                        } catch (Exception nm) {
+                            nm.printStackTrace();
+                        }
 
+                    } else {
+
+                        try {
+                            fab.setImageResource(R.drawable.ic_add_red_24dp);
+
+                            //txt_network_state.setText("Not connected to internet");
+                            //txt_network_state.setTextColor(getActivity().getResources().getColor(R.color.red));
+                        } catch (Exception vb) {
+                            vb.printStackTrace();
+                        }
+
+                    }
+                });
     }
 
     void stopAnim() {
@@ -643,37 +647,230 @@ public class AdminsTradersListFragment extends Fragment {
         return false;
     }
 
+    void startAnim() {
+        avi.show();
+        avi.setVisibility(View.VISIBLE);
+
+    }
+
     public void createTrader() {
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_add_trader, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(context));
         alertDialogBuilderUserInput.setView(mView);
-        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
-        alertDialogBuilderUserInput.setTitle("Trader");
 
 
         avi = mView.findViewById(R.id.avi);
 
 
-        TextInputEditText edtNames, edtMobile;
+        TextInputEditText phone = mView.findViewById(R.id.edt_traders_phone);
+        final char space = ' ';
+
+        phone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // if(s.length()>0&&editTextCarrierNumber.getText().toString().charAt(0)!='0') {
+                if (s.length() > 0 && (s.length() % 4) == 0) {
+                    final char c = s.charAt(s.length() - 1);
+                    if (space == c) {
+                        s.delete(s.length() - 1, s.length());
+                    }
+
+                }
+                // Insert char where needed.
+                if (s.length() > 0 && (s.length() % 4) == 0) {
+                    char c = s.charAt(s.length() - 1);
+                    // Only if its a digit where there should be a space we insert a space
+                    if (Character.isDigit(c) && TextUtils.split(s.toString(), String.valueOf(space)).length <= 3) {
+                        s.insert(s.length() - 1, String.valueOf(space));
+                    }
+
+                }
+            }
+        });
+
+
+
         alertDialogBuilderUserInput
-                .setCancelable(false)
-                .setPositiveButton("Save", (dialogBox, id) -> {
-                    // ToDo get user input here
+                .setCancelable(false);
+//                .setPositiveButton("Save", (dialogBox, id) -> {
+//                    // ToDo get user input here
+//
+//
+//                })
+//
+//                .setNegativeButton("Dismiss",
+//                        (dialogBox, id) -> dialogBox.cancel());
 
-
-                })
-
-                .setNegativeButton("Dismiss",
-                        (dialogBox, id) -> dialogBox.cancel());
 
         AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
         alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
         alertDialogAndroid.show();
 
-        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
-        theButton.setOnClickListener(new CustomListener(alertDialogAndroid));
+//        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
+//        theButton.setOnClickListener(new CustomListener(alertDialogAndroid));
 
+
+        MaterialButton btnPositive, btnNegative, btnNeutral;
+        TextView txtTitle;
+        LinearLayout lTitle;
+        ImageView imgIcon;
+        btnPositive = mView.findViewById(R.id.btn_positive);
+        btnNegative = mView.findViewById(R.id.btn_negative);
+        btnNeutral = mView.findViewById(R.id.btn_neutral);
+        txtTitle = mView.findViewById(R.id.txt_title);
+        lTitle = mView.findViewById(R.id.linear_title);
+        imgIcon = mView.findViewById(R.id.img_icon);
+
+
+        btnNeutral.setVisibility(View.GONE);
+        lTitle.setVisibility(View.GONE);
+        txtTitle.setVisibility(View.VISIBLE);
+        imgIcon.setVisibility(View.VISIBLE);
+        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
+        txtTitle.setText("Add Trader");
+
+        btnPositive.setOnClickListener(new CustomListener(alertDialogAndroid));
+        btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
+
+//        LinearLayout.LayoutParams buttonParams;
+//
+//
+//
+//
+//
+//        buttonParams = (LinearLayout.LayoutParams) theButton.getLayoutParams();
+//        buttonParams.gravity = Gravity.TOP;
+//
+//        Button buttonNegative = alertDialogAndroid.getButton(AlertDialog.BUTTON_NEGATIVE);
+//        buttonParams = (LinearLayout.LayoutParams) buttonNegative.getLayoutParams();
+//        buttonParams.gravity = Gravity.TOP;
+//
+//        Button buttonNeutral = alertDialogAndroid.getButton(AlertDialog.BUTTON_NEUTRAL);
+//        buttonParams = (LinearLayout.LayoutParams) buttonNeutral.getLayoutParams();
+//        buttonParams.gravity = Gravity.TOP;
+
+//        materialDialog=new MaterialDialog.Builder(getActivity()).title("").customView(R.layout.dialog_add_trader,true)
+//                .positiveText("Save").negativeText("Dismiss").onPositive((dialog, which) -> {
+//
+//                    View view=materialDialog.getView();
+//                    new QCustomListener(view).onClick(view);
+//
+//
+//
+//                }).onNegative((dialog, which) -> {
+//                    materialDialog.dismiss();
+//
+//                }).btnStackedGravity(GravityEnum.START)
+//                .autoDismiss(false).build();
+//
+//        materialDialog.show();
+
+
+    }
+
+    public void editTrader(TraderModel traderModel) {
+        if (context != null) {
+            LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
+            View mView = layoutInflaterAndroid.inflate(R.layout.dialog_add_trader, null);
+            AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(context));
+            alertDialogBuilderUserInput.setView(mView);
+
+
+            avi = mView.findViewById(R.id.avi);
+
+
+            TextInputEditText edtNames, edtMobile, edtBussinesName;
+            Spinner spinner;
+            spinner = mView.findViewById(R.id.spinner);
+            edtMobile = mView.findViewById(R.id.edt_traders_phone);
+            edtNames = mView.findViewById(R.id.edt_traders_names);
+            edtBussinesName = mView.findViewById(R.id.edt_traders_business_name);
+
+            edtBussinesName.setText(traderModel.getBusinessname());
+
+            edtMobile.setText(traderModel.getMobile());
+            edtNames.setText(traderModel.getNames());
+
+            CheckBox chk = mView.findViewById(R.id.chk_dummy);
+            chk.setVisibility(View.GONE);
+
+
+            switch (traderModel.getDefaultpaymenttype().toLowerCase()) {
+                case "mpesa":
+                    spinner.setSelection(2, true);
+                    break;
+
+                case "cash":
+                    spinner.setSelection(1, true);
+
+                    break;
+
+                case "bank":
+                    spinner.setSelection(3, true);
+
+                    break;
+
+            }
+
+
+            alertDialogBuilderUserInput
+                    .setCancelable(false);
+//                    .setPositiveButton("Update", (dialogBox, id) -> {
+//                        // ToDo get user input here
+//
+//
+//                    })
+//
+//                    .setNegativeButton("Dismiss",
+//                            (dialogBox, id) -> dialogBox.cancel());
+
+            AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
+            alertDialogAndroid.setCancelable(false);
+            alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
+            alertDialogAndroid.show();
+
+//            Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
+//            theButton.setOnClickListener(new EditCustomListener(alertDialogAndroid, traderModel));
+
+
+            MaterialButton btnPositive, btnNegative, btnNeutral;
+            TextView txtTitle;
+            LinearLayout lTitle;
+            ImageView imgIcon;
+            btnPositive = mView.findViewById(R.id.btn_positive);
+            btnNegative = mView.findViewById(R.id.btn_negative);
+            btnNeutral = mView.findViewById(R.id.btn_neutral);
+            txtTitle = mView.findViewById(R.id.txt_title);
+            lTitle = mView.findViewById(R.id.linear_title);
+            imgIcon = mView.findViewById(R.id.img_icon);
+
+
+            btnNeutral.setVisibility(View.GONE);
+            lTitle.setVisibility(View.VISIBLE);
+            txtTitle.setVisibility(View.VISIBLE);
+            imgIcon.setVisibility(View.VISIBLE);
+            imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
+            txtTitle.setText("Add Trader");
+
+            btnPositive.setOnClickListener(new EditCustomListener(alertDialogAndroid, traderModel));
+            btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
+
+
+        }
 
     }
 
@@ -684,6 +881,155 @@ public class AdminsTradersListFragment extends Fragment {
         RequestDataCallback requestDataCallback;
 
         public CustomListener(AlertDialog alertDialogAndroid) {
+            dialog = alertDialogAndroid;
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            TextInputEditText name, phone, bussinessname;
+            CheckBox chkDummy;
+            Spinner spinnerPayment;
+            spinnerPayment = dialog.findViewById(R.id.spinner);
+            bussinessname = dialog.findViewById(R.id.edt_traders_business_name);
+
+
+            name = dialog.findViewById(R.id.edt_traders_names);
+            phone = dialog.findViewById(R.id.edt_traders_phone);
+            chkDummy = dialog.findViewById(R.id.chk_dummy);
+
+
+            if (name.getText().toString().isEmpty()) {
+                name.setError("Required");
+                name.requestFocus();
+                stopAnim();
+                return;
+            }
+
+
+            if (phone.getText().toString().isEmpty()) {
+                phone.setError("Required");
+                phone.requestFocus();
+                stopAnim();
+                return;
+            }
+            String phoneNumber = phone.getText().toString().replaceAll(" ", "").trim();
+
+            if (!LoginController.isValidPhoneNumber(phoneNumber)) {
+                stopAnim();
+                snack("Invalid phone number ");
+                phone.requestFocus();
+                phone.setError("Invalid Phone number");
+                return;
+            }
+            String defaultPayment = "";
+            String bussines = "";
+
+
+            if (!bussinessname.getText().toString().isEmpty()) {
+                bussines = bussinessname.getText().toString();
+            }
+
+            if (spinnerPayment != null && spinnerPayment.getSelectedItemPosition() == 0) {
+
+
+                Snackbar snackbar = Snackbar.make(spinnerPayment, "Invalid payment option ", Snackbar.LENGTH_LONG);
+                View snackbarLayout = snackbar.getView();
+                snackbarLayout.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
+                snackbar.show();
+                spinnerPayment.requestFocus();
+
+                stopAnim();
+                //phone.setError("Invalid Phone number");
+            }
+
+
+            if (chkDummy.isChecked()) {
+                isDummy = true;
+            }
+
+
+            //  AdminPrefs adminPrefs = new AdminPrefs(context);
+            TraderModel traderModel = new TraderModel();
+            //if(type==ISCREATE) {
+            traderModel.setId(0);
+            traderModel.setCode("" + new GeneralUtills(context).getRandon(9000, 1000));
+            traderModel.setEntity("Admin");
+            traderModel.setEntityname("LishaBora");
+            traderModel.setBusinessname(bussines);
+            traderModel.setDefaultpaymenttype(spinnerPayment.getSelectedItem().toString());
+
+
+            traderModel.setEntitycode(new PrefrenceManager(context).getAdmin().getCode());
+
+            traderModel.setTransactioncode(DateTimeUtils.Companion.getNow());
+            traderModel.setNames(name.getText().toString());
+            traderModel.setMobile(phoneNumber);
+            traderModel.setPassword("password");
+            traderModel.setBalance("0");
+            traderModel.setApikey("");
+            traderModel.setFirebasetoken("");
+            traderModel.setStatus("Active");
+            traderModel.setTransactiontime(DateTimeUtils.Companion.getNow());
+            traderModel.setSynctime(DateTimeUtils.Companion.getNow());
+            traderModel.setTransactedby(new PrefrenceManager(context).getAdmin().getApikey());
+
+
+            traderModel.setArchived(0);
+            traderModel.setDeleted(0);
+            traderModel.setSynced(0);
+            traderModel.setDummy(0);
+
+
+            traderModel.setIsdeleted(false);
+            traderModel.setIsarchived(false);
+            traderModel.setIsdummy(isDummy);
+
+
+            startAnim();
+
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = new JSONObject(gson.toJson(traderModel));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            mViewModel.createTrader(jsonObject, true).observe(AdminsTradersListFragment.this, new Observer<ResponseModel>() {
+                @Override
+                public void onChanged(@Nullable ResponseModel responseModel) {
+                    stopAnim();
+
+
+                    Snackbar snackbar = Snackbar.make(name, responseModel.getResultDescription(), Snackbar.LENGTH_LONG);
+                    View snackbarLayout = snackbar.getView();
+                    snackbarLayout.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
+                    snackbar.show();
+
+
+                    // snack(responseModel.getResultDescription());
+                    if (responseModel.getResultCode() == 1) {
+                        traderModels.add(traderModel);
+                        listAdapter.notifyDataSetChanged();
+                        dialog.dismiss();
+                        avi.smoothToShow();
+                        mViewModel.refresh(getSearchObject(), true);
+                    }
+                }
+            });
+
+
+        }
+
+    }
+
+    private class QCustomListener implements View.OnClickListener {
+        View dialog;
+        boolean isDummy = false;
+        //int type;
+        RequestDataCallback requestDataCallback;
+
+        public QCustomListener(View alertDialogAndroid) {
             dialog = alertDialogAndroid;
 
         }
@@ -792,13 +1138,17 @@ public class AdminsTradersListFragment extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
             mViewModel.createTrader(jsonObject, true).observe(AdminsTradersListFragment.this, new Observer<ResponseModel>() {
                 @Override
                 public void onChanged(@Nullable ResponseModel responseModel) {
                     stopAnim();
+
                     snack(responseModel.getResultDescription());
                     if (responseModel.getResultCode() == 1) {
-                        dialog.dismiss();
+                        traderModels.add(traderModel);
+                        listAdapter.notifyDataSetChanged();
+                        materialDialog.dismiss();
                         mViewModel.refresh(getSearchObject(), true);
                     }
                 }
@@ -808,76 +1158,6 @@ public class AdminsTradersListFragment extends Fragment {
         }
 
     }
-
-    public void editTrader(TraderModel traderModel) {
-        if (context != null) {
-            LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
-            View mView = layoutInflaterAndroid.inflate(R.layout.dialog_add_trader, null);
-            AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(context));
-            alertDialogBuilderUserInput.setView(mView);
-            alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
-            alertDialogBuilderUserInput.setTitle("Trader");
-
-
-            avi = mView.findViewById(R.id.avi);
-
-
-            TextInputEditText edtNames, edtMobile, edtBussinesName;
-            Spinner spinner;
-            spinner = mView.findViewById(R.id.spinner);
-            edtMobile = mView.findViewById(R.id.edt_traders_phone);
-            edtNames = mView.findViewById(R.id.edt_traders_names);
-            edtBussinesName = mView.findViewById(R.id.edt_traders_business_name);
-
-            edtBussinesName.setText(traderModel.getBusinessname());
-
-            edtMobile.setText(traderModel.getMobile());
-            edtNames.setText(traderModel.getNames());
-
-            CheckBox chk = mView.findViewById(R.id.chk_dummy);
-            chk.setVisibility(View.GONE);
-
-
-            switch (traderModel.getDefaultpaymenttype().toLowerCase()) {
-                case "mpesa":
-                    spinner.setSelection(2, true);
-                    break;
-
-                case "cash":
-                    spinner.setSelection(1, true);
-
-                    break;
-
-                case "bank":
-                    spinner.setSelection(3, true);
-
-                    break;
-
-            }
-
-
-            alertDialogBuilderUserInput
-                    .setCancelable(false)
-                    .setPositiveButton("Update", (dialogBox, id) -> {
-                        // ToDo get user input here
-
-
-                    })
-
-                    .setNegativeButton("Dismiss",
-                            (dialogBox, id) -> dialogBox.cancel());
-
-            AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
-            alertDialogAndroid.setCancelable(false);
-            alertDialogAndroid.show();
-
-            Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
-            theButton.setOnClickListener(new EditCustomListener(alertDialogAndroid, traderModel));
-
-        }
-
-    }
-
 
     private class EditCustomListener implements View.OnClickListener {
         AlertDialog dialog;
@@ -919,6 +1199,12 @@ public class AdminsTradersListFragment extends Fragment {
                 stopAnim();
                 return;
             }
+            if (bussinessname.getText().toString().isEmpty()) {
+                bussinessname.setError("Required");
+                bussinessname.requestFocus();
+                stopAnim();
+                return;
+            }
             String bussines = "";
 
 
@@ -935,12 +1221,14 @@ public class AdminsTradersListFragment extends Fragment {
 
             String defaultPayment = "";
 
-            if (spinnerPayment != null && spinnerPayment.getSelectedItemPosition() == 0) {
+            assert spinnerPayment != null;
+            if (spinnerPayment.getSelectedItemPosition() == 0) {
 
                 snack("Invalid payment option ");
                 spinnerPayment.requestFocus();
 
                 stopAnim();
+                return;
                 //phone.setError("Invalid Phone number");
             }
 

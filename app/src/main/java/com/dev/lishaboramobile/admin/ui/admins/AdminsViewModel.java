@@ -6,23 +6,33 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.dev.lishaboramobile.Global.Account.ResponseObject;
 import com.dev.lishaboramobile.Global.Data.Operations.Repo.FarmerRepo;
+import com.dev.lishaboramobile.Global.Data.Operations.Repo.ProductsRepo;
 import com.dev.lishaboramobile.Global.Data.Operations.Repo.RoutesRepo;
 import com.dev.lishaboramobile.Global.Data.Operations.Repo.TraderRepo;
 import com.dev.lishaboramobile.Global.Models.ResponseModel;
 import com.dev.lishaboramobile.Global.Network.ApiConstants;
 import com.dev.lishaboramobile.Global.Network.Request;
 import com.dev.lishaboramobile.Global.Utils.ResponseCallback;
+import com.dev.lishaboramobile.admin.models.ProductsModel;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.lang.reflect.Type;
+import java.util.LinkedList;
 
 public class AdminsViewModel extends AndroidViewModel {
     private TraderRepo traderRepo;
     private RoutesRepo routesRepo;
     private FarmerRepo farmerRepo;
+    private ProductsRepo productsRepo;
 
 
     private MutableLiveData traders;
@@ -148,6 +158,17 @@ public class AdminsViewModel extends AndroidViewModel {
                             @Override
                             public void response(ResponseModel responseModel) {
                                 traderProducts.setValue(responseModel);
+
+                                Gson gson = new Gson();
+                                JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
+                                Type listType = new TypeToken<LinkedList<ProductsModel>>() {
+                                }.getType();
+                                // productsModel = ;
+                                Log.d("ReTrUp", "routes update called");
+                                //update(gson.fromJson(jsonArray, listType));
+
+
+
                             }
 
                             @Override

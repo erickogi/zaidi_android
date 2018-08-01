@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include layout="@layout/layout_custom_alert_button" />
+
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/avi"
         style="@style/AVLoadingIndicatorView"
@@ -14,104 +16,118 @@
         app:indicatorColor="@color/colorPrimaryDark"
         app:indicatorName="BallSpinFadeLoaderIndicator" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="8dp">
+        android:layout_marginBottom="50dp">
 
-        <android.support.design.widget.TextInputLayout
-
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:textColorHint="@color/black">
+            android:orientation="vertical"
+            android:padding="8dp">
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/edt_admin_code"
+            <android.support.design.widget.TextInputLayout
+
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:enabled="false"
-                android:hint=" Code "
-                android:inputType="text" />
+                android:layout_height="wrap_content"
+                android:layout_margin="3dp"
+                android:textColorHint="@color/black">
 
-        </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edt_admin_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:enabled="false"
+                    android:hint=" Code "
+                    android:inputType="text" />
+
+            </android.support.design.widget.TextInputLayout>
 
 
-        <android.support.design.widget.TextInputLayout
+            <android.support.design.widget.TextInputLayout
 
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
 
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:textColorHint="@color/black">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/edt_admin_names"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint=" Names "
-                android:inputType="text" />
+                android:layout_height="wrap_content"
+                android:layout_margin="3dp"
+                android:textColorHint="@color/black">
 
-        </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edt_admin_names"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint=" Names "
+                    android:inputType="text" />
 
-        <android.support.design.widget.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            </android.support.design.widget.TextInputLayout>
 
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:textColorHint="@color/black">
+            <android.support.design.widget.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/edt_admin_phone"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint=" Phone
+                android:layout_height="wrap_content"
+                android:layout_margin="3dp"
+                android:textColorHint="@color/black">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edt_admin_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Phone(7** *** ***)"
+                    android:inputType="phone"
+
+                    app:counterEnabled="true"
+                    app:counterMaxLength="10"
+
+
+                    app:helperText="7** *** ***"
+                    app:helperTextEnabled="true" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="3dp"
+                android:textColorHint="@color/black">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edt_admin_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint=" Email
 "
-                android:inputType="phone" />
+                    android:inputType="textEmailAddress" />
 
-        </android.support.design.widget.TextInputLayout>
+            </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <android.support.design.widget.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
 
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:textColorHint="@color/black">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/edt_admin_email"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint=" Email
-"
-                android:inputType="textEmailAddress" />
+                android:layout_height="wrap_content"
+                android:layout_margin="3dp"
+                android:textColorHint="@color/black">
 
-        </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edt_admin_department"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Department"
+                    android:inputType="text" />
 
-        <android.support.design.widget.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:textColorHint="@color/black">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/edt_admin_department"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="Department"
-                android:inputType="text" />
-
-        </android.support.design.widget.TextInputLayout>
+            </android.support.design.widget.TextInputLayout>
 
 
-    </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
 
 </RelativeLayout>

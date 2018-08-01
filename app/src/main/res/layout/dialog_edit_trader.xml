@@ -14,7 +14,10 @@
         app:indicatorColor="@color/colorPrimaryDark"
         app:indicatorName="BallSpinFadeLoaderIndicator" />
 
+    <include layout="@layout/layout_custom_alert_button" />
+
     <LinearLayout
+        android:layout_below="@+id/layout_custom_alert_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"

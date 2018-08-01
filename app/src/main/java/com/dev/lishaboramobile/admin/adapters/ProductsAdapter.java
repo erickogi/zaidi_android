@@ -57,6 +57,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsViewHolder> {
         holder.name.setText(productsModel.getNames());
         holder.cost.setText(productsModel.getCostprice());
         holder.status.setText("" + productsModel.getStatus());
+        holder.txtDate.setText("");
         if (productsModel.isSelected()) {
             holder.chk.setChecked(true);
         } else {

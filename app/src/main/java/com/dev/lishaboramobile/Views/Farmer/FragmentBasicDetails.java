@@ -174,7 +174,7 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
     }
 
     private boolean verifyNames() {
-        if (!TextUtils.isEmpty(edtNames.getText().toString()) && edtNames.getText().toString().length() > 4) {
+        if (!TextUtils.isEmpty(edtNames.getText().toString()) && edtNames.getText().toString().length() > 3) {
             return true;
         }
         edtNames.requestFocus();

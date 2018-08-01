@@ -2,10 +2,10 @@ package com.dev.lishaboramobile.admin;
 
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.button.MaterialButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,7 +17,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dev.lishaboramobile.BottomNav.AHBottomNavigation;
@@ -77,9 +80,9 @@ public class AdminsActivity extends AppCompatActivity {
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(this));
         alertDialogBuilderUserInput.setView(mView);
         alertDialogBuilderUserInput.setCancelable(false);
-        alertDialogBuilderUserInput.setIcon(R.drawable.ic_account_circle_black_24dp);
-        alertDialogBuilderUserInput.setTitle(adminModel.getNames());
-
+//        alertDialogBuilderUserInput.setIcon(R.drawable.ic_account_circle_black_24dp);
+//        alertDialogBuilderUserInput.setTitle(adminModel.getNames());
+//
 
         avi = mView.findViewById(R.id.avi);
 
@@ -104,37 +107,68 @@ public class AdminsActivity extends AppCompatActivity {
         edtMobile.setEnabled(false);
 
         alertDialogBuilderUserInput
-                .setCancelable(false)
-                .setPositiveButton("Update", (dialogBox, id) -> {
-                    // ToDo get user input here
-
-
-                })
-                .setNeutralButton("Edit", (dialogBox, id) -> {
-                    // ToDo get user input here
-                    //  edtDepartment.setEnabled(true);edtEmail.setEnabled(true);edtNames.setEnabled(true);edtMobile.setEnabled(true);
-
-
-                })
-
-                .setNegativeButton("Dismiss",
-                        (dialogBox, id) -> dialogBox.cancel());
+                .setCancelable(false);
+//                .setPositiveButton("Update", (dialogBox, id) -> {
+//                    // ToDo get user input here
+//
+//
+//                })
+//                .setNeutralButton("Edit", (dialogBox, id) -> {
+//                    // ToDo get user input here
+//                    //  edtDepartment.setEnabled(true);edtEmail.setEnabled(true);edtNames.setEnabled(true);edtMobile.setEnabled(true);
+//
+//
+//                })
+//
+//                .setNegativeButton("Dismiss",
+//                        (dialogBox, id) -> dialogBox.cancel());
 
         AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
         alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         alertDialogAndroid.show();
 
-        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
-        Button neutral = alertDialogAndroid.getButton(DialogInterface.BUTTON_NEUTRAL);
-        neutral.setOnClickListener(view -> {
+
+//        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
+//        Button neutral = alertDialogAndroid.getButton(DialogInterface.BUTTON_NEUTRAL);
+//        neutral.setOnClickListener(view -> {
+//            edtDepartment.setEnabled(true);
+//            edtEmail.setEnabled(true);
+//            edtNames.setEnabled(true);
+//            edtMobile.setEnabled(true);
+//
+//
+//        });
+//        theButton.setOnClickListener(new CustomListener(alertDialogAndroid, adminModel));
+
+        MaterialButton btnPositive, btnNegative, btnNeutral;
+        TextView txtTitle;
+        LinearLayout lTitle;
+        ImageView imgIcon;
+        btnPositive = mView.findViewById(R.id.btn_positive);
+        btnNegative = mView.findViewById(R.id.btn_negative);
+        btnNeutral = mView.findViewById(R.id.btn_neutral);
+        txtTitle = mView.findViewById(R.id.txt_title);
+        lTitle = mView.findViewById(R.id.linear_title);
+        imgIcon = mView.findViewById(R.id.img_icon);
+
+
+        btnNeutral.setVisibility(View.VISIBLE);
+        lTitle.setVisibility(View.GONE);
+        txtTitle.setVisibility(View.VISIBLE);
+        imgIcon.setVisibility(View.VISIBLE);
+        imgIcon.setImageResource(R.drawable.ic_account_circle_black_24dp);
+        txtTitle.setText(adminModel.getNames());
+
+        btnPositive.setOnClickListener(new CustomListener(alertDialogAndroid, adminModel));
+        btnNeutral.setOnClickListener(view -> {
             edtDepartment.setEnabled(true);
             edtEmail.setEnabled(true);
             edtNames.setEnabled(true);
             edtMobile.setEnabled(true);
 
-
         });
-        theButton.setOnClickListener(new CustomListener(alertDialogAndroid, adminModel));
+        btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
 
 
     }
@@ -144,9 +178,24 @@ public class AdminsActivity extends AppCompatActivity {
             @Override
             public void logOutClicked() {
 
-                new PrefrenceManager(AdminsActivity.this).setIsLoggedIn(false, 0);
-                startActivity(new Intent(AdminsActivity.this, LoginActivity.class));
-                finish();
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(AdminsActivity.this);
+                alertDialog.setMessage("Are sure you want to log out").setCancelable(false).setTitle("Log Out");
+
+
+                alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    new PrefrenceManager(AdminsActivity.this).setIsLoggedIn(false, 0);
+                    startActivity(new Intent(AdminsActivity.this, LoginActivity.class));
+                    finish();
+                }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
+
+                AlertDialog alertDialogAndroid = alertDialog.create();
+                alertDialogAndroid.setCancelable(false);
+                alertDialogAndroid.show();
+
+
+
+
             }
 
             @Override
