@@ -388,6 +388,11 @@ public class FragmentRoutes extends Fragment {
         chkDummy.setVisibility(View.GONE);
 
         name.setText(routesModel.getRoute());
+        try {
+            name.setSelection(routesModel.getRoute().length());
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
 
 
         alertDialogBuilderUserInput

@@ -1,8 +1,6 @@
 package com.dev.lishaboramobile.Views.Trader.ui;
 
-import android.app.ProgressDialog;
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -10,21 +8,18 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
-import android.support.design.chip.Chip;
-import android.support.design.chip.ChipGroup;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -47,11 +43,13 @@ import com.dev.lishaboramobile.Trader.Models.Cycles;
 import com.dev.lishaboramobile.Trader.Models.RPFSearchModel;
 import com.dev.lishaboramobile.Trader.Models.RoutesModel;
 import com.dev.lishaboramobile.Trader.Models.UnitsModel;
+import com.dev.lishaboramobile.Views.Farmer.FarmerConst;
 import com.dev.lishaboramobile.Views.Trader.CreateFarmerActivity;
-import com.dev.lishaboramobile.Views.Trader.FarmerController;
 import com.dev.lishaboramobile.Views.Trader.FarmerViewModel;
 import com.dev.lishaboramobile.Views.Trader.FarmersAdapter;
 import com.dev.lishaboramobile.Views.Trader.TraderViewModel;
+import com.dev.lishaboramobile.Views.Trader.ui.Draggable.helper.OnStartDragListener;
+import com.dev.lishaboramobile.Views.Trader.ui.Draggable.helper.SimpleItemTouchHelperCallback;
 import com.dev.lishaboramobile.login.PrefrenceManager;
 import com.google.gson.Gson;
 import com.jaredrummler.materialspinner.MaterialSpinner;
@@ -66,32 +64,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-public class FragementFarmersList extends Fragment {
+public class FragementFarmersList extends Fragment implements OnStartDragListener {
     FarmersAdapter listAdapter;
+    private final int CHRONOLOGICAL = 1, ALPHABETICAL = 2, AUTOMATICALLY = 0, MANUALLY = 3;
+
     Gson gson = new Gson();
-    FarmerController farmersController;
-    List<Object> objects;
-    LinkedList<FamerModel> famerModels;
-    LinkedList<FamerModel> filteredFamerModels;
     boolean isArchived = false;
     boolean isDummy = false;
     FarmerViewModel famersViewModel;
-    ViewModel viewModel;
     private View view;
     private Context context;
     private RecyclerView recyclerView;
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
-    private LinearLayout linearLayoutEmpty;
-    private int entity;
-    private ProgressDialog progressDialog;
-    private ActionMode mActionMode;
-    private SwipeRefreshLayout swipe_refresh_layout;
     private LinearLayout empty_layout;
     private TextView emptyTxt, txt_network_state;
-    private ChipGroup chipGroup;
-    private Chip activeChip, allChip, deletedChip, archivedChip, syncedChip, dummyChip, unsyncedChip;
     private AVLoadingIndicatorView avi;
-    private boolean isConnected;
     private String filterText = "";
     FloatingActionButton fab;
     MaterialSpinner spinner1, spinner2;
@@ -100,14 +87,16 @@ public class FragementFarmersList extends Fragment {
     private SearchView searchView;
     List<RoutesModel> getRoutess = new LinkedList<>();
     List<Cycles> getCycles = new LinkedList<>();
-    // private AdminsViewModel mViewModel;
     private TraderViewModel mViewModel;
     private PrefrenceManager prefrenceManager;
     private List<RoutesModel> routesModels;
+    private ItemTouchHelper mItemTouchHelper;
+    private Button btnDrag;
+    private boolean isDraggable = true;
+    private int SORTTYPE = 0;
 
 
 
-    private int FarmerDel, FarmerDummy, TraderSynched, FarmerArchive, All;
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
@@ -134,7 +123,7 @@ public class FragementFarmersList extends Fragment {
 
     public void initList() {
         recyclerView = view.findViewById(R.id.recyclerView);
-        listAdapter = new FarmersAdapter(getActivity(), filteredFamerModels, new OnclickRecyclerListener() {
+        listAdapter = new FarmersAdapter(getActivity(), FarmerConst.getSearchFamerModels(), new OnclickRecyclerListener() {
             @Override
             public void onClickListener(int position) {
 
@@ -159,10 +148,18 @@ public class FragementFarmersList extends Fragment {
 
             @Override
             public void onClickListener(int adapterPosition, @NotNull View view) {
-                popupMenu(adapterPosition, view, filteredFamerModels.get(adapterPosition));
+                try {
+                    popupMenu(adapterPosition, view, FarmerConst.getSearchFamerModels().get(adapterPosition));
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
 
             }
-        });
+        }, this);
+
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(listAdapter);
+        mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(recyclerView);
 
 
     }
@@ -172,17 +169,17 @@ public class FragementFarmersList extends Fragment {
 
         Log.d("ReTr", "update started");
 
-        if (this.famerModels != null && listAdapter != null) {
+        if (FarmerConst.getFamerModels() != null && listAdapter != null) {
             Log.d("ReTr", "update started");
 
-            this.famerModels.clear();
-            this.famerModels.addAll(famerModels);
+            FarmerConst.getFamerModels().clear();
+            FarmerConst.getFamerModels().addAll(famerModels);
             filterFarmers();
-            //listAdapter.notifyDataSetChanged();
 
 
         } else {
-            this.famerModels.clear();
+
+            FarmerConst.setFamerModels(new LinkedList<>());
             filterFarmers();
         }
     }
@@ -201,12 +198,38 @@ public class FragementFarmersList extends Fragment {
 
         //inflater.inflate(R.menu.menu_main, menu);
         MenuItem mSearch = menu.findItem(R.id.action_search);
-        searchView = (SearchView) mSearch.getActionView();
 
+
+        MenuItem mAutomatically = menu.findItem(R.id.action_automatically);
+        MenuItem mManually = menu.findItem(R.id.action_manually);
+        MenuItem mChronologically = menu.findItem(R.id.action_chronologically);
+        MenuItem mAlphabetically = menu.findItem(R.id.action_alphabetically);
+        MenuItem mRearrangeManually = menu.findItem(R.id.action_smanually);
+
+        mAutomatically.setVisible(true);
+        mChronologically.setVisible(true);
+        mManually.setVisible(true);
+        mAlphabetically.setVisible(true);
+        mRearrangeManually.setVisible(true);
+
+
+        searchView = (SearchView) mSearch.getActionView();
         searchView.setVisibility(View.GONE);
 
     }
 
+    void setDraggale(boolean draggale) {
+        if (listAdapter != null) {
+            listAdapter.setDraggale(draggale);
+        }
+        if (draggale) {
+            isDraggable = true;
+            btnDrag.setVisibility(View.VISIBLE);
+        } else {
+            isDraggable = false;
+            btnDrag.setVisibility(View.GONE);
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -216,12 +239,50 @@ public class FragementFarmersList extends Fragment {
                 return false;
             case R.id.action_search:
                 // Do Fragment menu item stuff here
+
                 return true;
+            case R.id.action_automatically:
+                // Do Fragment menu item stuff here
+                SORTTYPE = AUTOMATICALLY;
+                filterFarmers();
+                setDraggale(false);
+                return true;
+            case R.id.action_manually:
+                SORTTYPE = MANUALLY;
+                startDrag();
+                // Do Fragment menu item stuff here
+                return true;
+            case R.id.action_chronologically:
+                SORTTYPE = CHRONOLOGICAL;
+                filterFarmers();
+                setDraggale(false);
+                // Do Fragment menu item stuff here
+                return true;
+            case R.id.action_alphabetically:
+                SORTTYPE = ALPHABETICAL;
+                filterFarmers();
+                setDraggale(false);
+                // Do Fragment menu item stuff here
+                return true;
+            case R.id.action_smanually:
+                SORTTYPE = MANUALLY;
+                filterFarmers();
+                setDraggale(false);
+                // Do Fragment menu item stuff here
+                return true;
+
+
             default:
                 break;
         }
 
         return false;
+    }
+
+    private void startDrag() {
+
+        setDraggale(true);
+        filterFarmers();
     }
 
 
@@ -245,17 +306,23 @@ public class FragementFarmersList extends Fragment {
         emptyTxt = view.findViewById(R.id.empty_text);
         avi = view.findViewById(R.id.avi);
         txt_network_state = view.findViewById(R.id.txt_network_state);
+        btnDrag = view.findViewById(R.id.draggaing);
+        btnDrag.setVisibility(View.GONE);
+        btnDrag.setOnClickListener(view13 -> {
+            isDraggable = false;
+            btnDrag.setVisibility(View.GONE);
+            setDraggale(false);
+            updateItems();
+        });
+        setDraggale(false);
 
         fab = view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View viehw) {
-                if (isSetUp()) {
-                    FragementFarmersList.this.createFarmers();
-                } else {
-                    initDataOffline(true, true, true);
-                    MyToast.toast("Routes, Units and Cycles Not set Up", getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
-                }
+        fab.setOnClickListener(viehw -> {
+            if (isSetUp()) {
+                FragementFarmersList.this.createFarmers();
+            } else {
+                initDataOffline(true, true, true);
+                MyToast.toast("Routes, Units and Cycles Not set Up", getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
             }
         });
 
@@ -264,28 +331,75 @@ public class FragementFarmersList extends Fragment {
         lspinner1 = view.findViewById(R.id.lspinner1);
         spinner2 = view.findViewById(R.id.spinner2);
         lspinner2 = view.findViewById(R.id.lspinner2);
-        spinner2.setVisibility(View.GONE);
-        lspinner2.setVisibility(View.GONE);
+        spinner2.setVisibility(View.VISIBLE);
+        lspinner2.setVisibility(View.VISIBLE);
+        //spinner1.setItems("Active","Archived","Deleted","Dummy","All");
 
 
-        spinner1.setItems("Filter Automatically", "By Route", "Chronologically", "Manually", "Alphabetically", "By Account Status");
+        spinner1.setItems("Active", "Archived", "Deleted", "Dummy", "All");
+        getRoutes();
+
         spinner1.setOnItemSelectedListener((MaterialSpinner.OnItemSelectedListener<String>) (view1, position, id, item) -> {
-            if (position == 1 || position == 5) {
-                spinner2.setVisibility(View.VISIBLE);
-                lspinner2.setVisibility(View.VISIBLE);
-                setUpSpinner2(position);
-            } else {
-                spinner2.setVisibility(View.GONE);
-                lspinner2.setVisibility(View.GONE);
-            }
+
+            fetchFarmers(position, getSelectedRoute());
+
         });
 
+        spinner2.setOnItemSelectedListener((view12, position, id, item) -> {
+            if (spinner2.getSelectedIndex() == 0) {
+                fetchFarmers(getSelectedAccountStatus(), "");
+            } else {
+                fetchFarmers(getSelectedAccountStatus(), spinner2.getItems().get(position).toString());
+
+            }
+
+        });
         if (prefrenceManager.isRoutesListFirstTime() || prefrenceManager.isCycleListFirstTime() || prefrenceManager.isUnitListFirstTime()) {
             initDataOffline(false, false, false);
         }
 
 
 
+    }
+
+    private void updateItems() {
+        for (int a = 1; a < FarmerConst.getSearchFamerModels().size() + 1; a++) {
+            FamerModel f = FarmerConst.getSearchFamerModels().get(a - 1);
+            f.setPosition(a);
+
+            mViewModel.updateFarmer(f, false);
+        }
+    }
+
+    private int getSelectedAccountStatus() {
+        return spinner1.getSelectedIndex();
+    }
+
+    private String getSelectedRoute() {
+
+        if (spinner2.getSelectedIndex() == 0) {
+            return "";
+        } else return spinner2.getItems().get(spinner2.getSelectedIndex()).toString();
+    }
+
+    private void fetchFarmers(int staus, String route) {
+
+        avi.smoothToShow();
+        avi.setVisibility(View.VISIBLE);
+
+        if (mViewModel == null) {
+            mViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
+
+        }
+
+        mViewModel.getFarmerByStatusRoute(staus, route).observe(FragementFarmersList.this, new Observer<List<FamerModel>>() {
+            @Override
+            public void onChanged(@Nullable List<FamerModel> famerModels) {
+                avi.smoothToHide();
+                prefrenceManager.setIsFarmerListFirst(false);
+                update(famerModels);
+            }
+        });
     }
 
     private boolean isSetUp() {
@@ -297,10 +411,12 @@ public class FragementFarmersList extends Fragment {
         }
         return getRoutess != null || getRoutess.size() >= 1;
     }
+    //spinner1.setItems("Filter Automatically", "By Route", "Chronologically", "Manually", "Alphabetically", "By Account Status");
 
     private void setUpSpinner2(int pos) {
         switch (pos) {
             case 0:
+
                 filterFarmers();
                 break;
             case 2:
@@ -316,7 +432,6 @@ public class FragementFarmersList extends Fragment {
                 setUpSpinner2Listner();
                 break;
             case 5:
-                spinner2.setItems("All", "Active", "Archived", "In-Active", "Dummy");
                 setUpSpinner2Listner();
                 break;
 
@@ -341,16 +456,16 @@ public class FragementFarmersList extends Fragment {
                 prefrenceManager.setIsRoutesListFirst(false);
                 if (routesModels != null && routesModels.size() > 0) {
                     FragementFarmersList.this.routesModels = routesModels;
-                    String routes[] = new String[routesModels.size()];
-                    // routes[0] = "Choose Route";
+                    String routes[] = new String[routesModels.size() + 1];
+                    routes[0] = "All";
 
-                    for (int a = 0; a < routesModels.size(); a++) {
-                        routes[a] = routesModels.get(a).getRoute();
+                    for (int a = 1; a < routesModels.size() + 1; a++) {
+                        routes[a] = routesModels.get(a - 1).getRoute();
 
                     }
 
                     spinner2.setItems(routes);
-                    filterFarmers();
+                    //filterFarmers();
                 } else {
                     getRoutesOnline();
                 }
@@ -365,16 +480,16 @@ public class FragementFarmersList extends Fragment {
                 prefrenceManager.setIsRoutesListFirst(false);
                 if (routesModels != null && routesModels.size() > 0) {
                     FragementFarmersList.this.routesModels = routesModels;
-                    String routes[] = new String[routesModels.size()];
-                    // routes[0] = "Choose Route";
+                    String routes[] = new String[routesModels.size() + 1];
+                    routes[0] = "All";
 
-                    for (int a = 0; a < routesModels.size(); a++) {
-                        routes[a] = routesModels.get(a).getRoute();
+                    for (int a = 1; a < routesModels.size() + 1; a++) {
+                        routes[a] = routesModels.get(a - 1).getRoute();
 
                     }
 
                     spinner2.setItems(routes);
-                    filterFarmers();
+                    //filterFarmers();
                 }
                 //spinner2.setItems(routesModels);
             });
@@ -435,9 +550,6 @@ public class FragementFarmersList extends Fragment {
         recyclerView.setLayoutManager(mStaggeredLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        if (filteredFamerModels.size() < 1) {
-            //snack("No data");
-        }
 
         listAdapter.notifyDataSetChanged();
         recyclerView.setAdapter(listAdapter);
@@ -459,81 +571,90 @@ public class FragementFarmersList extends Fragment {
 
     private void filterFarmers() {
 
-        String route = "";
-        if (spinner1.getSelectedIndex() == 1) {
-            if (spinner2.getItems() != null) {
-                route = spinner2.getItems().get(spinner2.getSelectedIndex()).toString();
-            }
-            if (route != null && route.length() > 0) {
 
-            } else {
-                route = "";
-            }
+        if (FarmerConst.getSearchFamerModels() == null) {
 
-            filteredFamerModels.clear();
-            if (famerModels != null && famerModels.size() > 0) {
-                for (FamerModel famerModel : famerModels) {
-                    if (famerModel.getCode().toLowerCase().contains(filterText) ||
-                            famerModel.getMobile().toLowerCase().contains(filterText) ||
-                            famerModel.getNames().toLowerCase().contains(filterText)) {
-                        if (famerModel.getRoutename() != null) {
-                            if (famerModel.getRoutename().toLowerCase().contains(route.toLowerCase())) {
-                                filteredFamerModels.add(famerModel);
-                            }
-                        } else {
-                            filteredFamerModels.add(famerModel);
+            FarmerConst.setSearchFamerModels(new LinkedList<>());
+        }
 
-                        }
-                    }
+
+        FarmerConst.getSearchFamerModels().clear();
+        if (FarmerConst.getFamerModels() != null && FarmerConst.getFamerModels().size() > 0) {
+            for (FamerModel famerModel : FarmerConst.getFamerModels()) {
+                if (famerModel.getCode().toLowerCase().contains(filterText) ||
+                        famerModel.getMobile().toLowerCase().contains(filterText) ||
+                        famerModel.getNames().toLowerCase().contains(filterText)) {
+                    FarmerConst.getSearchFamerModels().add(famerModel);
+
 
                 }
-                listAdapter.notifyDataSetChanged();
-            } else {
-                listAdapter.notifyDataSetChanged();
-            }
-        } else {
 
-            filteredFamerModels.clear();
-            if (famerModels != null && famerModels.size() > 0) {
-                for (FamerModel famerModel : famerModels) {
-                    if (famerModel.getCode().toLowerCase().contains(filterText) ||
-                            famerModel.getMobile().toLowerCase().contains(filterText) ||
-                            famerModel.getNames().toLowerCase().contains(filterText)) {
-
-                        filteredFamerModels.add(famerModel);
-
-                    }
-
-                }
-                listAdapter.notifyDataSetChanged();
-            } else {
-                listAdapter.notifyDataSetChanged();
             }
         }
 
 
-        listAdapter.notifyDataSetChanged();
-    }
+        switch (SORTTYPE) {
+            case AUTOMATICALLY:
+                listAdapter.notifyDataSetChanged();
+                break;
+            case ALPHABETICAL:
+                filterFarmersAlpahbetically();
+                break;
+            case CHRONOLOGICAL:
+                filterFarmersChronologically();
+                break;
+            case MANUALLY:
+                filterFarmersManually();
+                break;
+            default:
+                listAdapter.notifyDataSetChanged();
+        }
+
+
+
+
+
+
+
+
+
+        }
+
+
 
     private void filterFarmersAlpahbetically() {
 
 
-        filteredFamerModels = famerModels;
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//          //  Collections.sort(filteredFamerModels, Comparator.comparing(FamerModel::getNames));
-//        }else {
-        Collections.sort(filteredFamerModels, (v1, v2) -> v1.getNames().compareTo(v2.getNames()));
-        // }
+        Collections.sort(FarmerConst.getSearchFamerModels(), FamerModel.farmerNameComparator);
         listAdapter.notifyDataSetChanged();
 
 
     }
 
+    private void filterFarmersChronologically() {
+
+
+        Collections.sort(FarmerConst.getSearchFamerModels(), FamerModel.farmerDateComparator);
+        listAdapter.notifyDataSetChanged();
+
+
+    }
+
+    private void filterFarmersManually() {
+
+
+        Collections.sort(FarmerConst.getSearchFamerModels(), FamerModel.farmerPosComparator);
+        listAdapter.notifyDataSetChanged();
+
+
+    }
     @Override
     public void onStart() {
         super.onStart();
-        famerModels = new LinkedList<>();
-        filteredFamerModels = new LinkedList<>();
+        FarmerConst.setFamerModels(new LinkedList<>());
+        FarmerConst.setFilteredFamerModels(new LinkedList<>());
+        FarmerConst.setSortedFamerModels(new LinkedList<>());
+        FarmerConst.setSearchFamerModels(new LinkedList<>());
 
         try {
             Objects.requireNonNull(getActivity()).setTitle("Farmers");
@@ -544,7 +665,7 @@ public class FragementFarmersList extends Fragment {
 
         initList();
         populateTraders();
-        getFarmers();
+        fetchFarmers(0, "");
 
 
 
@@ -553,33 +674,18 @@ public class FragementFarmersList extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (farmersController == null) {
-            farmersController = new FarmerController(context);
 
-        }
-        if (famerModels == null) {
-            famerModels = new LinkedList<>();
-        }
-        if (filteredFamerModels == null) {
-            filteredFamerModels = new LinkedList<>();
-        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        farmersController = null;
 
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        farmersController = null;
-//        ((TraderActivity) Objects.requireNonNull(getActivity())).fabButton(false, R.drawable.ic_add_black_24dp, () -> {
-
-        //   });
-
 
     }
 
@@ -924,39 +1030,14 @@ public class FragementFarmersList extends Fragment {
         });
     }
 
+    @Override
+    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+        mItemTouchHelper.startDrag(viewHolder);
 
-//    private void update(FamerModel famerModel) {
-//
-////        listAdapter.notifyDataSetChanged();
-////
-////        if (farmersController != null) {
-////            farmersController.startAnim();
-////        }
-////
-////        if (famersViewModel != null) {
-////            try {
-////                famersViewModel.updateTrader(new JSONObject(gson.toJson(traderModel)), true).observe(this, responseModel -> {
-////                    if (farmersController != null) {
-////                        farmersController.stopAnim();
-////                        if (responseModel != null) {
-////                            farmersController.snack(responseModel.getResultDescription());
-////                        }
-////                        if (responseModel != null) {
-////                            if (responseModel.getResultCode() != 0) {
-////                                farmersController.dismissDialog();
-////                                famersViewModel.refresh(getSearchObject(), true);
-////                            }
-////                        }
-////                    }
-////
-////                });
-////            } catch (JSONException e) {
-////                e.printStackTrace();
-////            }
-////        }
-//
-//
-//    }
+    }
+
+
+
 
     private class EditCustomListener implements View.OnClickListener {
         AlertDialog dialog;

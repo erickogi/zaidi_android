@@ -21,6 +21,7 @@ import com.dev.lishaboramobile.Trader.Models.Cycles;
 import com.dev.lishaboramobile.Trader.Models.RPFSearchModel;
 import com.dev.lishaboramobile.Trader.Models.RoutesModel;
 import com.dev.lishaboramobile.Trader.Models.UnitsModel;
+import com.dev.lishaboramobile.Views.Farmer.FarmerConst;
 import com.dev.lishaboramobile.login.PrefrenceManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -46,8 +47,7 @@ public class TraderViewModel extends AndroidViewModel
     private MutableLiveData deleteRouteSuccess;
 
 
-
-    private MutableLiveData farmer;
+    private LiveData farmer;
     private MutableLiveData createFarmerSuccess;
     private MutableLiveData updateFarmerSuccess;
     private MutableLiveData deleteFarmerSuccess;
@@ -121,6 +121,36 @@ public class TraderViewModel extends AndroidViewModel
         return farmers;
     }
 
+    public LiveData<List<FamerModel>> getFarmerByStatusRoute(int status, String route) {
+        if (farmers == null) {
+            farmers = new MutableLiveData();
+        }
+        switch (status) {
+            case FarmerConst.ACTIVE:
+                farmers = (farmerRepo.getFarmersByStatusRoute(0, 0, 0, route));
+                break;
+            case FarmerConst.DELETED:
+                farmers = (farmerRepo.getFarmersByStatusRoute(1, 0, 0, route));
+                break;
+            case FarmerConst.DUMMY:
+                farmers = (farmerRepo.getFarmersByStatusRoute(0, 0, 1, route));
+                break;
+            case FarmerConst.ARCHIVED:
+                farmers = (farmerRepo.getFarmersByStatusRoute(0, 1, 0, route));
+                break;
+            case FarmerConst.ALL:
+                farmer = (farmerRepo.fetchAllData(false));
+                break;
+            default:
+                farmer = (farmerRepo.fetchAllData(false));
+
+
+        }
+
+
+        return farmers;
+    }
+
     public LiveData<List<FamerModel>> getFarmersByName(String names) {
         if (farmers == null) {
             farmers = new MutableLiveData();
@@ -128,6 +158,15 @@ public class TraderViewModel extends AndroidViewModel
         }
 
         return farmers;
+    }
+
+    public LiveData<FamerModel> getLastFarmer() {
+        if (farmer == null) {
+            farmer = new MutableLiveData();
+            farmer = (farmerRepo.getLastFarmer());
+        }
+
+        return farmer;
     }
 
     public LiveData<List<FamerModel>> getFarmersByMobile(String mobile) {

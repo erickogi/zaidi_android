@@ -31,6 +31,10 @@ public interface FarmersDao {
     @Query("SELECT * FROM FARMERS")
     LiveData<List<FamerModel>> fetchAllData();
 
+    @Query("SELECT * FROM FARMERS ORDER BY id DESC LIMIT 1")
+    LiveData<FamerModel> getLastFarmer();
+
+
     @Query("SELECT * FROM FARMERS WHERE id =:keyid")
     LiveData<FamerModel> getFramerByKeyID(int keyid);
 
@@ -54,7 +58,7 @@ public interface FarmersDao {
     @Query("SELECT * FROM FARMERS WHERE names =:names")
     LiveData<FamerModel> getFramersByNames(String names);
 
-    @Query("SELECT * FROM FARMERS WHERE route =:route")
+    @Query("SELECT * FROM FARMERS WHERE routecode =:route")
     LiveData<List<FamerModel>> getFramersByRoute(String route);
 
 
@@ -83,4 +87,9 @@ public interface FarmersDao {
     void deleteRecord(FamerModel famerModel);
 
 
+    @Query("SELECT * FROM FARMERS WHERE routename LIKE :route AND deleted= :deleted AND archived= :dummy AND archived= :archived")
+    LiveData<List<FamerModel>> getFarmerByStatusByRoute(int deleted, int archived, int dummy, String route);
+
+    @Query("SELECT * FROM FARMERS WHERE  deleted= :deleted AND archived= :dummy AND archived= :archived")
+    LiveData<List<FamerModel>> getFarmerByStatus(int deleted, int archived, int dummy);
 }

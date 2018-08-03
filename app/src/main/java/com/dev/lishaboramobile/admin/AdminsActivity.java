@@ -28,7 +28,6 @@ import com.dev.lishaboramobile.BottomNav.AHBottomNavigationItem;
 import com.dev.lishaboramobile.Global.Utils.MyToast;
 import com.dev.lishaboramobile.Global.Utils.RequestDataCallback;
 import com.dev.lishaboramobile.R;
-import com.dev.lishaboramobile.Views.Admin.FragmentAdminDashboard;
 import com.dev.lishaboramobile.Views.Trader.AdminDrawerClass;
 import com.dev.lishaboramobile.Views.Trader.AdminDrawerItemListener;
 import com.dev.lishaboramobile.admin.models.AdminModel;
@@ -228,7 +227,7 @@ public class AdminsActivity extends AppCompatActivity {
 
             @Override
             public void analyticsReportsTransactionsClicked() {
-                fragment = new FragmentAdminDashboard();
+                //fragment = new FragmentAdminDashboard();
                 setFragment();
             }
 
@@ -337,7 +336,7 @@ public class AdminsActivity extends AppCompatActivity {
                         setFragment();
                         break;
                     case 2:
-                        fragment = new FragmentAdminDashboard();
+                        //fragment = new FragmentAdminDashboard();
                         popOutFragments();
                         bundle.putInt("type", 2);
                         fragment.setArguments(bundle);

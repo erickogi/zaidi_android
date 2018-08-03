@@ -45,6 +45,8 @@ public class FarmerRepo {
     public void deleteRecord(FamerModel farmerModel){
         new deleteTradersAsyncTask(db.farmersDao()).execute(farmerModel);
     }
+
+
     private static class insertTraderAsyncTask extends AsyncTask<FamerModel, Void, Boolean> {
 
         private FarmersDao mAsyncTaskDao;
@@ -158,6 +160,12 @@ public class FarmerRepo {
         return db.farmersDao().getFramerByKeyID(key);
     }
 
+    public LiveData<FamerModel> getLastFarmer() {
+        return db.farmersDao().getLastFarmer();
+    }
+
+
+
     public LiveData<List<FamerModel>> getAllByArchivedStatus(int archived) {
         return db.farmersDao().getAllByArchivedStatus(archived);
     }
@@ -195,6 +203,14 @@ public class FarmerRepo {
     }
     public LiveData<List<FamerModel>> search(String names,String moile,int dummy,int deleted,int archived) {
         return db.farmersDao().search( names, moile, dummy, deleted, archived);
+    }
+
+    public LiveData<List<FamerModel>> getFarmersByStatusRoute(int deleted, int archived, int dummy, String route) {
+
+        if (route.equals("") || route.toLowerCase().equals("all")) {
+            return db.farmersDao().getFarmerByStatus(deleted, archived, dummy);
+        }
+        return db.farmersDao().getFarmerByStatusByRoute(deleted, archived, dummy, route);
     }
 
 

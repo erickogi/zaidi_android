@@ -5,7 +5,11 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
+import com.dev.lishaboramobile.Global.Utils.DateTimeUtils;
+
 import java.io.Serializable;
+import java.util.Comparator;
+import java.util.Date;
 
 @Entity(tableName = "farmers", indices = {@Index(value = {"compositecode", "mobile", "apikey"}, unique = true)})
 
@@ -48,6 +52,46 @@ public class FamerModel implements Serializable {
     private int dummy;
 
 
+    public static Comparator<FamerModel> farmerNameComparator = (s1, s2) -> {
+        String FamerModelName1 = s1.getNames().toUpperCase();
+        String FamerModelName2 = s2.getNames().toUpperCase();
+
+        //ascending order
+        return FamerModelName1.compareTo(FamerModelName2);
+
+        //descending order
+        //return FamerModelName2.compareTo(FamerModelName1);
+    };
+    public static Comparator<FamerModel> farmerDateComparator = (s1, s2) -> {
+        String FamerModelStringDate1 = s1.getTransactiontime();
+        String FamerModelStringDate2 = s2.getTransactiontime();
+        Date FamerModelDate1 = DateTimeUtils.Companion.conver2Date(FamerModelStringDate1, DateTimeUtils.Companion.getFormat());
+        Date FamerModelDate2 = DateTimeUtils.Companion.conver2Date(FamerModelStringDate2, DateTimeUtils.Companion.getFormat());
+
+        //ascending order
+        if (FamerModelDate1 != null) {
+            return FamerModelDate1.compareTo(FamerModelDate2);
+        } else return 0;
+
+        //descending order
+        //return FamerModelName2.compareTo(FamerModelName1);
+    };
+    /*Comparator for sorting the list by position no*/
+    public static Comparator<FamerModel> farmerPosComparator = (s1, s2) -> {
+
+        int position1 = s1.getPosition();
+        int position2 = s2.getPosition();
+
+        /*For ascending order*/
+        return position1 - position2;
+
+        /*For descending order*/
+        //rollno2-rollno1;
+    };
+
+
+
+
     private boolean isSynched = false;
 
 
@@ -55,6 +99,47 @@ public class FamerModel implements Serializable {
     private String resultDescription;
     @Ignore
     private int responseCode;
+    private int syncstatus;
+    private int position;
+    private String loanbalance, milkbalance, orderbalance;
+    @Ignore
+    private boolean show;
+
+    public boolean isShow() {
+        return show;
+    }
+
+    public void setShow(boolean show) {
+        this.show = show;
+    }
+
+    public int getSyncstatus() {
+        return syncstatus;
+    }
+
+    public void setSyncstatus(int syncstatus) {
+        this.syncstatus = syncstatus;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public String getLoanbalance() {
+        return loanbalance;
+    }
+
+    public void setLoanbalance(String loanbalance) {
+        this.loanbalance = loanbalance;
+    }
+
+    public String getMilkbalance() {
+        return milkbalance;
+    }
 
     public boolean isSynched() {
         return isSynched;
@@ -347,5 +432,22 @@ public class FamerModel implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public void setMilkbalance(String milkbalance) {
+        this.milkbalance = milkbalance;
+    }
+
+    public String getOrderbalance() {
+        return orderbalance;
+    }
+
+    public void setOrderbalance(String orderbalance) {
+        this.orderbalance = orderbalance;
+    }
+
+    @Override
+    public String toString() {
+        return "[ rollno=" + id + ", name=" + names + ", age=" + code + "]";
     }
 }

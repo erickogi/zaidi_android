@@ -9,6 +9,8 @@ import java.util.*
 
 class DateTimeUtils {
     companion object {
+
+        var Format: String = "yyyy-MM-dd HH:mm:ss"
         fun getNowslong(): String {
             SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             val date = Date()

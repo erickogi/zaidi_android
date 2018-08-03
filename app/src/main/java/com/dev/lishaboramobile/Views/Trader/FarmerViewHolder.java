@@ -17,10 +17,12 @@ public class FarmerViewHolder extends RecyclerView.ViewHolder implements View.On
     private WeakReference<OnclickRecyclerListener> listenerWeakReference;
     public RelativeLayout background;
     public View statusview;
+    public View itemVew;
 
 
     public FarmerViewHolder(View itemView, OnclickRecyclerListener onclickRecyclerListener) {
         super(itemView);
+        this.itemVew = itemView;
         listenerWeakReference = new WeakReference<>(onclickRecyclerListener);
         itemView.setOnClickListener(this);
         itemView.setOnLongClickListener(this);

@@ -7,6 +7,42 @@
         android:orderInCategory="100"
         android:title="Reset Password"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_smanually"
+        android:orderInCategory="100"
+        android:title="As Manually Arranged"
+        android:visible="false"
+        app:showAsAction="never" />
+
+
+    <item
+        android:id="@+id/action_automatically"
+        android:orderInCategory="100"
+        android:title="Automatically"
+        android:visible="false"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_alphabetically"
+        android:orderInCategory="100"
+        android:title="Alphabetically"
+        android:visible="false"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_chronologically"
+        android:orderInCategory="100"
+        android:title="Chronologicaly"
+        android:visible="false"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_manually"
+        android:orderInCategory="100"
+        android:title="Re-Arrange Manually"
+        android:visible="false"
+        app:showAsAction="never" />
+
 
     <item
 

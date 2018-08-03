@@ -1,33 +1,58 @@
 package com.dev.lishaboramobile.Views.Trader;
 
 import android.content.Context;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.dev.lishaboramobile.Farmer.Models.FamerModel;
 import com.dev.lishaboramobile.Global.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
-import com.github.mikephil.charting.charts.PieChart;
+import com.dev.lishaboramobile.Views.Farmer.FarmerConst;
+import com.dev.lishaboramobile.Views.Trader.ui.Draggable.helper.ItemTouchHelperAdapter;
+import com.dev.lishaboramobile.Views.Trader.ui.Draggable.helper.OnStartDragListener;
 
-import java.lang.ref.WeakReference;
-import java.util.List;
+import java.util.Collections;
+import java.util.LinkedList;
 
-public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> {
+//RecyclerView.Adapter<RecyclerListAdapter.ItemViewHolder>
+public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> implements ItemTouchHelperAdapter {
 
     private Context context;
-    private List<FamerModel> modelList;
+    private LinkedList<FamerModel> modelList;
     private OnclickRecyclerListener listener;
+    private OnStartDragListener mDragStartListener;
+    private OnStartDragListener mmDragStartListener;
 
-    public FarmersAdapter(Context context, List<FamerModel> modelList, OnclickRecyclerListener listener) {
+    public FarmersAdapter(Context context, LinkedList<FamerModel> modelList, OnclickRecyclerListener listener, OnStartDragListener dragStartListener) {
         this.context = context;
+        mmDragStartListener = dragStartListener;
+
         this.modelList = modelList;
         this.listener = listener;
 
     }
+
+    public FarmersAdapter(Context context, LinkedList<FamerModel> modelList, OnclickRecyclerListener listener) {
+        this.context = context;
+        // mDragStartListener = dragStartListener;
+
+        this.modelList = modelList;
+        this.listener = listener;
+
+    }
+
+    public void setDraggale(boolean d) {
+        if (d) {
+            mDragStartListener = mmDragStartListener;
+        } else {
+            mDragStartListener = null;
+        }
+    }
+
 
     @Override
     public FarmerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -42,25 +67,19 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> {
     @Override
     public void onBindViewHolder(FarmerViewHolder holder, int position) {
         FamerModel farmer = modelList.get(position);
-
         holder.balance.setText(farmer.getTotalbalance());
         holder.id.setText(farmer.getCode());
         holder.name.setText(farmer.getNames());
         holder.cycle.setText(farmer.getCyclename());
         holder.route.setText("" + farmer.getRoutename());
         holder.txtDate.setText(farmer.getTransactiontime());
-
-
         String status = "";
-
         if (farmer.getArchived() == 0 && farmer.getDeleted() == 0 && farmer.getDummy() == 0) {
             status = "Active";
             holder.status.setText(status);
             holder.status.setTextColor(context.getResources().getColor(R.color.green_color_picker));
             holder.background.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
             holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
-//
-//
         } else {
             StringBuilder stringBuilder = new StringBuilder(status);
             if (farmer.getDeleted() == 1) {
@@ -74,8 +93,6 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> {
                 stringBuilder.append("|Dummy");
 
             }
-
-
             holder.status.setText(stringBuilder.toString());
             holder.status.setTextColor(context.getResources().getColor(R.color.red));
             holder.background.setBackgroundColor(context.getResources().getColor(R.color.red));
@@ -108,6 +125,36 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> {
 
         //farmer.getSynced()==1||farmer.getArchived()==1)
 
+        try {
+            if (mDragStartListener != null) {
+                holder.itemVew.setOnTouchListener((v, event) -> {
+                    if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+                        try {
+                            if (mDragStartListener != null) {
+                                mDragStartListener.onStartDrag(holder);
+                            }
+                        } catch (Exception nm) {
+                            nm.printStackTrace();
+                        }
+                    }
+                    return false;
+                });
+                holder.itemVew.setOnLongClickListener(v -> {
+                    try {
+                        if (mDragStartListener != null) {
+                            mDragStartListener.onStartDrag(holder);
+                        }
+                    } catch (Exception nm) {
+                        nm.printStackTrace();
+                    }
+                    return false;
+                });
+
+
+            }
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
     }
 
 
@@ -117,49 +164,28 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> {
     }
 
 
-    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-
-        PieChart chart;
-        TextView txtHeader;
-        private LinearLayout linearLayout;
-        private WeakReference<OnclickRecyclerListener> listenerWeakReference;
-
-        public MyViewHolder(View itemView, OnclickRecyclerListener listener) {
-            super(itemView);
-            txtHeader = itemView.findViewById(R.id.txt_header);
-            chart = itemView.findViewById(R.id.chartFarmers);
-            listenerWeakReference = new WeakReference<>(listener);
-
-            chart.setOnClickListener(this::onClick);
-
-        }
-
-        /**
-         * Called when a view has been clicked.
-         *
-         * @param v The view that was clicked.
-         */
-        @Override
-        public void onClick(View v) {
-
-
-            if (v.getId() == R.id.chartFarmers) {
-                listenerWeakReference.get().onClickListener(getAdapterPosition());
-            }
-        }
-
-        /**
-         * Called when a view has been clicked and held.
-         *
-         * @param v The view that was clicked and held.
-         * @return true if the callback consumed the long click, false otherwise.
-         */
-        @Override
-        public boolean onLongClick(View v) {
-            listenerWeakReference.get().onClickListener(getAdapterPosition(), v);
-            return false;
-        }
+    @Override
+    public void onItemDismiss(int position) {
+        modelList.remove(position);
+        notifyItemRemoved(position);
     }
 
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        try {
+
+
+            Collections.swap(modelList, fromPosition, toPosition);
+            FarmerConst.setSortedFamerModels(modelList);
+            notifyItemMoved(fromPosition, toPosition);
+
+
+        } catch (Exception ignored) {
+
+        }
+
+
+        return true;
+    }
 
 }

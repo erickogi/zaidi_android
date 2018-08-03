@@ -20,7 +20,7 @@ import com.dev.lishaboramobile.Trader.Models.TraderModel;
 import com.dev.lishaboramobile.Trader.Models.UnitsModel;
 import com.dev.lishaboramobile.admin.models.ProductsModel;
 
-@Database(entities = {TraderModel.class, FamerModel.class, RoutesModel.class, UnitsModel.class, Cycles.class, ProductsModel.class}, version = 7)
+@Database(entities = {TraderModel.class, FamerModel.class, RoutesModel.class, UnitsModel.class, Cycles.class, ProductsModel.class}, version = 8)
 @TypeConverters(DateConverter.class)
 
 public abstract class LMDatabase extends RoomDatabase {

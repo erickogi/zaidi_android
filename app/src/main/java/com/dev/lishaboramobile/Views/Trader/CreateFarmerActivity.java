@@ -24,6 +24,7 @@ public class CreateFarmerActivity extends AppCompatActivity implements StepperLa
     private FarmetRecruitAdapter mStepperAdapter;
     private PrefrenceManager prefrenceManager;
     private TraderViewModel mViewModel;
+    private int pos;
 
 
     @Override
@@ -33,6 +34,13 @@ public class CreateFarmerActivity extends AppCompatActivity implements StepperLa
         prefrenceManager = new PrefrenceManager(CreateFarmerActivity.this);
         mViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
 
+        mViewModel.getLastFarmer().observe(this, famerModel -> {
+            if (famerModel != null) {
+                pos = famerModel.getPosition();
+            } else {
+                pos = 1;
+            }
+        });
 
         mStepperLayout = findViewById(R.id.stepperLayout);
         mStepperAdapter = new FarmetRecruitAdapter(getSupportFragmentManager(), this);
@@ -50,10 +58,24 @@ public class CreateFarmerActivity extends AppCompatActivity implements StepperLa
     @Override
     public void onCompleted(View completeButton) {
 
+
+        insert(pos);
+
+    }
+
+    private void insert(int position) {
+        FarmerConst.getFamerModel().setPosition(position);
+        FarmerConst.getFamerModel().setSyncstatus(0);
+
+        FarmerConst.getFamerModel().setLoanbalance("0");
+        FarmerConst.getFamerModel().setOrderbalance("0");
+        FarmerConst.getFamerModel().setMilkbalance("0");
+
         FarmerConst.getFamerModel().setCode("" + new GeneralUtills(this).getRandon(9999, 1000));
         FarmerConst.getFamerModel().setArchived(0);
         FarmerConst.getFamerModel().setDeleted(0);
         FarmerConst.getFamerModel().setDummy(0);
+        FarmerConst.getFamerModel().setStatus("Active");
         FarmerConst.getFamerModel().setTransactiontime(DateTimeUtils.Companion.getNow());
         FarmerConst.getFamerModel().setSynched(false);
         FarmerConst.getFamerModel().setTransactedby(prefrenceManager.getTraderModel().getApikey());
@@ -75,7 +97,6 @@ public class CreateFarmerActivity extends AppCompatActivity implements StepperLa
             }
         });
     }
-
     @Override
     public void onError(VerificationError verificationError) {
         snack(verificationError.getErrorMessage());

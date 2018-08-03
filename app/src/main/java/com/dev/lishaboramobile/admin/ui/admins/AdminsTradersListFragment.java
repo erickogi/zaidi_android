@@ -5,6 +5,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -537,6 +538,25 @@ public class AdminsTradersListFragment extends Fragment {
 
                     editTrader(traderModel);
                     break;
+                case R.id.call:
+                    String phone = "0" + traderModel.getMobile();
+                    startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null)));
+                    break;
+                case R.id.sms:
+                    String address = "0" + traderModel.getMobile();
+
+                    try {
+                        Intent smsIntent = new Intent(Intent.ACTION_VIEW);
+                        smsIntent.setType("vnd.android-dir/mms-sms");
+                        smsIntent.putExtra("address", address);
+                        smsIntent.putExtra("sms_body", "Hello " + traderModel.getNames());
+                        startActivity(smsIntent);
+                    } catch (Exception nm) {
+                        nm.printStackTrace();
+                    }
+                    break;
+
+
                 default:
             }
             return false;
