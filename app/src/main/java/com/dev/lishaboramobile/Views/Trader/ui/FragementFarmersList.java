@@ -96,6 +96,65 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     private int SORTTYPE = 0;
 
 
+    public void collectMilk(FamerModel famerModel) {
+        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
+        View mView = layoutInflaterAndroid.inflate(R.layout.dialog_collect_milk, null);
+        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+        alertDialogBuilderUserInput.setView(mView);
+//        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
+//        alertDialogBuilderUserInput.setTitle("Route");
+
+
+        //avi = mView.findViewById(R.id.avi);
+
+
+        alertDialogBuilderUserInput
+                .setCancelable(false);
+//                .setPositiveButton("Save", (dialogBox, id) -> {
+//                    // ToDo get user input here
+//
+//
+//                })
+//
+//                .setNegativeButton("Dismiss",
+//                        (dialogBox, id) -> dialogBox.cancel());
+
+        AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
+        alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
+        alertDialogAndroid.show();
+
+//        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
+//        theButton.setOnClickListener(new CustomListener(alertDialogAndroid));
+
+
+        MaterialButton btnPositive, btnNegative, btnNeutral;
+        TextView txtTitle;
+        LinearLayout lTitle;
+        ImageView imgIcon;
+        btnPositive = mView.findViewById(R.id.btn_positive);
+        btnNegative = mView.findViewById(R.id.btn_negative);
+        btnNeutral = mView.findViewById(R.id.btn_neutral);
+        txtTitle = mView.findViewById(R.id.txt_title);
+        lTitle = mView.findViewById(R.id.linear_title);
+        imgIcon = mView.findViewById(R.id.img_icon);
+
+
+        btnNeutral.setVisibility(View.GONE);
+        lTitle.setVisibility(View.GONE);
+        txtTitle.setVisibility(View.VISIBLE);
+        imgIcon.setVisibility(View.VISIBLE);
+        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
+        txtTitle.setText("Route");
+
+        //btnPositive.setOnClickListener();
+        btnNeutral.setOnClickListener(view -> {
+
+        });
+        btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
+
+    }
 
 
     @Override
@@ -127,6 +186,8 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             @Override
             public void onClickListener(int position) {
 
+                collectMilk(FarmerConst.getSearchFamerModels().get(position));
+
 
             }
 
@@ -148,10 +209,14 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
             @Override
             public void onClickListener(int adapterPosition, @NotNull View view) {
-                try {
-                    popupMenu(adapterPosition, view, FarmerConst.getSearchFamerModels().get(adapterPosition));
-                } catch (Exception nm) {
-                    nm.printStackTrace();
+                if (FarmerConst.getSearchFamerModels().get(adapterPosition).getDeleted() == 1) {
+
+                } else {
+                    try {
+                        popupMenu(adapterPosition, view, FarmerConst.getSearchFamerModels().get(adapterPosition));
+                    } catch (Exception nm) {
+                        nm.printStackTrace();
+                    }
                 }
 
             }
@@ -159,7 +224,25 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(listAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
+
         mItemTouchHelper.attachToRecyclerView(recyclerView);
+
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                boolean isBottomReached = !recyclerView.canScrollVertically(1);
+                // if (isBottomReached && FarmerConst.getSearchFamerModels().getItemCount() > 0) {// Toast.makeText(getContext(),"Bottom reached",Toast.LENGTH_SHORT).show();
+                // }
+            }
+        });
+
 
 
     }
@@ -226,6 +309,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             isDraggable = true;
             btnDrag.setVisibility(View.VISIBLE);
         } else {
+            //listAdapter.setDraggale(false);
             isDraggable = false;
             btnDrag.setVisibility(View.GONE);
         }
@@ -341,17 +425,15 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
         spinner1.setOnItemSelectedListener((MaterialSpinner.OnItemSelectedListener<String>) (view1, position, id, item) -> {
 
-            fetchFarmers(position, getSelectedRoute());
+            fetchFarmers(getSelectedAccountStatus(), getSelectedRoute());
 
         });
 
         spinner2.setOnItemSelectedListener((view12, position, id, item) -> {
-            if (spinner2.getSelectedIndex() == 0) {
-                fetchFarmers(getSelectedAccountStatus(), "");
-            } else {
-                fetchFarmers(getSelectedAccountStatus(), spinner2.getItems().get(position).toString());
 
-            }
+            fetchFarmers(getSelectedAccountStatus(), getSelectedRoute());
+
+
 
         });
         if (prefrenceManager.isRoutesListFirstTime() || prefrenceManager.isCycleListFirstTime() || prefrenceManager.isUnitListFirstTime()) {
@@ -372,6 +454,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     }
 
     private int getSelectedAccountStatus() {
+        Log.d("Acsel", "" + spinner1.getSelectedIndex());
         return spinner1.getSelectedIndex();
     }
 
@@ -392,13 +475,10 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
         }
 
-        mViewModel.getFarmerByStatusRoute(staus, route).observe(FragementFarmersList.this, new Observer<List<FamerModel>>() {
-            @Override
-            public void onChanged(@Nullable List<FamerModel> famerModels) {
-                avi.smoothToHide();
-                prefrenceManager.setIsFarmerListFirst(false);
-                update(famerModels);
-            }
+        mViewModel.getFarmerByStatusRoute(staus, route).observe(FragementFarmersList.this, famerModels -> {
+            avi.smoothToHide();
+            prefrenceManager.setIsFarmerListFirst(false);
+            update(famerModels);
         });
     }
 
@@ -604,6 +684,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                 filterFarmersChronologically();
                 break;
             case MANUALLY:
+
                 filterFarmersManually();
                 break;
             default:
@@ -674,6 +755,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     @Override
     public void onResume() {
         super.onResume();
+        fetchFarmers(getSelectedAccountStatus(), getSelectedRoute());
 
     }
 
@@ -713,16 +795,24 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         PopupMenu popupMenu = new PopupMenu(Objects.requireNonNull(getContext()), view);
         popupMenu.inflate(R.menu.farmer_list_menu);
 
+        isArchived = false;
+        isDummy = false;
         if (famerModel.getDeleted() == 1) {
-            popupMenu.getMenu().getItem(0).setVisible(false);
+
+            popupMenu.getMenu().getItem(4).setTitle("Un-Delete");
         }
+
         if (famerModel.getArchived() == 1) {
             isArchived = true;
-            popupMenu.getMenu().getItem(1).setTitle("Un-Archive");
+            popupMenu.getMenu().getItem(5).setTitle("Un-Archive");
         }
+
+
         if (famerModel.getDummy() == 1) {
             isDummy = true;
-            popupMenu.getMenu().getItem(2).setTitle("Remove from dummy");
+            popupMenu.getMenu().getItem(6).setTitle("Remove from dummy");
+
+
         }
 
 
@@ -734,14 +824,8 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                     famerModel.setStatus("Deleted");
                     famerModel.setDeleted(1);
                     avi.smoothToShow();
-                    mViewModel.deleteFarmer(famerModel, false).observe(FragementFarmersList.this, new Observer<ResponseModel>() {
-                        @Override
-                        public void onChanged(@Nullable ResponseModel responseModel) {
-                            avi.smoothToHide();
-
-                        }
-                    });
-                    //update(famerModel);
+                    mViewModel.updateFarmer(famerModel, false).observe(FragementFarmersList.this, responseModel -> avi.smoothToHide());
+                    FragementFarmersList.this.fetchFarmers(FragementFarmersList.this.getSelectedAccountStatus(), FragementFarmersList.this.getSelectedRoute());//update(famerModel);
 
 
                     break;
@@ -756,13 +840,9 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                         famerModel.setArchived(1);
                     }
                     avi.smoothToShow();
-                    mViewModel.updateFarmer(famerModel, false).observe(FragementFarmersList.this, new Observer<ResponseModel>() {
-                        @Override
-                        public void onChanged(@Nullable ResponseModel responseModel) {
-                            avi.smoothToHide();
-                        }
-                    });
-                    // update(famerModel);
+                    mViewModel.updateFarmer(famerModel, false).observe(FragementFarmersList.this, responseModel -> avi.smoothToHide());
+                    FragementFarmersList.this.fetchFarmers(FragementFarmersList.this.getSelectedAccountStatus(), FragementFarmersList.this.getSelectedRoute());
+
 
                     break;
 
@@ -780,20 +860,21 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                         @Override
                         public void onChanged(@Nullable ResponseModel responseModel) {
                             avi.smoothToHide();
+                            fetchFarmers(getSelectedAccountStatus(), getSelectedRoute());
+
                         }
                     });
 
-                    // update(famerModel);
                     break;
                 case R.id.edit:
 
 
                     Log.d("farmerdialog", "edit clicked");
-                    editTrader(famerModel, getUnits(), getCycles(), getRoutess(), true);
+                    FragementFarmersList.this.editTrader(famerModel, FragementFarmersList.this.getUnits(), FragementFarmersList.this.getCycles(), FragementFarmersList.this.getRoutess(), true);
                     break;
                 case R.id.view:
 
-                    editTrader(famerModel, getUnits(), getCycles(), getRoutess(), false);
+                    FragementFarmersList.this.editTrader(famerModel, FragementFarmersList.this.getUnits(), FragementFarmersList.this.getCycles(), FragementFarmersList.this.getRoutess(), false);
 
                     break;
                 default:
@@ -1034,9 +1115,8 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemTouchHelper.startDrag(viewHolder);
 
+
     }
-
-
 
 
     private class EditCustomListener implements View.OnClickListener {
@@ -1065,5 +1145,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
         }
     }
+
 
 }

@@ -31,6 +31,10 @@ public interface FarmersDao {
     @Query("SELECT * FROM FARMERS")
     LiveData<List<FamerModel>> fetchAllData();
 
+
+    @Query("SELECT * FROM FARMERS WHERE routename LIKE :route")
+    LiveData<List<FamerModel>> fetchAllData(String route);
+
     @Query("SELECT * FROM FARMERS ORDER BY id DESC LIMIT 1")
     LiveData<FamerModel> getLastFarmer();
 
@@ -78,7 +82,8 @@ public interface FarmersDao {
     @Query("SELECT * FROM FARMERS WHERE names LIKE :names OR mobile LIKE :moile AND dummy =:dummy AND `deleted` = :deleted AND archived=:archived ")
     LiveData<List<FamerModel>> search(String names, String moile, int dummy, int deleted, int archived);
 
-
+    @Query("SELECT COUNT(routecode) FROM FARMERS WHERE routecode = :route")
+    int getNumberOfRows(String route);
 
     @Update
     void updateRecord(FamerModel famerModel);
@@ -87,9 +92,40 @@ public interface FarmersDao {
     void deleteRecord(FamerModel famerModel);
 
 
-    @Query("SELECT * FROM FARMERS WHERE routename LIKE :route AND deleted= :deleted AND archived= :dummy AND archived= :archived")
+    @Query("SELECT * FROM FARMERS WHERE routename LIKE :route AND deleted= :deleted AND archived= :archived AND dummy= :dummy")
     LiveData<List<FamerModel>> getFarmerByStatusByRoute(int deleted, int archived, int dummy, String route);
 
-    @Query("SELECT * FROM FARMERS WHERE  deleted= :deleted AND archived= :dummy AND archived= :archived")
+    @Query("SELECT * FROM FARMERS WHERE  deleted= :deleted AND archived= :archived AND dummy= :dummy")
     LiveData<List<FamerModel>> getFarmerByStatus(int deleted, int archived, int dummy);
+
+
+    //DELETED
+
+    @Query("SELECT * FROM FARMERS WHERE routename LIKE :route AND deleted= :deleted ")
+    LiveData<List<FamerModel>> getFarmerByStatusByRouteDeleted(int deleted, String route);
+
+    @Query("SELECT * FROM FARMERS WHERE  deleted= :deleted ")
+    LiveData<List<FamerModel>> getFarmerByStatusDeleted(int deleted);
+
+
+    //ARCHIVED
+
+    @Query("SELECT * FROM FARMERS WHERE routename LIKE :route AND archived= :archived ")
+    LiveData<List<FamerModel>> getFarmerByStatusByRouteArchived(int archived, String route);
+
+    @Query("SELECT * FROM FARMERS WHERE   archived= :archived ")
+    LiveData<List<FamerModel>> getFarmerByStatusArchived(int archived);
+
+    //DUMMY
+
+
+    @Query("SELECT * FROM FARMERS WHERE routename LIKE :route AND dummy= :dummy")
+    LiveData<List<FamerModel>> getFarmerByStatusByRouteDummy(int dummy, String route);
+
+    @Query("SELECT * FROM FARMERS WHERE  dummy= :dummy")
+    LiveData<List<FamerModel>> getFarmerByStatusDummy(int dummy);
+
+
+
+
 }

@@ -27,6 +27,19 @@
             android:orientation="vertical"
             android:padding="2dp">
 
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="5dp"
+                android:entries="@array/payments"></Spinner>
+
+            <CheckBox
+                android:id="@+id/chk_dummy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dummy Account" />
+
             <android.support.design.widget.TextInputLayout
 
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -88,17 +101,7 @@
             </android.support.design.widget.TextInputLayout>
 
 
-            <Spinner
-                android:id="@+id/spinner"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:entries="@array/payments"></Spinner>
 
-            <CheckBox
-                android:id="@+id/chk_dummy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Dummy Account" />
         </LinearLayout>
     </ScrollView>
 

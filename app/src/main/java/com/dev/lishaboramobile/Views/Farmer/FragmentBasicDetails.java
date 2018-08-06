@@ -12,6 +12,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.dev.lishaboramobile.Farmer.Models.FamerModel;
 import com.dev.lishaboramobile.R;
@@ -26,6 +27,7 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
 
     private View view;
     private FamerModel famerModel;
+    TextView txtKe;
     private TextInputEditText edtNames, edtMobile;
     private MaterialSpinner defaultPayment;
     private TraderViewModel mViewModel;
@@ -110,6 +112,7 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
         edtNames = view.findViewById(R.id.edt_farmer_names);
         edtMobile = view.findViewById(R.id.edt_farmer_phone);
         defaultPayment = view.findViewById(R.id.spinnerPayments);
+        txtKe = view.findViewById(R.id.txt_ke);
 
         initData();
 
@@ -132,6 +135,20 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
             @Override
             public void afterTextChanged(Editable s) {
                 // if(s.length()>0&&editTextCarrierNumber.getText().toString().charAt(0)!='0') {
+                try {
+                    if (s.charAt(0) == '0') {
+                        s.delete(s.length() - 1, s.length());
+                        txtKe.setText("+254-0");
+                    } else if (s != null && s.length() < 1) {
+                        txtKe.setText("+254");
+
+                    }
+
+
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
+                //if (s.length() < 9) {
                 if (s.length() > 0 && (s.length() % 4) == 0) {
                     final char c = s.charAt(s.length() - 1);
                     if (space == c) {
@@ -148,6 +165,10 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
                     }
 
                 }
+                // }else {
+                // s.delete(9,9);
+                // edtMobile.setError("Tulia");
+                // }
             }
         });
 

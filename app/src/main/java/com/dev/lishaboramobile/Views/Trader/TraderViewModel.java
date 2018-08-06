@@ -122,30 +122,36 @@ public class TraderViewModel extends AndroidViewModel
     }
 
     public LiveData<List<FamerModel>> getFarmerByStatusRoute(int status, String route) {
+
+        Log.d("byRouteByStatus", "Status " + status + "\n Route " + route);
+
         if (farmers == null) {
             farmers = new MutableLiveData();
         }
+
         switch (status) {
             case FarmerConst.ACTIVE:
+
                 farmers = (farmerRepo.getFarmersByStatusRoute(0, 0, 0, route));
                 break;
             case FarmerConst.DELETED:
-                farmers = (farmerRepo.getFarmersByStatusRoute(1, 0, 0, route));
+                farmers = (farmerRepo.getFarmersByStatusRouteDeleted(1, route));
                 break;
             case FarmerConst.DUMMY:
-                farmers = (farmerRepo.getFarmersByStatusRoute(0, 0, 1, route));
+                farmers = (farmerRepo.getFarmersByStatusRouteDummy(1, route));
                 break;
             case FarmerConst.ARCHIVED:
-                farmers = (farmerRepo.getFarmersByStatusRoute(0, 1, 0, route));
+                farmers = (farmerRepo.getFarmersByStatusRouteArchived(1, route));
                 break;
             case FarmerConst.ALL:
-                farmer = (farmerRepo.fetchAllData(false));
+                farmers = (farmerRepo.fetchAllData(false, route));
                 break;
             default:
-                farmer = (farmerRepo.fetchAllData(false));
+                farmers = (farmerRepo.fetchAllData(false));
 
 
         }
+
 
 
         return farmers;
@@ -387,6 +393,10 @@ public class TraderViewModel extends AndroidViewModel
         return jsonObject;
     }
 
+    public int noOfFarmersPerRoute(String routecode) {
+        return farmerRepo.getNoOfRows(routecode);
+    }
+
 
     public LiveData<ResponseModel> createRoute(RoutesModel routesModel, JSONObject jsonObject, boolean b) {
         if (this.createRouteSuccess == null) {
@@ -574,7 +584,7 @@ public class TraderViewModel extends AndroidViewModel
                 @Override
                 public void response(ResponseModel responseModel) {
                     updateFarmerSuccess.setValue(responseModel);
-                    farmerRepo.insert(famerModel);
+                    farmerRepo.upDateRecord(famerModel);
 
                 }
 
@@ -582,7 +592,7 @@ public class TraderViewModel extends AndroidViewModel
                 public void response(ResponseObject responseModel) {
                     updateFarmerSuccess.setValue(responseModel);
 
-                    farmerRepo.insert(famerModel);
+                    farmerRepo.upDateRecord(famerModel);
 
                 }
             });
@@ -591,7 +601,7 @@ public class TraderViewModel extends AndroidViewModel
             farmerRepo.upDateRecord(famerModel);
             ResponseModel responseModel = new ResponseModel();
             responseModel.setResultCode(1);
-            responseModel.setResultDescription("Farmer deleted successfully");
+            responseModel.setResultDescription("Farmer updated successfully");
             responseModel.setData(null);
             updateFarmerSuccess.setValue(responseModel);
 

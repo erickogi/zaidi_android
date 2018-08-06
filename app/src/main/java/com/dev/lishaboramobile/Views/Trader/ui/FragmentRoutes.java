@@ -331,17 +331,19 @@ public class FragmentRoutes extends Fragment {
             switch (item.getItemId()) {
                 case R.id.delete:
 
+                    if (mViewModel.noOfFarmersPerRoute(routesModel.getCode()) > 0) {
+                        MyToast.toast("A route with existing farmers cannot be deleted", getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
 
-                    routesModel.setStatus(0);
+                    } else {
 
-                    avi.smoothToShow();
-                    mViewModel.deleteRoute(routesModel, null, false).observe(FragmentRoutes.this, new Observer<ResponseModel>() {
-                        @Override
-                        public void onChanged(@Nullable ResponseModel responseModel) {
+                        routesModel.setStatus(0);
+
+                        avi.smoothToShow();
+                        mViewModel.deleteRoute(routesModel, null, false).observe(FragmentRoutes.this, responseModel -> {
                             avi.smoothToHide();
                             MyToast.toast(responseModel.getResultDescription(), getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
-                        }
-                    });
+                        });
+                    }
 
                     break;
 

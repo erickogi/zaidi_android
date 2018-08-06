@@ -2,6 +2,7 @@ package com.dev.lishaboramobile.Global.Data.Operations.Repo;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
+import android.content.Context;
 import android.os.AsyncTask;
 
 import com.dev.lishaboramobile.Farmer.Models.FamerModel;
@@ -24,6 +25,11 @@ public class FarmerRepo {
         farmersDao=db.farmersDao();
     }
 
+    public FarmerRepo(Context application) {
+        db = LMDatabase.getDatabase(application);
+        farmersDao = db.farmersDao();
+    }
+
 
     public LiveData<List<FamerModel>> fetchAllData(boolean isOnline) {
         if(isOnline){
@@ -31,6 +37,18 @@ public class FarmerRepo {
         }else {
             farmersDao = db.farmersDao();
             return farmersDao.fetchAllData();
+        }
+    }
+
+    public LiveData<List<FamerModel>> fetchAllData(boolean isOnline, String route) {
+        if (isOnline) {
+            return null;
+        } else {
+            farmersDao = db.farmersDao();
+            if (route.equals("") || route.toLowerCase().equals("all")) {
+                return db.farmersDao().fetchAllData();
+            }
+            return farmersDao.fetchAllData(route);
         }
     }
 
@@ -135,14 +153,11 @@ public class FarmerRepo {
 
         }
     }
-
-
     public void insertMultipleTraders(List<FamerModel> traderModels){
         farmersDao = db.farmersDao();
 
         new insertTradersAsyncTask(farmersDao).execute(traderModels);
     }
-
     public void insertSingleTrader(FamerModel farmerModel,boolean isOnline){
         if(isOnline){
             insertSingleTrader(farmerModel);
@@ -151,7 +166,6 @@ public class FarmerRepo {
             db.farmersDao().insertSingleFramer(farmerModel);
         }
     }
-
     private void insertSingleTrader(FamerModel farmerModel) {
         
     }
@@ -164,6 +178,9 @@ public class FarmerRepo {
         return db.farmersDao().getLastFarmer();
     }
 
+    public int getNoOfRows(String route) {
+        return db.farmersDao().getNumberOfRows(route);
+    }
 
 
     public LiveData<List<FamerModel>> getAllByArchivedStatus(int archived) {
@@ -212,6 +229,38 @@ public class FarmerRepo {
         }
         return db.farmersDao().getFarmerByStatusByRoute(deleted, archived, dummy, route);
     }
+
+    //DELETED
+
+    public LiveData<List<FamerModel>> getFarmersByStatusRouteDeleted(int deleted, String route) {
+
+        if (route.equals("") || route.toLowerCase().equals("all")) {
+            return db.farmersDao().getFarmerByStatusDeleted(deleted);
+        }
+        return db.farmersDao().getFarmerByStatusByRouteDeleted(deleted, route);
+    }
+
+    //DUMMY
+
+    public LiveData<List<FamerModel>> getFarmersByStatusRouteDummy(int dummy, String route) {
+
+        if (route.equals("") || route.toLowerCase().equals("all")) {
+            return db.farmersDao().getFarmerByStatusDummy(dummy);
+        }
+        return db.farmersDao().getFarmerByStatusByRouteDummy(dummy, route);
+    }
+
+    //ARCHIVED
+
+    public LiveData<List<FamerModel>> getFarmersByStatusRouteArchived(int archived, String route) {
+
+        if (route.equals("") || route.toLowerCase().equals("all")) {
+            return db.farmersDao().getFarmerByStatusArchived(archived);
+        }
+        return db.farmersDao().getFarmerByStatusByRouteArchived(archived, route);
+    }
+
+
 
 
 }

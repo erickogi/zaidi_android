@@ -2,6 +2,7 @@ package com.dev.lishaboramobile.Views.Trader;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,6 +19,8 @@ public class FarmerViewHolder extends RecyclerView.ViewHolder implements View.On
     public RelativeLayout background;
     public View statusview;
     public View itemVew;
+    public LinearLayout lBig;
+
 
 
     public FarmerViewHolder(View itemView, OnclickRecyclerListener onclickRecyclerListener) {
@@ -26,6 +29,7 @@ public class FarmerViewHolder extends RecyclerView.ViewHolder implements View.On
         listenerWeakReference = new WeakReference<>(onclickRecyclerListener);
         itemView.setOnClickListener(this);
         itemView.setOnLongClickListener(this);
+        lBig = itemView.findViewById(R.id.l_big);
         statusview = itemView.findViewById(R.id.status_view);
         background = itemView.findViewById(R.id.background);
 

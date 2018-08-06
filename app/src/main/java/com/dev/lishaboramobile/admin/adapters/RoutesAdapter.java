@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.dev.lishaboramobile.Global.Data.Operations.Repo.FarmerRepo;
 import com.dev.lishaboramobile.Global.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
 import com.dev.lishaboramobile.Trader.Models.RoutesModel;
@@ -41,9 +42,9 @@ public class RoutesAdapter extends RecyclerView.Adapter<RoutesViewHolder> {
     @Override
     public void onBindViewHolder(RoutesViewHolder holder, int position) {
         RoutesModel routesModel = modelList.get(position);
-
+        FarmerRepo f = new FarmerRepo(context);
         holder.name.setText(routesModel.getRoute());
-        holder.famerscount.setText("" + routesModel.getFarmers());
+        holder.famerscount.setText("" + f.getNoOfRows(routesModel.getCode()));
         holder.status.setText("" + routesModel.getStatus());
 
         String status = "";

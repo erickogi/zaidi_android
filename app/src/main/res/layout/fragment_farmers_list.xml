@@ -66,9 +66,23 @@
                     android:layout_margin="2dp" />
 
             </LinearLayout>
+
+            <Button
+                android:id="@+id/draggaing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="12dp"
+                android:background="@color/colorAccent"
+
+                android:text="Done Dragging"
+
+                android:visibility="gone" />
+
+
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
+    <android.support.v7.widget.RecyclerView
 
 
             android:id="@+id/recyclerView"
@@ -170,15 +184,5 @@
             android:visibility="visible"
             app:srcCompat="@android:drawable/ic_input_add" />
 
-    <Button
-        android:id="@+id/draggaing"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="4dp"
-        android:background="@color/colorAccent"
-        android:padding="4dp"
-        android:text="Done Dragging" />
 
     </RelativeLayout>

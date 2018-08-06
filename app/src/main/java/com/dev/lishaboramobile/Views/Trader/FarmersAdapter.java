@@ -18,7 +18,6 @@ import com.dev.lishaboramobile.Views.Trader.ui.Draggable.helper.OnStartDragListe
 import java.util.Collections;
 import java.util.LinkedList;
 
-//RecyclerView.Adapter<RecyclerListAdapter.ItemViewHolder>
 public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> implements ItemTouchHelperAdapter {
 
     private Context context;
@@ -26,7 +25,6 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
     private OnclickRecyclerListener listener;
     private OnStartDragListener mDragStartListener;
     private OnStartDragListener mmDragStartListener;
-
     public FarmersAdapter(Context context, LinkedList<FamerModel> modelList, OnclickRecyclerListener listener, OnStartDragListener dragStartListener) {
         this.context = context;
         mmDragStartListener = dragStartListener;
@@ -132,6 +130,9 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
                         try {
                             if (mDragStartListener != null) {
                                 mDragStartListener.onStartDrag(holder);
+                                holder.lBig.setVisibility(View.GONE);
+                            } else {
+                                holder.lBig.setVisibility(View.VISIBLE);
                             }
                         } catch (Exception nm) {
                             nm.printStackTrace();
@@ -155,6 +156,7 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
         } catch (Exception nm) {
             nm.printStackTrace();
         }
+
     }
 
 
