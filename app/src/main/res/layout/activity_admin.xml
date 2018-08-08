@@ -36,7 +36,7 @@
 
     <include layout="@layout/admins_activity" />
 
-    <com.dev.lishaboramobile.BottomNav.AHBottomNavigation
+    <com.dev.lishabora.Utils.BottomNav.AHBottomNavigation
         android:id="@+id/bottom_navigation"
 
 

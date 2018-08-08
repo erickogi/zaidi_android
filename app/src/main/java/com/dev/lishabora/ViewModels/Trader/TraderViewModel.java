@@ -1,0 +1,787 @@
+package com.dev.lishabora.ViewModels.Trader;
+
+import android.app.Application;
+import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
+import android.support.annotation.NonNull;
+import android.util.Log;
+
+import com.dev.lishabora.Models.Cycles;
+import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.ProductsModel;
+import com.dev.lishabora.Models.RPFSearchModel;
+import com.dev.lishabora.Models.ResponseModel;
+import com.dev.lishabora.Models.ResponseObject;
+import com.dev.lishabora.Models.RoutesModel;
+import com.dev.lishabora.Models.UnitsModel;
+import com.dev.lishabora.Repos.ProductsRepo;
+import com.dev.lishabora.Repos.RoutesRepo;
+import com.dev.lishabora.Repos.Trader.CyclesRepo;
+import com.dev.lishabora.Repos.Trader.FarmerRepo;
+import com.dev.lishabora.Repos.Trader.UnitsRepo;
+import com.dev.lishabora.Utils.Network.ApiConstants;
+import com.dev.lishabora.Utils.Network.Request;
+import com.dev.lishabora.Utils.PrefrenceManager;
+import com.dev.lishabora.Utils.ResponseCallback;
+import com.dev.lishabora.Views.Trader.FarmerConst;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Type;
+import java.util.LinkedList;
+import java.util.List;
+
+public class TraderViewModel extends AndroidViewModel
+
+{
+    FarmerRepo farmerRepo;
+    RoutesRepo routesRepo;
+    UnitsRepo unitsRepo;
+    CyclesRepo cyclesRepo;
+    ProductsRepo productsRepo;
+    Gson gson = new Gson();
+    private MutableLiveData createRouteSuccess;
+    private MutableLiveData updateRouteSuccess;
+    private MutableLiveData deleteRouteSuccess;
+
+    private MutableLiveData createProductSuccess;
+    private MutableLiveData updateProductSuccess;
+    private MutableLiveData deleteProductSuccess;
+
+
+    private LiveData farmer;
+    private MutableLiveData createFarmerSuccess;
+    private MutableLiveData updateFarmerSuccess;
+    private MutableLiveData deleteFarmerSuccess;
+    private MutableLiveData unit;
+    private LiveData<List<FamerModel>> farmers;
+    private MutableLiveData route;
+    private LiveData<List<UnitsModel>> units;
+    private MutableLiveData cycle;
+    private LiveData<List<RoutesModel>> routes;
+    private LiveData<List<Cycles>> cycles;
+
+    private LiveData<List<ProductsModel>> products;
+    private MutableLiveData productss;
+
+
+    private Application application;
+
+
+    public TraderViewModel(@NonNull Application application) {
+        super(application);
+        this.application = application;
+        farmers = new MutableLiveData();
+        routes = new MutableLiveData();
+        units = new MutableLiveData();
+        cycles = new MutableLiveData();
+        farmerRepo = new FarmerRepo(application);
+        unitsRepo = new UnitsRepo(application);
+        routesRepo = new RoutesRepo(application);
+        cyclesRepo = new CyclesRepo(application);
+        productsRepo = new ProductsRepo(application);
+//
+//        farmers.setValue(farmerRepo.fetchAllData(false));
+//        routes.setValue(routesRepo.fetchAllData(false));
+//        units.setValue(unitsRepo.fetchAllData(false));
+//        cycles.setValue(cyclesRepo.fetchAllData(false));
+    }
+
+    public LiveData<ResponseModel> getProductsModels(JSONObject jsonObject, boolean fetchFromOnline) {
+
+        if (this.productss == null) {
+            this.productss = new MutableLiveData();
+            if (fetchFromOnline) {
+                Request.Companion.getResponse(ApiConstants.Companion.getProducts(), jsonObject, "", new ResponseCallback() {
+                            @Override
+                            public void response(ResponseModel responseModel) {
+                                productss.setValue(responseModel);
+                            }
+
+                            @Override
+                            public void response(ResponseObject responseModel) {
+
+                                productss.setValue(responseModel);
+                            }
+                        }
+                );
+
+            } else {
+
+            }
+
+
+        }
+
+
+        return productss;
+    }
+
+
+
+    public LiveData<List<FamerModel>> getFarmers(JSONObject jsonObject, boolean isOnline) {
+        if (farmers == null) {
+            farmers = new MutableLiveData();
+
+
+        }
+
+        if (isOnline) {
+            Request.Companion.getResponse(ApiConstants.Companion.getTraderFarmers(), jsonObject, "", new ResponseCallback() {
+                        @Override
+                        public void response(ResponseModel responseModel) {
+                            JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
+                            Type listType = new TypeToken<LinkedList<FamerModel>>() {
+                            }.getType();
+                            // famerModels = gson.fromJson(jsonArray, listType);
+
+
+                            Log.d("ReTrUp", "farmers update called");
+                            farmerRepo.insertMultipleTraders(gson.fromJson(jsonArray, listType));
+                        }
+
+                        @Override
+                        public void response(ResponseObject responseModel) {
+
+                            JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
+                            Type listType = new TypeToken<LinkedList<FamerModel>>() {
+                            }.getType();
+                            // famerModels = gson.fromJson(jsonArray, listType);
+
+
+                            Log.d("ReTrUp", "farmers update called");
+                            farmerRepo.insertMultipleTraders(gson.fromJson(jsonArray, listType));
+                        }
+                    }
+            );
+
+
+        }
+        farmers = (farmerRepo.fetchAllData(false));
+        return farmers;
+    }
+
+    public LiveData<List<FamerModel>> getFarmerByStatusRoute(int status, String route) {
+
+        Log.d("byRouteByStatus", "Status " + status + "\n Route " + route);
+
+        if (farmers == null) {
+            farmers = new MutableLiveData();
+        }
+
+        switch (status) {
+            case FarmerConst.ACTIVE:
+
+                farmers = (farmerRepo.getFarmersByStatusRoute(0, 0, 0, route));
+                break;
+            case FarmerConst.DELETED:
+                farmers = (farmerRepo.getFarmersByStatusRouteDeleted(1, route));
+                break;
+            case FarmerConst.DUMMY:
+                farmers = (farmerRepo.getFarmersByStatusRouteDummy(1, route));
+                break;
+            case FarmerConst.ARCHIVED:
+                farmers = (farmerRepo.getFarmersByStatusRouteArchived(1, route));
+                break;
+            case FarmerConst.ALL:
+                farmers = (farmerRepo.fetchAllData(false, route));
+                break;
+            default:
+                farmers = (farmerRepo.fetchAllData(false));
+
+
+        }
+
+
+
+        return farmers;
+    }
+
+    public LiveData<List<FamerModel>> getFarmersByName(String names) {
+        if (farmers == null) {
+            farmers = new MutableLiveData();
+            farmers = (farmerRepo.searchByNames(names));
+        }
+
+        return farmers;
+    }
+
+    public LiveData<FamerModel> getLastFarmer() {
+        if (farmer == null) {
+            farmer = new MutableLiveData();
+            farmer = (farmerRepo.getLastFarmer());
+        }
+
+        return farmer;
+    }
+
+    public LiveData<List<FamerModel>> getFarmersByMobile(String mobile) {
+        if (farmers == null) {
+            farmers = new MutableLiveData();
+        }
+
+        farmers = (farmerRepo.searchByMobile(mobile));
+
+        return farmers;
+    }
+
+    public LiveData<List<FamerModel>> getFarmersByRoute(String route) {
+        if (farmers == null) {
+            farmers = new MutableLiveData();
+        }
+        farmers = (farmerRepo.getFramersByRoute(route));
+
+
+        return farmers;
+    }
+
+    public LiveData<List<RoutesModel>> getRoutes(boolean isOnline) {
+        if (routes == null) {
+            routes = new MutableLiveData();
+        }
+
+        if (isOnline) {
+            Request.Companion.getResponse(ApiConstants.Companion.getTraderRoutes(), getTraderRoutesObject(), "", new ResponseCallback() {
+                        @Override
+                        public void response(ResponseModel responseModel) {
+                            if (responseModel.getResultCode() == 1) {
+                                JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
+                                Type listType = new TypeToken<LinkedList<RoutesModel>>() {
+                                }.getType();
+                                // routesModel = ;
+                                Log.d("ReTrUp", "routes update called");
+                                routesRepo.insertMultipleRoutes(gson.fromJson(jsonArray, listType));
+
+                            }
+
+                        }
+
+                        @Override
+                        public void response(ResponseObject responseModel) {
+                            JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
+                            Type listType = new TypeToken<LinkedList<RoutesModel>>() {
+                            }.getType();
+                            // routesModel = ;
+                            Log.d("ReTrUp", "routes update called");
+                            routesRepo.insertMultipleRoutes(gson.fromJson(jsonArray, listType));
+
+                        }
+                    }
+            );
+        }
+        routes = (routesRepo.fetchAllData(false));
+
+
+        return routes;
+    }
+
+    public LiveData<List<ProductsModel>> getProducts(boolean isOnline) {
+        if (products == null) {
+            products = new MutableLiveData();
+        }
+
+        if (isOnline) {
+            Request.Companion.getResponse(ApiConstants.Companion.getProducts(), getTraderRoutesObject(), "", new ResponseCallback() {
+                        @Override
+                        public void response(ResponseModel responseModel) {
+                            if (responseModel.getResultCode() == 1) {
+                                JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
+                                Type listType = new TypeToken<LinkedList<RoutesModel>>() {
+                                }.getType();
+                                // routesModel = ;
+                                Log.d("ReTrUp", "routes update called");
+                                routesRepo.insertMultipleRoutes(gson.fromJson(jsonArray, listType));
+
+                            }
+
+                        }
+
+                        @Override
+                        public void response(ResponseObject responseModel) {
+                            JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
+                            Type listType = new TypeToken<LinkedList<RoutesModel>>() {
+                            }.getType();
+                            // routesModel = ;
+                            Log.d("ReTrUp", "routes update called");
+                            routesRepo.insertMultipleRoutes(gson.fromJson(jsonArray, listType));
+
+                        }
+                    }
+            );
+        }
+        products = (productsRepo.fetchAllData(false));
+        Log.d("fetchall", "inserting repo" + products);
+
+
+        return products;
+    }
+
+
+    public LiveData<List<UnitsModel>> getUnits(boolean isOnline) {
+        if (units == null) {
+            units = new MutableLiveData();
+        }
+        if (isOnline) {
+            if (isOnline) {
+                Request.Companion.getResponse(ApiConstants.Companion.getUnits(), getTraderUnitObject(), "", new ResponseCallback() {
+                            @Override
+                            public void response(ResponseModel responseModel) {
+                                JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
+                                Type listType = new TypeToken<LinkedList<UnitsModel>>() {
+                                }.getType();
+                                // routesModel = ;
+                                Log.d("ReTrUp", "routes update called");
+                                unitsRepo.insertMultipleUnits(gson.fromJson(jsonArray, listType));
+
+
+                            }
+
+                            @Override
+                            public void response(ResponseObject responseModel) {
+                                JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
+                                Type listType = new TypeToken<LinkedList<UnitsModel>>() {
+                                }.getType();
+                                // routesModel = ;
+                                Log.d("ReTrUp", "routes update called");
+                                unitsRepo.insertMultipleUnits(gson.fromJson(jsonArray, listType));
+
+                            }
+                        }
+                );
+            }
+        }
+        units = (unitsRepo.fetchAllData(false));
+
+
+        return units;
+    }
+
+    public LiveData<List<Cycles>> getCycles(boolean isOnline) {
+        if (cycles == null) {
+            cycles = new MutableLiveData();
+        }
+        if (isOnline) {
+            if (isOnline) {
+                Request.Companion.getResponse(ApiConstants.Companion.getCycles(), getTraderCycleObject(), "", new ResponseCallback() {
+                            @Override
+                            public void response(ResponseModel responseModel) {
+                                JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
+                                Type listType = new TypeToken<LinkedList<Cycles>>() {
+                                }.getType();
+                                // routesModel = ;
+                                Log.d("ReTrUp", "routes update called");
+                                cyclesRepo.insert(gson.fromJson(jsonArray, listType));
+
+
+                            }
+
+                            @Override
+                            public void response(ResponseObject responseModel) {
+                                JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
+                                Type listType = new TypeToken<LinkedList<Cycles>>() {
+                                }.getType();
+                                // routesModel = ;
+                                Log.d("ReTrUp", "routes update called");
+                                cyclesRepo.insert(gson.fromJson(jsonArray, listType));
+
+                            }
+                        }
+                );
+            }
+        }
+        cycles = (cyclesRepo.fetchAllData(false));
+
+
+        return cycles;
+    }
+
+
+
+    public void refreshFarmers(JSONObject jsonObject, boolean fetchFromOnline) {
+        if (this.farmers == null) {
+            this.farmers = new MutableLiveData();
+
+        }
+        if (fetchFromOnline) {
+
+            Gson gson = new Gson();
+            Request.Companion.getResponse(ApiConstants.Companion.getFarmers(), jsonObject, "", new ResponseCallback() {
+                @Override
+                public void response(ResponseModel responseModel) {
+                    JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
+                    Type listType = new TypeToken<LinkedList<FamerModel>>() {
+                    }.getType();
+                    farmerRepo.insertMultipleTraders(gson.fromJson(jsonArray, listType));
+                    farmers = (farmerRepo.fetchAllData(fetchFromOnline));
+                }
+
+                @Override
+                public void response(ResponseObject responseModel) {
+
+                }
+            });
+
+        } else {
+            farmers = (farmerRepo.fetchAllData(fetchFromOnline));
+
+
+        }
+
+
+    }
+
+    private JSONObject getTraderRoutesObject() {
+
+
+        Gson gson = new Gson();
+        RPFSearchModel rpfSearchModel = new RPFSearchModel();
+        rpfSearchModel.setEntitycode(new PrefrenceManager(application).getTraderModel().getCode());
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(gson.toJson(rpfSearchModel));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+    private JSONObject getTraderUnitObject() {
+
+
+        Gson gson = new Gson();
+        RPFSearchModel rpfSearchModel = new RPFSearchModel();
+        rpfSearchModel.setAll("1");
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(gson.toJson(rpfSearchModel));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+    private JSONObject getTraderCycleObject() {
+
+
+        Gson gson = new Gson();
+        RPFSearchModel rpfSearchModel = new RPFSearchModel();
+        rpfSearchModel.setAll("1");
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(gson.toJson(rpfSearchModel));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+    public int noOfFarmersPerRoute(String routecode) {
+        return farmerRepo.getNoOfRows(routecode);
+    }
+
+
+    public LiveData<ResponseModel> createRoute(RoutesModel routesModel, JSONObject jsonObject, boolean b) {
+        if (this.createRouteSuccess == null) {
+        }
+        this.createRouteSuccess = new MutableLiveData();
+
+        if (b) {
+            Request.Companion.getResponse(ApiConstants.Companion.getCreateRoutes(), jsonObject, "", new ResponseCallback() {
+                @Override
+                public void response(ResponseModel responseModel) {
+                    createRouteSuccess.setValue(responseModel);
+                    routesRepo.insert(routesModel);
+
+                }
+
+                @Override
+                public void response(ResponseObject responseModel) {
+                    createRouteSuccess.setValue(responseModel);
+
+                    routesRepo.insert(routesModel);
+
+                }
+            });
+
+        } else {
+            routesRepo.insert(routesModel);
+            ResponseModel responseModel = new ResponseModel();
+            responseModel.setResultCode(1);
+            responseModel.setResultDescription("Added");
+            responseModel.setData(null);
+            createRouteSuccess.setValue(responseModel);
+
+        }
+        return createRouteSuccess;
+    }
+
+    public LiveData<ResponseModel> updateRoute(RoutesModel routesModel, JSONObject jsonObject, boolean b) {
+        if (this.updateRouteSuccess == null) {
+        }
+        this.updateRouteSuccess = new MutableLiveData();
+
+        if (b) {
+            Request.Companion.getResponse(ApiConstants.Companion.getCreateRoutes(), jsonObject, "", new ResponseCallback() {
+                @Override
+                public void response(ResponseModel responseModel) {
+                    updateRouteSuccess.setValue(responseModel);
+                    routesRepo.insert(routesModel);
+
+                }
+
+                @Override
+                public void response(ResponseObject responseModel) {
+                    updateRouteSuccess.setValue(responseModel);
+
+                    routesRepo.insert(routesModel);
+
+                }
+            });
+
+        } else {
+            routesRepo.upDateRecord(routesModel);
+            ResponseModel responseModel = new ResponseModel();
+            responseModel.setResultCode(1);
+            responseModel.setResultDescription("Updated");
+            responseModel.setData(null);
+            updateRouteSuccess.setValue(responseModel);
+
+        }
+        return updateRouteSuccess;
+    }
+
+    public LiveData<ResponseModel> deleteRoute(RoutesModel routesModel, JSONObject jsonObject, boolean b) {
+        if (this.deleteRouteSuccess == null) {
+        }
+        this.deleteRouteSuccess = new MutableLiveData();
+
+        if (b) {
+            Request.Companion.getResponse(ApiConstants.Companion.getCreateRoutes(), jsonObject, "", new ResponseCallback() {
+                @Override
+                public void response(ResponseModel responseModel) {
+                    deleteRouteSuccess.setValue(responseModel);
+                    routesRepo.insert(routesModel);
+
+                }
+
+                @Override
+                public void response(ResponseObject responseModel) {
+                    deleteRouteSuccess.setValue(responseModel);
+
+                    routesRepo.insert(routesModel);
+
+                }
+            });
+
+        } else {
+            routesRepo.deleteRecord(routesModel);
+            ResponseModel responseModel = new ResponseModel();
+            responseModel.setResultCode(1);
+            responseModel.setResultDescription("Deleted");
+            responseModel.setData(null);
+            deleteRouteSuccess.setValue(responseModel);
+
+        }
+        return deleteRouteSuccess;
+    }
+
+
+    public LiveData<ResponseModel> createProduct(ProductsModel productsModel, boolean b) {
+        if (this.createProductSuccess == null) {
+        }
+        this.createProductSuccess = new MutableLiveData();
+
+        if (b) {
+
+        } else {
+            productsRepo.insert(productsModel);
+            ResponseModel responseModel = new ResponseModel();
+            responseModel.setResultCode(1);
+            responseModel.setResultDescription("Added");
+            responseModel.setData(null);
+            createProductSuccess.setValue(responseModel);
+
+        }
+        return createProductSuccess;
+    }
+
+    public LiveData<ResponseModel> createProducts(List<ProductsModel> productsModels, boolean b) {
+        if (this.createProductSuccess == null) {
+        }
+        this.createProductSuccess = new MutableLiveData();
+
+        if (b) {
+
+        } else {
+
+            if (productsRepo.insert(productsModels)) {
+                ResponseModel responseModel = new ResponseModel();
+                responseModel.setResultCode(1);
+                responseModel.setResultDescription("Added");
+                responseModel.setData(null);
+                createProductSuccess.setValue(responseModel);
+            } else {
+
+            }
+
+        }
+        return createProductSuccess;
+    }
+
+    public LiveData<ResponseModel> updateProduct(ProductsModel productsModel, boolean b) {
+        if (this.updateProductSuccess == null) {
+        }
+        this.updateProductSuccess = new MutableLiveData();
+
+        if (b) {
+
+        } else {
+            productsRepo.upDateRecord(productsModel);
+            ResponseModel responseModel = new ResponseModel();
+            responseModel.setResultCode(1);
+            responseModel.setResultDescription("Updated");
+            responseModel.setData(null);
+            updateProductSuccess.setValue(responseModel);
+
+        }
+        return updateProductSuccess;
+    }
+
+    public LiveData<ResponseModel> deleteProduct(ProductsModel productsModel, boolean b) {
+        if (this.deleteProductSuccess == null) {
+        }
+        this.deleteProductSuccess = new MutableLiveData();
+
+        if (b) {
+
+        } else {
+            productsRepo.deleteRecord(productsModel);
+            ResponseModel responseModel = new ResponseModel();
+            responseModel.setResultCode(1);
+            responseModel.setResultDescription("Deleted");
+            responseModel.setData(null);
+            deleteProductSuccess.setValue(responseModel);
+
+        }
+        return deleteProductSuccess;
+    }
+
+
+
+    public LiveData<ResponseModel> createFarmer(FamerModel famerModel, boolean b) {
+        if (this.createFarmerSuccess == null) {
+        }
+        this.createFarmerSuccess = new MutableLiveData();
+
+        if (b) {
+            Request.Companion.getResponse(ApiConstants.Companion.getCreateFarmer(), getFarmerJson(), "", new ResponseCallback() {
+                @Override
+                public void response(ResponseModel responseModel) {
+                    createFarmerSuccess.setValue(responseModel);
+                    farmerRepo.insert(famerModel);
+
+                }
+
+                @Override
+                public void response(ResponseObject responseModel) {
+                    createFarmerSuccess.setValue(responseModel);
+
+                    farmerRepo.insert(famerModel);
+
+                }
+            });
+
+        } else {
+            farmerRepo.insert(famerModel);
+            ResponseModel responseModel = new ResponseModel();
+            responseModel.setResultCode(1);
+            responseModel.setResultDescription("Farmer added successfully");
+            responseModel.setData(null);
+            createFarmerSuccess.setValue(responseModel);
+
+        }
+        return createFarmerSuccess;
+    }
+
+    public LiveData<ResponseModel> deleteFarmer(FamerModel famerModel, boolean b) {
+        if (this.deleteFarmerSuccess == null) {
+        }
+        this.deleteFarmerSuccess = new MutableLiveData();
+
+        if (b) {
+            Request.Companion.getResponse(ApiConstants.Companion.getCreateFarmer(), getFarmerJson(), "", new ResponseCallback() {
+                @Override
+                public void response(ResponseModel responseModel) {
+                    deleteFarmerSuccess.setValue(responseModel);
+                    farmerRepo.insert(famerModel);
+
+                }
+
+                @Override
+                public void response(ResponseObject responseModel) {
+                    deleteFarmerSuccess.setValue(responseModel);
+
+                    farmerRepo.insert(famerModel);
+
+                }
+            });
+
+        } else {
+            farmerRepo.deleteRecord(famerModel);
+            ResponseModel responseModel = new ResponseModel();
+            responseModel.setResultCode(1);
+            responseModel.setResultDescription("Farmer deleted successfully");
+            responseModel.setData(null);
+            deleteFarmerSuccess.setValue(responseModel);
+
+        }
+        return deleteFarmerSuccess;
+    }
+
+    public LiveData<ResponseModel> updateFarmer(FamerModel famerModel, boolean b) {
+        if (this.updateFarmerSuccess == null) {
+        }
+        this.updateFarmerSuccess = new MutableLiveData();
+
+        if (b) {
+            Request.Companion.getResponse(ApiConstants.Companion.getCreateFarmer(), getFarmerJson(), "", new ResponseCallback() {
+                @Override
+                public void response(ResponseModel responseModel) {
+                    updateFarmerSuccess.setValue(responseModel);
+                    farmerRepo.upDateRecord(famerModel);
+
+                }
+
+                @Override
+                public void response(ResponseObject responseModel) {
+                    updateFarmerSuccess.setValue(responseModel);
+
+                    farmerRepo.upDateRecord(famerModel);
+
+                }
+            });
+
+        } else {
+            farmerRepo.upDateRecord(famerModel);
+            ResponseModel responseModel = new ResponseModel();
+            responseModel.setResultCode(1);
+            responseModel.setResultDescription("Farmer updated successfully");
+            responseModel.setData(null);
+            updateFarmerSuccess.setValue(responseModel);
+
+        }
+        return updateFarmerSuccess;
+    }
+
+    private JSONObject getFarmerJson() {
+
+        return null;
+    }
+
+
+}

@@ -20,9 +20,8 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
 
-
     <application
-        android:name=".Global.Application"
+        android:name="com.dev.lishabora.Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -30,15 +29,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Global.Account.EntryActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".Global.Account.SplashActivity"
+            android:name="com.dev.lishabora.Views.SplashActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
@@ -49,20 +40,19 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".login.SmsReceiver">
+        <receiver android:name="com.dev.lishabora.Utils.SmsReceiver">
             <intent-filter android:priority="99999">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
 
-
-        <service android:name=".Global.FireBase.Firebase">
+        <service android:name="com.dev.lishabora.Utils.FireBase.Firebase">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
         <service
-            android:name=".Global.FireBase.FirebaseService"
+            android:name="com.dev.lishabora.Utils.FireBase.FirebaseService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -85,29 +75,28 @@
         <!-- android:value="@string/default_notification_channel_id" /> -->
 
         <activity
-            android:name=".Views.Admin.AdminActivity"
-            android:label="@string/title_activity_admin"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Views.Trader.TraderActivity"
+            android:name="com.dev.lishabora.Views.Trader.Activities.TraderActivity"
             android:label="@string/title_activity_trader"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Views.Trader.CreateFarmerActivity" />
+        <activity android:name="com.dev.lishabora.Views.Trader.Activities.CreateFarmerActivity" />
         <activity
-            android:name=".login.LoginActivity"
+            android:name="com.dev.lishabora.Views.Login.Activities.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".admin.AdminsActivity"
+            android:name="com.dev.lishabora.Views.Admin.Activities.AdminsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".admin.ui.ResetPassword"
+            android:name="com.dev.lishabora.Views.Login.ResetPassword"
             android:label="@string/title_activity_reset_password"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".admin.ui.admins.AdimTraderProfile"
-
+            android:name="com.dev.lishabora.Views.Admin.Activities.AdimTraderProfile"
             android:label="@string/title_activity_adim_profile"
-            android:parentActivityName=".admin.AdminsActivity"
+            android:parentActivityName="com.dev.lishabora.Views.Admin.Activities.AdminsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.dev.lishabora.Views.Trader.Activities.FirstTimeLaunch"
+            android:label="@string/title_activity_first_time_launch"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

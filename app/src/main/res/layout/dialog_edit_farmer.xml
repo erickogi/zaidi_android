@@ -54,12 +54,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/img_flag"
-                    android:layout_width="40dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@drawable/flag_kenya" />
 
                 <com.dev.customfonts.MyTextView_Roboto_Bold
                     android:id="@+id/txt_ke"

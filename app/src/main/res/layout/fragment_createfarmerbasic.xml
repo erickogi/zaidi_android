@@ -34,10 +34,10 @@
 
             <ImageView
                 android:id="@+id/img_flag"
-                android:layout_width="40dp"
+                android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
-                android:background="@drawable/flag_kenya" />
+                android:background="@drawable/ke_24" />
 
             <com.dev.customfonts.MyTextView_Roboto_Bold
                 android:id="@+id/txt_ke"
@@ -52,9 +52,10 @@
 
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_marginStart="3dp"
-                app:counterEnabled="true"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:counterEnabled="true"
                 app:counterMaxLength="11"
                 android:textColorHint="@color/black">
 
