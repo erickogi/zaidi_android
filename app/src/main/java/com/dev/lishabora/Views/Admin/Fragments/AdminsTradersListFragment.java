@@ -285,6 +285,11 @@ public class AdminsTradersListFragment extends Fragment {
         if (NetworkUtils.Companion.isConnectionFast(Objects.requireNonNull(getActivity()))) {
             listAdapter = new TradersAdapter(getActivity(), filteredTraderModels, new OnclickRecyclerListener() {
                 @Override
+                public void onSwipe(int adapterPosition, int direction) {
+
+                }
+
+                @Override
                 public void onClickListener(int position) {
 
                     Intent intent = new Intent(getActivity(), AdimTraderProfile.class);

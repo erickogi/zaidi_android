@@ -50,6 +50,11 @@ public class FragmentTradersRoutes extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         listAdapter = new RoutesAdapter(getActivity(), routesModels, new OnclickRecyclerListener() {
             @Override
+            public void onSwipe(int adapterPosition, int direction) {
+
+            }
+
+            @Override
             public void onClickListener(int position) {
 
 

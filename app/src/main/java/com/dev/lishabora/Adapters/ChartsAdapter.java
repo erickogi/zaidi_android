@@ -1,5 +1,6 @@
 package com.dev.lishabora.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -33,6 +34,9 @@ public class ChartsAdapter extends RecyclerView.Adapter<ChartsAdapter.MyViewHold
         this.context = context;
         this.modelList = modelList;
         this.listener = listener;
+
+        Activity activity;
+        // activity.getSup
 
     }
 

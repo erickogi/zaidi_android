@@ -13,8 +13,6 @@ import java.util.List;
 
 public class ProductsRepo {
     private ProductsDao productsDao;
-    private LiveData<List<ProductsModel>> products;
-    private LiveData<ProductsModel> product;
 
 
     private LMDatabase db;
@@ -32,7 +30,7 @@ public class ProductsRepo {
         } else {
 
             productsDao = db.productsDao();
-            Log.d("fetchall", "inserting repo" + isOnline);
+            Log.d("fetchall", "fetching repo" + isOnline);
 
             return productsDao.fetchAllData();
         }
@@ -128,8 +126,9 @@ public class ProductsRepo {
             mAsyncTaskDao = dao;
         }
 
+        @SafeVarargs
         @Override
-        protected Boolean doInBackground(final List<ProductsModel>... params) {
+        protected final Boolean doInBackground(final List<ProductsModel>... params) {
             mAsyncTaskDao.insertMultipleProducts(params[0]);
             return true;
 

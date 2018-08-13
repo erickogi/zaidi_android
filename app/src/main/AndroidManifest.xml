@@ -97,6 +97,10 @@
         <activity
             android:name="com.dev.lishabora.Views.Trader.Activities.FirstTimeLaunch"
             android:label="@string/title_activity_first_time_launch"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.dev.lishabora.Views.Trader.Activities.Payouts"
+            android:label="@string/title_activity_payouts"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

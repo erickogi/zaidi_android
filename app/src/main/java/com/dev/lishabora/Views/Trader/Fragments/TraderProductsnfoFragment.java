@@ -176,6 +176,11 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
 
         listAdapterAll = new ProductsAdapter(getActivity(), productsModels, new OnclickRecyclerListener() {
             @Override
+            public void onSwipe(int adapterPosition, int direction) {
+
+            }
+
+            @Override
             public void onClickListener(int position) {
 
                 if (productsModels.get(position).isSelected()) {
@@ -341,6 +346,11 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
         recyclerView = view.findViewById(R.id.recyclerView);
         listAdapter = new ProductsAdapter(getActivity(), filteredProductsModel, new OnclickRecyclerListener() {
             @Override
+            public void onSwipe(int adapterPosition, int direction) {
+
+            }
+
+            @Override
             public void onClickListener(int position) {
 
 
@@ -448,9 +458,9 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
     private class CustomListener implements View.OnClickListener {
         AlertDialog dialog;
 
-        private LinkedList<ProductsModel> selectedProducts;
+        private List<ProductsModel> selectedProducts;
 
-        public CustomListener(AlertDialog alertDialogAndroid, LinkedList<ProductsModel> selectedProducts) {
+        public CustomListener(AlertDialog alertDialogAndroid, List<ProductsModel> selectedProducts) {
             dialog = alertDialogAndroid;
             this.selectedProducts = selectedProducts;
 
@@ -461,15 +471,17 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
 
 
             if (selectedProducts != null && selectedProducts.size() > 0) {
+                Log.d("createproducts", " products" + selectedProducts.size() + selectedProducts.get(0).getNames());
 
                 tViewModel.createProducts(selectedProducts, false).observe(TraderProductsnfoFragment.this, responseModel -> {
                     avi.smoothToHide();
                     dialog.dismiss();
-                    Snackbar.make(view, responseModel.getResultDescription(), Snackbar.LENGTH_LONG).show();
+                    if (responseModel != null) {
+                        Snackbar.make(view, responseModel.getResultDescription(), Snackbar.LENGTH_LONG).show();
+                    }
                 });
 
             } else {
-                Log.d("ReTrReq", " Dialog is has closed nu");
 
                 // dialog.dismiss();
             }

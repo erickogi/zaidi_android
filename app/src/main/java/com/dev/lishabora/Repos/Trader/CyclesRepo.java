@@ -45,6 +45,11 @@ public class CyclesRepo {
         return db.cyclesDao().getCycleByKeyID(key);
     }
 
+    public LiveData<Cycles> getCycleByKeyCode(String code, boolean b) {
+        return db.cyclesDao().getCycleByKeyCode(code);
+
+    }
+
     private static class insertUnitsAsyncTask extends AsyncTask<List<Cycles>, Void, Boolean> {
 
         private CyclesDao mAsyncTaskDao;

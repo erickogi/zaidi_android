@@ -98,6 +98,11 @@ public class FragmentAdminDashboard extends Fragment {
 
         listAdapter = new ChartsAdapter(getActivity(), chartModels, new OnclickRecyclerListener() {
             @Override
+            public void onSwipe(int adapterPosition, int direction) {
+
+            }
+
+            @Override
             public void onClickListener(int position) {
 //                fragment = new FragmentEntityList();
 //                Bundle args = new Bundle();

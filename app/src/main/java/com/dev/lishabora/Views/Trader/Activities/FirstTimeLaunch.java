@@ -45,6 +45,7 @@ public class FirstTimeLaunch extends AppCompatActivity implements StepperLayout.
 
     @Override
     public void onCompleted(View completeButton) {
+        prefrenceManager.setIsTraderFirstTime(false);
         finish();
 
     }

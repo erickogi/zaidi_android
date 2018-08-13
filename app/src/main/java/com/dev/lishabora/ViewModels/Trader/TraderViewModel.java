@@ -7,6 +7,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.ProductsModel;
@@ -17,6 +18,7 @@ import com.dev.lishabora.Models.RoutesModel;
 import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.Repos.ProductsRepo;
 import com.dev.lishabora.Repos.RoutesRepo;
+import com.dev.lishabora.Repos.Trader.CollectionsRepo;
 import com.dev.lishabora.Repos.Trader.CyclesRepo;
 import com.dev.lishabora.Repos.Trader.FarmerRepo;
 import com.dev.lishabora.Repos.Trader.UnitsRepo;
@@ -44,6 +46,7 @@ public class TraderViewModel extends AndroidViewModel
     UnitsRepo unitsRepo;
     CyclesRepo cyclesRepo;
     ProductsRepo productsRepo;
+    CollectionsRepo collectionsRepo;
     Gson gson = new Gson();
     private MutableLiveData createRouteSuccess;
     private MutableLiveData updateRouteSuccess;
@@ -53,21 +56,32 @@ public class TraderViewModel extends AndroidViewModel
     private MutableLiveData updateProductSuccess;
     private MutableLiveData deleteProductSuccess;
 
+    private MutableLiveData createCollectionSuccess;
+    private MutableLiveData updateCollectionSuccess;
+    private MutableLiveData deleteCollectionSuccess;
+
+
 
     private LiveData farmer;
+
     private MutableLiveData createFarmerSuccess;
     private MutableLiveData updateFarmerSuccess;
     private MutableLiveData deleteFarmerSuccess;
+
     private MutableLiveData unit;
     private LiveData<List<FamerModel>> farmers;
     private MutableLiveData route;
     private LiveData<List<UnitsModel>> units;
-    private MutableLiveData cycle;
+    private LiveData cycle;
     private LiveData<List<RoutesModel>> routes;
     private LiveData<List<Cycles>> cycles;
 
     private LiveData<List<ProductsModel>> products;
     private MutableLiveData productss;
+
+    private LiveData<List<Collection>> collections;
+    private List<Collection> collectionslist;
+
 
 
     private Application application;
@@ -85,6 +99,7 @@ public class TraderViewModel extends AndroidViewModel
         routesRepo = new RoutesRepo(application);
         cyclesRepo = new CyclesRepo(application);
         productsRepo = new ProductsRepo(application);
+        collectionsRepo = new CollectionsRepo(application);
 //
 //        farmers.setValue(farmerRepo.fetchAllData(false));
 //        routes.setValue(routesRepo.fetchAllData(false));
@@ -400,6 +415,47 @@ public class TraderViewModel extends AndroidViewModel
         return cycles;
     }
 
+    public LiveData<Cycles> getCycles(String code, boolean isOnline) {
+        if (cycle == null) {
+            cycle = new MutableLiveData()
+            ;
+        }
+        if (isOnline) {
+            if (isOnline) {
+                Request.Companion.getResponse(ApiConstants.Companion.getCycles(), getTraderCycleObject(), "", new ResponseCallback() {
+                            @Override
+                            public void response(ResponseModel responseModel) {
+                                JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
+                                Type listType = new TypeToken<LinkedList<Cycles>>() {
+                                }.getType();
+                                // routesModel = ;
+                                Log.d("ReTrUp", "routes update called");
+                                cyclesRepo.insert(gson.fromJson(jsonArray, listType));
+
+
+                            }
+
+                            @Override
+                            public void response(ResponseObject responseModel) {
+                                JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
+                                Type listType = new TypeToken<LinkedList<Cycles>>() {
+                                }.getType();
+                                // routesModel = ;
+                                Log.d("ReTrUp", "routes update called");
+                                cyclesRepo.insert(gson.fromJson(jsonArray, listType));
+
+                            }
+                        }
+                );
+            }
+        }
+        cycle = (cyclesRepo.getCycleByKeyCode(code, false));
+
+
+        return cycle;
+    }
+
+
 
 
     public void refreshFarmers(JSONObject jsonObject, boolean fetchFromOnline) {
@@ -633,6 +689,27 @@ public class TraderViewModel extends AndroidViewModel
         return createProductSuccess;
     }
 
+    public LiveData<ResponseModel> createCollections(Collection collection, boolean b) {
+        if (this.createCollectionSuccess == null) {
+        }
+        this.createCollectionSuccess = new MutableLiveData();
+
+        if (b) {
+
+        } else {
+
+            collectionsRepo.insert(collection);
+            ResponseModel responseModel = new ResponseModel();
+            responseModel.setResultCode(1);
+            responseModel.setResultDescription("Added");
+            responseModel.setData(null);
+            createCollectionSuccess.setValue(responseModel);
+
+
+        }
+        return createCollectionSuccess;
+    }
+
     public LiveData<ResponseModel> updateProduct(ProductsModel productsModel, boolean b) {
         if (this.updateProductSuccess == null) {
         }
@@ -784,4 +861,10 @@ public class TraderViewModel extends AndroidViewModel
     }
 
 
+    public List<Collection> getCollectionByDateByFarmer(String code, String date) {
+        if (collectionslist == null) {
+            collectionslist = new LinkedList<>();
+        }
+        return collectionsRepo.getCollectionByFarmerByDa(code, date);
+    }
 }

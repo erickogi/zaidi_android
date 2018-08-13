@@ -1,8 +1,10 @@
 package com.dev.lishabora.Adapters;
 
 import android.content.Context;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -13,20 +15,20 @@ import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.Views.Trader.FarmerConst;
 import com.dev.lishaboramobile.R;
 
-import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.LinkedList;
 
 import github.nisrulz.recyclerviewhelper.RVHAdapter;
 
-public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> implements RVHAdapter {
+public class FarmersDragAdapter extends RecyclerView.Adapter<FarmerViewHolder> implements RVHAdapter {
 
     private Context context;
     private LinkedList<FamerModel> modelList;
     private OnclickRecyclerListener listener;
     private OnStartDragListener mDragStartListener;
     private OnStartDragListener mmDragStartListener;
-    public FarmersAdapter(Context context, LinkedList<FamerModel> modelList, OnclickRecyclerListener listener, OnStartDragListener dragStartListener) {
+
+    public FarmersDragAdapter(Context context, LinkedList<FamerModel> modelList, OnclickRecyclerListener listener, OnStartDragListener dragStartListener) {
         this.context = context;
         mmDragStartListener = dragStartListener;
 
@@ -35,7 +37,7 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
 
     }
 
-    public FarmersAdapter(Context context, LinkedList<FamerModel> modelList, OnclickRecyclerListener listener) {
+    public FarmersDragAdapter(Context context, LinkedList<FamerModel> modelList, OnclickRecyclerListener listener) {
         this.context = context;
         // mDragStartListener = dragStartListener;
 
@@ -59,7 +61,7 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
 
         itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.farmer_card, parent, false);
 
-        return new FarmerViewHolder(itemView, listener);
+        return new FarmerViewHolder(itemView);
     }
 
 
@@ -124,39 +126,39 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
 
         //farmer.getSynced()==1||farmer.getArchived()==1)
 
-//        try {
-//            if (mDragStartListener != null) {
-//                holder.itemVew.setOnTouchListener((v, event) -> {
-//                    if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
-//                        try {
-//                            if (mDragStartListener != null) {
-//                                mDragStartListener.onStartDrag(holder);
-//                                holder.lBig.setVisibility(View.GONE);
-//                            } else {
-//                                holder.lBig.setVisibility(View.VISIBLE);
-//                            }
-//                        } catch (Exception nm) {
-//                            nm.printStackTrace();
-//                        }
-//                    }
-//                    return false;
-//                });
-//                holder.itemVew.setOnLongClickListener(v -> {
-//                    try {
-//                        if (mDragStartListener != null) {
-//                            mDragStartListener.onStartDrag(holder);
-//                        }
-//                    } catch (Exception nm) {
-//                        nm.printStackTrace();
-//                    }
-//                    return false;
-//                });
-//
-//
-//            }
-//        } catch (Exception nm) {
-//            nm.printStackTrace();
-//        }
+        try {
+            if (mDragStartListener != null) {
+                holder.itemVew.setOnTouchListener((v, event) -> {
+                    if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+                        try {
+                            if (mDragStartListener != null) {
+                                mDragStartListener.onStartDrag(holder);
+                                holder.lBig.setVisibility(View.GONE);
+                            } else {
+                                holder.lBig.setVisibility(View.VISIBLE);
+                            }
+                        } catch (Exception nm) {
+                            nm.printStackTrace();
+                        }
+                    }
+                    return false;
+                });
+                holder.itemVew.setOnLongClickListener(v -> {
+                    try {
+                        if (mDragStartListener != null) {
+                            mDragStartListener.onStartDrag(holder);
+                        }
+                    } catch (Exception nm) {
+                        nm.printStackTrace();
+                    }
+                    return false;
+                });
+
+
+            }
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
 
     }
 
@@ -167,24 +169,10 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
     }
 
 
-//    @Override
-//    public void onItemDismiss(int position) {
-//        modelList.remove(position);
-//        notifyItemRemoved(position);
-//    }
-
     @Override
     public void onItemDismiss(int position, int direction) {
-        //modelList.remove(position);
-        //notifyItemRemoved(position);
-        WeakReference<OnclickRecyclerListener> listenerWeakReference;
-        listenerWeakReference = new WeakReference<>(listener);
-
-        if (listener != null) {
-            listenerWeakReference.get().onSwipe(position, direction);
-        }
-
-
+        modelList.remove(position);
+        notifyItemRemoved(position);
     }
 
     @Override
@@ -192,10 +180,7 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
         try {
 
 
-            Collections.swap(modelList, fromPosition, toPosition);
-            FarmerConst.setSortedFamerModels(modelList);
-            notifyItemMoved(fromPosition, toPosition);
-
+            swap(fromPosition, toPosition);
 
         } catch (Exception ignored) {
 
@@ -203,6 +188,18 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
 
 
         return true;
+    }
+
+    private void remove(int position) {
+        modelList.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    private void swap(int firstPosition, int secondPosition) {
+        Collections.swap(modelList, firstPosition, secondPosition);
+        FarmerConst.setSortedFamerModels(modelList);
+        notifyItemMoved(firstPosition, secondPosition);
+
     }
 
 }

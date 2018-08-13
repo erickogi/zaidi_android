@@ -233,6 +233,8 @@ public class AdminProductsFragment extends Fragment {
 
         alertDialogAndroid.show();
 
+        // getActivity().get
+
 //        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
 //        theButton.setOnClickListener(new CustomListener(alertDialogAndroid, true));
 
@@ -374,6 +376,11 @@ public class AdminProductsFragment extends Fragment {
     void initProductsList() {
         if (NetworkUtils.Companion.isConnectionFast(Objects.requireNonNull(getActivity()))) {
             listAdapter = new ProductsAdapter(getActivity(), filteredProductsModels, new OnclickRecyclerListener() {
+                @Override
+                public void onSwipe(int adapterPosition, int direction) {
+
+                }
+
                 @Override
                 public void onClickListener(int position) {
 
