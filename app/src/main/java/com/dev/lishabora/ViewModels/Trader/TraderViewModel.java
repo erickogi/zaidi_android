@@ -81,6 +81,7 @@ public class TraderViewModel extends AndroidViewModel
 
     private LiveData<List<Collection>> collections;
     private List<Collection> collectionslist;
+    private Collection collection;
 
 
 
@@ -107,6 +108,11 @@ public class TraderViewModel extends AndroidViewModel
 //        cycles.setValue(cyclesRepo.fetchAllData(false));
     }
 
+    public Collection getLastCollection(String cyclecode) {
+
+
+        return collectionsRepo.getLast(cyclecode);
+    }
     public LiveData<ResponseModel> getProductsModels(JSONObject jsonObject, boolean fetchFromOnline) {
 
         if (this.productss == null) {

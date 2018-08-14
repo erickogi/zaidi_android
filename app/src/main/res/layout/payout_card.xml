@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.MaterialComponents.CardView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/green_color_picker"
+    app:cardUseCompatPadding="true"
+    app:strokeColor="@color/divider"
+    app:strokeWidth="0dp">
+
+    <RelativeLayout
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/green_color_picker">
+
+
+        <LinearLayout
+            android:id="@+id/linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+
+                android:orientation="horizontal"
+                android:padding="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+
+                        <com.dev.customfonts.MyTextView_Roboto_Bold
+                            android:id="@+id/txt_date_start"
+                            android:layout_width="0dp"
+
+
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="12/4/2018"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                            android:textSize="11sp"
+                            android:textStyle="italic" />
+
+                        <com.dev.customfonts.MyTextView_Roboto_Bold
+                            android:id="@+id/txt_cycle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Weekly"
+                            android:textColor="@color/black"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txt_date_end"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:layout_weight="1"
+                            android:text="12/12/2018"
+                            android:textAlignment="viewEnd"
+                            android:textSize="11sp"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorPrimary" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="horizontal">
+
+                                <com.dev.customfonts.MyTextView_Roboto_Bold
+
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+
+                                    android:text="Balance  :"
+
+                                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                                    android:textColor="#000000"
+                                    android:textSize="11.5sp"
+                                    android:textStyle="bold" />
+
+                                <com.dev.customfonts.MyTextView_Roboto_Bold
+                                    android:id="@+id/txt_Bal_out"
+                                    android:layout_width="0dp"
+
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="20000"
+                                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                                    android:textSize="12.5sp"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="horizontal">
+
+                                <com.dev.customfonts.MyTextView_Roboto_Bold
+
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+
+                                    android:text="Milk  :"
+
+                                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                                    android:textColor="#000000"
+                                    android:textSize="12.5sp"
+                                    android:textStyle="bold" />
+
+                                <com.dev.customfonts.MyTextView_Roboto_Bold
+                                    android:id="@+id/txt_milk_totals"
+                                    android:layout_width="0dp"
+
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="2000 Ksh"
+                                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                                    android:textSize="12.5sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="horizontal">
+
+                                <com.dev.customfonts.MyTextView_Roboto_Bold
+
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+
+                                    android:text="Loans :"
+
+                                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                                    android:textColor="#000000"
+                                    android:textSize="11.5sp"
+                                    android:textStyle="bold" />
+
+                                <com.dev.customfonts.MyTextView_Roboto_Bold
+                                    android:id="@+id/txt_loans_total"
+                                    android:layout_width="0dp"
+
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="20"
+                                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                                    android:textSize="12.5sp"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="horizontal">
+
+                                <com.dev.customfonts.MyTextView_Roboto_Bold
+
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+
+                                    android:layout_weight="1"
+                                    android:text="Orders :"
+                                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+
+                                    android:textColor="#000000"
+                                    android:textSize="11.5sp"
+                                    android:textStyle="bold" />
+
+                                <com.dev.customfonts.MyTextView_Roboto_Bold
+                                    android:id="@+id/txt_orders_total"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+
+                                    android:layout_weight="1"
+
+                                    android:text="40000"
+                                    android:textAlignment="viewStart"
+                                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                                    android:textSize="12.5sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimary" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <View
+
+                        android:id="@+id/status_view"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="5dp"
+                        android:background="@color/green_color_picker"
+                        android:src="@drawable/round" />
+
+                    <TextView
+                        android:id="@+id/txt_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
+                        android:text="Approved "
+                        android:textColor="@color/green_color_picker"
+                        android:textStyle="italic|bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <com.dev.customfonts.MyTextView_Roboto_Bold
+
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+
+                        android:text="Approved :"
+
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textSize="11.5sp"
+                        android:textStyle="italic" />
+
+                    <com.dev.customfonts.MyTextView_Roboto_Bold
+                        android:id="@+id/txt_approved_farmers"
+                        android:layout_width="0dp"
+
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="80%"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textSize="12.5sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <com.dev.customfonts.MyTextView_Roboto_Bold
+
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+
+                        android:text="Pending : "
+
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textSize="11.5sp"
+                        android:textStyle="italic" />
+
+                    <com.dev.customfonts.MyTextView_Roboto_Bold
+                        android:id="@+id/txt_pending_farmers"
+                        android:layout_width="0dp"
+
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="20%"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textSize="12.5sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/divider"
+                android:visibility="gone" />
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</android.support.design.card.MaterialCardView>

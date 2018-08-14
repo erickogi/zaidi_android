@@ -44,4 +44,7 @@ public interface CollectionsDao {
 
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE farmerCode = :code AND dayDate LIKE :date")
     List<Collection> getCollectionByFarmerByDate(String code, String date);
+
+    @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE cycleCode = :cycleCode ORDER BY id DESC LIMIT 1")
+    Collection getLast(String cycleCode);
 }

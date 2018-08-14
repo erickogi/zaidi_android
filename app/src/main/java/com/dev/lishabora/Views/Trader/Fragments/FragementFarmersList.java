@@ -198,8 +198,9 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                         unitTotal.setText(String.valueOf(Double.valueOf(edtTodayAm.getText().toString()) * price));
 
                     }
+                } else {
+                    unitTotal.setText("");
                 }
-                unitTotal.setText("");
             }
         });
         edtTodayPm.addTextChangedListener(new TextWatcher() {
@@ -288,16 +289,14 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             c.setSynced(0);
             c.setSynced(false);
 
-            Log.d("tagssearch", c.getFarmerCode() + "  Milk " + c.getMilkCollected() + "   Dtae  " + c.getDayDate());
+            //mViewModel.getL
 
-            mViewModel.createCollections(c, false).observe(FragementFarmersList.this, new Observer<ResponseModel>() {
-                @Override
-                public void onChanged(@Nullable ResponseModel responseModel) {
-                    if (responseModel.getResultCode() == 1) {
-                        snack(responseModel.getResultDescription());
-                    }
 
+            mViewModel.createCollections(c, false).observe(FragementFarmersList.this, responseModel -> {
+                if (responseModel.getResultCode() == 1) {
+                    snack(responseModel.getResultDescription());
                 }
+
             });
 
             // c.setMilkCollected();

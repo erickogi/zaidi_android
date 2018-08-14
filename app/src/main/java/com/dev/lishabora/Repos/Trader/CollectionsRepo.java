@@ -38,6 +38,10 @@ public class CollectionsRepo {
         return collectionsDao.getCollectionByFarmerByDate(code, date);
     }
 
+    public Collection getLast(String cycleCode) {
+        return collectionsDao.getLast(cycleCode);
+    }
+
     public void insert(Collection collection) {
 
         new insertAsyncTask(collectionsDao).execute(collection);
