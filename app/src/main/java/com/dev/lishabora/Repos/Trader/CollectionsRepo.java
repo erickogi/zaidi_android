@@ -38,6 +38,10 @@ public class CollectionsRepo {
         return collectionsDao.getCollectionByFarmerByDate(code, date);
     }
 
+    public LiveData<List<Collection>> getCollectionByPayout(String payout) {
+        return collectionsDao.getCollectionByPayoutNumber(payout);
+    }
+
     public Collection getLast(String cycleCode) {
         return collectionsDao.getLast(cycleCode);
     }

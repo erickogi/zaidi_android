@@ -31,9 +31,11 @@ public interface CollectionsDao {
     LiveData<Collection> getCollectionById(int keyid);
 
 
-    @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE dayDate =:date")
+    @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE daydate =:date")
     LiveData<List<Collection>> getCollectionByDate(String date);
 
+    @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE payoutnumber =:payoutnumber")
+    LiveData<List<Collection>> getCollectionByPayoutNumber(String payoutnumber);
 
     @Update
     void updateRecord(Collection collection);

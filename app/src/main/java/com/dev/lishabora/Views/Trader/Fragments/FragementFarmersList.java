@@ -284,10 +284,15 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             c.setDayDate(DateTimeUtils.Companion.getToday());
             c.setTimeOfDay(ampm);
             c.setMilkCollected(milk);
+            c.setLoanAmountGivenOutPrice("0");
+            c.setOrderGivenOutPrice("0");
+
             c.setLoanId("");
             c.setOrderId("");
             c.setSynced(0);
             c.setSynced(false);
+            c.setApproved(0);
+
 
             //mViewModel.getL
 

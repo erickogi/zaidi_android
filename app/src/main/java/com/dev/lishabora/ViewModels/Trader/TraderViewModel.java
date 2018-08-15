@@ -10,6 +10,7 @@ import android.util.Log;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Models.ProductsModel;
 import com.dev.lishabora.Models.RPFSearchModel;
 import com.dev.lishabora.Models.ResponseModel;
@@ -21,6 +22,7 @@ import com.dev.lishabora.Repos.RoutesRepo;
 import com.dev.lishabora.Repos.Trader.CollectionsRepo;
 import com.dev.lishabora.Repos.Trader.CyclesRepo;
 import com.dev.lishabora.Repos.Trader.FarmerRepo;
+import com.dev.lishabora.Repos.Trader.PayoutsRepo;
 import com.dev.lishabora.Repos.Trader.UnitsRepo;
 import com.dev.lishabora.Utils.Network.ApiConstants;
 import com.dev.lishabora.Utils.Network.Request;
@@ -47,6 +49,8 @@ public class TraderViewModel extends AndroidViewModel
     CyclesRepo cyclesRepo;
     ProductsRepo productsRepo;
     CollectionsRepo collectionsRepo;
+    PayoutsRepo payoutsRepo;
+
     Gson gson = new Gson();
     private MutableLiveData createRouteSuccess;
     private MutableLiveData updateRouteSuccess;
@@ -73,6 +77,7 @@ public class TraderViewModel extends AndroidViewModel
     private MutableLiveData route;
     private LiveData<List<UnitsModel>> units;
     private LiveData cycle;
+    private Cycles cycle0ne;
     private LiveData<List<RoutesModel>> routes;
     private LiveData<List<Cycles>> cycles;
 
@@ -83,6 +88,10 @@ public class TraderViewModel extends AndroidViewModel
     private List<Collection> collectionslist;
     private Collection collection;
 
+
+    private LiveData<List<Payouts>> payouts;
+    private LiveData<Payouts> payout;
+    private Payouts payoutOne;
 
 
     private Application application;
@@ -101,6 +110,14 @@ public class TraderViewModel extends AndroidViewModel
         cyclesRepo = new CyclesRepo(application);
         productsRepo = new ProductsRepo(application);
         collectionsRepo = new CollectionsRepo(application);
+        payoutsRepo = new PayoutsRepo(application);
+
+
+//
+        payouts = new MutableLiveData<>();
+        payout = new MutableLiveData<>();
+        payoutOne = new Payouts();
+
 //
 //        farmers.setValue(farmerRepo.fetchAllData(false));
 //        routes.setValue(routesRepo.fetchAllData(false));
@@ -230,6 +247,21 @@ public class TraderViewModel extends AndroidViewModel
         }
 
         return farmers;
+    }
+
+    public LiveData<List<FamerModel>> getFarmersByCycle(String code) {
+        if (farmers == null) {
+            farmers = new MutableLiveData();
+            farmers = (farmerRepo.getFarmersByCycle(code));
+        }
+
+        return farmers;
+    }
+
+    public int getFarmersCountByCycle(String code) {
+        return (farmerRepo.getFarmersCountByCycle(code));
+
+
     }
 
     public LiveData<FamerModel> getLastFarmer() {
@@ -700,9 +732,27 @@ public class TraderViewModel extends AndroidViewModel
         }
         this.createCollectionSuccess = new MutableLiveData();
 
-        if (b) {
+
+        Payouts p = getLastPayout(collection.getCycleCode());
+        Cycles c = getCycleO(collection.getCycleCode());
+        int farmerCountPerCycle = getFarmersCountByCycle(collection.getCycleCode());
+
+        if (p == null) {
+
+
+            Payouts payouts = new Payouts();
+            payouts.setCycleCode(collection.getCycleCode());
+            payouts.setCyclename(c.getCycle());
+            payouts.setFarmersCount("" + farmerCountPerCycle);
+            payouts.setStatus(0);
+
+            payouts.setStartDate();
 
         } else {
+
+        }
+
+
 
             collectionsRepo.insert(collection);
             ResponseModel responseModel = new ResponseModel();
@@ -712,7 +762,7 @@ public class TraderViewModel extends AndroidViewModel
             createCollectionSuccess.setValue(responseModel);
 
 
-        }
+
         return createCollectionSuccess;
     }
 
@@ -873,4 +923,80 @@ public class TraderViewModel extends AndroidViewModel
         }
         return collectionsRepo.getCollectionByFarmerByDa(code, date);
     }
+
+    public LiveData<List<Collection>> getCollectionByDateByPayout(String payoutnumber) {
+        if (collections == null) {
+            collections = new MutableLiveData<>();
+        }
+        return collectionsRepo.getCollectionByPayout(payoutnumber);
+    }
+
+
+    public LiveData<List<Payouts>> fetchAll(boolean isOnline) {
+        return payoutsRepo.fetchAllData(false);
+    }
+
+    public LiveData<Payouts> getPayoutById(int id) {
+        return payoutsRepo.getPayoutById(id);
+    }
+
+    public LiveData<List<Payouts>> getPayoutsByCycleCode(String code) {
+        return payoutsRepo.getPayoutsByCycleCode(code);
+    }
+
+    public LiveData<List<Payouts>> getPayoutsByStatus(String status) {
+        return payoutsRepo.getPayoutsByStatus(status);
+    }
+
+    public LiveData<List<Payouts>> getPayoutsByPayoutsByDates(String startDate, String endDate) {
+        return payoutsRepo.getPayoutsByPayoutsByDate(startDate, endDate);
+    }
+
+    public LiveData<List<Payouts>> getPayoutsByPayoutNumber(String number) {
+        return payoutsRepo.getPayoutsByPayout(number);
+    }
+
+    public Payouts getLastPayout(String cycleCode) {
+        return payoutsRepo.getLast(cycleCode);
+    }
+
+    public Payouts getLastPayout() {
+        return payoutsRepo.getLast();
+    }
+
+    public void updatePayout(Payouts payouts) {
+        payoutsRepo.upDateRecord(payouts);
+    }
+
+    public void deletePayout(Payouts payouts) {
+        payoutsRepo.deleteRecord(payouts);
+    }
+
+    public void insertPayout(Payouts payouts) {
+        payoutsRepo.insert(payouts);
+    }
+
+    public void insertPayout(List<Payouts> payouts) {
+        payoutsRepo.insert(payouts);
+    }
+
+    public LiveData<Cycles> getCycle(String cycleCode) {
+        if (cycle == null) {
+            cycle = new MutableLiveData();
+        }
+
+        cycle = (cyclesRepo.getCycleByKeyCode(cycleCode, false));
+
+
+        return cycle;
+    }
+
+    public Cycles getCycleO(String cycleCode) {
+
+        cycle0ne = (cyclesRepo.getCycleByKeyCodeOne(cycleCode, false));
+
+
+        return cycle0ne;
+    }
+
 }

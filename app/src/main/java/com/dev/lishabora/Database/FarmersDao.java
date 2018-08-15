@@ -126,6 +126,10 @@ public interface FarmersDao {
     LiveData<List<FamerModel>> getFarmerByStatusDummy(int dummy);
 
 
+    @Query("SELECT * FROM FARMERS WHERE  cyclecode= :code")
+    LiveData<List<FamerModel>> getAllByCycleCode(String code);
 
+    @Query("SELECT COUNT(id) FROM FARMERS WHERE cyclecode = :code")
+    int getFarmersCountByCycle(String code);
 
 }

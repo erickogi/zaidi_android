@@ -144,6 +144,7 @@
 
             <LinearLayout
 
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -462,6 +463,37 @@
 
             </LinearLayout>
 
+            <android.support.design.widget.TextInputLayout
+
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.2"
+
+                android:textColorHint="@color/black">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edt_loan"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:enabled="false"
+                    android:gravity="center"
+                    android:hint="Loan given"
+                    android:inputType="number"
+
+
+                    android:maxLength="4" />
+
+            </android.support.design.widget.TextInputLayout>
+
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/products"
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
     </ScrollView>

@@ -22,7 +22,7 @@ public class Collection {
     private String dayDateTime;
 
 
-    private String cycleNumber;
+    private String payoutnumber;
     private String cycleId;
 
     private String cycleStartedOn;
@@ -126,12 +126,12 @@ public class Collection {
         this.dayDateTime = dayDateTime;
     }
 
-    public String getCycleNumber() {
-        return cycleNumber;
+    public String getPayoutnumber() {
+        return payoutnumber;
     }
 
-    public void setCycleNumber(String cycleNumber) {
-        this.cycleNumber = cycleNumber;
+    public void setPayoutnumber(String payoutnumber) {
+        this.payoutnumber = payoutnumber;
     }
 
     public String getCycleStartedOn() {

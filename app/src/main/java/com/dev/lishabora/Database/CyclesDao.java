@@ -36,6 +36,10 @@ public interface CyclesDao {
     @Query("SELECT * FROM CYCLES WHERE code =:code")
     LiveData<Cycles> getCycleByKeyCode(String code);
 
+    @Query("SELECT * FROM CYCLES WHERE code =:code")
+    Cycles getCycleByKeyCodeOne(String code);
+
+
 
 
     @Query("SELECT * FROM CYCLES WHERE status =:status")

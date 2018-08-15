@@ -50,6 +50,11 @@ public class CyclesRepo {
 
     }
 
+    public Cycles getCycleByKeyCodeOne(String code, boolean b) {
+        return db.cyclesDao().getCycleByKeyCodeOne(code);
+
+    }
+
     private static class insertUnitsAsyncTask extends AsyncTask<List<Cycles>, Void, Boolean> {
 
         private CyclesDao mAsyncTaskDao;

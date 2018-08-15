@@ -40,6 +40,21 @@ public class FarmerRepo {
         }
     }
 
+
+    public LiveData<List<FamerModel>> getFarmersByCycle(String code) {
+
+        farmersDao = db.farmersDao();
+        return farmersDao.getAllByCycleCode(code);
+
+    }
+
+    public int getFarmersCountByCycle(String code) {
+
+        farmersDao = db.farmersDao();
+        return farmersDao.getFarmersCountByCycle(code);
+
+    }
+
     public LiveData<List<FamerModel>> fetchAllData(boolean isOnline, String route) {
         if (isOnline) {
             return null;
