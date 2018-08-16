@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.dev.lishabora.Models.Trader.TraderModel;
+import com.dev.lishabora.Utils.PayoutsCyclesDatesUtills;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishaboramobile.R;
 import com.stepstone.stepper.BlockingStep;
@@ -29,6 +30,7 @@ public class TraderCyclesInfoFragment extends Fragment implements BlockingStep, 
     TextView txtStartDay, txtEndDay;
     private View view;
     private PrefrenceManager prefrenceManager;
+    private int startDayNumber, endDayNumber;
 
     public void hideKeyboardFrom(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -92,44 +94,65 @@ public class TraderCyclesInfoFragment extends Fragment implements BlockingStep, 
 
             case R.id.sun:
 
-                txtStartDay.setText(R.string.sunday);
-                txtEndDay.setText("Saturday");
+                startDayNumber = 1;
+                endDayNumber = 7;
+
+                txtStartDay.setText(PayoutsCyclesDatesUtills.getDayByNumber(startDayNumber));
+                txtEndDay.setText(PayoutsCyclesDatesUtills.getDayByNumber(endDayNumber));
+
 
                 break;
             case R.id.mon:
 
-                txtStartDay.setText("Monday");
-                txtEndDay.setText("Sunday");
+                startDayNumber = 2;
+                endDayNumber = 1;
+
+                txtStartDay.setText(PayoutsCyclesDatesUtills.getDayByNumber(startDayNumber));
+                txtEndDay.setText(PayoutsCyclesDatesUtills.getDayByNumber(endDayNumber));
 
                 break;
             case R.id.tue:
 
-                txtStartDay.setText("Tuesday");
-                txtEndDay.setText("Monday");
+                startDayNumber = 3;
+                endDayNumber = 2;
+
+                txtStartDay.setText(PayoutsCyclesDatesUtills.getDayByNumber(startDayNumber));
+                txtEndDay.setText(PayoutsCyclesDatesUtills.getDayByNumber(endDayNumber));
 
                 break;
             case R.id.wed:
 
-                txtStartDay.setText("Wednesday");
-                txtEndDay.setText("Tuesday");
+                startDayNumber = 4;
+                endDayNumber = 3;
+
+                txtStartDay.setText(PayoutsCyclesDatesUtills.getDayByNumber(startDayNumber));
+                txtEndDay.setText(PayoutsCyclesDatesUtills.getDayByNumber(endDayNumber));
 
                 break;
             case R.id.thur:
 
-                txtStartDay.setText("Thursday");
-                txtEndDay.setText("Wednesday");
+                startDayNumber = 5;
+                endDayNumber = 4;
+
+                txtStartDay.setText(PayoutsCyclesDatesUtills.getDayByNumber(startDayNumber));
+                txtEndDay.setText(PayoutsCyclesDatesUtills.getDayByNumber(endDayNumber));
 
                 break;
             case R.id.fri:
 
-                txtStartDay.setText("Friday");
-                txtEndDay.setText("Thursday");
+                startDayNumber = 6;
+                endDayNumber = 5;
+
+                txtStartDay.setText(PayoutsCyclesDatesUtills.getDayByNumber(startDayNumber));
+                txtEndDay.setText(PayoutsCyclesDatesUtills.getDayByNumber(endDayNumber));
 
                 break;
             case R.id.sat:
+                startDayNumber = 7;
+                endDayNumber = 6;
 
-                txtStartDay.setText("Saturday");
-                txtEndDay.setText("Friday");
+                txtStartDay.setText(PayoutsCyclesDatesUtills.getDayByNumber(startDayNumber));
+                txtEndDay.setText(PayoutsCyclesDatesUtills.getDayByNumber(endDayNumber));
 
                 break;
             default:
@@ -142,6 +165,10 @@ public class TraderCyclesInfoFragment extends Fragment implements BlockingStep, 
         traderModel = prefrenceManager.getTraderModel();
         txtStartDay.setText(traderModel.getCycleStartDay());
         txtEndDay.setText(traderModel.getCycleEndDay());
+
+        startDayNumber = traderModel.getCycleStartDayNumber();
+        endDayNumber = traderModel.getCycleEndDayNumber();
+
 
 
         hideKeyboardFrom(Objects.requireNonNull(getContext()), getView());
@@ -157,8 +184,14 @@ public class TraderCyclesInfoFragment extends Fragment implements BlockingStep, 
     @Override
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
 
-        traderModel.setCycleStartDay(txtStartDay.getText().toString());
-        traderModel.setCycleEndDay(txtEndDay.getText().toString());
+
+        traderModel.setCycleStartDay(PayoutsCyclesDatesUtills.getDayByNumber(startDayNumber));
+        traderModel.setCycleEndDay(PayoutsCyclesDatesUtills.getDayByNumber(endDayNumber));
+
+        traderModel.setCycleStartDayNumber(startDayNumber);
+        traderModel.setCycleEndDayNumber(endDayNumber);
+
+
         prefrenceManager.setLoggedUser(traderModel);
         callback.goToNextStep();
     }

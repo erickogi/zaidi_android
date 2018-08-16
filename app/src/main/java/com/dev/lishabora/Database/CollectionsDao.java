@@ -37,6 +37,10 @@ public interface CollectionsDao {
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE payoutnumber =:payoutnumber")
     LiveData<List<Collection>> getCollectionByPayoutNumber(String payoutnumber);
 
+
+    @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE payoutnumber =:payoutnumber")
+    List<Collection> getCollectionByPayoutNumberListOne(String payoutnumber);
+
     @Update
     void updateRecord(Collection collection);
 

@@ -42,7 +42,6 @@ import com.dev.lishabora.Models.RPFSearchModel;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.RoutesModel;
 import com.dev.lishabora.Models.UnitsModel;
-import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.Draggable.helper.OnStartDragListener;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
@@ -151,11 +150,11 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
         names.setText(famerModel.getNames());
         balance.setText(famerModel.getTotalbalance());
 
-        today.setText(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate()));
-        day3.setText(DateTimeUtils.Companion.getDayPrevious(1));
-        day2.setText(DateTimeUtils.Companion.getDayPrevious(2));
-        day1.setText(DateTimeUtils.Companion.getDayPrevious(3));
-
+//        today.setText(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(),"E"));
+//        day3.setText(DateTimeUtils.Companion.getDayPrevious(1));
+//        day2.setText(DateTimeUtils.Companion.getDayPrevious(2));
+//        day1.setText(DateTimeUtils.Companion.getDayPrevious(3));
+//
 
         btnPositive = mView.findViewById(R.id.btn_positive);
         btnNegative = mView.findViewById(R.id.btn_negative);

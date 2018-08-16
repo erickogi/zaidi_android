@@ -20,6 +20,7 @@ import com.dev.lishabora.Repos.Trader.PayoutsRepo;
 import com.dev.lishabora.Repos.Trader.UnitsRepo;
 import com.dev.lishabora.Views.Trader.FarmerConst;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class PayoutsVewModel extends AndroidViewModel {
@@ -42,6 +43,7 @@ public class PayoutsVewModel extends AndroidViewModel {
 
     private LiveData<List<Collection>> collections;
     private LiveData<Collection> collection;
+    private List<Collection> collectionListOne;
     private Collection collectionOne;
 
 
@@ -50,6 +52,7 @@ public class PayoutsVewModel extends AndroidViewModel {
     private Cycles cycleOne;
 
     private LiveData<List<FamerModel>> farmers;
+    private List<FamerModel> farmersListOne;
     private LiveData<FamerModel> farmer;
     private FamerModel farmerOne;
 
@@ -168,6 +171,12 @@ public class PayoutsVewModel extends AndroidViewModel {
         return farmer;
     }
 
+    public int getFarmersCountByCycle(String code) {
+        return (farmerRepo.getFarmersCountByCycle(code));
+
+
+    }
+
     public LiveData<List<FamerModel>> getFarmerByStatusRoute(int status, String route) {
 
         Log.d("byRouteByStatus", "Status " + status + "\n Route " + route);
@@ -232,6 +241,20 @@ public class PayoutsVewModel extends AndroidViewModel {
 
 
         return cycle;
+    }
+
+    public LiveData<List<Collection>> getCollectionByDateByPayout(String payoutnumber) {
+        if (collections == null) {
+            collections = new MutableLiveData<>();
+        }
+        return collectionsRepo.getCollectionByPayout(payoutnumber);
+    }
+
+    public List<Collection> getCollectionByDateByPayoutListOne(String payoutnumber) {
+        if (collectionListOne == null) {
+            collectionListOne = new LinkedList<>();
+        }
+        return collectionsRepo.getCollectionByPayoutListOne(payoutnumber);
     }
 
 

@@ -45,6 +45,9 @@ public class TraderModel implements Serializable {
     private String cycleStartDay;
     private String cycleEndDay;
 
+    private int cycleStartDayNumber;
+    private int cycleEndDayNumber;
+
 
 
 
@@ -52,6 +55,22 @@ public class TraderModel implements Serializable {
     private   int deleted ;
     private   int synced ;
     private   int dummy ;
+
+    public int getCycleStartDayNumber() {
+        return cycleStartDayNumber;
+    }
+
+    public void setCycleStartDayNumber(int cycleStartDayNumber) {
+        this.cycleStartDayNumber = cycleStartDayNumber;
+    }
+
+    public int getCycleEndDayNumber() {
+        return cycleEndDayNumber;
+    }
+
+    public void setCycleEndDayNumber(int cycleEndDayNumber) {
+        this.cycleEndDayNumber = cycleEndDayNumber;
+    }
 
     public String getCycleStartDay() {
         return cycleStartDay;

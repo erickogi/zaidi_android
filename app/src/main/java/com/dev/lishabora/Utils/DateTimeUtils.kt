@@ -1,6 +1,7 @@
 package com.dev.lishabora.Utils
 
 import android.text.format.DateUtils
+import android.util.Log
 import org.joda.time.DateTime
 import org.joda.time.Period
 import org.joda.time.format.DateTimeFormat
@@ -53,6 +54,14 @@ class DateTimeUtils {
 
         }
 
+        fun calcDiff(startDate: DateTime?, endDate: DateTime?): Period {
+            val START_DT = if (startDate == null) null else startDate
+            val END_DT = if (endDate == null) null else endDate
+
+            return Period(START_DT, END_DT)
+
+        }
+
         fun conver2Date(mydate: String, formatFrom: String): Date? {
             val format1 = SimpleDateFormat(formatFrom)
 
@@ -65,6 +74,12 @@ class DateTimeUtils {
 
             return date
         }
+
+        fun conver2Date(mydate: String): DateTime? {
+            val formatter = DateTimeFormat.forPattern(this.FormatSmall)
+            return formatter.parseDateTime(mydate)
+        }
+
 
         fun convert2String(date: DateTime): String {
             val dt = DateTime()
@@ -111,16 +126,23 @@ class DateTimeUtils {
             return date
         }
 
-        fun getDayOfWeek(dt: DateTime): String {
-            val fmt = DateTimeFormat.forPattern("EEE")
+        fun getTodayDateL(): Date {
+
+            val date = DateTime().toDate()
+
+            return date
+        }
+
+        fun getDayOfWeek(dt: DateTime, pattern: String): String {
+            val fmt = DateTimeFormat.forPattern(pattern)
             val strEnglish = fmt.print(dt)
 
             return strEnglish
         }
 
-        fun getDayPrevious(dif: Int): String {
+        fun getDayPrevious(dif: Int, pattern: String): String {
             val oneDayAgo = getTodayDate().minusDays(dif)
-            return getDayOfWeek(oneDayAgo)
+            return getDayOfWeek(oneDayAgo, pattern)
 
 
         }
@@ -128,6 +150,32 @@ class DateTimeUtils {
         fun getDatePrevious(i: Int): String {
             return convert2String(getTodayDate().minusDays(i))
 
+
+        }
+
+        fun addDays(date: DateTime, i: Int): DateTime {
+            val day = date.plusDays(i)
+            return day
+
+        }
+
+        fun addDaysString(date: DateTime, i: Int): String {
+
+            val day = date.plusDays(i)
+            val fmt = DateTimeFormat.forPattern(this.FormatSmall)
+            return fmt.print(day)
+
+        }
+
+        fun isPastLastDay(endDate: String): Boolean {
+
+            val today = getTodayDate().withHourOfDay(0)
+            val enddate = conver2Date(endDate)!!.withHourOfDay(23)
+            val n = today.isAfter(enddate)
+
+            Log.d("isAfter", " Today " + today + "  Enddate " + enddate + "  Is After " + n)
+
+            return n
 
         }
     }

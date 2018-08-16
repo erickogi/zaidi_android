@@ -106,7 +106,7 @@ public class FragmentAdminDashboard extends Fragment {
             public void onClickListener(int position) {
 //                fragment = new FragmentEntityList();
 //                Bundle args = new Bundle();
-//                args.putInt("Entity", AppConstants.TRADER);
+//                args.putInt("Entity", PayoutsCyclesDatesUtills.TRADER);
 //                fragment.setArguments(args);
 //                popOutFragments();
 //                setUpView();

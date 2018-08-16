@@ -218,6 +218,7 @@ public class FarmerRepo {
         return db.farmersDao().getFramersByNames(name);
     }
 
+
     public LiveData<List<FamerModel>> getFramersByRoute(String route) {
         return db.farmersDao().getFramersByRoute(route);
     }

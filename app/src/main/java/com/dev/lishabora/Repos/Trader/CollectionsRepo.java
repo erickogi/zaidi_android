@@ -42,6 +42,10 @@ public class CollectionsRepo {
         return collectionsDao.getCollectionByPayoutNumber(payout);
     }
 
+    public List<Collection> getCollectionByPayoutListOne(String payout) {
+        return collectionsDao.getCollectionByPayoutNumberListOne(payout);
+    }
+
     public Collection getLast(String cycleCode) {
         return collectionsDao.getLast(cycleCode);
     }

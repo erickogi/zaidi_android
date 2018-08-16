@@ -24,8 +24,10 @@ import com.dev.lishabora.Repos.Trader.CyclesRepo;
 import com.dev.lishabora.Repos.Trader.FarmerRepo;
 import com.dev.lishabora.Repos.Trader.PayoutsRepo;
 import com.dev.lishabora.Repos.Trader.UnitsRepo;
+import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.Network.ApiConstants;
 import com.dev.lishabora.Utils.Network.Request;
+import com.dev.lishabora.Utils.PayoutsCyclesDatesUtills;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.Utils.ResponseCallback;
 import com.dev.lishabora.Views.Trader.FarmerConst;
@@ -95,6 +97,7 @@ public class TraderViewModel extends AndroidViewModel
 
 
     private Application application;
+    private PrefrenceManager prefrenceManager;
 
 
     public TraderViewModel(@NonNull Application application) {
@@ -111,6 +114,7 @@ public class TraderViewModel extends AndroidViewModel
         productsRepo = new ProductsRepo(application);
         collectionsRepo = new CollectionsRepo(application);
         payoutsRepo = new PayoutsRepo(application);
+        prefrenceManager = new PrefrenceManager(application);
 
 
 //
@@ -735,9 +739,18 @@ public class TraderViewModel extends AndroidViewModel
 
         Payouts p = getLastPayout(collection.getCycleCode());
         Cycles c = getCycleO(collection.getCycleCode());
+        if (c == null) {
+            insertCycles();
+            c = getCycleO(collection.getCycleCode());
+
+        }
         int farmerCountPerCycle = getFarmersCountByCycle(collection.getCycleCode());
 
         if (p == null) {
+
+            int tradersStartDay = prefrenceManager.getTraderModel().getCycleStartDayNumber();
+            int tradersEndDay = prefrenceManager.getTraderModel().getCycleEndDayNumber();
+
 
 
             Payouts payouts = new Payouts();
@@ -746,24 +759,135 @@ public class TraderViewModel extends AndroidViewModel
             payouts.setFarmersCount("" + farmerCountPerCycle);
             payouts.setStatus(0);
 
-            payouts.setStartDate();
+            PayoutsCyclesDatesUtills.EndAndStart endAndStart = new PayoutsCyclesDatesUtills.EndAndStart();
+            endAndStart = PayoutsCyclesDatesUtills.getPayoutStartEndDate(c.getCode(), new PayoutsCyclesDatesUtills.EndAndStart(tradersStartDay, tradersEndDay), null);
+            payouts.setStartDate(endAndStart.getStartDate());
+            payouts.setEndDate(endAndStart.getEndDate());
 
-        } else {
+            payouts.setApprovedCards("");
+            payouts.setMilkTotal("");
+            payouts.setBalance("");
+            payouts.setLoanTotal("");
+            payouts.setPayoutnumber(1);
 
-        }
 
+            insertPayout(payouts);
+            collection.setCycleStartedOn(payouts.getStartDate());
+            collection.setPayoutnumber(payouts.getPayoutnumber());
 
 
             collectionsRepo.insert(collection);
             ResponseModel responseModel = new ResponseModel();
             responseModel.setResultCode(1);
-            responseModel.setResultDescription("Added");
+            responseModel.setResultDescription("Collection Inserted \nNew  payout \n(No other  payouts available)");
             responseModel.setData(null);
             createCollectionSuccess.setValue(responseModel);
 
 
 
+        } else {
+
+
+            if (DateTimeUtils.Companion.isPastLastDay(p.getEndDate())) {
+
+
+                int tradersStartDay = prefrenceManager.getTraderModel().getCycleStartDayNumber();
+                int tradersEndDay = prefrenceManager.getTraderModel().getCycleEndDayNumber();
+
+
+                Payouts plast = getLastPayout();
+
+                Payouts payouts = new Payouts();
+                payouts.setCycleCode(collection.getCycleCode());
+                payouts.setCyclename(c.getCycle());
+                payouts.setFarmersCount("" + farmerCountPerCycle);
+                payouts.setStatus(0);
+
+                PayoutsCyclesDatesUtills.EndAndStart endAndStart;
+                endAndStart = PayoutsCyclesDatesUtills.getPayoutStartEndDate(c.getCode(), new PayoutsCyclesDatesUtills.EndAndStart(tradersStartDay, tradersEndDay), new PayoutsCyclesDatesUtills.EndAndStart(p.getStartDate(), p.getEndDate()));
+                payouts.setStartDate(endAndStart.getStartDate());
+                payouts.setEndDate(endAndStart.getEndDate());
+
+                payouts.setApprovedCards("");
+                payouts.setMilkTotal("");
+                payouts.setBalance("");
+                payouts.setLoanTotal("");
+                payouts.setPayoutnumber(plast.getPayoutnumber() + 1);
+
+
+                insertPayout(payouts);
+                collection.setCycleStartedOn(payouts.getStartDate());
+                collection.setPayoutnumber(payouts.getPayoutnumber());
+
+
+                collectionsRepo.insert(collection);
+                ResponseModel responseModel = new ResponseModel();
+                responseModel.setResultCode(1);
+                responseModel.setResultDescription("Collection Inserted \nNew  payout \nOther cycles payouts available");
+                responseModel.setData(null);
+                createCollectionSuccess.setValue(responseModel);
+
+
+            } else {
+                collection.setCycleStartedOn(p.getStartDate());
+                collection.setPayoutnumber(p.getPayoutnumber());
+
+                collectionsRepo.insert(collection);
+                ResponseModel responseModel = new ResponseModel();
+                responseModel.setResultCode(1);
+                responseModel.setResultDescription("Collection Inserted \nExisting payout");
+                responseModel.setData(null);
+                createCollectionSuccess.setValue(responseModel);
+
+            }
+
+
+        }
+
+
+
+
+ 
+
         return createCollectionSuccess;
+    }
+
+    private void insertCycles() {
+        Cycles cycles = new Cycles();
+        cycles.setCode(1);
+        cycles.setCycle("Weekly");
+        cycles.setPeriod("7");
+        cycles.setStatus("1");
+
+        Cycles cycles1 = new Cycles();
+        cycles1.setCode(1);
+        cycles1.setCycle("Bi Weekly");
+        cycles1.setPeriod("14");
+        cycles1.setStatus("1");
+
+
+        Cycles cycles2 = new Cycles();
+        cycles2.setCode(1);
+        cycles2.setCycle("Semi Monthly");
+        cycles2.setPeriod("14");
+        cycles2.setStatus("1");
+
+
+        Cycles cycles3 = new Cycles();
+        cycles3.setCode(4);
+        cycles3.setCycle("Monthly");
+        cycles3.setPeriod("30");
+        cycles3.setStatus("1");
+
+        List<Cycles> cycles4 = new LinkedList<>();
+        cycles4.add(cycles);
+        cycles4.add(cycles1);
+        cycles4.add(cycles2);
+        cycles4.add(cycles3);
+
+        cyclesRepo.insert(cycles4);
+
+
     }
 
     public LiveData<ResponseModel> updateProduct(ProductsModel productsModel, boolean b) {

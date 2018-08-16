@@ -39,7 +39,7 @@ public class PayoutsViewHolder extends RecyclerView.ViewHolder implements View.O
 
         approvedCount = itemView.findViewById(R.id.txt_approved_farmers);
         unApprovedCount = itemView.findViewById(R.id.txt_pending_farmers);
-        balance = itemView.findViewById(R.id.txt_balance);
+        balance = itemView.findViewById(R.id.txt_Bal_out);
 
 
     }

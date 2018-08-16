@@ -3,6 +3,7 @@ package com.dev.lishabora.Views.Trader.Fragments;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -166,10 +167,10 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         edtTodayPm = mView.findViewById(R.id.edt_pm);
         names.setText(famerModel.getNames());
         balance.setText(famerModel.getTotalbalance());
-        today.setText(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate()));
-        day3.setText(DateTimeUtils.Companion.getDayPrevious(1));
-        day2.setText(DateTimeUtils.Companion.getDayPrevious(2));
-        day1.setText(DateTimeUtils.Companion.getDayPrevious(3));
+        today.setText(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "E"));
+        day3.setText(DateTimeUtils.Companion.getDayPrevious(1, "E"));
+        day2.setText(DateTimeUtils.Companion.getDayPrevious(2, "E"));
+        day1.setText(DateTimeUtils.Companion.getDayPrevious(3, "E"));
 
         unitName.setText(unitsModel.getUnit());
         unitPrice.setText(unitsModel.getUnitprice());
@@ -443,31 +444,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             }
 
         }));
-
-//        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(listAdapter);
-//        mItemTouchHelper = new ItemTouchHelper(callback);
-//
-//        mItemTouchHelper.attachToRecyclerView(recyclerView);
-//
-//
-//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//            }
-//
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                boolean isBottomReached = !recyclerView.canScrollVertically(1);
-//                // if (isBottomReached && FarmerConst.getSearchFamerModels().getItemCount() > 0) {// Toast.makeText(getContext(),"Bottom reached",Toast.LENGTH_SHORT).show();
-//                // }
-//            }
-//        });
-
-
-//
-
 
 
 
@@ -1011,7 +987,18 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     private void snack(String msg) {
         if (view != null) {
             Snackbar.make(view, msg, Snackbar.LENGTH_SHORT)
-                    .setAction("Action", null).show();
+                    .setAction("Action", null);//.show();
+
+            AlertDialog.Builder d = new AlertDialog.Builder(getContext());
+            d.setMessage(msg);
+            d.setCancelable(true);
+            d.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            d.show();
 
         }
         Log.d("SnackMessage", msg);
@@ -1339,7 +1326,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
             }
         });
-        mViewModel.getCycles(isCycles).observe(this, cycles -> {
+        mViewModel.getCycles(true).observe(this, cycles -> {
             if (cycles != null && cycles.size() > 0) {
                 prefrenceManager.setIsCyclesListFirst(false);
                 FragementFarmersList.this.getCycles = cycles;

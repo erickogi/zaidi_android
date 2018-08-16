@@ -5,7 +5,7 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
-@Entity(tableName = "payouts", indices = {@Index(value = {"cyclenumber"}, unique = true)})
+@Entity(tableName = "payouts", indices = {@Index(value = {"payoutnumber"}, unique = true)})
 
 public class Payouts {
     @PrimaryKey(autoGenerate = true)

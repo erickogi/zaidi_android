@@ -22,7 +22,7 @@ public class Collection {
     private String dayDateTime;
 
 
-    private String payoutnumber;
+    private int payoutnumber;
     private String cycleId;
 
     private String cycleStartedOn;
@@ -126,11 +126,11 @@ public class Collection {
         this.dayDateTime = dayDateTime;
     }
 
-    public String getPayoutnumber() {
+    public int getPayoutnumber() {
         return payoutnumber;
     }
 
-    public void setPayoutnumber(String payoutnumber) {
+    public void setPayoutnumber(int payoutnumber) {
         this.payoutnumber = payoutnumber;
     }
 
@@ -151,7 +151,11 @@ public class Collection {
     }
 
     public String getMilkCollected() {
-        return milkCollected;
+        if (!milkCollected.isEmpty() && !milkCollected.equals("")) {
+            return milkCollected;
+        } else {
+            return "0.0";
+        }
     }
 
     public void setMilkCollected(String milkCollected) {
@@ -191,7 +195,11 @@ public class Collection {
     }
 
     public String getLoanAmountGivenOutPrice() {
-        return loanAmountGivenOutPrice;
+        if (!loanAmountGivenOutPrice.isEmpty() && !loanAmountGivenOutPrice.equals("")) {
+            return loanAmountGivenOutPrice;
+        } else {
+            return "0.0";
+        }
     }
 
     public void setLoanAmountGivenOutPrice(String loanAmountGivenOutPrice) {
@@ -207,7 +215,11 @@ public class Collection {
     }
 
     public String getOrderGivenOutPrice() {
-        return orderGivenOutPrice;
+        if (!orderGivenOutPrice.isEmpty() && !orderGivenOutPrice.equals("")) {
+            return orderGivenOutPrice;
+        } else {
+            return "0.0";
+        }
     }
 
     public void setOrderGivenOutPrice(String orderGivenOutPrice) {

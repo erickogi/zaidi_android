@@ -52,6 +52,9 @@ public class PrefrenceManager {
     private static final String cycleStart = "cyclestart";
     private static final String cycleEnd = "cycleend";
 
+    private static final String cyclestartdayNumber = "cyclestartnumberend";
+    private static final String cycleenddayNumber = "cycleendnumber";
+
 
     private static final String routesSettingsDone = "isroutesdone";
     private static final String productsSettingsDone = "isProductSettingsDone";
@@ -164,6 +167,9 @@ public class PrefrenceManager {
         editor.putString(cycleStart, trader.getCycleStartDay());
         editor.putString(cycleEnd, trader.getCycleEndDay());
 
+        editor.putInt(cyclestartdayNumber, trader.getCycleStartDayNumber());
+        editor.putInt(cycleenddayNumber, trader.getCycleEndDayNumber());
+
         editor.commit();
 
     }
@@ -187,6 +193,9 @@ public class PrefrenceManager {
         traderModel.setTransactiontime(pref.getString(transactiontime, null));
         traderModel.setCycleStartDay(pref.getString(cycleStart, ""));
         traderModel.setCycleEndDay(pref.getString(cycleEnd, ""));
+
+        traderModel.setCycleStartDayNumber(pref.getInt(cyclestartdayNumber, 0));
+        traderModel.setCycleEndDayNumber(pref.getInt(cycleenddayNumber, 0));
 
         return traderModel;
 

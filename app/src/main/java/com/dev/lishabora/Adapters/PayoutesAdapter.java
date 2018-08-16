@@ -42,7 +42,7 @@ public class PayoutesAdapter extends RecyclerView.Adapter<PayoutsViewHolder> {
     public PayoutsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = null;
 
-        itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_card, parent, false);
+        itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.payout_card, parent, false);
 
         return new PayoutsViewHolder(itemView, listener);
     }
@@ -66,7 +66,7 @@ public class PayoutesAdapter extends RecyclerView.Adapter<PayoutsViewHolder> {
 
 
         if (model.getStatus() == 1) {
-            holder.status.setText("Active");
+            //  holder.status.setText("Active");
             holder.status.setTextColor(context.getResources().getColor(R.color.green_color_picker));
             holder.background.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
             holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
@@ -74,13 +74,13 @@ public class PayoutesAdapter extends RecyclerView.Adapter<PayoutsViewHolder> {
 
         } else if (model.getStatus() == 0) {
 
-            holder.status.setText("Deleted");
+            //  holder.status.setText("Deleted");
             holder.status.setTextColor(context.getResources().getColor(R.color.red));
             holder.background.setBackgroundColor(context.getResources().getColor(R.color.red));
             holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.red));
 
         } else {
-            holder.status.setText("In-Active");
+            // holder.status.setText("In-Active");
             holder.status.setTextColor(context.getResources().getColor(R.color.blue_color_picker));
             holder.background.setBackgroundColor(context.getResources().getColor(R.color.blue_color_picker));
             holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.blue_color_picker));

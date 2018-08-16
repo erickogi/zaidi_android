@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dev.lishabora.Models.Cycles;
+import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Trader.FarmerConst;
 import com.dev.lishaboramobile.R;
@@ -91,42 +92,12 @@ public class FragmentCycleDetails extends Fragment implements BlockingStep, View
     }
 
     private void setUpSpinners() {
-//        mViewModel.getCycles(true).observe(this, new Observer<List<Cycles>>() {
-//            @Override
-//            public void onChanged(@Nullable List<Cycles> cycles) {
-//
-//                if (cycles != null && cycles.size() > 0) {
-//                    new PrefrenceManager(getContext()).setIsCyclesListFirst(false);
-//                    FragmentCycleDetails.this.cycles = cycles;
-//                    String units[] = new String[cycles.size()];
-//
-//                    // units[0]="Choose Unit ";
-//                    for (int a = 0; a < cycles.size(); a++) {
-//                        units[a] = cycles.get(a).getCycle();
-//
-//                    }
-//                    spinner.setItems(units);
-//
-//                }
-//            }
-//        });
-        spinner.setItems("Weekly", "Monthly", "Bi-Monthly", "");
+
+        spinner.setItems("Weekly", "Bi-Weekly", "Semi-Monthly", "Monthly");
 
 
         spinner.setOnItemSelectedListener((MaterialSpinner.OnItemSelectedListener<String>) (view, position, id, item) -> {
-            if (position == 0) {
-                isWeekly = true;
-                SELECTED = WEEKLY;
-                setUpCalender(position);
-            } else {
-                if (position == 1) {
-                    SELECTED = MONTHLY;
-                } else if (position == 2) {
-                    SELECTED = BIMONTHLY;
-                }
-                isWeekly = false;
-                lcyclestart.setVisibility(View.GONE);
-            }
+            SELECTED = position + 1;
         });
     }
 
@@ -136,66 +107,25 @@ public class FragmentCycleDetails extends Fragment implements BlockingStep, View
 
 
 
-
-//        CalendarView calendarView = view.findViewById(R.id.calendarView);
-//        calendarView.setOnDayClickListener(eventDay -> {
-//            events = new ArrayList<>();
-//            Calendar calendar = eventDay.getCalendar();
-//            if (position == 1) {
-//                for (int a = 0; a < 7; a++) {
-//                    calendar.add(Calendar.DAY_OF_MONTH, a);
-//                    events.add(new EventDay(calendar, R.drawable.notification_background));
-//
-//                }
-//                calendarView.setEvents(events);
-//            } else if (position == 2) {
-//                for (int a = 0; a < 7; a++) {
-//                    calendar.add(Calendar.DAY_OF_MONTH, a);
-//                    events.add(new EventDay(calendar, R.drawable.notification_background));
-//
-//                }
-//                calendarView.setEvents(events);
-//            } else if (position == 3) {
-//                for (int a = 0; a < 7; a++) {
-//                    calendar.add(Calendar.DAY_OF_MONTH, a);
-//                    events.add(new EventDay(calendar, R.drawable.notification_background));
-//
-//                }
-//                calendarView.setEvents(events);
-//            }
-//        });
-//
-
     }
 
 
     @Override
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
-//        FarmerConst.getFamerModel().setCyclecode("" + SELECTED);
-//        FarmerConst.getFamerModel().setCyclename(spinner.getItems().get(spinner.getSelectedIndex()).toString());
-//
-//        FarmerConst.getFamerModel().setCycleStartDate("");
-//        FarmerConst.getFamerModel().setCycleStartDay("");
-//        FarmerConst.getFamerModel().setCycleStartEndDay("");
-//        callback.goToNextStep();
+
 
     }
 
     @Override
     public void onCompleteClicked(StepperLayout.OnCompleteClickedCallback callback) {
+        PrefrenceManager prefrenceManager = new PrefrenceManager(getContext());
         FarmerConst.getFamerModel().setCyclecode("" + SELECTED);
         FarmerConst.getFamerModel().setCyclename(spinner.getItems().get(spinner.getSelectedIndex()).toString());
 
-        String startDay = "";
-        String endDay = "";
-        String price = "";
-        if (isWeekly) {
-            startDay = txtStartDay.getText().toString();
-            endDay = txtEndDay.getText().toString();
-        }
-        FarmerConst.getFamerModel().setCycleStartDate(startDay);
-        FarmerConst.getFamerModel().setCycleStartDay(startDay);
-        FarmerConst.getFamerModel().setCycleStartEndDay(endDay);
+
+        FarmerConst.getFamerModel().setCycleStartDate(prefrenceManager.getTraderModel().getCycleStartDay());
+        FarmerConst.getFamerModel().setCycleStartDay(prefrenceManager.getTraderModel().getCycleStartDay());
+        FarmerConst.getFamerModel().setCycleStartEndDay(prefrenceManager.getTraderModel().getCycleEndDay());
 
         callback.complete();
     }
@@ -210,15 +140,7 @@ public class FragmentCycleDetails extends Fragment implements BlockingStep, View
     @Override
     public VerificationError verifyStep() {
 
-        if (SELECTED == WEEKLY) {
-            if (isWeekly && isStartSelected) {
-                return null;
-            } else if (isWeekly && !isStartSelected) {
-                return new VerificationError("Select start day");
-            } else {
-                return null;
-            }
-        } else if (SELECTED > 0) {
+        if (SELECTED > 0) {
             return null;
 
         } else {
