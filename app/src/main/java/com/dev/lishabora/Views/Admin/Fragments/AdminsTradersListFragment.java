@@ -270,7 +270,7 @@ public class AdminsTradersListFragment extends Fragment {
 //            if (mViewModel != null && tradersController != null) {
 //                startAnim();
 //                mViewModel.refresh(getSearchObject(), true);
-//            }
+//            }24
 //        });
 //
 //        chipGroup.setOnCheckedChangeListener((chipGroup, i) -> {

@@ -52,6 +52,7 @@ public class PayoutesAdapter extends RecyclerView.Adapter<PayoutsViewHolder> {
     public void onBindViewHolder(PayoutsViewHolder holder, int position) {
         Payouts model = modelList.get(position);
 
+
         holder.startDate.setText(model.getStartDate());
         holder.endDate.setText(model.getEndDate());
         holder.cycleName.setText(model.getCyclename());

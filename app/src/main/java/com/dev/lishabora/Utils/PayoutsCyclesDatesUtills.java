@@ -1,9 +1,10 @@
 package com.dev.lishabora.Utils;
 
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import org.joda.time.DateTime;
-import org.joda.time.Period;
+import org.joda.time.Days;
 
 public class PayoutsCyclesDatesUtills {
 
@@ -13,6 +14,7 @@ public class PayoutsCyclesDatesUtills {
     private static final int WEEKLY_CYCLE_CODE = 1;
 
     public static EndAndStart getPayoutStartEndDate(int cycleCode, @Nullable EndAndStart tradersEndAndStart, @Nullable EndAndStart lastEndStartDate) {
+        Log.d("period deffrence days", "" + cycleCode);
 
         switch (cycleCode) {
             case WEEKLY_CYCLE_CODE:
@@ -52,13 +54,11 @@ public class PayoutsCyclesDatesUtills {
         EndAndStart dates = new EndAndStart();
 
         DateTime today = DateTimeUtils.Companion.getTodayDate();
-
         DateTime endOfMonth = today.dayOfMonth().withMaximumValue();
         DateTime startOfMonth = today.dayOfMonth().withMinimumValue();
 
-
-        Period p = DateTimeUtils.Companion.calcDiff(today, startOfMonth);
-        if (p.getDays() > 15) {
+        int p = Days.daysBetween(startOfMonth.toLocalDate(), today.toLocalDate()).getDays();
+        if (p > 15) {
             dates.setStartDate(DateTimeUtils.Companion.convert2String(DateTimeUtils.Companion.addDays(startOfMonth, 15)));
             dates.setEndDate(DateTimeUtils.Companion.convert2String(endOfMonth));
 
@@ -78,6 +78,16 @@ public class PayoutsCyclesDatesUtills {
         if (lastEndStartDate != null) {
             DateTime lastStartDate = DateTimeUtils.Companion.conver2Date(lastEndStartDate.getStartDate());
             DateTime lastEndDate = DateTimeUtils.Companion.conver2Date(lastEndStartDate.getEndDate());
+            if (DateTimeUtils.Companion.isPastLastDay(DateTimeUtils.Companion.convert2String(lastEndDate)) && DateTimeUtils.Companion.isPastLastDay(DateTimeUtils.Companion.addDaysString(lastEndDate, 13))) {
+                int traderStartDayNumber = tradersEndAndStart.getStartDayNumber();
+                int todayNumber = getNumberByDate(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "EEEE"));
+
+                dates.setStartDate(DateTimeUtils.Companion.getDatePrevious(todayNumber - traderStartDayNumber));
+                dates.setEndDate(DateTimeUtils.Companion.addDaysString(DateTimeUtils.Companion.conver2Date(dates.getStartDate()), 13));
+
+
+                return dates;
+            }
 
 
             dates.setStartDate(DateTimeUtils.Companion.addDaysString(lastStartDate, 14));
@@ -86,7 +96,7 @@ public class PayoutsCyclesDatesUtills {
             return dates;
         } else {
             int traderStartDayNumber = tradersEndAndStart.getStartDayNumber();
-            int todayNumber = getNumberByDate(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "EEE"));
+            int todayNumber = getNumberByDate(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "EEEE"));
 
             dates.setStartDate(DateTimeUtils.Companion.getDatePrevious(todayNumber - traderStartDayNumber));
             dates.setEndDate(DateTimeUtils.Companion.addDaysString(DateTimeUtils.Companion.conver2Date(dates.getStartDate()), 13));
@@ -106,7 +116,7 @@ public class PayoutsCyclesDatesUtills {
 
             if (DateTimeUtils.Companion.isPastLastDay(DateTimeUtils.Companion.convert2String(lastEndDate)) && DateTimeUtils.Companion.isPastLastDay(DateTimeUtils.Companion.addDaysString(lastEndDate, 6))) {
                 int traderStartDayNumber = tradersEndAndStart.getStartDayNumber();
-                int todayNumber = getNumberByDate(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "EEE"));
+                int todayNumber = getNumberByDate(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "EEEE"));
 
                 dates.setStartDate(DateTimeUtils.Companion.getDatePrevious(todayNumber - traderStartDayNumber));
                 dates.setEndDate(DateTimeUtils.Companion.addDaysString(DateTimeUtils.Companion.conver2Date(dates.getStartDate()), 6));
@@ -120,8 +130,10 @@ public class PayoutsCyclesDatesUtills {
             return dates;
         } else {
             int traderStartDayNumber = tradersEndAndStart.getStartDayNumber();
-            int todayNumber = getNumberByDate(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "EEE"));
+            int todayNumber = getNumberByDate(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "EEEE"));
 
+
+            Log.d("dayNumbersLog", "Traders Start  " + traderStartDayNumber + "  Today " + todayNumber);
             dates.setStartDate(DateTimeUtils.Companion.getDatePrevious(todayNumber - traderStartDayNumber));
             dates.setEndDate(DateTimeUtils.Companion.addDaysString(DateTimeUtils.Companion.conver2Date(dates.getStartDate()), 6));
 
@@ -154,6 +166,7 @@ public class PayoutsCyclesDatesUtills {
     }
 
     public static int getNumberByDate(String number) {
+        Log.d("dayNumbersLogD", number);
         switch (number) {
             case "Sunday":
                 return 1;

@@ -5,9 +5,11 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity(tableName = "payouts", indices = {@Index(value = {"payoutnumber"}, unique = true)})
 
-public class Payouts {
+public class Payouts implements Serializable {
     @PrimaryKey(autoGenerate = true)
 
     private int id;

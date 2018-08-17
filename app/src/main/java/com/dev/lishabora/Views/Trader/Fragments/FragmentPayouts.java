@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -19,6 +20,7 @@ import com.dev.lishabora.Adapters.PayoutesAdapter;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
+import com.dev.lishabora.Views.Trader.PayoutConstants;
 import com.dev.lishaboramobile.R;
 
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +38,7 @@ public class FragmentPayouts extends Fragment {
     private LinearLayout empty_layout;
     private List<com.dev.lishabora.Models.Payouts> payouts;
     private PayoutsVewModel payoutsVewModel;
+    private Fragment fragment;
 
     public void initList() {
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -58,10 +61,23 @@ public class FragmentPayouts extends Fragment {
             public void onClickListener(int position) {
 
 
+                fragment = new FragmentPayoutColloectionsList();
+                Bundle args = new Bundle();
+                args.putSerializable("data", payouts.get(position));
+                PayoutConstants.setPayouts(payouts.get(position));
+                fragment.setArguments(args);
+                // popOutFragments();
+                setUpView();
+
+
+
+
+
             }
 
             @Override
             public void onLongClickListener(int position) {
+
 
 
             }
@@ -79,6 +95,13 @@ public class FragmentPayouts extends Fragment {
             @Override
             public void onClickListener(int adapterPosition, @NotNull View view) {
 
+                fragment = new FragmentPayoutFarmersList();
+                Bundle args = new Bundle();
+                args.putSerializable("data", payouts.get(adapterPosition));
+                PayoutConstants.setPayouts(payouts.get(adapterPosition));
+                fragment.setArguments(args);
+                // popOutFragments();
+                setUpView();
 
             }
         });
@@ -87,6 +110,22 @@ public class FragmentPayouts extends Fragment {
         listAdapter.notifyDataSetChanged();
 
 
+    }
+
+    void setUpView() {
+        if (fragment != null) {
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.frame_layout, fragment)
+                    .addToBackStack(null).commit();
+        }
+
+    }
+
+    void popOutFragments() {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        for (int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
+            fragmentManager.popBackStack();
+        }
     }
 
     @Override

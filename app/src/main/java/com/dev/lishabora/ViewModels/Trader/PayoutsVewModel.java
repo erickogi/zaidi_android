@@ -141,10 +141,13 @@ public class PayoutsVewModel extends AndroidViewModel {
     }
 
     public LiveData<List<FamerModel>> getFarmersByCycle(String code) {
+        Log.d("farmersPayouts", "Db called ");
+
         if (farmers == null) {
             farmers = new MutableLiveData();
-            farmers = (farmerRepo.getFarmersByCycle(code));
+
         }
+        farmers = (farmerRepo.getFarmersByCycle(code));
 
         return farmers;
     }

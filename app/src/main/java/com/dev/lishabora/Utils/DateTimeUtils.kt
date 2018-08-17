@@ -2,7 +2,9 @@ package com.dev.lishabora.Utils
 
 import android.text.format.DateUtils
 import android.util.Log
+import com.dev.lishabora.Models.DaysDates
 import org.joda.time.DateTime
+import org.joda.time.Days
 import org.joda.time.Period
 import org.joda.time.format.DateTimeFormat
 import java.text.ParseException
@@ -144,6 +146,29 @@ class DateTimeUtils {
             val oneDayAgo = getTodayDate().minusDays(dif)
             return getDayOfWeek(oneDayAgo, pattern)
 
+
+        }
+
+        fun getDaysAndDatesBtnDates(firstDate: String, lastDate: String): List<DaysDates> {
+            val fd = conver2Date(firstDate)
+            val ld = conver2Date(lastDate)
+            val p = calcDiff2(fd, ld)
+            val daysDates = LinkedList<DaysDates>()
+            for (i in 0..p) {
+
+                val date = addDays(fd!!, i)
+                val day = getDayOfWeek(date, "EEE")
+                daysDates.add(DaysDates(day, convert2String(date)))
+
+
+            }
+            return daysDates
+
+
+        }
+
+        private fun calcDiff2(fd: DateTime?, ld: DateTime?): Int {
+            return Days.daysBetween(fd!!.toLocalDate(), ld!!.toLocalDate()).days
 
         }
 

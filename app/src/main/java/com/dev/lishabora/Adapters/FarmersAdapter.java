@@ -58,6 +58,7 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
         View itemView = null;
 
         itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.farmer_card, parent, false);
+        //itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.farmer_card_v1, parent, false);
 
         return new FarmerViewHolder(itemView, listener);
     }

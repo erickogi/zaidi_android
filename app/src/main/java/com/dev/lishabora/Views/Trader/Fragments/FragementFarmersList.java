@@ -55,6 +55,7 @@ import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.Utils.RequestDataCallback;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Trader.Activities.CreateFarmerActivity;
+import com.dev.lishabora.Views.Trader.Activities.FirstTimeLaunch;
 import com.dev.lishabora.Views.Trader.FarmerConst;
 import com.dev.lishaboramobile.R;
 import com.google.gson.Gson;
@@ -622,11 +623,16 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
         fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(viehw -> {
-            if (isSetUp()) {
-                FragementFarmersList.this.createFarmers();
+
+            if (prefrenceManager.isTraderFirstTime()) {
+                alertDialogFirstTime();
             } else {
-                initDataOffline(true, true, true);
-                MyToast.toast("Routes, Units and Cycles Not set Up", getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                if (isSetUp()) {
+                    FragementFarmersList.this.createFarmers();
+                } else {
+                    initDataOffline(true, true, true);
+                    MyToast.toast("Routes, Units and Cycles Not set Up", getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                }
             }
         });
 
@@ -660,6 +666,34 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             initDataOffline(false, false, false);
         }
 
+
+
+    }
+
+    private void alertDialogFirstTime() {
+        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
+        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(getContext());
+        alertDialogBuilderUserInput.setTitle("Initial Account Setup ");
+        alertDialogBuilderUserInput.setCancelable(true);
+        alertDialogBuilderUserInput.setMessage("It seems to be the first time you are logging into the app.. \nTo continue using the app fully, you will need to setup you basic details ,routes , cycles and products information .\n Press SET UP to do so  thank you.");
+
+
+        alertDialogBuilderUserInput
+                .setCancelable(false)
+                .setPositiveButton("Set Up", (dialogBox, id) -> {
+                    // ToDo get user input here
+                    startActivity(new Intent(getActivity(), FirstTimeLaunch.class));
+
+
+                })
+
+        ;
+
+        AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
+        alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
+        alertDialogAndroid.show();
 
 
     }
