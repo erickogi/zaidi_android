@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:drawable/picture_frame"
+    app:cardBackgroundColor="@color/white"
     app:cardUseCompatPadding="true"
     app:strokeColor="@color/divider"
     app:strokeWidth="2dp">
@@ -12,8 +13,10 @@
 
     <RelativeLayout
         android:id="@+id/background"
+
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/white">
 
         <LinearLayout
             android:id="@+id/rl_header"
@@ -46,6 +49,7 @@
                 android:layout_weight="1"
                 android:text="12/12/2018"
                 android:textAlignment="viewEnd"
+                android:textColor="@color/black"
                 android:textStyle="italic" />
 
 
@@ -53,10 +57,10 @@
 
         <LinearLayout
             android:id="@+id/background_linear"
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/rl_header"
+            android:background="@color/white"
             android:orientation="horizontal"
             android:weightSum="3">
 
@@ -112,19 +116,25 @@
                 android:paddingBottom="2dp"
                 android:weightSum="2">
 
-                <TextView
+                <EditText
                     android:id="@+id/txt_am_milk"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:text="200.9 Ltrs" />
 
-                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="numberDecimal"
+                    android:text="200.9 Ltrs"
+                    android:textSize="15sp" />
+
+                <EditText
                     android:id="@+id/txt_pm_milk"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="40,6 Ltrs" />
+                    android:inputType="numberDecimal"
+                    android:text="40,6 Ltrs"
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
@@ -144,19 +154,24 @@
                 android:paddingBottom="2dp"
                 android:weightSum="2">
 
-                <TextView
+                <EditText
                     android:id="@+id/txt_am_loans"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:text="1200 /=" />
 
-                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="numberDecimal"
+                    android:text="1200 /="
+                    android:textSize="15sp" />
+
+                <EditText
                     android:id="@+id/txt_pm_loans"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="200 /=" />
+                    android:inputType="numberDecimal"
+                    android:text="200 /="
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
@@ -176,19 +191,25 @@
                 android:paddingBottom="2dp"
                 android:weightSum="2">
 
-                <TextView
+                <EditText
                     android:id="@+id/txt_am_orders"
                     android:layout_width="match_parent"
+
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="0.0 Ksh" />
+                    android:inputType="numberDecimal"
+                    android:text="0.0 Ksh"
+                    android:textSize="15sp" />
 
-                <TextView
+                <EditText
                     android:id="@+id/txt_pm_orders"
                     android:layout_width="match_parent"
+
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="4000 Ksh" />
+                    android:inputType="numberDecimal"
+                    android:text="4000 Ksh"
+                    android:textSize="15sp" />
 
             </LinearLayout>
 

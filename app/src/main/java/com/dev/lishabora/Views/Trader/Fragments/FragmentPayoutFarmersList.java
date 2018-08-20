@@ -1,8 +1,8 @@
 package com.dev.lishabora.Views.Trader.Fragments;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,8 +14,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.dev.lishabora.Adapters.PayoutFarmersAdapter;
@@ -25,6 +27,7 @@ import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
+import com.dev.lishabora.Views.Trader.Activities.PayCard;
 import com.dev.lishabora.Views.Trader.PayoutConstants;
 import com.dev.lishaboramobile.R;
 
@@ -32,6 +35,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class FragmentPayoutFarmersList extends Fragment {
     public TextView status, startDate, cycleName, endDate, milkTotal, loanTotal, orderTotal, balance, approvedCount, unApprovedCount;
@@ -70,6 +74,10 @@ public class FragmentPayoutFarmersList extends Fragment {
             @Override
             public void onClickListener(int position) {
 
+                Log.d("farmerCilcked", "clicked " + position);
+                Intent intent = new Intent(getActivity(), PayCard.class);
+                intent.putExtra("data", dayCollectionModels.get(position));
+                startActivity(intent);
 
             }
 
@@ -128,6 +136,40 @@ public class FragmentPayoutFarmersList extends Fragment {
 
     }
 
+    private void setSpinner() {
+        try {
+            Spinner spinner = Objects.requireNonNull(getActivity()).findViewById(R.id.spinner);
+            spinner.setVisibility(View.VISIBLE);
+            spinner.setSelection(1);
+
+
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                    if (i == 0) {
+                        Fragment fragment = new FragmentPayoutColloectionsList();
+                        ((com.dev.lishabora.Views.Trader.Activities.Payouts) getActivity()).popOutFragments();
+                        ((com.dev.lishabora.Views.Trader.Activities.Payouts) getActivity()).setUpView(fragment);
+
+
+                    } else {
+
+
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+    }
+
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -152,6 +194,7 @@ public class FragmentPayoutFarmersList extends Fragment {
         if (payouts != null) {
             setCardHeaderData(payouts);
         }
+        setSpinner();
 
     }
 
@@ -200,15 +243,12 @@ public class FragmentPayoutFarmersList extends Fragment {
 
     private void loadCollectionPayouts() {
 
-        payoutsVewModel.getCollectionByDateByPayout("" + payouts.getPayoutnumber()).observe(this, new Observer<List<Collection>>() {
-            @Override
-            public void onChanged(@Nullable List<Collection> collections) {
-                if (collections != null) {
-                    Log.d("farmersPayouts", "Collections found " + collections.size());
+        payoutsVewModel.getCollectionByDateByPayout("" + payouts.getPayoutnumber()).observe(this, collections -> {
+            if (collections != null) {
+                Log.d("farmersPayouts", "Collections found " + collections.size());
 
-                    FragmentPayoutFarmersList.this.collections = collections;
-                    setUpFarmerCollectionList();
-                }
+                FragmentPayoutFarmersList.this.collections = collections;
+                setUpFarmerCollectionList();
             }
         });
 
@@ -222,10 +262,19 @@ public class FragmentPayoutFarmersList extends Fragment {
             String milkTotal = getMilk(famerModel.getCode());
             String loanTotal = getLoan(famerModel.getCode());
             String orderTotal = getOrder(famerModel.getCode());
+            int status = getFarmerStatus(famerModel.getCode());
+            String statusText = "";
+            statusText = status == 0 ? "Pending" : "Approved";
             String balance = getBalance(milkTotal, loanTotal, orderTotal);
             collectionModels.add(new PayoutFarmersCollectionModel(
-                    famerModel.getCode(), famerModel.getNames(), milkTotal,
-                    loanTotal, orderTotal, 0, "Pending", balance
+                    famerModel.getCode(),
+                    famerModel.getNames(),
+                    milkTotal,
+                    loanTotal,
+                    orderTotal,
+                    status,
+                    statusText,
+                    balance, payouts.getPayoutnumber()
             ));
 
 
@@ -234,6 +283,27 @@ public class FragmentPayoutFarmersList extends Fragment {
         setUpList(collectionModels);
 
 
+    }
+
+    private int getFarmerStatus(String code) {
+        int status = 0;
+        int collectsNo = 0;
+        for (Collection c : collections) {
+            if (c.getFarmerCode().equals(code)) {
+                collectsNo++;
+                try {
+                    status += c.getApproved();
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
+            }
+
+        }
+        if (status >= collectsNo) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     private String getBalance(String milkTotal, String loanTotal, String orderTotal) {

@@ -268,7 +268,7 @@ public class ForgotPassPhoneFragment extends Fragment implements View.OnClickLis
         fragment = ForgotPassOtpFragment.newInstance(responseModel);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager.beginTransaction().setCustomAnimations(R.anim.left_enter, R.anim.right_out)
-                .replace(R.id.container, fragment, "fragmentWelcome").commit();
+                .replace(R.id.container, fragment, "fragmentWelcome").addToBackStack(null).commit();
 
 
     }

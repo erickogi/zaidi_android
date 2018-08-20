@@ -186,7 +186,7 @@ public class ForgotPassOtpFragment extends Fragment implements View.OnClickListe
 
         getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_enter, R.anim.left_out)
 
-                .replace(R.id.container, ForgotPassConfirmFragment.newInstance(responseModel))
+                .replace(R.id.container, ForgotPassConfirmFragment.newInstance(responseModel)).addToBackStack(null)
                 .commitNow();
 
 

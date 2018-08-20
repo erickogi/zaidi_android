@@ -32,7 +32,7 @@ public interface PayoutsDao {
 
 
     @Query("SELECT * FROM PAYOUTS WHERE payoutnumber =:payoutnumber")
-    LiveData<List<Payouts>> getPayoutsByPayoutNumber(String payoutnumber);
+    LiveData<Payouts> getPayoutsByPayoutNumber(String payoutnumber);
 
     @Query("SELECT * FROM PAYOUTS WHERE cycleCode =:cycleCode")
     LiveData<List<Payouts>> getPayoutsByCycleCode(String cycleCode);
@@ -58,5 +58,6 @@ public interface PayoutsDao {
 
     @Query("SELECT * FROM  PAYOUTS  ORDER BY id DESC LIMIT 1")
     Payouts getLast();
+
 
 }

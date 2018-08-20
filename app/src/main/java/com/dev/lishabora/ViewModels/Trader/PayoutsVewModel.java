@@ -112,9 +112,7 @@ public class PayoutsVewModel extends AndroidViewModel {
         return payoutsRepo.getPayoutsByPayoutsByDate(startDate, endDate);
     }
 
-    public LiveData<List<Payouts>> getPayoutsByPayoutNumber(String number) {
-        return payoutsRepo.getPayoutsByPayout(number);
-    }
+    LiveData<Double> milkTotal;
 
     public Payouts getLastPayout(String cycleCode) {
         return payoutsRepo.getLast(cycleCode);
@@ -151,6 +149,8 @@ public class PayoutsVewModel extends AndroidViewModel {
 
         return farmers;
     }
+
+    LiveData<Double> loanTotal;
 
     public LiveData<List<FamerModel>> getFarmers() {
         if (farmers == null) {
@@ -246,11 +246,17 @@ public class PayoutsVewModel extends AndroidViewModel {
         return cycle;
     }
 
+    LiveData<Double> orderTotal;
+
     public LiveData<List<Collection>> getCollectionByDateByPayout(String payoutnumber) {
         if (collections == null) {
             collections = new MutableLiveData<>();
         }
         return collectionsRepo.getCollectionByPayout(payoutnumber);
+    }
+
+    public LiveData<Payouts> getPayoutsByPayoutNumber(String number) {
+        return payoutsRepo.getPayoutsByPayout(number);
     }
 
     public List<Collection> getCollectionByDateByPayoutListOne(String payoutnumber) {
@@ -260,5 +266,64 @@ public class PayoutsVewModel extends AndroidViewModel {
         return collectionsRepo.getCollectionByPayoutListOne(payoutnumber);
     }
 
+    public List<FamerModel> getFarmersByCycleONe(String code) {
+        Log.d("farmersPayouts", "Db called ");
 
+        if (farmersListOne == null) {
+            farmersListOne = new LinkedList<>();
+
+        }
+        farmersListOne = (farmerRepo.getFarmersByCycleOne(code));
+
+        return farmersListOne;
+    }
+
+    public LiveData<Collection> getCollectionById(int collectionId) {
+        if (collection == null) {
+            collection = new MutableLiveData<>();
+
+        }
+        return collectionsRepo.getCollectionById(collectionId);
+    }
+
+    public LiveData<List<Collection>> getCollectionByDateByPayoutByFarmer(String payoutnumber, String farmer) {
+        if (collections == null) {
+            collections = new MutableLiveData<>();
+        }
+        return collectionsRepo.getCollectionByPayoutByFarmer(payoutnumber, farmer);
+    }
+
+    public LiveData<Double> getSumOfMilkForPayout(String farmercode, int payoutNumber) {
+        if (milkTotal == null) {
+            milkTotal = new MutableLiveData<>();
+        }
+        milkTotal = collectionsRepo.getSumOfMilkFarmerPayout(farmercode, payoutNumber);
+
+        return milkTotal;
+    }
+
+    public LiveData<Double> getSumOfLoansForPayout(String farmercode, int payoutNumber) {
+        if (loanTotal == null) {
+            loanTotal = new MutableLiveData<>();
+        }
+        loanTotal = collectionsRepo.getSumOfLoanFarmerPayout(farmercode, payoutNumber);
+
+        return loanTotal;
+    }
+
+    public LiveData<Double> getSumOfOrdersForPayout(String farmercode, int payoutNumber) {
+        if (orderTotal == null) {
+            orderTotal = new MutableLiveData<>();
+        }
+        orderTotal = collectionsRepo.getSumOfOrderFarmerPayout(farmercode, payoutNumber);
+
+        return orderTotal;
+    }
+
+
+    public void updateCollection(Collection c) {
+        if (c != null) {
+            collectionsRepo.upDateRecord(c);
+        }
+    }
 }

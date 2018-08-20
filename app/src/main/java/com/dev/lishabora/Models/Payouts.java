@@ -11,8 +11,9 @@ import java.io.Serializable;
 
 public class Payouts implements Serializable {
     @PrimaryKey(autoGenerate = true)
-
     private int id;
+
+
     private String cycleCode;
     private String startDate;
     //private String startDateMilliseconds;

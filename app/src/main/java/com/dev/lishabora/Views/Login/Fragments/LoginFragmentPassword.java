@@ -268,7 +268,7 @@ public class LoginFragmentPassword extends Fragment implements View.OnClickListe
         fragment = ForgotPassPhoneFragment.newInstance(responseModel);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager.beginTransaction().setCustomAnimations(R.anim.left_enter, R.anim.right_out)
-                .replace(R.id.container, fragment, "fragmentWelcome").commit();
+                .replace(R.id.container, fragment, "fragmentWelcome").addToBackStack(null).commit();
 
     }
 

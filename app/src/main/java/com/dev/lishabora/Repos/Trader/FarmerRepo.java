@@ -48,6 +48,14 @@ public class FarmerRepo {
 
     }
 
+    public List<FamerModel> getFarmersByCycleOne(String code) {
+
+        farmersDao = db.farmersDao();
+        return farmersDao.getAllByCycleCodeOne(code);
+
+    }
+
+
     public int getFarmersCountByCycle(String code) {
 
         farmersDao = db.farmersDao();

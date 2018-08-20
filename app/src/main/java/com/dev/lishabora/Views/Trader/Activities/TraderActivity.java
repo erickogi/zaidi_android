@@ -38,7 +38,6 @@ import com.dev.lishabora.ViewModels.Admin.AdminsViewModel;
 import com.dev.lishabora.Views.Login.Activities.LoginActivity;
 import com.dev.lishabora.Views.Login.ResetPassword;
 import com.dev.lishabora.Views.Trader.Fragments.FragementFarmersList;
-import com.dev.lishabora.Views.Trader.Fragments.FragmentPayouts;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentProductList;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentRoutes;
 import com.dev.lishaboramobile.R;
@@ -138,9 +137,9 @@ public class TraderActivity extends AppCompatActivity {
 
             @Override
             public void payoutsClicked() {
-                fragment = new FragmentPayouts();
-                popOutFragments();
-                setUpView();
+                startActivity(new Intent(TraderActivity.this, Payouts.class));
+
+
             }
         });
 

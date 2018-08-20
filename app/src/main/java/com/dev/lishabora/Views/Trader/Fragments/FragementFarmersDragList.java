@@ -296,6 +296,12 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         context = getContext();
+
+        try {
+            Objects.requireNonNull(getActivity()).setTitle("Farmers List");
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
     }
 
     @Override

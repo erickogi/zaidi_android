@@ -42,6 +42,25 @@ public class CollectionsRepo {
         return collectionsDao.getCollectionByPayoutNumber(payout);
     }
 
+    public LiveData<List<Collection>> getCollectionByPayoutByFarmer(String payout, String farmer) {
+        return collectionsDao.getCollectionByPayoutNumberByFarmer(payout, farmer);
+    }
+
+    public LiveData<Double> getSumOfMilkFarmerPayout(String farmercode, int payoutNumber) {
+        return collectionsDao.getSumOfMilkFarmerPayout(farmercode, payoutNumber);
+
+    }
+
+    public LiveData<Double> getSumOfLoanFarmerPayout(String farmercode, int payoutNumber) {
+        return collectionsDao.getSumOfLoanFarmerPayout(farmercode, payoutNumber);
+
+    }
+
+    public LiveData<Double> getSumOfOrderFarmerPayout(String farmercode, int payoutNumber) {
+        return collectionsDao.getSumOfOrderFarmerPayout(farmercode, payoutNumber);
+
+    }
+
     public List<Collection> getCollectionByPayoutListOne(String payout) {
         return collectionsDao.getCollectionByPayoutNumberListOne(payout);
     }
@@ -75,6 +94,10 @@ public class CollectionsRepo {
     private void insertSingleProduct(Collection productsModel) {
 
 
+    }
+
+    public LiveData<Collection> getCollectionById(int collectionId) {
+        return collectionsDao.getCollectionById(collectionId);
     }
 
 

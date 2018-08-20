@@ -10,6 +10,13 @@
 
     </string-array>
 
+    <string-array name="payoutsview">
+        <item>Collections View</item>
+        <item>Farmers View</item>
+
+
+    </string-array>
+
     <string name="app_name">LishaBora Mobile</string>
     <string name="title_activity_trader">TraderActivity</string>
     <string name="next">Next</string>

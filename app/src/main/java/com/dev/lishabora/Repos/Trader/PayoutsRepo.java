@@ -52,7 +52,7 @@ public class PayoutsRepo {
         return dao.getPayoutsByByDate(start, end);
     }
 
-    public LiveData<List<Payouts>> getPayoutsByPayout(String payout) {
+    public LiveData<Payouts> getPayoutsByPayout(String payout) {
         return dao.getPayoutsByPayoutNumber(payout);
     }
 

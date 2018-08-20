@@ -82,7 +82,7 @@ public class PayoutsCyclesDatesUtills {
                 int traderStartDayNumber = tradersEndAndStart.getStartDayNumber();
                 int todayNumber = getNumberByDate(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "EEEE"));
 
-                dates.setStartDate(DateTimeUtils.Companion.getDatePrevious(todayNumber - traderStartDayNumber));
+                dates.setStartDate(DateTimeUtils.Companion.getDatePrevious(getDaysToSubtractFromToday(todayNumber, traderStartDayNumber)));
                 dates.setEndDate(DateTimeUtils.Companion.addDaysString(DateTimeUtils.Companion.conver2Date(dates.getStartDate()), 13));
 
 
@@ -98,7 +98,7 @@ public class PayoutsCyclesDatesUtills {
             int traderStartDayNumber = tradersEndAndStart.getStartDayNumber();
             int todayNumber = getNumberByDate(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "EEEE"));
 
-            dates.setStartDate(DateTimeUtils.Companion.getDatePrevious(todayNumber - traderStartDayNumber));
+            dates.setStartDate(DateTimeUtils.Companion.getDatePrevious(getDaysToSubtractFromToday(todayNumber, traderStartDayNumber)));
             dates.setEndDate(DateTimeUtils.Companion.addDaysString(DateTimeUtils.Companion.conver2Date(dates.getStartDate()), 13));
 
 
@@ -118,7 +118,7 @@ public class PayoutsCyclesDatesUtills {
                 int traderStartDayNumber = tradersEndAndStart.getStartDayNumber();
                 int todayNumber = getNumberByDate(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "EEEE"));
 
-                dates.setStartDate(DateTimeUtils.Companion.getDatePrevious(todayNumber - traderStartDayNumber));
+                dates.setStartDate(DateTimeUtils.Companion.getDatePrevious(getDaysToSubtractFromToday(todayNumber, traderStartDayNumber)));
                 dates.setEndDate(DateTimeUtils.Companion.addDaysString(DateTimeUtils.Companion.conver2Date(dates.getStartDate()), 6));
 
 
@@ -132,17 +132,32 @@ public class PayoutsCyclesDatesUtills {
             int traderStartDayNumber = tradersEndAndStart.getStartDayNumber();
             int todayNumber = getNumberByDate(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "EEEE"));
 
+            int difference = todayNumber - traderStartDayNumber;
 
-            Log.d("dayNumbersLog", "Traders Start  " + traderStartDayNumber + "  Today " + todayNumber);
-            dates.setStartDate(DateTimeUtils.Companion.getDatePrevious(todayNumber - traderStartDayNumber));
+            dates.setStartDate(DateTimeUtils.Companion.getDatePrevious(getDaysToSubtractFromToday(todayNumber, traderStartDayNumber)));
+
             dates.setEndDate(DateTimeUtils.Companion.addDaysString(DateTimeUtils.Companion.conver2Date(dates.getStartDate()), 6));
-
+            Log.d("dayNumbersLog", "Traders Start No " + traderStartDayNumber + "  Today No " + todayNumber + " Difference " + difference);
 
             return dates;
         }
 
 
     }
+
+    private static int getDaysToSubtractFromToday(int today, int traderStart) {
+
+        int postiveDiffrence = today - traderStart;
+        if (postiveDiffrence >= 0) {
+            return postiveDiffrence;
+        } else {
+            return 7 + postiveDiffrence;
+        }
+
+
+    }
+
+
 
     public static String getDayByNumber(int number) {
         switch (number) {

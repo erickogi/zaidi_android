@@ -1,0 +1,25 @@
+package com.dev.lishabora.Utils
+
+import android.text.Editable
+import android.view.View
+
+/**
+ * Created by Eric on 12/18/2017.
+ */
+
+interface AdvancedOnclickRecyclerListener {
+    fun onClickListener(position: Int)
+
+    fun onLongClickListener(position: Int)
+
+    fun onCheckedClickListener(position: Int)
+
+    fun onMoreClickListener(position: Int)
+
+    fun onClickListener(adapterPosition: Int, view: View)
+    fun onSwipe(adapterPosition: Int, direction: Int)
+
+    fun onEditTextChanged(position: Int, idTime: Int, idType: Int, editable: Editable)
+
+    // fun onDeleteListener( adapterPosition: Int);
+}

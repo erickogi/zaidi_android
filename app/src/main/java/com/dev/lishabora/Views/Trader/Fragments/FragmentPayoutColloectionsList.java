@@ -13,8 +13,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.dev.lishabora.Adapters.CollectionsAdapter;
@@ -32,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class FragmentPayoutColloectionsList extends Fragment {
     public TextView status, startDate, cycleName, endDate, milkTotal, loanTotal, orderTotal, balance, approvedCount, unApprovedCount;
@@ -205,7 +208,12 @@ public class FragmentPayoutColloectionsList extends Fragment {
             String orderAm = getOrder(d.getDate(), "AM");
             String orderPm = getOrder(d.getDate(), "PM");
 
-            dayCollectionModels.add(new DayCollectionModel(payouts.getPayoutnumber(), d.getDay(), d.getDate(), milkAm, milkPm, loanAm, laonPm, orderAm, orderPm));
+            dayCollectionModels.add(new DayCollectionModel(payouts.getPayoutnumber(),
+                    d.getDay(), d.getDate(), milkAm,
+                    milkPm, loanAm, laonPm, orderAm,
+                    orderPm, 0, 0
+
+            ));
         }
 
         setUpList(dayCollectionModels);
@@ -280,5 +288,39 @@ public class FragmentPayoutColloectionsList extends Fragment {
         initCardHeader();
         initList();
         loadCollections();
+        setSpinner();
+    }
+
+    private void setSpinner() {
+        try {
+            Spinner spinner = Objects.requireNonNull(getActivity()).findViewById(R.id.spinner);
+            spinner.setVisibility(View.VISIBLE);
+            spinner.setSelection(0);
+
+
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                    if (i == 0) {
+
+
+                    } else {
+
+                        Fragment fragment = new FragmentPayoutFarmersList();
+                        ((com.dev.lishabora.Views.Trader.Activities.Payouts) getActivity()).popOutFragments();
+                        ((com.dev.lishabora.Views.Trader.Activities.Payouts) getActivity()).setUpView(fragment);
+
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
     }
 }

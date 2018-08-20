@@ -738,6 +738,8 @@ public class TraderViewModel extends AndroidViewModel
 
 
         Payouts p = getLastPayout(collection.getCycleCode());
+        Payouts plastIfOne = getLastPayout();
+
         Cycles c = getCycleO(collection.getCycleCode());
         if (c == null) {
             insertCycles();
@@ -768,7 +770,14 @@ public class TraderViewModel extends AndroidViewModel
             payouts.setMilkTotal("");
             payouts.setBalance("");
             payouts.setLoanTotal("");
-            payouts.setPayoutnumber(1);
+
+            if (plastIfOne != null) {
+                payouts.setPayoutnumber(plastIfOne.getPayoutnumber() + 1);
+
+            } else {
+                payouts.setPayoutnumber(1);
+
+            }
 
 
             insertPayout(payouts);
@@ -1076,7 +1085,7 @@ public class TraderViewModel extends AndroidViewModel
         return payoutsRepo.getPayoutsByPayoutsByDate(startDate, endDate);
     }
 
-    public LiveData<List<Payouts>> getPayoutsByPayoutNumber(String number) {
+    public LiveData<Payouts> getPayoutsByPayoutNumber(String number) {
         return payoutsRepo.getPayoutsByPayout(number);
     }
 

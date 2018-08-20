@@ -4,6 +4,11 @@ import java.io.Serializable;
 
 public class DayCollectionModel implements Serializable {
 
+
+    private int collectionIdAm;
+    private int collectionIdPm;
+
+
     private int payoutNumber;
 
     private String day;
@@ -21,7 +26,8 @@ public class DayCollectionModel implements Serializable {
     public DayCollectionModel() {
     }
 
-    public DayCollectionModel(int payoutNumber, String day, String date, String milkAm, String milkPm, String loanAm, String loanPm, String orderAm, String orderPm) {
+    public DayCollectionModel(int payoutNumber, String day, String date, String milkAm, String milkPm,
+                              String loanAm, String loanPm, String orderAm, String orderPm, int collectionIdAm, int collectionIdPm) {
         this.payoutNumber = payoutNumber;
         this.day = day;
         this.date = date;
@@ -31,6 +37,26 @@ public class DayCollectionModel implements Serializable {
         this.loanPm = loanPm;
         this.orderAm = orderAm;
         this.orderPm = orderPm;
+        this.collectionIdAm = collectionIdAm;
+        this.collectionIdPm = collectionIdPm;
+
+    }
+
+
+    public int getCollectionIdAm() {
+        return collectionIdAm;
+    }
+
+    public void setCollectionIdAm(int collectionIdAm) {
+        this.collectionIdAm = collectionIdAm;
+    }
+
+    public int getCollectionIdPm() {
+        return collectionIdPm;
+    }
+
+    public void setCollectionIdPm(int collectionIdPm) {
+        this.collectionIdPm = collectionIdPm;
     }
 
     public int getPayoutNumber() {

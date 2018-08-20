@@ -667,7 +667,11 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         }
 
 
-
+        try {
+            Objects.requireNonNull(getActivity()).setTitle("Farmers List");
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
     }
 
     private void alertDialogFirstTime() {

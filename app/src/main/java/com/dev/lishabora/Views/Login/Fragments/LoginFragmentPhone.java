@@ -312,7 +312,7 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
         fragment = ForgotPassConfirmFragment.newInstance(responseModel);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager.beginTransaction().setCustomAnimations(R.anim.left_enter, R.anim.right_out)
-                .replace(R.id.container, fragment, "fragmentWelcome").commit();
+                .replace(R.id.container, fragment, "fragmentWelcome").addToBackStack(null).commit();
 
 //        getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_enter, R.anim.left_out)
 //

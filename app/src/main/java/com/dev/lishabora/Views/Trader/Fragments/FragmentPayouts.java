@@ -1,6 +1,5 @@
 package com.dev.lishabora.Views.Trader.Fragments;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
@@ -15,9 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 
 import com.dev.lishabora.Adapters.PayoutesAdapter;
 import com.dev.lishabora.Models.Collection;
+import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.Views.Trader.PayoutConstants;
@@ -27,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class FragmentPayouts extends Fragment {
     double total, milk, loans, orders;
@@ -95,13 +97,13 @@ public class FragmentPayouts extends Fragment {
             @Override
             public void onClickListener(int adapterPosition, @NotNull View view) {
 
-                fragment = new FragmentPayoutFarmersList();
-                Bundle args = new Bundle();
-                args.putSerializable("data", payouts.get(adapterPosition));
-                PayoutConstants.setPayouts(payouts.get(adapterPosition));
-                fragment.setArguments(args);
-                // popOutFragments();
-                setUpView();
+//                fragment = new FragmentPayoutFarmersList();
+//                Bundle args = new Bundle();
+//                args.putSerializable("data", payouts.get(adapterPosition));
+//                PayoutConstants.setPayouts(payouts.get(adapterPosition));
+//                fragment.setArguments(args);
+//                // popOutFragments();
+//                setUpView();
 
             }
         });
@@ -146,6 +148,18 @@ public class FragmentPayouts extends Fragment {
         this.view = view;
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
 
+        try {
+            Objects.requireNonNull(getActivity()).setTitle("Payouts List");
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+
+        try {
+            Spinner spinner = getActivity().findViewById(R.id.spinner);
+            spinner.setVisibility(View.GONE);
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
 
     }
 
@@ -168,12 +182,7 @@ public class FragmentPayouts extends Fragment {
     }
 
     private void fetch() {
-        payoutsVewModel.fetchAll(false).observe(this, new Observer<List<com.dev.lishabora.Models.Payouts>>() {
-            @Override
-            public void onChanged(@Nullable List<com.dev.lishabora.Models.Payouts> payouts) {
-                setData(payouts);
-            }
-        });
+        payoutsVewModel.fetchAll(false).observe(this, payouts -> setData(payouts));
     }
 
     private void setData(List<com.dev.lishabora.Models.Payouts> payouts) {
@@ -182,6 +191,12 @@ public class FragmentPayouts extends Fragment {
 
             for (com.dev.lishabora.Models.Payouts p : payouts) {
                 List<Collection> c = payoutsVewModel.getCollectionByDateByPayoutListOne("" + p.getPayoutnumber());
+
+
+                int status[] = getApprovedCards(c, "" + p.getPayoutnumber());
+
+                int st = 0;
+                String stText = "";
                 for (Collection coll : c) {
 
                     milk = milk + Double.valueOf(coll.getMilkCollected());
@@ -190,15 +205,28 @@ public class FragmentPayouts extends Fragment {
 
 
                 }
+                if (status[1] < status[0]) {
+                    st = 0;
+                    stText = "Pending";
+                } else {
+                    st = 1;
+                    stText = "Approved";
+                }
+
+
+
                 p.setMilkTotal(String.valueOf(milk));
                 p.setLoanTotal(String.valueOf(loans));
                 p.setOrderTotal(String.valueOf(orders));
                 p.setBalance(String.valueOf(milk - (orders + loans)));
                 p.setFarmersCount("" + payoutsVewModel.getFarmersCountByCycle("" + p.getCycleCode()));
-                p.setApprovedCards("0");
-                p.setPendingCards(p.getFarmersCount());
-                p.setStatus(0);
-                p.setStatusName("Pending");
+
+
+                p.setApprovedCards("" + status[1]);
+                p.setPendingCards("" + status[2]);
+
+                p.setStatus(st);
+                p.setStatusName(stText);
                 milk = 0.0;
                 total = 0.0;
                 loans = 0.0;
@@ -220,4 +248,57 @@ public class FragmentPayouts extends Fragment {
             initList();
         }
     }
+
+    public int[] getApprovedCards(List<Collection> collections, String pcode) {
+
+        int[] statusR = new int[3];
+        int farmerStatus = 0;
+
+
+        List<FamerModel> f = payoutsVewModel.getFarmersByCycleONe(pcode);
+
+
+        statusR[0] = f.size();
+
+
+        int approved = 0;
+
+        for (FamerModel famerModel : f) {
+            int status = 0;
+            int collectionNo = 0;
+            for (Collection c : collections) {
+
+
+                if (c.getFarmerCode().equals(famerModel.getCode())) {
+
+
+                    collectionNo = collectionNo + 1;
+
+                    try {
+                        status += c.getApproved();
+
+                    } catch (Exception nm) {
+                        nm.printStackTrace();
+                    }
+                }
+
+
+            }
+
+            if (status == collectionNo) {
+                approved += 1;
+            }
+
+
+        }
+        statusR[1] = approved;
+        statusR[2] = statusR[0] - approved;
+
+
+        return statusR;
+
+
+    }
+
+
 }

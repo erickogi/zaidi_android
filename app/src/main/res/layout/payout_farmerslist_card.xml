@@ -83,12 +83,26 @@
                 android:layout_marginEnd="3dp"
                 android:background="@color/divider" />
 
-            <TextView
-                android:id="@+id/txt_milk"
+            <LinearLayout
                 android:layout_width="match_parent"
+
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="200.9 Ltrs" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Milk"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/txt_milk"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="200.9 Ltrs" />
+            </LinearLayout>
+
 
             <View
                 android:layout_width="1dp"
@@ -96,12 +110,28 @@
                 android:layout_marginEnd="3dp"
                 android:background="@color/divider" />
 
-            <TextView
-                android:id="@+id/txt_loans"
+            <LinearLayout
                 android:layout_width="match_parent"
+
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="1200 /=" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Loan"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/txt_loans"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="1200 /=" />
+
+            </LinearLayout>
+
 
             <View
                 android:layout_width="1dp"
@@ -109,13 +139,27 @@
                 android:layout_marginEnd="3dp"
                 android:background="@color/divider" />
 
-            <TextView
-                android:id="@+id/txt_orders"
+            <LinearLayout
                 android:layout_width="match_parent"
+
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="0.0 Ksh" />
+                android:orientation="vertical">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Orders"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/txt_orders"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="0.0 Ksh" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
