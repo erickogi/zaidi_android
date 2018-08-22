@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:background="@color/colorAccent">
+
+        <com.jaredrummler.materialspinner.MaterialSpinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            app:ms_arrow_tint="@color/green_color_picker"
+
+            app:ms_hint_color="@color/green_color_picker"
+            app:ms_text_color="@color/black" />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+
+
+        android:id="@+id/recyclerView"
+
+        android:layout_width="match_parent"
+
+
+        android:layout_height="match_parent"
+
+        android:layout_centerHorizontal="true"
+        android:nestedScrollingEnabled="false"
+        android:scrollIndicators="start|end"
+        android:scrollbarSize="6dp"
+        android:scrollbars="vertical"
+        android:visibility="visible"
+
+        >
+
+
+    </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>

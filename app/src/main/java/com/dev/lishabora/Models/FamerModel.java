@@ -50,6 +50,22 @@ public class FamerModel implements Serializable {
     private int archived;
     private String status;
     private int dummy;
+    public static Comparator<FamerModel> farmerDateComparator = (s1, s2) -> {
+        String FamerModelStringDate1 = s1.getLastCollectionTime();
+        String FamerModelStringDate2 = s2.getLastCollectionTime();
+        Date FamerModelDate1 = DateTimeUtils.Companion.conver2Date(FamerModelStringDate1, DateTimeUtils.Companion.getFormat());
+        Date FamerModelDate2 = DateTimeUtils.Companion.conver2Date(FamerModelStringDate2, DateTimeUtils.Companion.getFormat());
+
+        //ascending order
+        if (FamerModelDate1 != null) {
+            return FamerModelDate1.compareTo(FamerModelDate2);
+        } else return 0;
+
+        //descending order
+        //return FamerModelName2.compareTo(FamerModelName1);
+    };
+
+
 
 
     public static Comparator<FamerModel> farmerNameComparator = (s1, s2) -> {
@@ -62,7 +78,7 @@ public class FamerModel implements Serializable {
         //descending order
         //return FamerModelName2.compareTo(FamerModelName1);
     };
-    public static Comparator<FamerModel> farmerDateComparator = (s1, s2) -> {
+    public static Comparator<FamerModel> farmerDate1Comparator = (s1, s2) -> {
         String FamerModelStringDate1 = s1.getTransactiontime();
         String FamerModelStringDate2 = s2.getTransactiontime();
         Date FamerModelDate1 = DateTimeUtils.Companion.conver2Date(FamerModelStringDate1, DateTimeUtils.Companion.getFormat());
@@ -76,6 +92,7 @@ public class FamerModel implements Serializable {
         //descending order
         //return FamerModelName2.compareTo(FamerModelName1);
     };
+    private String lastCollectionTime;
     /*Comparator for sorting the list by position no*/
     public static Comparator<FamerModel> farmerPosComparator = (s1, s2) -> {
 
@@ -104,6 +121,14 @@ public class FamerModel implements Serializable {
     private String loanbalance, milkbalance, orderbalance;
     @Ignore
     private boolean show;
+
+    public String getLastCollectionTime() {
+        return lastCollectionTime;
+    }
+
+    public void setLastCollectionTime(String lastCollectionTime) {
+        this.lastCollectionTime = lastCollectionTime;
+    }
 
     public boolean isShow() {
         return show;

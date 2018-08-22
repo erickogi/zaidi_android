@@ -1,5 +1,4 @@
-package com.dev.lishabora.Views.Trader.Activities;
-
+package com.dev.lishabora.Views.Trader.Fragments;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -9,21 +8,18 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -31,88 +27,100 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.FarmerCollectionsAdapter;
-import com.dev.lishabora.Adapters.PayoutFarmersAdapter;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.DayCollectionModel;
 import com.dev.lishabora.Models.DaysDates;
+import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Utils.AdvancedOnclickRecyclerListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.MyToast;
-import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
+import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishaboramobile.R;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-public class PayCard extends AppCompatActivity {
+public class FragmentCurrentFarmerPayout extends Fragment {
+
     public TextView status, id, name, balance, milk, loan, order;
     public RelativeLayout background;
     public View statusview;
     public View itemVew;
     Collection c = new Collection();
     PayoutFarmersCollectionModel payoutfarmermodel;
-    LinearLayout layoutBottomSheet;
-
-    private Button save;
+    private View view;
+    private FamerModel famerModel;
+    private StaggeredGridLayoutManager mStaggeredLayoutManager;
+    private PayoutsVewModel payoutsVewModel;
+    private TraderViewModel traderViewModel;
+    private Payouts payouts;
     private FarmerCollectionsAdapter listAdapter;
     private Context context;
     private RecyclerView recyclerView;
-    private StaggeredGridLayoutManager mStaggeredLayoutManager;
     private List<DayCollectionModel> dayCollectionModels;
     private MaterialButton btnApprove, btnBack;
-
-    private LinearLayout empty_layout;
-    private Payouts payouts;
-    private PayoutsVewModel payoutsVewModel;
-
-    private List<Collection> collections;
-    private boolean firstDone = false;
     private List<DayCollectionModel> liveModel;
-    BottomSheetBehavior sheetBehavior;
+    private List<Collection> collections;
     private AVLoadingIndicatorView avi;
-    private SearchView searchView;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
+        traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
 
-
-    private void loadCollections(String payoutNumber, String farmerCode) {
-        payoutsVewModel.getCollectionByDateByPayoutByFarmer(payoutNumber, farmerCode).observe(this, collections -> {
-            if (collections != null) {
-                PayCard.this.collections = collections;
-                //setUpDayCollectionsModel();
-                getPayout(payoutNumber, collections);
-            }
-        });
-    }
-
-    private void getPayout(String payout, List<Collection> collections) {
-        payoutsVewModel.getPayoutsByPayoutNumber(payout).observe(this, new Observer<Payouts>() {
-            @Override
-            public void onChanged(@Nullable Payouts payouts) {
-                setUpDayCollectionsModel(payouts, collections);
-            }
-        });
 
     }
 
-    private String filterText = "";
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_farmer_card, container, false);
+    }
 
-    private void setUpList(List<DayCollectionModel> dayCollectionModels) {
-        this.dayCollectionModels = dayCollectionModels;
-        this.liveModel = dayCollectionModels;
-        listAdapter.refresh(dayCollectionModels);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        this.view = view;
+        famerModel = (FamerModel) getArguments().getSerializable("farmer");
+        btnApprove = view.findViewById(R.id.btn_approve);
+        btnApprove.setVisibility(View.GONE);
+
+        btnBack = view.findViewById(R.id.btn_back);
+
+        btnBack.setVisibility(View.GONE);
+
+        statusview = view.findViewById(R.id.status_view);
+        background = view.findViewById(R.id.background);
+        // save.setOnClickListener(view -> update(liveModel));
 
 
+        status = view.findViewById(R.id.txt_status);
+        id = view.findViewById(R.id.txt_id);
+        name = view.findViewById(R.id.txt_name);
+        balance = view.findViewById(R.id.txt_balance);
 
+
+        milk = view.findViewById(R.id.txt_milk);
+        loan = view.findViewById(R.id.txt_loans);
+        order = view.findViewById(R.id.txt_orders);
+
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        initList();
+        initData();
     }
 
     private void setUpDayCollectionsModel(Payouts payouts, List<Collection> collections) {
@@ -144,6 +152,14 @@ public class PayCard extends AppCompatActivity {
         }
 
         setUpList(dayCollectionModels);
+
+    }
+
+    private void setUpList(List<DayCollectionModel> dayCollectionModels) {
+        this.dayCollectionModels = dayCollectionModels;
+        this.liveModel = dayCollectionModels;
+        listAdapter.refresh(dayCollectionModels);
+
 
     }
 
@@ -238,191 +254,131 @@ public class PayCard extends AppCompatActivity {
         return 0;
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pay_card);
-        payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
+    private void initData() {
+        if (checkIfWeCanUseLastPayout()) {
+            //We are in a valid payout for this cycle
 
-        initList();
-
-        btnApprove = findViewById(R.id.btn_approve);
-        btnApprove.setVisibility(View.GONE);
-
-        btnBack = findViewById(R.id.btn_back);
-
-        btnBack.setVisibility(View.GONE);
-
-        statusview = findViewById(R.id.status_view);
-        background = findViewById(R.id.background);
-        save = findViewById(R.id.save_btn);
-        save.setVisibility(View.GONE);
-        layoutBottomSheet = findViewById(R.id.bottom_sheet);
-        // save.setOnClickListener(view -> update(liveModel));
+            payoutsVewModel.getCollectionByDateByPayout("" + payouts.getPayoutnumber()).observe(this, (List<Collection> collections) -> {
 
 
-        status = findViewById(R.id.txt_status);
-        id = findViewById(R.id.txt_id);
-        name = findViewById(R.id.txt_name);
-        balance = findViewById(R.id.txt_balance);
-        searchView = findViewById(R.id.search);
+                FragmentCurrentFarmerPayout.this.collections = collections;
+                setUpDayCollectionsModel(payouts, collections);
+                setData(det());
 
 
-        milk = findViewById(R.id.txt_milk);
-        loan = findViewById(R.id.txt_loans);
-        order = findViewById(R.id.txt_orders);
-        PayoutFarmersCollectionModel model = (PayoutFarmersCollectionModel) getIntent().getSerializableExtra("data");
-        payouts = (Payouts) getIntent().getSerializableExtra("payout");
+            });
 
 
-        setData(model);
-
-        String data = getIntent().getStringExtra("farmers");
-
-        Gson gson = new Gson();
-//        JsonArray jsonArray = gson.toJsonTree(data).getAsJsonArray();
-        Type listType = new TypeToken<LinkedList<PayoutFarmersCollectionModel>>() {
-        }.getType();
-
-        setBottom();
-        initBottomList(gson.fromJson(data, listType));
-
-
+        }
     }
 
-    private void approve(Payouts payouts, PayoutFarmersCollectionModel model) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(PayCard.this);
-        alertDialog.setMessage("Confirm that you wish to approve " + model.getFarmername() + "'s " + payouts.getCyclename() + " Collection card").setCancelable(false).setTitle("Approve " + model.getFarmername() + " Card");
-
-
-        alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
-
-            payoutsVewModel.approveFarmersPayoutCard(model.getFarmercode(), model.getPayoutNumber());
-            model.setStatus(1);
-            model.setStatusName("Approved");
-            setData(model);
-
-
-            dialogInterface.dismiss();
-
-        }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
-
-        AlertDialog alertDialogAndroid = alertDialog.create();
-        alertDialogAndroid.setCancelable(false);
-        alertDialogAndroid.show();
-
-    }
-
-    private void searchInit() {
-
-
-    }
-
-    public void initBottomList(List<PayoutFarmersCollectionModel> models) {
-
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewbottom);
-        mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(mStaggeredLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-
-        PayoutFarmersAdapter listAdapter = new PayoutFarmersAdapter(this, models, new OnclickRecyclerListener() {
-            @Override
-            public void onSwipe(int adapterPosition, int direction) {
-
-
-            }
-
-            @Override
-            public void onClickListener(int position) {
-                if (sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                }
-
-                setData(models.get(position));
-
-            }
-
-            @Override
-            public void onLongClickListener(int position) {
-
-
-            }
-
-            @Override
-            public void onCheckedClickListener(int position) {
-
-            }
-
-            @Override
-            public void onMoreClickListener(int position) {
-
-            }
-
-            @Override
-            public void onClickListener(int adapterPosition, @NotNull View view) {
-
-
-            }
-        });
-        recyclerView.setAdapter(listAdapter);
-
-        listAdapter.notifyDataSetChanged();
-
-        searchView.setVisibility(View.GONE);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                filterText = s;
-
-
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                filterText = s;
-
-                return true;
-            }
-        });
-
-
-    }
-
-
-    private void setBottom() {
-        sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
-
-        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                switch (newState) {
-                    case BottomSheetBehavior.STATE_HIDDEN:
-                        break;
-                    case BottomSheetBehavior.STATE_EXPANDED: {
-
-                    }
-                    break;
-                    case BottomSheetBehavior.STATE_COLLAPSED: {
-
-                    }
-                    break;
-                    case BottomSheetBehavior.STATE_DRAGGING:
-                        break;
-                    case BottomSheetBehavior.STATE_SETTLING:
-                        break;
+    private int getFarmerStatus(String code) {
+        int status = 0;
+        int collectsNo = 0;
+        for (Collection c : collections) {
+            if (c.getFarmerCode().equals(code)) {
+                collectsNo++;
+                try {
+                    status += c.getApproved();
+                } catch (Exception nm) {
+                    nm.printStackTrace();
                 }
             }
 
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+        }
+        if (status >= collectsNo) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 
+
+    private String getOrder(String farmercode) {
+        double orderTotal = 0.0;
+
+        for (Collection c : collections) {
+            if (c.getFarmerCode().equals(farmercode)) {
+                try {
+                    orderTotal += Double.valueOf(c.getOrderGivenOutPrice());
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
             }
-        });
+        }
+
+        return String.valueOf(orderTotal);
 
     }
+
+    private String getLoan(String farmercode) {
+        double loanTotal = 0.0;
+        for (Collection c : collections) {
+            if (c.getFarmerCode().equals(farmercode)) {
+                try {
+                    loanTotal += Double.valueOf(c.getLoanAmountGivenOutPrice());
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
+            }
+        }
+        return String.valueOf(loanTotal);
+
+
+    }
+
+    private String getMilk(String farmercode) {
+        double milkTotal = 0.0;
+
+        for (Collection c : collections) {
+            if (c.getFarmerCode().equals(farmercode)) {
+                try {
+                    milkTotal += Double.valueOf(c.getMilkCollected());
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
+            }
+        }
+        return String.valueOf(milkTotal);
+
+
+    }
+
+    private boolean checkIfWeCanUseLastPayout() {
+        Payouts p = traderViewModel.getLastPayout(famerModel.getCyclecode());
+        if (p == null) {
+            payouts = null;
+            return false;
+        } else {
+
+            payouts = p;
+            return !DateTimeUtils.Companion.isPastLastDay(p.getEndDate());
+
+        }
+
+    }
+
+    public PayoutFarmersCollectionModel det() {
+        String milkTotal = getMilk(famerModel.getCode());
+        String loanTotal = getLoan(famerModel.getCode());
+        String orderTotal = getOrder(famerModel.getCode());
+        int status = getFarmerStatus(famerModel.getCode());
+        String statusText = "";
+        statusText = status == 0 ? "Pending" : "Approved";
+        String balance = getBalance(milkTotal, loanTotal, orderTotal);
+        return new PayoutFarmersCollectionModel(
+                famerModel.getCode(),
+                famerModel.getNames(),
+                milkTotal,
+                loanTotal,
+                orderTotal,
+                status,
+                statusText,
+                balance, payouts.getPayoutnumber(), famerModel.getCyclecode()
+        );
+
+    }
+
 
     private String getBalance(String milkTotal, String loanTotal, String orderTotal) {
         double balance = 0.0;
@@ -482,21 +438,21 @@ public class PayCard extends AppCompatActivity {
                 }
             }
         }
-        save.setVisibility(View.GONE);
+        //save.setVisibility(View.GONE);
 
     }
 
     private void setBalance() {
         balance.setText(getBalance(milk.getText().toString(), loan.getText().toString(), order.getText().toString()));
     }
+
     private void setData(PayoutFarmersCollectionModel model) {
-        this.payoutfarmermodel = model;
         balance.setText(model.getBalance());
         id.setText(model.getFarmercode());
         name.setText(model.getFarmername());
         status.setText(model.getStatusName());
 
-        setTitle("" + model.getFarmername() + "        ID " + model.getFarmercode());
+        getActivity().setTitle("" + model.getFarmername() + "        ID " + model.getFarmercode());
 
 
         milk.setText(model.getMilktotal());
@@ -558,8 +514,6 @@ public class PayCard extends AppCompatActivity {
 
         }
 
-        loadCollections("" + model.getPayoutNumber(), model.getFarmercode());
-
 
         payoutsVewModel.getSumOfMilkForPayout(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
             milk.setText(String.valueOf(integer));
@@ -582,44 +536,14 @@ public class PayCard extends AppCompatActivity {
         } else {
             btnApprove.setVisibility(View.GONE);
         }
-        btnApprove.setOnClickListener(view -> approve(payouts, model));
-//        payoutsVewModel.getStatusForFarmerPayout(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
-//            if(integer!=null) {
-//                if (integer == 1) {
-//                    //  status.setText("Active");
-//                    status.setText("Approved");
-//                    status.setTextColor(PayCard.this.getResources().getColor(R.color.green_color_picker));
-//                    background.setBackgroundColor(PayCard.this.getResources().getColor(R.color.green_color_picker));
-//                    statusview.setBackgroundColor(PayCard.this.getResources().getColor(R.color.green_color_picker));
-//
-//
-//                } else if (integer == 0) {
-//                    status.setText("Pending");
-//
-//                    //  status.setText("Deleted");
-//                    status.setTextColor(PayCard.this.getResources().getColor(R.color.red));
-//                    background.setBackgroundColor(PayCard.this.getResources().getColor(R.color.red));
-//                    statusview.setBackgroundColor(PayCard.this.getResources().getColor(R.color.red));
-//
-//                } else {
-//                    status.setText("Approved");
-//
-//                    // status.setText("In-Active");
-//                    status.setTextColor(PayCard.this.getResources().getColor(R.color.blue_color_picker));
-//                    background.setBackgroundColor(PayCard.this.getResources().getColor(R.color.blue_color_picker));
-//                    statusview.setBackgroundColor(PayCard.this.getResources().getColor(R.color.blue_color_picker));
-//
-//                }
-//            }
-//        });
-//
+
 
     }
 
     public void editValue(int adapterPosition, int time, int type, View editable, DayCollectionModel dayCollectionModel) {
-        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(this);
+        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_edit_collection, null);
-        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(this));
+        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
         alertDialogBuilderUserInput.setView(mView);
 //        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
 //        alertDialogBuilderUserInput.setTitle("Route");
@@ -735,7 +659,7 @@ public class PayCard extends AppCompatActivity {
                 payoutsVewModel.createCollections(c).observe(this, responseModel -> {
                     if (responseModel != null) {
                         a.dismiss();
-                        MyToast.toast(responseModel.getResultDescription(), PayCard.this, R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                        MyToast.toast(responseModel.getResultDescription(), getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
                     }
                 });
                 a.dismiss();
@@ -786,7 +710,7 @@ public class PayCard extends AppCompatActivity {
                 payoutsVewModel.createCollections(c).observe(this, responseModel -> {
                     if (responseModel != null) {
                         a.dismiss();
-                        MyToast.toast(responseModel.getResultDescription(), PayCard.this, R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                        MyToast.toast(responseModel.getResultDescription(), getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
                     }
                 });
                 a.dismiss();
@@ -814,7 +738,7 @@ public class PayCard extends AppCompatActivity {
     }
 
     public void initList() {
-        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = view.findViewById(R.id.recyclerView);
         mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(mStaggeredLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -823,7 +747,7 @@ public class PayCard extends AppCompatActivity {
         if (dayCollectionModels == null) {
             dayCollectionModels = new LinkedList<>();
         }
-        listAdapter = new FarmerCollectionsAdapter(this, dayCollectionModels, new AdvancedOnclickRecyclerListener() {
+        listAdapter = new FarmerCollectionsAdapter(getContext(), dayCollectionModels, new AdvancedOnclickRecyclerListener() {
             @Override
             public void onSwipe(int adapterPosition, int direction) {
 
@@ -872,70 +796,5 @@ public class PayCard extends AppCompatActivity {
 
 
     }
-
-
-    @Override
-    public void onBackPressed() {
-
-
-        super.onBackPressed();
-
-
-    }
-
-
-    private void updateOrder(Editable editable, int adapterPosition, int time) {
-
-        if (time == 1) {
-            liveModel.get(adapterPosition).setOrderAm(editable.toString());
-
-        } else {
-            liveModel.get(adapterPosition).setOrderPm(editable.toString());
-
-        }
-    }
-
-    private void updateLoan(Editable editable, int adapterPosition, int time) {
-        if (time == 1) {
-            liveModel.get(adapterPosition).setLoanAm(editable.toString());
-
-        } else {
-            liveModel.get(adapterPosition).setLoanPm(editable.toString());
-
-        }
-
-    }
-
-    private void updateMilk(Editable editable, int adapterPosition, int time) {
-        if (time == 1) {
-            liveModel.get(adapterPosition).setMilkAm(editable.toString());
-
-//            payoutsVewModel.getCollectionById(dayCollectionModels.get(adapterPosition).getCollectionIdAm()).observe(this, new Observer<Collection>() {
-//                @Override
-//                public void onChanged(@Nullable Collection collection) {
-//                    if (collection != null) {
-//                        c=collection;
-//                        c.setMilkCollected(editable.toString());
-//                        payoutsVewModel.updateCollection(c);
-//                    }
-//                }
-//            });
-        } else {
-            liveModel.get(adapterPosition).setMilkPm(editable.toString());
-//            payoutsVewModel.getCollectionById(dayCollectionModels.get(adapterPosition).getCollectionIdPm()).observe(this, new Observer<Collection>() {
-//                @Override
-//                public void onChanged(@Nullable Collection collection) {
-//                    if (collection != null) {
-//                        c=collection;
-//                        c.setMilkCollected(editable.toString());
-//                        payoutsVewModel.updateCollection(c);
-//                    }
-//                }
-//            });
-        }
-
-    }
-
-
 
 }

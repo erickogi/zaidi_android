@@ -3,8 +3,10 @@ package com.dev.lishabora.Utils
 import android.text.format.DateUtils
 import android.util.Log
 import com.dev.lishabora.Models.DaysDates
+import com.dev.lishabora.Models.MonthsDates
 import org.joda.time.DateTime
 import org.joda.time.Days
+import org.joda.time.LocalDate
 import org.joda.time.Period
 import org.joda.time.format.DateTimeFormat
 import java.text.ParseException
@@ -167,6 +169,7 @@ class DateTimeUtils {
 
         }
 
+
         private fun calcDiff2(fd: DateTime?, ld: DateTime?): Int {
             return Days.daysBetween(fd!!.toLocalDate(), ld!!.toLocalDate()).days
 
@@ -201,6 +204,49 @@ class DateTimeUtils {
             Log.d("isAfter", " Today " + today + "  Enddate " + enddate + "  Is After " + n)
 
             return n
+
+        }
+
+        fun getMonth(date: String): String? {
+
+
+            var month = conver2Date(date)?.toString("yyyy-MMM")
+            return month
+
+        }
+
+
+        fun getMonths(limit: Int): LinkedList<MonthsDates> {
+
+            val months = LinkedList<MonthsDates>()
+
+            val today = getTodayDate()
+
+            val endOfMonth = today.dayOfMonth().withMaximumValue()
+            val startOfMonth = today.dayOfMonth().withMinimumValue()
+
+
+            months.add(MonthsDates((LocalDate.now()).toString("MMM/yyyy"), convert2String(startOfMonth), convert2String(endOfMonth)))
+
+            for (i in 1..limit) {
+
+
+                val prevous = today.minus(Period.months(i))
+                val endOfMonthPrevious = prevous.dayOfMonth().withMaximumValue()
+                val startOfMonthPrevious = prevous.dayOfMonth().withMinimumValue()
+                months.add(MonthsDates(prevous.toString("MMM/yyyy"), convert2String(startOfMonthPrevious), convert2String(endOfMonthPrevious)))
+
+
+            }
+            return months
+
+
+        }
+
+        fun isInMonth(date: String, month: String): Boolean {
+
+            val dateG = conver2Date(date)!!.toString("MMM/yyyy")
+            return dateG.equals(month)
 
         }
     }

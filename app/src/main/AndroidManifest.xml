@@ -104,9 +104,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.dev.lishabora.Views.Trader.Activities.PayCard"
-            android:screenOrientation="portrait"
-
-            ></activity>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.dev.lishabora.Views.Trader.Activities.FarmerProfile"
+            android:label="@string/title_activity_farmer_profile"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -50,6 +50,10 @@ public class CollectionsRepo {
         return collectionsDao.getCollectionByPayoutNumberByFarmer(payout, farmer);
     }
 
+    public LiveData<List<Collection>> getCollectionByFarmer(String farmer) {
+        return collectionsDao.getCollectionByFarmer(farmer);
+    }
+
     public LiveData<Double> getSumOfMilkFarmerPayout(String farmercode, int payoutNumber) {
         return collectionsDao.getSumOfMilkFarmerPayout(farmercode, payoutNumber);
 

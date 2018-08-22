@@ -55,6 +55,7 @@ import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.Utils.RequestDataCallback;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Trader.Activities.CreateFarmerActivity;
+import com.dev.lishabora.Views.Trader.Activities.FarmerProfile;
 import com.dev.lishabora.Views.Trader.Activities.FirstTimeLaunch;
 import com.dev.lishabora.Views.Trader.FarmerConst;
 import com.dev.lishaboramobile.R;
@@ -129,6 +130,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         value = null;
         vCol = 0.0;
         clp = null;
+
 
         List<Collection> col = mViewModel.getCollectionByDateByFarmerByTime(famerModel.getCode(), DateTimeUtils.Companion.getToday(), ampm);
         if (col != null && col.size() > 0) {
@@ -205,6 +207,11 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         getCollection(famerModel.getCode(), DateTimeUtils.Companion.getDatePrevious(3), day1am, day1pm);
         getCollection(famerModel.getCode(), DateTimeUtils.Companion.getDatePrevious(2), day2am, day2pm);
         getCollection(famerModel.getCode(), DateTimeUtils.Companion.getDatePrevious(1), day3am, day3pm);
+
+
+        getCollection(famerModel.getCode(), DateTimeUtils.Companion.getToday(), edtTodayAm, edtTodayPm);
+
+
         edtTodayAm.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -339,7 +346,10 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                         snack(responseModel.getResultDescription());
                     }
 
+
                 });
+                famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
+                mViewModel.updateFarmer(famerModel, false);
             } else {
                 clp.setMilkCollected(milk);
                 mViewModel.updateCollection(clp).observe(FragementFarmersList.this, new Observer<ResponseModel>() {
@@ -350,6 +360,8 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                         }
                     }
                 });
+                famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
+                mViewModel.updateFarmer(famerModel, false);
 
             }
 
@@ -425,11 +437,11 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             @Override
             public void onSwipe(int adapterPosition, int direction) {
 
+                FamerModel fm = FarmerConst.getSearchFamerModels().get(adapterPosition);
+                fm.setLastCollectionTime(DateTimeUtils.Companion.getNow());
+                mViewModel.updateFarmer(fm, false);
 
-                MyToast.toast("swiped  " + FarmerConst.getSearchFamerModels().get(adapterPosition).getNames(), context, R.drawable.ic_launcher, Toast.LENGTH_LONG);
-                FarmerConst.getSearchFamerModels().remove(adapterPosition);
 
-                listAdapter.notifyItemRemoved(adapterPosition);
             }
 
             @Override
@@ -1177,14 +1189,19 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
                     break;
                 case R.id.edit:
-
+                    Intent intent = new Intent(getActivity(), FarmerProfile.class);
+                    intent.putExtra("farmer", famerModel);
+                    startActivity(intent);
 
                     Log.d("farmerdialog", "edit clicked");
-                    FragementFarmersList.this.editTrader(famerModel, FragementFarmersList.this.getUnits(), FragementFarmersList.this.getCycles(), FragementFarmersList.this.getRoutess(), true);
+                    //FragementFarmersList.this.editTrader(famerModel, FragementFarmersList.this.getUnits(), FragementFarmersList.this.getCycles(), FragementFarmersList.this.getRoutess(), true);
                     break;
                 case R.id.view:
 
-                    FragementFarmersList.this.editTrader(famerModel, FragementFarmersList.this.getUnits(), FragementFarmersList.this.getCycles(), FragementFarmersList.this.getRoutess(), false);
+                    Intent intent1 = new Intent(getActivity(), FarmerProfile.class);
+                    intent1.putExtra("farmer", famerModel);
+                    startActivity(intent1);
+                    // FragementFarmersList.this.editTrader(famerModel, FragementFarmersList.this.getUnits(), FragementFarmersList.this.getCycles(), FragementFarmersList.this.getRoutess(), false);
 
                     break;
                 default:

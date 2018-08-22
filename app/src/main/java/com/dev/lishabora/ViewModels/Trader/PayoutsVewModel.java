@@ -304,6 +304,12 @@ public class PayoutsVewModel extends AndroidViewModel {
         return collectionsRepo.getCollectionByPayoutByFarmer(payoutnumber, farmer);
     }
 
+    public LiveData<List<Collection>> getCollectionByFarmer(String farmer) {
+        if (collections == null) {
+            collections = new MutableLiveData<>();
+        }
+        return collectionsRepo.getCollectionByFarmer(farmer);
+    }
     public LiveData<Double> getSumOfMilkForPayout(String farmercode, int payoutNumber) {
         if (milkTotal == null) {
             milkTotal = new MutableLiveData<>();

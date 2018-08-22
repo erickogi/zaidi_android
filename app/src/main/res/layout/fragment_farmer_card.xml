@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="30dp"
+
     android:background="@color/white"
     tools:context="com.dev.lishabora.Views.Trader.Activities.PayCard">
 
@@ -313,12 +308,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
+        android:layout_below="@+id/lineari"
+
         android:layout_centerHorizontal="true"
 
+
         android:layout_marginStart="4dp"
-
-
-        android:layout_below="@+id/lineari"
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="@dimen/mdtp_done_button_height"
 
@@ -367,11 +362,11 @@
             app:strokeWidth="2dp" />
 
         <android.support.design.button.MaterialButton
+            android:id="@+id/btn_back"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
 
-            android:id="@+id/btn_back"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_gravity="end"
 
@@ -391,22 +386,22 @@
 
         <android.support.design.button.MaterialButton
             android:id="@+id/save_btn"
-            android:visibility="gone"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="match_parent"
-
             android:layout_height="wrap_content"
+
             android:layout_alignParentBottom="true"
             android:layout_gravity="end"
-
             android:layout_margin="3dp"
+
             android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:text="Save"
             android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
             android:textColor="@color/black"
-
             android:textSize="16.5sp"
+
+            android:visibility="gone"
             app:cornerRadius="5dp"
             app:rippleColor="@color/accent"
             app:strokeColor="@color/black"
@@ -416,7 +411,3 @@
 
     </LinearLayout>
 </RelativeLayout>
-
-    <include layout="@layout/bottom_sheet" />
-
-</android.support.design.widget.CoordinatorLayout>
