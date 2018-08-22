@@ -1,10 +1,12 @@
 package com.dev.lishabora.Views.Trader.Fragments;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.button.MaterialButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
@@ -51,6 +53,7 @@ public class FragmentPayoutColloectionsList extends Fragment {
     private PayoutsVewModel payoutsVewModel;
     private List<DayCollectionModel> dayCollectionModels;
     private List<Collection> collections;
+    private MaterialButton btnApprove, btnBack;
 
     public void initList() {
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -108,11 +111,7 @@ public class FragmentPayoutColloectionsList extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            payouts = (Payouts) getArguments().getSerializable("data");
-        } else {
-            payouts = PayoutConstants.getPayouts();
-        }
+
 
     }
 
@@ -127,7 +126,21 @@ public class FragmentPayoutColloectionsList extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         this.view = view;
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
+        btnApprove = view.findViewById(R.id.btn_approve);
+        btnApprove.setVisibility(View.GONE);
 
+        payouts = new Payouts();
+        if (getArguments() != null) {
+            payouts = (Payouts) getArguments().getSerializable("data");
+        } else {
+            payouts = PayoutConstants.getPayouts();
+        }
+        payoutsVewModel.getPayoutsByPayoutNumber("" + payouts.getPayoutnumber()).observe(this, new Observer<Payouts>() {
+            @Override
+            public void onChanged(@Nullable Payouts payouts) {
+                // FragmentPayoutColloectionsList.this.payouts=payouts;
+            }
+        });
     }
 
     @Override
@@ -154,6 +167,23 @@ public class FragmentPayoutColloectionsList extends Fragment {
         if (payouts != null) {
             setCardHeaderData(payouts);
         }
+        if (payouts.getStatus() == 1) {
+            btnApprove.setVisibility(View.GONE);
+        } else {
+            if (payouts.getEndDate().equals(DateTimeUtils.Companion.getToday()) || DateTimeUtils.Companion.isPastLastDay(payouts.getEndDate())) {
+                btnApprove.setVisibility(View.VISIBLE);
+            } else {
+                btnApprove.setVisibility(View.GONE);
+            }
+        }
+
+        btnApprove.setOnClickListener(view -> {
+            payouts.setStatus(1);
+            payouts.setStatusName("Approved");
+            payoutsVewModel.updatePayout(payouts);
+            initCardHeader();
+
+        });
 
     }
 

@@ -1,6 +1,5 @@
 package com.dev.lishabora.Utils
 
-import android.text.Editable
 import android.view.View
 
 /**
@@ -19,7 +18,7 @@ interface AdvancedOnclickRecyclerListener {
     fun onClickListener(adapterPosition: Int, view: View)
     fun onSwipe(adapterPosition: Int, direction: Int)
 
-    fun onEditTextChanged(position: Int, idTime: Int, idType: Int, editable: Editable)
+    fun onEditTextChanged(position: Int, idTime: Int, idType: Int, editable: View)
 
     // fun onDeleteListener( adapterPosition: Int);
 }

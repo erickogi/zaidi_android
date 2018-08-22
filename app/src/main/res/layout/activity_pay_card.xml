@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="30dp"
     android:background="@color/white"
     tools:context="com.dev.lishabora.Views.Trader.Activities.PayCard">
+
 
     <android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -310,6 +317,7 @@
             android:text="APPROVE"
             android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
 
+
             android:textColor="@color/black"
             android:textSize="16.5sp"
             app:cornerRadius="5dp"
@@ -323,6 +331,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
+            android:id="@+id/btn_back"
             android:layout_alignParentBottom="true"
             android:layout_gravity="end"
 
@@ -342,6 +351,7 @@
 
         <android.support.design.button.MaterialButton
             android:id="@+id/save_btn"
+            android:visibility="gone"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="match_parent"
 
@@ -366,3 +376,7 @@
 
     </LinearLayout>
 </RelativeLayout>
+
+    <include layout="@layout/bottom_sheet" />
+
+</android.support.design.widget.CoordinatorLayout>

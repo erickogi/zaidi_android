@@ -13,6 +13,7 @@ public class PayoutFarmersCollectionModel implements Serializable {
     private String statusName;
     private String balance;
 
+    private String cycleCode;
 
     private int payoutNumber;
 
@@ -21,7 +22,8 @@ public class PayoutFarmersCollectionModel implements Serializable {
     }
 
     public PayoutFarmersCollectionModel(String farmercode, String farmername, String milktotal,
-                                        String loanTotal, String orderTotal, int status, String statusName, String balance, int payoutNumber) {
+                                        String loanTotal, String orderTotal, int status, String statusName,
+                                        String balance, int payoutNumber, String cycleCode) {
         this.farmercode = farmercode;
         this.farmername = farmername;
         this.milktotal = milktotal;
@@ -31,6 +33,15 @@ public class PayoutFarmersCollectionModel implements Serializable {
         this.statusName = statusName;
         this.balance = balance;
         this.payoutNumber = payoutNumber;
+        this.cycleCode = cycleCode;
+    }
+
+    public String getCycleCode() {
+        return cycleCode;
+    }
+
+    public void setCycleCode(String cycleCode) {
+        this.cycleCode = cycleCode;
     }
 
     public int getPayoutNumber() {

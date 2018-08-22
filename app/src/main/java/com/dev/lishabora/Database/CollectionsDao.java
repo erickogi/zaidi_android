@@ -30,6 +30,10 @@ public interface CollectionsDao {
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE id =:keyid")
     LiveData<Collection> getCollectionById(int keyid);
 
+    @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE id =:keyid")
+    Collection getCollectionByIdOne(int keyid);
+
+
 
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE daydate =:date")
     LiveData<List<Collection>> getCollectionByDate(String date);
@@ -45,6 +49,10 @@ public interface CollectionsDao {
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE payoutnumber =:payoutnumber")
     List<Collection> getCollectionByPayoutNumberListOne(String payoutnumber);
 
+    @Query("UPDATE COLLECTIONTRANSACTIONS SET approved =:a WHERE farmerCode =:farmercode AND payoutnumber =:payoutNumber")
+    void approveFarmersPayoutCard(int a, String farmercode, int payoutNumber);
+
+
     @Update
     void updateRecord(Collection collection);
 
@@ -54,6 +62,10 @@ public interface CollectionsDao {
 
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE farmerCode = :code AND dayDate LIKE :date")
     List<Collection> getCollectionByFarmerByDate(String code, String date);
+
+    @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE farmerCode = :code AND  timeOfDay =:ampm AND dayDate LIKE :today")
+    List<Collection> getCollectionByDateByFarmerByTime(String code, String today, String ampm);
+
 
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE cycleCode = :cycleCode ORDER BY id DESC LIMIT 1")
     Collection getLast(String cycleCode);
@@ -67,4 +79,8 @@ public interface CollectionsDao {
 
     @Query("SELECT SUM(orderGivenOutPrice) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutnumber = :payoutNumber")
     LiveData<Double> getSumOfOrderFarmerPayout(String farmercode, int payoutNumber);
+
+    @Query("UPDATE COLLECTIONTRANSACTIONS SET approved =:status WHERE  payoutnumber =:payoutnumber")
+    void approvePayout(int payoutnumber, int status);
+
 }

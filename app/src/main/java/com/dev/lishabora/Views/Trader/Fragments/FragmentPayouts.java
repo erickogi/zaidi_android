@@ -225,8 +225,8 @@ public class FragmentPayouts extends Fragment {
                 p.setApprovedCards("" + status[1]);
                 p.setPendingCards("" + status[2]);
 
-                p.setStatus(st);
-                p.setStatusName(stText);
+                p.setStatus(p.getStatus());
+                p.setStatusName(p.getStatusName());
                 milk = 0.0;
                 total = 0.0;
                 loans = 0.0;

@@ -12,4 +12,6 @@ public class PayoutConstants {
     public static void setPayouts(Payouts payouts) {
         PayoutConstants.payouts = payouts;
     }
+
+
 }

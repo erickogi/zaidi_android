@@ -44,6 +44,7 @@ public class Payouts extends AppCompatActivity {
         //  fragment = new FragmentPayouts();
         // popOutFragments();
         setUpMainFragment();
+        setTitle("Payouts");
 
     }
 

@@ -11,6 +11,7 @@ import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.Payouts;
+import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Repos.ProductsRepo;
 import com.dev.lishabora.Repos.RoutesRepo;
 import com.dev.lishabora.Repos.Trader.CollectionsRepo;
@@ -35,6 +36,7 @@ public class PayoutsVewModel extends AndroidViewModel {
     private MutableLiveData createPayoutSuccess;
     private MutableLiveData updatePayoutSuccess;
     private MutableLiveData deletePayoutSuccess;
+    private MutableLiveData createCollectionSuccess;
 
 
     private LiveData<List<Payouts>> payouts;
@@ -124,6 +126,7 @@ public class PayoutsVewModel extends AndroidViewModel {
 
     public void updatePayout(Payouts payouts) {
         payoutsRepo.upDateRecord(payouts);
+        collectionsRepo.updateCollectionsByPayout(payouts.getPayoutnumber(), 1);
     }
 
     public void deletePayout(Payouts payouts) {
@@ -286,6 +289,14 @@ public class PayoutsVewModel extends AndroidViewModel {
         return collectionsRepo.getCollectionById(collectionId);
     }
 
+    public Collection getCollectionByIdOne(int collectionId) {
+        if (collectionOne == null) {
+            collectionOne = new Collection();
+
+        }
+        return collectionsRepo.getCollectionByIdOne(collectionId);
+    }
+
     public LiveData<List<Collection>> getCollectionByDateByPayoutByFarmer(String payoutnumber, String farmer) {
         if (collections == null) {
             collections = new MutableLiveData<>();
@@ -326,4 +337,30 @@ public class PayoutsVewModel extends AndroidViewModel {
             collectionsRepo.upDateRecord(c);
         }
     }
+
+    public LiveData<ResponseModel> createCollections(Collection collection) {
+        if (this.createCollectionSuccess == null) {
+
+            this.createCollectionSuccess = new MutableLiveData();
+        }
+
+
+        collectionsRepo.insert(collection);
+        ResponseModel responseModel = new ResponseModel();
+        responseModel.setResultCode(1);
+        responseModel.setResultDescription("Collection Inserted \nExisting payout");
+        responseModel.setData(null);
+        createCollectionSuccess.setValue(responseModel);
+
+
+        return createCollectionSuccess;
+    }
+
+    public void approveFarmersPayoutCard(String farmercode, int payoutNumber) {
+        collectionsRepo.approveFarmersPayoutCard(farmercode, payoutNumber);
+    }
+
+//    public LiveData<Integer> getStatusForFarmerPayout(String farmercode, int payoutNumber) {
+//
+//    }
 }

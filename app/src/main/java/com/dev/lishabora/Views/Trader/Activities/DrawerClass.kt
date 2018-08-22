@@ -94,7 +94,7 @@ class DrawerClass {
                             ProfileDrawerItem().withName("0$name").withEmail(email)
 
                                     //.withSelectedTextColorRes(R.color.colorPrimaryDark)
-                            // .withIcon(R.drawable.ic_launcher)
+                                    .withIcon(R.drawable.ic_launcher)
 
 
                     )

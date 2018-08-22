@@ -427,12 +427,17 @@ public class TraderViewModel extends AndroidViewModel
                 Request.Companion.getResponse(ApiConstants.Companion.getCycles(), getTraderCycleObject(), "", new ResponseCallback() {
                             @Override
                             public void response(ResponseModel responseModel) {
-                                JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
-                                Type listType = new TypeToken<LinkedList<Cycles>>() {
-                                }.getType();
-                                // routesModel = ;
-                                Log.d("ReTrUp", "routes update called");
-                                cyclesRepo.insert(gson.fromJson(jsonArray, listType));
+                                try {
+                                    JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
+                                    Type listType = new TypeToken<LinkedList<Cycles>>() {
+                                    }.getType();
+                                    // routesModel = ;
+                                    Log.d("ReTrUp", "routes update called");
+                                    cyclesRepo.insert(gson.fromJson(jsonArray, listType));
+
+                                } catch (Exception mn) {
+
+                                }
 
 
                             }
@@ -1057,6 +1062,12 @@ public class TraderViewModel extends AndroidViewModel
         return collectionsRepo.getCollectionByFarmerByDa(code, date);
     }
 
+    public List<Collection> getCollectionByDateByFarmerByTime(String code, String today, String ampm) {
+        if (collectionslist == null) {
+            collectionslist = new LinkedList<>();
+        }
+        return collectionsRepo.getCollectionByDateByFarmerByTime(code, today, ampm);
+    }
     public LiveData<List<Collection>> getCollectionByDateByPayout(String payoutnumber) {
         if (collections == null) {
             collections = new MutableLiveData<>();
@@ -1132,4 +1143,21 @@ public class TraderViewModel extends AndroidViewModel
         return cycle0ne;
     }
 
+
+    public LiveData<ResponseModel> updateCollection(Collection c) {
+        if (c != null) {
+            collectionsRepo.upDateRecord(c);
+        }
+        if (this.updateCollectionSuccess == null) {
+        }
+        this.updateCollectionSuccess = new MutableLiveData();
+
+        ResponseModel responseModel = new ResponseModel();
+        responseModel.setResultCode(1);
+        responseModel.setResultDescription("Farmer updated successfully");
+        responseModel.setData(null);
+        updateCollectionSuccess.setValue(responseModel);
+
+        return updateCollectionSuccess;
+    }
 }

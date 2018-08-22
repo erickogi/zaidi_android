@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.button.MaterialButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
@@ -25,14 +26,18 @@ import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
 import com.dev.lishabora.Models.Payouts;
+import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.Views.Trader.Activities.PayCard;
 import com.dev.lishabora.Views.Trader.PayoutConstants;
 import com.dev.lishaboramobile.R;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -53,6 +58,8 @@ public class FragmentPayoutFarmersList extends Fragment {
     private List<PayoutFarmersCollectionModel> dayCollectionModels;
     private List<FamerModel> famerModels;
     private List<Collection> collections;
+    private MaterialButton btnApprove, btnBack;
+
 
     public void initList() {
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -74,9 +81,18 @@ public class FragmentPayoutFarmersList extends Fragment {
             @Override
             public void onClickListener(int position) {
 
+                Gson gson = new Gson();
+                String element = gson.toJson(
+                        dayCollectionModels,
+                        new TypeToken<ArrayList<PayoutFarmersCollectionModel>>() {
+                        }.getType());
+
+                Gson g = new Gson();
                 Log.d("farmerCilcked", "clicked " + position);
                 Intent intent = new Intent(getActivity(), PayCard.class);
                 intent.putExtra("data", dayCollectionModels.get(position));
+                intent.putExtra("payout", payouts);
+                intent.putExtra("farmers", element);
                 startActivity(intent);
 
             }
@@ -107,6 +123,23 @@ public class FragmentPayoutFarmersList extends Fragment {
 
         listAdapter.notifyDataSetChanged();
 
+        if (payouts.getStatus() == 1) {
+            btnApprove.setVisibility(View.GONE);
+        } else {
+            if (payouts.getEndDate().equals(DateTimeUtils.Companion.getToday()) || DateTimeUtils.Companion.isPastLastDay(payouts.getEndDate())) {
+                btnApprove.setVisibility(View.VISIBLE);
+            } else {
+                btnApprove.setVisibility(View.GONE);
+            }
+        }
+
+        btnApprove.setOnClickListener(view -> {
+            payouts.setStatus(1);
+            payouts.setStatusName("Approved");
+            payoutsVewModel.updatePayout(payouts);
+
+        });
+
 
     }
 
@@ -133,6 +166,8 @@ public class FragmentPayoutFarmersList extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         this.view = view;
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
+        btnApprove = view.findViewById(R.id.btn_approve);
+        btnApprove.setVisibility(View.GONE);
 
     }
 
@@ -274,7 +309,7 @@ public class FragmentPayoutFarmersList extends Fragment {
                     orderTotal,
                     status,
                     statusText,
-                    balance, payouts.getPayoutnumber()
+                    balance, payouts.getPayoutnumber(), famerModel.getCyclecode()
             ));
 
 

@@ -38,6 +38,10 @@ public class CollectionsRepo {
         return collectionsDao.getCollectionByFarmerByDate(code, date);
     }
 
+    public List<Collection> getCollectionByDateByFarmerByTime(String code, String today, String ampm) {
+        return collectionsDao.getCollectionByDateByFarmerByTime(code, today, ampm);
+
+    }
     public LiveData<List<Collection>> getCollectionByPayout(String payout) {
         return collectionsDao.getCollectionByPayoutNumber(payout);
     }
@@ -99,6 +103,22 @@ public class CollectionsRepo {
     public LiveData<Collection> getCollectionById(int collectionId) {
         return collectionsDao.getCollectionById(collectionId);
     }
+
+    public Collection getCollectionByIdOne(int collectionId) {
+        return collectionsDao.getCollectionByIdOne(collectionId);
+    }
+
+    public void approveFarmersPayoutCard(String farmercode, int payoutNumber) {
+        collectionsDao.approveFarmersPayoutCard(1, farmercode, payoutNumber);
+
+    }
+
+    public void updateCollectionsByPayout(int payoutnumber, int status) {
+        collectionsDao.approvePayout(payoutnumber, status);
+
+    }
+
+
 
 
     private static class insertAsyncTask extends AsyncTask<Collection, Void, Boolean> {

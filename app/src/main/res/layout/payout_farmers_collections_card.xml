@@ -71,28 +71,39 @@
                 android:background="@color/divider" />
 
             <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:gravity="center"
 
-                android:orientation="vertical"
                 android:paddingTop="2dp"
-                android:paddingBottom="2dp"
+                android:orientation="vertical"
+
                 android:weightSum="2">
 
 
                 <TextView
+                    android:layout_gravity="center"
+                    android:textSize="12sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+
                     android:gravity="center"
                     android:text=" AM  "
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="2dp"
+                    android:background="@color/divider" />
+
                 <TextView
+                    android:textSize="12sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+
                     android:gravity="center"
                     android:text=" PM  "
                     android:textColor="@color/black"
@@ -113,28 +124,35 @@
 
                 android:orientation="vertical"
                 android:paddingTop="2dp"
-                android:paddingBottom="2dp"
+
                 android:weightSum="2">
 
-                <EditText
+                <TextView
+                    android:padding="2dp"
+                    android:text="45454"
+                    android:textSize="14sp"
                     android:id="@+id/txt_am_milk"
                     android:layout_width="match_parent"
 
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="numberDecimal"
-                    android:text="200.9 Ltrs"
-                    android:textSize="15sp" />
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content" />
 
-                <EditText
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="2dp"
+                    android:background="@color/divider" />
+
+                <TextView
+                    android:focusableInTouchMode="false"
+                    android:padding="2dp"
+                    android:textSize="14sp"
                     android:id="@+id/txt_pm_milk"
                     android:layout_width="match_parent"
+                    android:textStyle="bold"
 
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="numberDecimal"
-                    android:text="40,6 Ltrs"
-                    android:textSize="15sp" />
+                    android:text="40,6 Ltrs" />
 
             </LinearLayout>
 
@@ -145,33 +163,43 @@
                 android:background="@color/divider" />
 
             <LinearLayout
+                android:paddingTop="2dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
 
                 android:orientation="vertical"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
+
                 android:weightSum="2">
 
-                <EditText
+                <TextView
+                    android:focusableInTouchMode="false"
+                    android:padding="2dp"
+                    android:textSize="14sp"
                     android:id="@+id/txt_am_loans"
                     android:layout_width="match_parent"
+                    android:textStyle="bold"
 
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="numberDecimal"
-                    android:text="1200 /="
-                    android:textSize="15sp" />
 
-                <EditText
+                    android:inputType="numberDecimal"
+                    android:text="1200 /=" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="2dp"
+                    android:background="@color/divider" />
+
+                <TextView
+
+                    android:padding="2dp"
                     android:id="@+id/txt_pm_loans"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="numberDecimal"
                     android:text="200 /="
-                    android:textSize="15sp" />
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -182,34 +210,41 @@
                 android:background="@color/divider" />
 
             <LinearLayout
+                android:paddingTop="2dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
 
                 android:orientation="vertical"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
+
                 android:weightSum="2">
 
-                <EditText
+                <TextView
+                    android:layout_height="wrap_content"
                     android:id="@+id/txt_am_orders"
                     android:layout_width="match_parent"
 
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:inputType="numberDecimal"
+                    android:padding="2dp"
                     android:text="0.0 Ksh"
-                    android:textSize="15sp" />
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
-                <EditText
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="2dp"
+                    android:background="@color/divider" />
+
+                <TextView
+                    android:layout_height="wrap_content"
                     android:id="@+id/txt_pm_orders"
                     android:layout_width="match_parent"
+                    android:focusableInTouchMode="false"
 
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:inputType="numberDecimal"
+                    android:padding="2dp"
                     android:text="4000 Ksh"
-                    android:textSize="15sp" />
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
