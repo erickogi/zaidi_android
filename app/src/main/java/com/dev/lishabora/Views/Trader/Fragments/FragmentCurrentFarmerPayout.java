@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.FarmerCollectionsAdapter;
 import com.dev.lishabora.Models.Collection;
+import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.DayCollectionModel;
 import com.dev.lishabora.Models.DaysDates;
 import com.dev.lishabora.Models.FamerModel;
@@ -66,6 +67,7 @@ public class FragmentCurrentFarmerPayout extends Fragment {
     private RecyclerView recyclerView;
     private List<DayCollectionModel> dayCollectionModels;
     private MaterialButton btnApprove, btnBack;
+    private TextView txtApprovalStatus;
     private List<DayCollectionModel> liveModel;
     private List<Collection> collections;
     private AVLoadingIndicatorView avi;
@@ -94,12 +96,12 @@ public class FragmentCurrentFarmerPayout extends Fragment {
         btnApprove.setVisibility(View.GONE);
 
         btnBack = view.findViewById(R.id.btn_back);
+        txtApprovalStatus = view.findViewById(R.id.txt_approval_status);
 
         btnBack.setVisibility(View.GONE);
 
         statusview = view.findViewById(R.id.status_view);
         background = view.findViewById(R.id.background);
-        // save.setOnClickListener(view -> update(liveModel));
 
 
         status = view.findViewById(R.id.txt_status);
@@ -158,7 +160,7 @@ public class FragmentCurrentFarmerPayout extends Fragment {
     private void setUpList(List<DayCollectionModel> dayCollectionModels) {
         this.dayCollectionModels = dayCollectionModels;
         this.liveModel = dayCollectionModels;
-        listAdapter.refresh(dayCollectionModels);
+        listAdapter.refresh(dayCollectionModels, payouts.getStatus() == 0);
 
 
     }
@@ -255,10 +257,19 @@ public class FragmentCurrentFarmerPayout extends Fragment {
     }
 
     private void initData() {
-        if (checkIfWeCanUseLastPayout()) {
-            //We are in a valid payout for this cycle
+//        if (checkIfWeCanUseLastPayout(famerModel.getCyclecode())) {
+//            //We are in a valid payout for this cycle
+//
+//            t
 
-            payoutsVewModel.getCollectionByDateByPayout("" + payouts.getPayoutnumber()).observe(this, (List<Collection> collections) -> {
+        Cycles c = new Cycles();
+        c.setCycle(famerModel.getCyclename());
+        c.setCode(Integer.valueOf(famerModel.getCyclecode()));
+
+
+        this.payouts = traderViewModel.createPayout(c);
+        if (payouts != null) {
+            payoutsVewModel.getCollectionByDateByPayoutByFarmer("" + payouts.getPayoutnumber(), famerModel.getCode()).observe(this, (List<Collection> collections) -> {
 
 
                 FragmentCurrentFarmerPayout.this.collections = collections;
@@ -267,10 +278,43 @@ public class FragmentCurrentFarmerPayout extends Fragment {
 
 
             });
-
-
         }
+
+
+//        }else {
+//            Payouts p=checkIfWeCanUseLastPayout();
+//
+//            if(p!=null){
+//                Payouts payouts=new Payouts();
+//                payouts.setStatus(0);
+//                payouts.setStatusName("Pending");
+//                payouts.setPayoutnumber(p.getPayoutnumber()+1);
+//                payouts.setCyclename(famerModel.getCyclename());
+//                payouts.setCycleCode(famerModel.getCyclecode());
+//
+//
+//
+//
+//
+////                private int id;
+////
+////
+////                private String cycleCode;
+////                private String startDate;
+////                //private String startDateMilliseconds;
+////                private String endDate;
+////                //private String endDateMilliseconds;
+////                private String cyclename;
+////                private int payoutnumber;
+////                private int status;
+//
+//
+//            }
+//
+//
+//        }
     }
+
 
     private int getFarmerStatus(String code) {
         int status = 0;
@@ -286,7 +330,7 @@ public class FragmentCurrentFarmerPayout extends Fragment {
             }
 
         }
-        if (status >= collectsNo) {
+        if (status >= collectsNo && status != 0) {
             return 1;
         } else {
             return 0;
@@ -344,7 +388,11 @@ public class FragmentCurrentFarmerPayout extends Fragment {
 
     }
 
-    private boolean checkIfWeCanUseLastPayout() {
+    private Payouts checkIfWeCanUseLastPayout() {
+        return traderViewModel.getLastPayout();
+    }
+
+    private boolean checkIfWeCanUseLastPayout(String cyclecode) {
         Payouts p = traderViewModel.getLastPayout(famerModel.getCyclecode());
         if (p == null) {
             payouts = null;
@@ -452,7 +500,7 @@ public class FragmentCurrentFarmerPayout extends Fragment {
         name.setText(model.getFarmername());
         status.setText(model.getStatusName());
 
-        getActivity().setTitle("" + model.getFarmername() + "        ID " + model.getFarmercode());
+        Objects.requireNonNull(getActivity()).setTitle("" + model.getFarmername() + "        ID " + model.getFarmercode());
 
 
         milk.setText(model.getMilktotal());
@@ -528,15 +576,93 @@ public class FragmentCurrentFarmerPayout extends Fragment {
             setBalance();
         });
 
+        btnApprove.setOnClickListener(view -> approve(payouts, model));
+        btnBack.setOnClickListener(view1 -> cancelApprove(payouts, model));
+
 
         if (model.getStatus() == 0 && (DateTimeUtils.Companion.getToday().equals(payouts.getEndDate())
                 || DateTimeUtils.Companion.isPastLastDay(payouts.getEndDate()))) {
             btnApprove.setVisibility(View.VISIBLE);
+            txtApprovalStatus.setVisibility(View.GONE);
+            btnBack.setVisibility(View.GONE);
 
-        } else {
+
+        } else if (model.getStatus() == 1) {
+            txtApprovalStatus.setText("Approved");
+            txtApprovalStatus.setVisibility(View.VISIBLE);
+            txtApprovalStatus.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+
+            if (payouts.getStatus() == 0) {
+                btnApprove.setVisibility(View.GONE);
+                btnBack.setVisibility(View.VISIBLE);
+                btnBack.setText("Cancel Approval");
+
+                txtApprovalStatus.setVisibility(View.VISIBLE);
+            } else {
+                btnBack.setVisibility(View.GONE);
+                btnApprove.setVisibility(View.GONE);
+                txtApprovalStatus.setText("Approved");
+                txtApprovalStatus.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+
+                txtApprovalStatus.setVisibility(View.VISIBLE);
+            }
+        } else if (model.getStatus() == 0 && (!DateTimeUtils.Companion.getToday().equals(payouts.getEndDate())
+                || !DateTimeUtils.Companion.isPastLastDay(payouts.getEndDate()))) {
+            txtApprovalStatus.setText("Pending");
+            txtApprovalStatus.setTextColor(getContext().getResources().getColor(R.color.red));
+
+            txtApprovalStatus.setVisibility(View.VISIBLE);
+            btnBack.setVisibility(View.GONE);
             btnApprove.setVisibility(View.GONE);
+
+
         }
 
+
+    }
+
+    private void cancelApprove(Payouts payouts, PayoutFarmersCollectionModel model) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
+        alertDialog.setMessage("Confirm that you wish to cancel " + model.getFarmername() + "'s " + payouts.getCyclename() + " Collection card").setCancelable(false).setTitle("Cancel " + model.getFarmername() + " Card");
+
+
+        alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
+
+            payoutsVewModel.cancelFarmersPayoutCard(model.getFarmercode(), model.getPayoutNumber());
+            model.setStatus(1);
+            model.setStatusName("Canceled");
+            setData(model);
+
+
+            dialogInterface.dismiss();
+
+        }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
+
+        AlertDialog alertDialogAndroid = alertDialog.create();
+        alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.show();
+    }
+
+    private void approve(Payouts payouts, PayoutFarmersCollectionModel model) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
+        alertDialog.setMessage("Confirm that you wish to approve " + model.getFarmername() + "'s " + payouts.getCyclename() + " Collection card").setCancelable(false).setTitle("Approve " + model.getFarmername() + " Card");
+
+
+        alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
+
+            payoutsVewModel.approveFarmersPayoutCard(model.getFarmercode(), model.getPayoutNumber());
+            model.setStatus(1);
+            model.setStatusName("Approved");
+            setData(model);
+
+
+            dialogInterface.dismiss();
+
+        }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
+
+        AlertDialog alertDialogAndroid = alertDialog.create();
+        alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.show();
 
     }
 
@@ -551,6 +677,24 @@ public class FragmentCurrentFarmerPayout extends Fragment {
 
         avi = mView.findViewById(R.id.avi);
         TextInputEditText edtVL = mView.findViewById(R.id.edt_value);
+        TextView txt = mView.findViewById(R.id.txt_desc);
+
+
+        String ti = "";
+        if (time == 0) {
+            ti = " AM";
+        } else {
+            ti = " PM";
+        }
+        String tp = "";
+        if (type == 0) {
+            tp = " Milk collection";
+        } else if (type == 1) {
+            tp = " Loan";
+        } else {
+            tp = " Order ";
+        }
+        txt.setText(" Editing " + tp + "  For  " + dayCollectionModel.getDate() + "  " + ti);
 
 
         try {
@@ -626,8 +770,8 @@ public class FragmentCurrentFarmerPayout extends Fragment {
             } else {
                 Collection c = new Collection();
                 c.setCycleCode(payouts.getCycleCode());
-                c.setFarmerCode(payoutfarmermodel.getFarmercode());
-                c.setFarmerName(payoutfarmermodel.getFarmername());
+                c.setFarmerCode(famerModel.getCode());
+                c.setFarmerName(famerModel.getNames());
                 c.setCycleId(payouts.getCycleCode());
                 c.setDayName(dayCollectionModel.getDay());
                 c.setLoanAmountGivenOutPrice(dayCollectionModel.getLoanAm());
@@ -675,10 +819,10 @@ public class FragmentCurrentFarmerPayout extends Fragment {
 
 
                 Collection c = new Collection();
-                c.setCycleCode(payoutfarmermodel.getCycleCode());
-                c.setFarmerCode(payoutfarmermodel.getFarmercode());
-                c.setFarmerName(payoutfarmermodel.getFarmername());
-                c.setCycleId(payoutfarmermodel.getCycleCode());
+                c.setCycleCode(famerModel.getCyclecode());
+                c.setFarmerCode(famerModel.getCode());
+                c.setFarmerName(famerModel.getNames());
+                c.setCycleId(famerModel.getCode());
                 c.setDayName(dayCollectionModel.getDay());
                 c.setLoanAmountGivenOutPrice(dayCollectionModel.getLoanPm());
                 c.setDayDate(dayCollectionModel.getDate());

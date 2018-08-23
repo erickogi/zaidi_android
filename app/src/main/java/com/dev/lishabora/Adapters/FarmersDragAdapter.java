@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.dev.lishabora.Adapters.ViewHolders.FarmerViewHolder;
 import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.Draggable.helper.OnStartDragListener;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.Views.Trader.FarmerConst;
@@ -73,7 +74,10 @@ public class FarmersDragAdapter extends RecyclerView.Adapter<FarmerViewHolder> i
         holder.name.setText(farmer.getNames());
         holder.cycle.setText(farmer.getCyclename());
         holder.route.setText("" + farmer.getRoutename());
-        holder.txtDate.setText(farmer.getTransactiontime());
+
+        holder.txtDate.setText(DateTimeUtils.Companion.getDisplayDate(farmer.getTransactiontime()));
+
+        // holder.txtDate.setText(farmer.getTransactiontime());
         String status = "";
         if (farmer.getArchived() == 0 && farmer.getDeleted() == 0 && farmer.getDummy() == 0) {
             status = "Active";

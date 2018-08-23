@@ -6,6 +6,7 @@ import java.util.LinkedList;
 
 public class FarmerConst {
     private static FamerModel famerModel;
+    private static int createFarmerIntentType = 0;
 
     public static final int ACTIVE = 0, ARCHIVED = 1, DELETED = 2, DUMMY = 3, ALL = 4;
     private static LinkedList<FamerModel> famerModels;
@@ -35,6 +36,13 @@ public class FarmerConst {
         FarmerConst.famerModel = famerModel;
     }
 
+    public static int getCreateFarmerIntentType() {
+        return createFarmerIntentType;
+    }
+
+    public static void setCreateFarmerIntentType(int createFarmerIntentType) {
+        FarmerConst.createFarmerIntentType = createFarmerIntentType;
+    }
 
     public static LinkedList<FamerModel> getFamerModels() {
         return famerModels;

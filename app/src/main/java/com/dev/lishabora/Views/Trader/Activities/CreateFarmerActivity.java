@@ -1,12 +1,17 @@
 package com.dev.lishabora.Views.Trader.Activities;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.dev.lishabora.Adapters.FarmetRecruitAdapter;
+import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.PrefrenceManager;
@@ -26,6 +31,8 @@ public class CreateFarmerActivity extends AppCompatActivity implements StepperLa
     private PrefrenceManager prefrenceManager;
     private TraderViewModel mViewModel;
     private int pos;
+    private int type = 0; // 0 -- add  1 --  edit
+
 
 
     @Override
@@ -42,6 +49,16 @@ public class CreateFarmerActivity extends AppCompatActivity implements StepperLa
                 pos = 1;
             }
         });
+        type = getIntent().getIntExtra("type", 0);
+        FarmerConst.setCreateFarmerIntentType(type);
+
+        if (type == 1) {
+
+            FamerModel famerModel = (FamerModel) getIntent().getSerializableExtra("farmer");
+            FarmerConst.setFamerModel(famerModel);
+        }
+
+
 
         mStepperLayout = findViewById(R.id.stepperLayout);
         mStepperAdapter = new FarmetRecruitAdapter(getSupportFragmentManager(), this);
@@ -60,8 +77,30 @@ public class CreateFarmerActivity extends AppCompatActivity implements StepperLa
     public void onCompleted(View completeButton) {
 
 
-        insert(pos);
+        if (type == 0) {
+            insert(pos);
+        } else {
+            update();
+        }
 
+    }
+
+    private void update() {
+        mViewModel.updateFarmer(FarmerConst.getFamerModel(), false).observe(this, new Observer<ResponseModel>() {
+            @Override
+            public void onChanged(@Nullable ResponseModel responseModel) {
+                if (responseModel != null && responseModel.getResultCode() == 1) {
+                    snack(responseModel.getResultDescription());
+
+
+                    Intent data = new Intent();
+
+                    data.putExtra("farmer_back", FarmerConst.getFamerModel());
+                    setResult(RESULT_OK, data);
+                    finish();
+                }
+            }
+        });
     }
 
     private void insert(int position) {

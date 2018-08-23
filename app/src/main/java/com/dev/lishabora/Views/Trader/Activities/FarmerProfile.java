@@ -1,5 +1,6 @@
 package com.dev.lishabora.Views.Trader.Activities;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,11 +10,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
+import com.dev.lishabora.Views.Trader.FarmerConst;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentCurrentFarmerPayout;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentFarmerHistory;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentFarmerProfile;
@@ -24,6 +26,20 @@ public class FarmerProfile extends AppCompatActivity {
     AHBottomNavigationItem item2;
     AHBottomNavigation bottomNavigation;
     private FamerModel famerModel;
+    private TraderViewModel traderViewModel;
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,20 +47,18 @@ public class FarmerProfile extends AppCompatActivity {
         setContentView(R.layout.activity_farmer_profile);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
 
         famerModel = (FamerModel) getIntent().getSerializableExtra("farmer");
+        FarmerConst.setFamerModel(famerModel);
+
         Bundle bundle = new Bundle();
         bundle.putInt("type", 1);
-        bundle.putSerializable("farmer", famerModel);
+        bundle.putSerializable("farmer", FarmerConst.getFamerModel());
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show());
 
         fragment = new FragmentFarmerProfile();
         fragment.setArguments(bundle);
@@ -93,7 +107,7 @@ public class FarmerProfile extends AppCompatActivity {
                     fragment = new FragmentFarmerProfile();
                     popOutFragments();
                     bundle.putInt("type", 0);
-                    bundle.putSerializable("farmer", famerModel);
+                    bundle.putSerializable("farmer", FarmerConst.getFamerModel());
                     fragment.setArguments(bundle);
                     setFragment();
                     break;
@@ -101,7 +115,7 @@ public class FarmerProfile extends AppCompatActivity {
                     popOutFragments();
                     fragment = new FragmentFarmerHistory();
                     bundle.putInt("type", 1);
-                    bundle.putSerializable("farmer", famerModel);
+                    bundle.putSerializable("farmer", FarmerConst.getFamerModel());
 
                     fragment.setArguments(bundle);
                     setFragment();
@@ -111,7 +125,7 @@ public class FarmerProfile extends AppCompatActivity {
                     popOutFragments();
                     fragment = new FragmentCurrentFarmerPayout();
                     bundle.putInt("type", 1);
-                    bundle.putSerializable("farmer", famerModel);
+                    bundle.putSerializable("farmer", FarmerConst.getFamerModel());
 
                     fragment.setArguments(bundle);
                     setFragment();
@@ -122,15 +136,13 @@ public class FarmerProfile extends AppCompatActivity {
             }
             return true;
         });
-        bottomNavigation.setOnNavigationPositionListener(new AHBottomNavigation.OnNavigationPositionListener() {
-            @Override
-            public void onPositionChange(int y) {
-                // Manage the new y position
-            }
+        bottomNavigation.setOnNavigationPositionListener(y -> {
+            // Manage the new y position
         });
 
 
     }
+
 
     void setFragment() {
         // fragment = new FragmentSearch();

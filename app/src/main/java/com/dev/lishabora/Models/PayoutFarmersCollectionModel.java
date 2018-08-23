@@ -12,9 +12,7 @@ public class PayoutFarmersCollectionModel implements Serializable {
     private int status;
     private String statusName;
     private String balance;
-
     private String cycleCode;
-
     private int payoutNumber;
 
 

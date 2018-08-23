@@ -1160,4 +1160,105 @@ public class TraderViewModel extends AndroidViewModel
 
         return updateCollectionSuccess;
     }
+
+    public Payouts createPayout(Cycles collection) {
+
+
+        Payouts p = getLastPayout("" + collection.getCode());
+
+
+        Payouts plastIfOne = getLastPayout();
+
+        Cycles c = getCycleO("" + collection.getCode());
+        if (c == null) {
+            insertCycles();
+            c = getCycleO("" + collection.getCode());
+
+        }
+
+
+        int farmerCountPerCycle = getFarmersCountByCycle("" + collection.getCode());
+
+        if (p == null) {
+
+            int tradersStartDay = prefrenceManager.getTraderModel().getCycleStartDayNumber();
+            int tradersEndDay = prefrenceManager.getTraderModel().getCycleEndDayNumber();
+
+
+            Payouts payouts = new Payouts();
+            payouts.setCycleCode("" + collection.getCode());
+            payouts.setCyclename(c.getCycle());
+            payouts.setFarmersCount("" + farmerCountPerCycle);
+            payouts.setStatus(0);
+
+            PayoutsCyclesDatesUtills.EndAndStart endAndStart = new PayoutsCyclesDatesUtills.EndAndStart();
+            endAndStart = PayoutsCyclesDatesUtills.getPayoutStartEndDate(c.getCode(), new PayoutsCyclesDatesUtills.EndAndStart(tradersStartDay, tradersEndDay), null);
+            payouts.setStartDate(endAndStart.getStartDate());
+            payouts.setEndDate(endAndStart.getEndDate());
+
+            payouts.setApprovedCards("");
+            payouts.setMilkTotal("");
+            payouts.setBalance("");
+            payouts.setLoanTotal("");
+
+            if (plastIfOne != null) {
+                payouts.setPayoutnumber(plastIfOne.getPayoutnumber() + 1);
+
+            } else {
+                payouts.setPayoutnumber(1);
+
+            }
+
+
+            insertPayout(payouts);
+
+            return getLastPayout("" + collection.getCode());
+
+        } else {
+
+
+            if (DateTimeUtils.Companion.isPastLastDay(p.getEndDate())) {
+
+
+                int tradersStartDay = prefrenceManager.getTraderModel().getCycleStartDayNumber();
+                int tradersEndDay = prefrenceManager.getTraderModel().getCycleEndDayNumber();
+
+
+                Payouts plast = getLastPayout();
+
+                Payouts payouts = new Payouts();
+                payouts.setCycleCode("" + collection.getCode());
+                payouts.setCyclename(c.getCycle());
+                payouts.setFarmersCount("" + farmerCountPerCycle);
+                payouts.setStatus(0);
+
+                PayoutsCyclesDatesUtills.EndAndStart endAndStart;
+                endAndStart = PayoutsCyclesDatesUtills.getPayoutStartEndDate(c.getCode(), new PayoutsCyclesDatesUtills.EndAndStart(tradersStartDay, tradersEndDay), new PayoutsCyclesDatesUtills.EndAndStart(p.getStartDate(), p.getEndDate()));
+                payouts.setStartDate(endAndStart.getStartDate());
+                payouts.setEndDate(endAndStart.getEndDate());
+
+                payouts.setApprovedCards("");
+                payouts.setMilkTotal("");
+                payouts.setBalance("");
+                payouts.setLoanTotal("");
+                payouts.setPayoutnumber(plast.getPayoutnumber() + 1);
+
+
+                insertPayout(payouts);
+
+
+                return getLastPayout("" + collection.getCode());
+
+
+            } else {
+
+                return p;
+
+            }
+
+
+        }
+
+
+    }
 }

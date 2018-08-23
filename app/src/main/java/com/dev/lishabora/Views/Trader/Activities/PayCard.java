@@ -70,6 +70,7 @@ public class PayCard extends AppCompatActivity {
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
     private List<DayCollectionModel> dayCollectionModels;
     private MaterialButton btnApprove, btnBack;
+    private TextView txtApprovalStatus;
 
     private LinearLayout empty_layout;
     private Payouts payouts;
@@ -95,12 +96,7 @@ public class PayCard extends AppCompatActivity {
     }
 
     private void getPayout(String payout, List<Collection> collections) {
-        payoutsVewModel.getPayoutsByPayoutNumber(payout).observe(this, new Observer<Payouts>() {
-            @Override
-            public void onChanged(@Nullable Payouts payouts) {
-                setUpDayCollectionsModel(payouts, collections);
-            }
-        });
+        payoutsVewModel.getPayoutsByPayoutNumber(payout).observe(this, payouts -> setUpDayCollectionsModel(payouts, collections));
 
     }
 
@@ -109,7 +105,8 @@ public class PayCard extends AppCompatActivity {
     private void setUpList(List<DayCollectionModel> dayCollectionModels) {
         this.dayCollectionModels = dayCollectionModels;
         this.liveModel = dayCollectionModels;
-        listAdapter.refresh(dayCollectionModels);
+
+        listAdapter.refresh(dayCollectionModels, payoutfarmermodel.getStatus() == 0);
 
 
 
@@ -248,6 +245,8 @@ public class PayCard extends AppCompatActivity {
 
         btnApprove = findViewById(R.id.btn_approve);
         btnApprove.setVisibility(View.GONE);
+        txtApprovalStatus = findViewById(R.id.txt_approval_status);
+
 
         btnBack = findViewById(R.id.btn_back);
 
@@ -279,13 +278,20 @@ public class PayCard extends AppCompatActivity {
 
         String data = getIntent().getStringExtra("farmers");
 
-        Gson gson = new Gson();
-//        JsonArray jsonArray = gson.toJsonTree(data).getAsJsonArray();
-        Type listType = new TypeToken<LinkedList<PayoutFarmersCollectionModel>>() {
-        }.getType();
+        if (data != null && !data.equals("null")) {
 
-        setBottom();
-        initBottomList(gson.fromJson(data, listType));
+            Gson gson = new Gson();
+//        JsonArray jsonArray = gson.toJsonTree(data).getAsJsonArray();
+            Type listType = new TypeToken<LinkedList<PayoutFarmersCollectionModel>>() {
+            }.getType();
+
+            setBottom();
+            initBottomList(gson.fromJson(data, listType));
+
+        } else {
+            layoutBottomSheet.setVisibility(View.GONE);
+        }
+
 
 
     }
@@ -491,7 +497,7 @@ public class PayCard extends AppCompatActivity {
     }
     private void setData(PayoutFarmersCollectionModel model) {
         this.payoutfarmermodel = model;
-        balance.setText(model.getBalance());
+        balance.setText("" + model.getBalance());
         id.setText(model.getFarmercode());
         name.setText(model.getFarmername());
         status.setText(model.getStatusName());
@@ -575,44 +581,48 @@ public class PayCard extends AppCompatActivity {
         });
 
 
+        btnApprove.setOnClickListener(view -> approve(payouts, model));
+
+
         if (model.getStatus() == 0 && (DateTimeUtils.Companion.getToday().equals(payouts.getEndDate())
                 || DateTimeUtils.Companion.isPastLastDay(payouts.getEndDate()))) {
             btnApprove.setVisibility(View.VISIBLE);
+            txtApprovalStatus.setVisibility(View.GONE);
+            btnBack.setVisibility(View.GONE);
 
-        } else {
+
+        } else if (model.getStatus() == 1) {
+            txtApprovalStatus.setText("Approved");
+            txtApprovalStatus.setVisibility(View.VISIBLE);
+            txtApprovalStatus.setTextColor(this.getResources().getColor(R.color.colorPrimary));
+
+
+            if (payouts.getStatus() == 0) {
+                btnApprove.setVisibility(View.GONE);
+                btnBack.setVisibility(View.VISIBLE);
+                btnBack.setText("Cancel Approval");
+                txtApprovalStatus.setVisibility(View.VISIBLE);
+
+            } else {
+                btnBack.setVisibility(View.GONE);
+                btnApprove.setVisibility(View.GONE);
+                txtApprovalStatus.setText("Approved");
+                txtApprovalStatus.setTextColor(this.getResources().getColor(R.color.colorPrimary));
+
+                txtApprovalStatus.setVisibility(View.VISIBLE);
+            }
+        } else if (model.getStatus() == 0 && (!DateTimeUtils.Companion.getToday().equals(payouts.getEndDate())
+                || !DateTimeUtils.Companion.isPastLastDay(payouts.getEndDate()))) {
+            txtApprovalStatus.setText("Pending");
+            txtApprovalStatus.setTextColor(this.getResources().getColor(R.color.red));
+
+            txtApprovalStatus.setVisibility(View.VISIBLE);
+            btnBack.setVisibility(View.GONE);
             btnApprove.setVisibility(View.GONE);
+
+
         }
-        btnApprove.setOnClickListener(view -> approve(payouts, model));
-//        payoutsVewModel.getStatusForFarmerPayout(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
-//            if(integer!=null) {
-//                if (integer == 1) {
-//                    //  status.setText("Active");
-//                    status.setText("Approved");
-//                    status.setTextColor(PayCard.this.getResources().getColor(R.color.green_color_picker));
-//                    background.setBackgroundColor(PayCard.this.getResources().getColor(R.color.green_color_picker));
-//                    statusview.setBackgroundColor(PayCard.this.getResources().getColor(R.color.green_color_picker));
-//
-//
-//                } else if (integer == 0) {
-//                    status.setText("Pending");
-//
-//                    //  status.setText("Deleted");
-//                    status.setTextColor(PayCard.this.getResources().getColor(R.color.red));
-//                    background.setBackgroundColor(PayCard.this.getResources().getColor(R.color.red));
-//                    statusview.setBackgroundColor(PayCard.this.getResources().getColor(R.color.red));
-//
-//                } else {
-//                    status.setText("Approved");
-//
-//                    // status.setText("In-Active");
-//                    status.setTextColor(PayCard.this.getResources().getColor(R.color.blue_color_picker));
-//                    background.setBackgroundColor(PayCard.this.getResources().getColor(R.color.blue_color_picker));
-//                    statusview.setBackgroundColor(PayCard.this.getResources().getColor(R.color.blue_color_picker));
-//
-//                }
-//            }
-//        });
-//
+
 
     }
 
@@ -627,6 +637,24 @@ public class PayCard extends AppCompatActivity {
 
         avi = mView.findViewById(R.id.avi);
         TextInputEditText edtVL = mView.findViewById(R.id.edt_value);
+        TextView txt = mView.findViewById(R.id.txt_desc);
+
+        String ti = "";
+        if (time == 1) {
+            ti = " AM";
+        } else {
+            ti = " PM";
+        }
+        String tp = "";
+        if (type == 1) {
+            tp = " Milk collection";
+        } else if (type == 2) {
+            tp = " Loan";
+        } else {
+            tp = " Order ";
+        }
+        txt.setText(" Editing " + tp + "  For  " + dayCollectionModel.getDate() + "  " + ti);
+
 
 
         try {
@@ -794,6 +822,8 @@ public class PayCard extends AppCompatActivity {
             }
 
         }
+
+
         if (collection != null) {
             if (type == 1) {
                 collection.setMilkCollected(s);
@@ -823,6 +853,8 @@ public class PayCard extends AppCompatActivity {
         if (dayCollectionModels == null) {
             dayCollectionModels = new LinkedList<>();
         }
+
+
         listAdapter = new FarmerCollectionsAdapter(this, dayCollectionModels, new AdvancedOnclickRecyclerListener() {
             @Override
             public void onSwipe(int adapterPosition, int direction) {
@@ -865,7 +897,9 @@ public class PayCard extends AppCompatActivity {
 
             }
 
-        });
+        }, false);
+
+
         recyclerView.setAdapter(listAdapter);
 
         listAdapter.notifyDataSetChanged();

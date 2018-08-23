@@ -23,7 +23,7 @@ public class FarmerCollectionViewHolder extends RecyclerView.ViewHolder implemen
     private WeakReference<AdvancedOnclickRecyclerListener> listenerWeakReference;
 
 
-    public FarmerCollectionViewHolder(View itemView, AdvancedOnclickRecyclerListener onclickRecyclerListener) {
+    public FarmerCollectionViewHolder(View itemView, AdvancedOnclickRecyclerListener onclickRecyclerListener, boolean isEditable) {
         super(itemView);
         listenerWeakReference = new WeakReference<>(onclickRecyclerListener);
         itemView.setOnClickListener(this);
@@ -43,12 +43,23 @@ public class FarmerCollectionViewHolder extends RecyclerView.ViewHolder implemen
         orderTotalPm = itemView.findViewById(R.id.txt_pm_orders);
 
 
+//        if(isEditable) {
         milkTotalAm.setOnClickListener(this);
         milkTotalPm.setOnClickListener(this);
         orderTotalAm.setOnClickListener(this);
         orderTotalPm.setOnClickListener(this);
         loanTotalAm.setOnClickListener(this);
         loanTotalPm.setOnClickListener(this);
+//        }else {
+//            milkTotalPm.setEnabled(false);
+//            milkTotalAm.setEnabled(false);
+//            loanTotalAm.setEnabled(false);
+//            loanTotalPm.setEnabled(false);
+//            orderTotalAm.setEnabled(false);
+//            orderTotalPm.setEnabled(false);
+//
+//
+//        }
 
 
 //        milkTotalAm.addTextChangedListener(new TextWatcher() {

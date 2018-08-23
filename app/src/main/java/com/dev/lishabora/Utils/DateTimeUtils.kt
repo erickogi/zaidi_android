@@ -19,6 +19,13 @@ class DateTimeUtils {
 
         var Format: String = "yyyy-MM-dd HH:mm:ss"
         var FormatSmall: String = "yyyy-MM-dd"
+
+
+        var DisplayDatePattern1 = "dd/MMM/yyyy"
+        var DisplayDatePattern2 = "dd/MMM/yyyy HH:mm:ss"
+
+
+
         fun getNowslong(): String {
             SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             val date = Date()
@@ -81,6 +88,11 @@ class DateTimeUtils {
 
         fun conver2Date(mydate: String): DateTime? {
             val formatter = DateTimeFormat.forPattern(this.FormatSmall)
+            return formatter.parseDateTime(mydate)
+        }
+
+        fun conver2DateLong(mydate: String): DateTime? {
+            val formatter = DateTimeFormat.forPattern(this.Format)
             return formatter.parseDateTime(mydate)
         }
 
@@ -211,6 +223,22 @@ class DateTimeUtils {
 
 
             var month = conver2Date(date)?.toString("yyyy-MMM")
+            return month
+
+        }
+
+        fun getDisplayDate(date: String, pattern: String): String? {
+
+
+            var month = conver2Date(date)?.toString(pattern)
+            return month
+
+        }
+
+        fun getDisplayDate(date: String): String? {
+
+
+            var month = conver2DateLong(date)?.toString(this.DisplayDatePattern2)
             return month
 
         }

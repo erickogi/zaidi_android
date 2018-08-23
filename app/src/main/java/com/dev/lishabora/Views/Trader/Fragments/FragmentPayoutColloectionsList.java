@@ -323,6 +323,8 @@ public class FragmentPayoutColloectionsList extends Fragment {
 
     private void setSpinner() {
         try {
+            RelativeLayout rspinner = Objects.requireNonNull(getActivity()).findViewById(R.id.linear_spinner);
+            rspinner.setVisibility(View.VISIBLE);
             Spinner spinner = Objects.requireNonNull(getActivity()).findViewById(R.id.spinner);
             spinner.setVisibility(View.VISIBLE);
             spinner.setSelection(0);

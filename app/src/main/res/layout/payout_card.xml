@@ -72,13 +72,16 @@
                             android:textStyle="bold" />
 
                         <TextView
+
+                            android:gravity="end"
                             android:id="@+id/txt_date_end"
                             android:layout_width="0dp"
+
+
                             android:layout_height="wrap_content"
-                            android:layout_gravity="end"
                             android:layout_weight="1"
-                            android:text="12/12/2018"
-                            android:textAlignment="viewEnd"
+                            android:text="12/4/2018"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                             android:textSize="12sp"
                             android:textStyle="italic" />
                     </LinearLayout>
@@ -288,6 +291,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/linear_approved_count"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -298,6 +302,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+
 
                         android:text="Approved :"
 
@@ -318,6 +323,8 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/linear_pending_count"
+
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.dev.lishabora.Adapters.ViewHolders.TraderViewHolder;
 import com.dev.lishabora.Models.Trader.TraderModel;
+import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
 import com.github.mikephil.charting.charts.PieChart;
@@ -49,7 +50,10 @@ public class TradersAdapter extends RecyclerView.Adapter<TraderViewHolder> {
         holder.name.setText(trader.getNames());
         holder.phone.setText(trader.getMobile());
         holder.status.setText(trader.getStatus());
-        holder.txtDate.setText(trader.getTransactiontime());
+
+        holder.txtDate.setText(DateTimeUtils.Companion.getDisplayDate(trader.getTransactiontime(), DateTimeUtils.Companion.getDisplayDatePattern1()));
+
+        // holder.txtDate.setText(trader.getTransactiontime());
 
         String status = "";
 

@@ -366,6 +366,10 @@ public class PayoutsVewModel extends AndroidViewModel {
         collectionsRepo.approveFarmersPayoutCard(farmercode, payoutNumber);
     }
 
+    public void cancelFarmersPayoutCard(String farmercode, int payoutNumber) {
+        collectionsRepo.cancelFarmersPayoutCard(farmercode, payoutNumber);
+    }
+
 //    public LiveData<Integer> getStatusForFarmerPayout(String farmercode, int payoutNumber) {
 //
 //    }

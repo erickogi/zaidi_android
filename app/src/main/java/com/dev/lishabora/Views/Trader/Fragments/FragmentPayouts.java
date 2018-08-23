@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.dev.lishabora.Adapters.PayoutesAdapter;
@@ -138,7 +139,7 @@ public class FragmentPayouts extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_trader_routes, container, false);
+        return inflater.inflate(R.layout.fragment_trader_payouts, container, false);
     }
 
     @Override
@@ -150,12 +151,15 @@ public class FragmentPayouts extends Fragment {
 
         try {
             Objects.requireNonNull(getActivity()).setTitle("Payouts List");
+
         } catch (Exception nm) {
             nm.printStackTrace();
         }
 
         try {
             Spinner spinner = getActivity().findViewById(R.id.spinner);
+            RelativeLayout rspinner = getActivity().findViewById(R.id.linear_spinner);
+            rspinner.setVisibility(View.GONE);
             spinner.setVisibility(View.GONE);
         } catch (Exception nm) {
             nm.printStackTrace();
@@ -193,7 +197,6 @@ public class FragmentPayouts extends Fragment {
                 List<Collection> c = payoutsVewModel.getCollectionByDateByPayoutListOne("" + p.getPayoutnumber());
 
 
-                int status[] = getApprovedCards(c, "" + p.getPayoutnumber());
 
                 int st = 0;
                 String stText = "";
@@ -205,6 +208,8 @@ public class FragmentPayouts extends Fragment {
 
 
                 }
+                int status[] = getApprovedCards(c, "" + p.getPayoutnumber());
+
                 if (status[1] < status[0]) {
                     st = 0;
                     stText = "Pending";

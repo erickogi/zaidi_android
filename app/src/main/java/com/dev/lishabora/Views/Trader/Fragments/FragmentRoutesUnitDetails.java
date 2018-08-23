@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
+import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.RoutesModel;
 import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.Utils.PrefrenceManager;
@@ -140,6 +141,33 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
 
         initData();
         initActions();
+
+        if (FarmerConst.getCreateFarmerIntentType() == 1) {
+            FamerModel fm = FarmerConst.getFamerModel();
+            if (fm != null) {
+                setEditData(fm);
+            }
+        }
+
+    }
+
+    private void setEditData(FamerModel fm) {
+//        FarmerConst.getFamerModel().setRoute(edtRouteName.getText().toString());
+//        FarmerConst.getFamerModel().setRoutename(edtRouteName.getText().toString());
+//        FarmerConst.getFamerModel().setRoutecode(edtRouteCode.getText().toString());
+//        FarmerConst.getFamerModel().setUnitcapacity(edtUnitMeasurement.getText().toString());
+//        FarmerConst.getFamerModel().setUnitname(spinnerUnit.getItems().get(spinnerUnit.getSelectedIndex()).toString());
+//        FarmerConst.getFamerModel().setUnitcode(edtUnitName.getText().toString());
+//        FarmerConst.getFamerModel().setUnitcapacity(edtUnitMeasurement.getText().toString());
+//        FarmerConst.getFamerModel().setUnitprice(edtUnitPrice.getText().toString());
+
+        edtRouteName.setText(fm.getRoutename());
+        edtRouteCode.setText(fm.getRoutecode());
+
+        edtUnitMeasurement.setText(fm.getUnitcapacity());
+        edtUnitName.setText(fm.getUnitcode());
+        edtUnitPrice.setText(fm.getUnitprice());
+
 
     }
 

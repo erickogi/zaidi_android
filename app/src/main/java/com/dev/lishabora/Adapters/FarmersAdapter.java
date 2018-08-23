@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.dev.lishabora.Adapters.ViewHolders.FarmerViewHolder;
 import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.Draggable.helper.OnStartDragListener;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.Views.Trader.FarmerConst;
@@ -72,7 +73,9 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
         holder.name.setText(farmer.getNames());
         holder.cycle.setText(farmer.getCyclename());
         holder.route.setText("" + farmer.getRoutename());
-        holder.txtDate.setText(farmer.getTransactiontime());
+
+
+        holder.txtDate.setText(DateTimeUtils.Companion.getDisplayDate(farmer.getTransactiontime()));
         String status = "";
         if (farmer.getArchived() == 0 && farmer.getDeleted() == 0 && farmer.getDummy() == 0) {
             status = "Active";
@@ -97,67 +100,9 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
             holder.status.setTextColor(context.getResources().getColor(R.color.red));
             holder.background.setBackgroundColor(context.getResources().getColor(R.color.red));
             holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.red));
-//
+
         }
-//
-//        if(farmer.getSynced()==0){
-//            holder.status.setTextColor(context.getResources().getColor(R.color.accent));
-//        }else {
-//            holder.status.setTextColor(context.getResources().getColor(R.color.green_color_picker));
-//
-//        }
-//
-//
-//        if(farmer.getArchived()==1){
-//            holder.status.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
-//        }else {
-//            holder.status.setTextColor(context.getResources().getColor(R.color.green_color_picker));
-//
-//        }
-//
-//        if(farmer.getDeleted()==1){
-//            holder.status.setTextColor(context.getResources().getColor(R.color.red));
-//        }else {
-//            holder.status.setTextColor(context.getResources().getColor(R.color.green_color_picker));
-//
-//        }
 
-
-        //farmer.getSynced()==1||farmer.getArchived()==1)
-
-//        try {
-//            if (mDragStartListener != null) {
-//                holder.itemVew.setOnTouchListener((v, event) -> {
-//                    if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
-//                        try {
-//                            if (mDragStartListener != null) {
-//                                mDragStartListener.onStartDrag(holder);
-//                                holder.lBig.setVisibility(View.GONE);
-//                            } else {
-//                                holder.lBig.setVisibility(View.VISIBLE);
-//                            }
-//                        } catch (Exception nm) {
-//                            nm.printStackTrace();
-//                        }
-//                    }
-//                    return false;
-//                });
-//                holder.itemVew.setOnLongClickListener(v -> {
-//                    try {
-//                        if (mDragStartListener != null) {
-//                            mDragStartListener.onStartDrag(holder);
-//                        }
-//                    } catch (Exception nm) {
-//                        nm.printStackTrace();
-//                    }
-//                    return false;
-//                });
-//
-//
-//            }
-//        } catch (Exception nm) {
-//            nm.printStackTrace();
-//        }
 
     }
 

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.dev.lishabora.Adapters.ViewHolders.PayoutsViewHolder;
 import com.dev.lishabora.Models.Payouts;
+import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
 
@@ -20,23 +21,24 @@ public class PayoutesAdapter extends RecyclerView.Adapter<PayoutsViewHolder> {
     private Context context;
     private List<Payouts> modelList;
     private OnclickRecyclerListener listener;
-    private boolean isChk = false;
+    private boolean hideCounts = false;
 
     public PayoutesAdapter(Context context, List<Payouts> modelList, OnclickRecyclerListener listener) {
         this.context = context;
         this.modelList = modelList;
         this.listener = listener;
-        this.isChk = false;
+        this.hideCounts = false;
 
     }
 
-    public PayoutesAdapter(Context context, List<Payouts> modelList, OnclickRecyclerListener listener, boolean isChk) {
+    public PayoutesAdapter(Context context, List<Payouts> modelList, OnclickRecyclerListener listener, boolean hideCounts) {
         this.context = context;
         this.modelList = modelList;
         this.listener = listener;
-        this.isChk = isChk;
+        this.hideCounts = hideCounts;
 
     }
+
 
     @Override
     public PayoutsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -53,8 +55,10 @@ public class PayoutesAdapter extends RecyclerView.Adapter<PayoutsViewHolder> {
         Payouts model = modelList.get(position);
 
 
-        holder.startDate.setText(model.getStartDate());
-        holder.endDate.setText(model.getEndDate());
+        holder.startDate.setText(DateTimeUtils.Companion.getDisplayDate(model.getStartDate(), DateTimeUtils.Companion.getDisplayDatePattern1()));
+        holder.endDate.setText(DateTimeUtils.Companion.getDisplayDate(model.getEndDate(), DateTimeUtils.Companion.getDisplayDatePattern1()));
+
+
         holder.cycleName.setText(model.getCyclename());
         holder.status.setText(model.getStatusName());
         holder.milkTotal.setText(model.getMilkTotal());
@@ -62,6 +66,8 @@ public class PayoutesAdapter extends RecyclerView.Adapter<PayoutsViewHolder> {
         holder.orderTotal.setText(model.getOrderTotal());
 
         holder.balance.setText(model.getBalance());
+
+
         holder.approvedCount.setText(model.getApprovedCards());
         holder.unApprovedCount.setText(model.getPendingCards());
 
@@ -88,6 +94,14 @@ public class PayoutesAdapter extends RecyclerView.Adapter<PayoutsViewHolder> {
 
         }
 
+        if (hideCounts) {
+            holder.approvedView.setVisibility(View.GONE);
+            holder.pendingView.setVisibility(View.GONE);
+        } else {
+            holder.approvedView.setVisibility(View.VISIBLE);
+            holder.pendingView.setVisibility(View.VISIBLE);
+        }
+
 
     }
 
@@ -98,4 +112,10 @@ public class PayoutesAdapter extends RecyclerView.Adapter<PayoutsViewHolder> {
     }
 
 
+    public void refresh(List<Payouts> payoutsList) {
+        if (payoutsList != null) {
+            modelList = payoutsList;
+            notifyDataSetChanged();
+        }
+    }
 }

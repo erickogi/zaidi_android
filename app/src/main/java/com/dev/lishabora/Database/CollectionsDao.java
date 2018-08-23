@@ -53,7 +53,7 @@ public interface CollectionsDao {
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE payoutnumber =:payoutnumber")
     List<Collection> getCollectionByPayoutNumberListOne(String payoutnumber);
 
-    @Query("UPDATE COLLECTIONTRANSACTIONS SET approved =:a WHERE farmerCode =:farmercode AND payoutnumber =:payoutNumber")
+    @Query("UPDATE COLLECTIONTRANSACTIONS SET approved =:a  WHERE farmerCode =:farmercode AND payoutnumber =:payoutNumber")
     void approveFarmersPayoutCard(int a, String farmercode, int payoutNumber);
 
 

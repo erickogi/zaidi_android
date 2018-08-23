@@ -117,6 +117,11 @@ public class CollectionsRepo {
 
     }
 
+    public void cancelFarmersPayoutCard(String farmercode, int payoutNumber) {
+        collectionsDao.approveFarmersPayoutCard(0, farmercode, payoutNumber);
+
+    }
+
     public void updateCollectionsByPayout(int payoutnumber, int status) {
         collectionsDao.approvePayout(payoutnumber, status);
 

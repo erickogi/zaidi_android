@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.dev.lishabora.Adapters.ViewHolders.FarmerCollectionViewHolder;
 import com.dev.lishabora.Models.DayCollectionModel;
 import com.dev.lishabora.Utils.AdvancedOnclickRecyclerListener;
+import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishaboramobile.R;
 
 import java.util.List;
@@ -20,26 +21,34 @@ public class FarmerCollectionsAdapter extends RecyclerView.Adapter<FarmerCollect
     private Context context;
     private List<DayCollectionModel> modelList;
     private AdvancedOnclickRecyclerListener listener;
-    private boolean isChk = false;
+    private boolean isEditable = true;
 
     public FarmerCollectionsAdapter(Context context, List<DayCollectionModel> modelList, AdvancedOnclickRecyclerListener listener) {
         this.context = context;
         this.modelList = modelList;
         this.listener = listener;
-        this.isChk = false;
+        this.isEditable = true;
 
     }
 
-    public FarmerCollectionsAdapter(Context context, List<DayCollectionModel> modelList, AdvancedOnclickRecyclerListener listener, boolean isChk) {
+    public FarmerCollectionsAdapter(Context context, List<DayCollectionModel> modelList, AdvancedOnclickRecyclerListener listener, boolean isEditable) {
         this.context = context;
         this.modelList = modelList;
         this.listener = listener;
-        this.isChk = isChk;
+        this.isEditable = isEditable;
+
 
     }
 
     public void refresh(List<DayCollectionModel> collections) {
         this.modelList.clear();
+        this.modelList.addAll(collections);
+        notifyDataSetChanged();
+    }
+
+    public void refresh(List<DayCollectionModel> collections, boolean isEditable) {
+        this.modelList.clear();
+        this.isEditable = isEditable;
         this.modelList.addAll(collections);
         notifyDataSetChanged();
     }
@@ -50,7 +59,7 @@ public class FarmerCollectionsAdapter extends RecyclerView.Adapter<FarmerCollect
 
         itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.payout_farmers_collections_card, parent, false);
 
-        return new FarmerCollectionViewHolder(itemView, listener);
+        return new FarmerCollectionViewHolder(itemView, listener, isEditable);
     }
 
 
@@ -59,7 +68,8 @@ public class FarmerCollectionsAdapter extends RecyclerView.Adapter<FarmerCollect
         DayCollectionModel model = modelList.get(position);
 
         holder.day.setText(model.getDay());
-        holder.date.setText(model.getDate());
+        // holder.date.setText(model.getDate());
+        holder.date.setText(DateTimeUtils.Companion.getDisplayDate(model.getDate(), DateTimeUtils.Companion.getDisplayDatePattern1()));
 
 
         holder.milkTotalAm.setText(model.getMilkAm());
@@ -130,6 +140,25 @@ public class FarmerCollectionsAdapter extends RecyclerView.Adapter<FarmerCollect
 
         }
 
+        if (isEditable) {
+            holder.milkTotalPm.setEnabled(true);
+            holder.milkTotalAm.setEnabled(true);
+            holder.loanTotalAm.setEnabled(true);
+            holder.loanTotalPm.setEnabled(true);
+            holder.orderTotalAm.setEnabled(true);
+            holder.orderTotalPm.setEnabled(true);
+
+
+        } else {
+            holder.milkTotalPm.setEnabled(false);
+            holder.milkTotalAm.setEnabled(false);
+            holder.loanTotalAm.setEnabled(false);
+            holder.loanTotalPm.setEnabled(false);
+            holder.orderTotalAm.setEnabled(false);
+            holder.orderTotalPm.setEnabled(false);
+
+
+        }
 
     }
 

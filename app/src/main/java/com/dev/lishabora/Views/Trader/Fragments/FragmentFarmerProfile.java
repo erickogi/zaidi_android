@@ -1,5 +1,6 @@
 package com.dev.lishabora.Views.Trader.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,10 +18,14 @@ import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.RoutesModel;
 import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
+import com.dev.lishabora.Views.Trader.Activities.CreateFarmerActivity;
+import com.dev.lishabora.Views.Trader.FarmerConst;
 import com.dev.lishaboramobile.R;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 public class FragmentFarmerProfile extends Fragment {
     FamerModel famerModel;
@@ -80,6 +85,18 @@ public class FragmentFarmerProfile extends Fragment {
         btnEdit = mView.findViewById(R.id.btn_edit);
 
 
+        setUpData();
+        btnEdit.setOnClickListener(view -> {
+
+            Intent intent = new Intent(getActivity(), CreateFarmerActivity.class);
+            intent.putExtra("type", 1);
+            intent.putExtra("farmer", famerModel);
+
+            startActivityForResult(intent, 1001);
+        });
+    }
+
+    void setUpData() {
         if (famerModel != null) {
             edtNames.setText(famerModel.getNames());
             edtMobile.setText(famerModel.getMobile());
@@ -98,8 +115,15 @@ public class FragmentFarmerProfile extends Fragment {
             }
 
         }
-        btnEdit.setOnClickListener(view -> {
+    }
 
-        });
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1001) {
+            if (resultCode == RESULT_OK) {
+                famerModel = (FamerModel) data.getSerializableExtra("farmer_back");
+                FarmerConst.setFamerModel(famerModel);
+                setUpData();
+            }
+        }
     }
 }

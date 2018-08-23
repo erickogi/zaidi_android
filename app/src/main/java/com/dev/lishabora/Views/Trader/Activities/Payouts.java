@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.dev.lishabora.Views.Trader.Fragments.FragmentPayouts;
@@ -14,6 +15,7 @@ import com.dev.lishaboramobile.R;
 
 public class Payouts extends AppCompatActivity {
     static Spinner spinner;
+    private RelativeLayout lspinner;
     private static Fragment fragment = null;
 
     public static void setSpinner(int v) {
@@ -31,6 +33,7 @@ public class Payouts extends AppCompatActivity {
         setContentView(R.layout.activity_payouts);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -39,6 +42,7 @@ public class Payouts extends AppCompatActivity {
 
         fab.hide();
 
+        lspinner = findViewById(R.id.linear_spinner);
         spinner = findViewById(R.id.spinner);
 
         //  fragment = new FragmentPayouts();

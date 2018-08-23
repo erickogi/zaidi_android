@@ -272,7 +272,11 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             ampm = "AM";
             if (value != null) {
                 edtTodayAm.setText(value);
-                edtTodayAm.setSelection(value.length());
+                try {
+                    edtTodayAm.setSelection(value.length());
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
             }
 
         } else {
@@ -283,7 +287,11 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             ampm = "PM";
             if (value != null) {
                 edtTodayPm.setText(value);
-                edtTodayPm.setSelection(value.length());
+                try {
+                    edtTodayPm.setSelection(value.length());
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
             }
         }
 

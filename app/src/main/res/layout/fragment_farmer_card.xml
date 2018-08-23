@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="10dp"
 
     android:background="@color/white"
     tools:context="com.dev.lishabora.Views.Trader.Activities.PayCard">
@@ -49,7 +50,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Farmer Names"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
@@ -61,7 +62,7 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="2dp"
                     android:layout_weight="1"
-                    android:text="34553"
+                    android:text=""
                     android:textAlignment="viewEnd"
                     android:textStyle="italic" />
 
@@ -114,7 +115,7 @@
                         android:id="@+id/txt_milk"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="200.9 Ltrs" />
+                        android:text="0.0" />
                 </LinearLayout>
 
 
@@ -142,7 +143,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
 
-                        android:text="1200 /=" />
+                        android:text="0.0" />
 
                 </LinearLayout>
 
@@ -250,7 +251,7 @@
 
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="30000 Ksh"
+                    android:text="0.0"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
 
                     android:textStyle="bold" />
@@ -304,6 +305,7 @@
 
     <android.support.v7.widget.RecyclerView
 
+
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -315,7 +317,7 @@
 
         android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
-        android:layout_marginBottom="@dimen/mdtp_done_button_height"
+        android:layout_marginBottom="50dp"
 
         android:background="@color/white"
         android:nestedScrollingEnabled="false"
@@ -334,6 +336,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
+        android:gravity="top"
         android:layout_alignParentBottom="true"
         android:background="@color/white"
         android:orientation="horizontal">
@@ -361,6 +364,20 @@
 
             app:strokeWidth="2dp" />
 
+        <TextView
+            android:id="@+id/txt_approval_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_weight="1"
+            android:gravity="top"
+            android:text="Pending Approval : "
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="17dp"
+            android:textStyle="bold"
+            android:visibility="visible" />
+
         <android.support.design.button.MaterialButton
             android:id="@+id/btn_back"
             style="@style/Widget.MaterialComponents.Button.TextButton"
@@ -383,6 +400,7 @@
             app:strokeColor="@color/black"
 
             app:strokeWidth="2dp" />
+
 
         <android.support.design.button.MaterialButton
             android:id="@+id/save_btn"

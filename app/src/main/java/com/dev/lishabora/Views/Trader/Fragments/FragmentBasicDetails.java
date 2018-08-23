@@ -62,9 +62,14 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
 
     @Override
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
-        if (FarmerConst.getFamerModel() == null) {
+        if (FarmerConst.getCreateFarmerIntentType() == 1 && FarmerConst.getFamerModel() != null) {
+
+        } else {
+
             FarmerConst.setFamerModel(new FamerModel());
         }
+
+
         FarmerConst.getFamerModel().setNames(edtNames.getText().toString());
         FarmerConst.getFamerModel().setMobile(edtMobile.getText().toString());
 
@@ -115,8 +120,21 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
         defaultPayment = view.findViewById(R.id.spinnerPayments);
         txtKe = view.findViewById(R.id.txt_ke);
 
+
+        if (FarmerConst.getCreateFarmerIntentType() == 1) {
+            FamerModel fm = FarmerConst.getFamerModel();
+            if (fm != null) {
+                setEditData(fm);
+            }
+        }
         initData();
 
+
+    }
+
+    private void setEditData(FamerModel fm) {
+        edtNames.setText(fm.getNames());
+        edtMobile.setText(fm.getMobile());
     }
 
     private void initData() {

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.dev.lishabora.Adapters.ViewHolders.CollectionViewHolder;
 import com.dev.lishabora.Models.DayCollectionModel;
+import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
 
@@ -53,7 +54,9 @@ public class CollectionsAdapter extends RecyclerView.Adapter<CollectionViewHolde
         DayCollectionModel model = modelList.get(position);
 
         holder.day.setText(model.getDay());
-        holder.date.setText(model.getDate());
+
+
+        holder.date.setText(DateTimeUtils.Companion.getDisplayDate(model.getDate(), DateTimeUtils.Companion.getDisplayDatePattern1()));
 
 
         holder.milkTotalAm.setText(model.getMilkAm());

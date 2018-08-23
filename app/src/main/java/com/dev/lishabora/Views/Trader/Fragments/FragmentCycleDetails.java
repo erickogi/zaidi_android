@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dev.lishabora.Models.Cycles;
+import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Trader.FarmerConst;
@@ -88,6 +89,20 @@ public class FragmentCycleDetails extends Fragment implements BlockingStep, View
     void setUp() {
         spinner = view.findViewById(R.id.spinnerCycle);
         setUpSpinners();
+
+        if (FarmerConst.getCreateFarmerIntentType() == 1) {
+            FamerModel fm = FarmerConst.getFamerModel();
+            if (fm != null) {
+                setEditData(fm);
+            }
+        }
+
+    }
+
+    private void setEditData(FamerModel fm) {
+
+        spinner.setSelectedIndex(Integer.valueOf(fm.getCyclecode()) - 1);
+        SELECTED = Integer.valueOf(fm.getCyclecode());
 
     }
 

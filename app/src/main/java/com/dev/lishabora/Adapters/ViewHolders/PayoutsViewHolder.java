@@ -2,6 +2,7 @@ package com.dev.lishabora.Adapters.ViewHolders;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ public class PayoutsViewHolder extends RecyclerView.ViewHolder implements View.O
 
     public TextView status, startDate, cycleName, endDate, milkTotal, loanTotal, orderTotal, balance, approvedCount, unApprovedCount;
     public RelativeLayout background;
+    public LinearLayout approvedView, pendingView;
     public View statusview;
     private WeakReference<OnclickRecyclerListener> listenerWeakReference;
 
@@ -29,6 +31,10 @@ public class PayoutsViewHolder extends RecyclerView.ViewHolder implements View.O
         startDate = itemView.findViewById(R.id.txt_date_start);
         endDate = itemView.findViewById(R.id.txt_date_end);
         status = itemView.findViewById(R.id.txt_status);
+
+        approvedView = itemView.findViewById(R.id.linear_approved_count);
+        pendingView = itemView.findViewById(R.id.linear_pending_count);
+
 
 
         cycleName = itemView.findViewById(R.id.txt_cycle);
