@@ -38,6 +38,11 @@ public class CollectionsRepo {
         return collectionsDao.getCollectionByFarmerByDate(code, date);
     }
 
+    public double getFarmerBalance(String code) {
+        return collectionsDao.getBalanceByFarmerCode(code);
+    }
+
+
     public List<Collection> getCollectionByDateByFarmerByTime(String code, String today, String ampm) {
         return collectionsDao.getCollectionByDateByFarmerByTime(code, today, ampm);
 

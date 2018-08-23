@@ -533,6 +533,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         } else {
 
             FarmerConst.setFamerModels(new LinkedList<>());
+
             filterFarmers();
         }
     }
@@ -803,6 +804,12 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         mViewModel.getFarmerByStatusRoute(staus, route).observe(FragementFarmersList.this, famerModels -> {
             avi.smoothToHide();
             prefrenceManager.setIsFarmerListFirst(false);
+
+            if (famerModels != null) {
+                for (int a = 0; a < famerModels.size(); a++) {
+                    famerModels.get(a).setTotalbalance(String.valueOf(mViewModel.getBalance(famerModels.get(a).getCode())));
+                }
+            }
             update(famerModels);
         });
     }

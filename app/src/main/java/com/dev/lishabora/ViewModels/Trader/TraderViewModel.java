@@ -1261,4 +1261,8 @@ public class TraderViewModel extends AndroidViewModel
 
 
     }
+
+    public double getBalance(String code) {
+        return collectionsRepo.getFarmerBalance(code);
+    }
 }
