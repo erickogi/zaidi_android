@@ -63,7 +63,7 @@ public interface CollectionsDao {
     @Delete
     void deleteRecord(Collection collection);
 
-    @Query("SELECT (milkCollected - SUM(loanAmountGivenOutPrice+orderGivenOutPrice)) FROM collectiontransactions WHERE farmerCode =:farmercode")
+    @Query("SELECT (milkCollected - SUM(loanAmountGivenOutPrice+orderGivenOutPrice)) FROM COLLECTIONTRANSACTIONS WHERE farmerCode =:farmercode")
     double getBalanceByFarmerCode(String farmercode);
 
 

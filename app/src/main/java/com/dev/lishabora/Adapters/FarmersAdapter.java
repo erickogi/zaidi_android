@@ -75,7 +75,7 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
         holder.route.setText("" + farmer.getRoutename());
 
 
-        holder.txtDate.setText(DateTimeUtils.Companion.getDisplayDate(farmer.getTransactiontime()));
+        holder.txtDate.setText(DateTimeUtils.Companion.getDisplayDate(farmer.getLastCollectionTime()));
         String status = "";
         if (farmer.getArchived() == 0 && farmer.getDeleted() == 0 && farmer.getDummy() == 0) {
             status = "Active";

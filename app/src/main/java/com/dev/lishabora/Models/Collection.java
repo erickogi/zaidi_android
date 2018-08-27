@@ -151,7 +151,7 @@ public class Collection {
     }
 
     public String getMilkCollected() {
-        if (!milkCollected.isEmpty() && !milkCollected.equals("")) {
+        if (milkCollected != null && !milkCollected.isEmpty() && !milkCollected.equals("")) {
             return milkCollected;
         } else {
             return "0.0";

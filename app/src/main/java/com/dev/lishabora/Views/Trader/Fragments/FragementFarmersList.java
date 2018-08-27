@@ -3,7 +3,6 @@ package com.dev.lishabora.Views.Trader.Fragments;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -115,10 +114,21 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     boolean isAm = false;
     String ampm = "";
     Cycles c;
-    String value = null;
-    Double vCol = 0.0;
-    Collection clp = null;
+
+
+    String valueAm = null;
+    String valuePm = null;
+
+
+    Double vColAm = 0.0;
+    Double vColPm = 0.0;
+
+
+    Collection clpAm = null;
+    Collection clpPm = null;
     public void collectMilk(FamerModel famerModel) {
+
+
         if (DateTimeUtils.Companion.isAM(DateTimeUtils.Companion.getTodayDate())) {
 
             ampm = "AM";
@@ -127,18 +137,31 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
             ampm = "PM";
         }
-        value = null;
-        vCol = 0.0;
-        clp = null;
+
+        valueAm = null;
+        valuePm = null;
+        vColAm = 0.0;
+        vColPm = 0.0;
+        clpAm = null;
+        clpPm = null;
 
 
-        List<Collection> col = mViewModel.getCollectionByDateByFarmerByTime(famerModel.getCode(), DateTimeUtils.Companion.getToday(), ampm);
-        if (col != null && col.size() > 0) {
-            for (Collection coll : col) {
-                vCol = vCol + Double.valueOf(coll.getMilkCollected());
-                clp = coll;
+        List<Collection> colAm = mViewModel.getCollectionByDateByFarmerByTime(famerModel.getCode(), DateTimeUtils.Companion.getToday(), "AM");
+        List<Collection> colPm = mViewModel.getCollectionByDateByFarmerByTime(famerModel.getCode(), DateTimeUtils.Companion.getToday(), "PM");
+
+        if (colAm != null && colAm.size() > 0) {
+            for (Collection coll : colAm) {
+                vColAm = vColAm + Double.valueOf(coll.getMilkCollected());
+                clpAm = coll;
             }
-            value = String.valueOf(vCol);
+            valueAm = String.valueOf(vColAm);
+        }
+        if (colPm != null && colPm.size() > 0) {
+            for (Collection coll : colPm) {
+                vColPm = vColPm + Double.valueOf(coll.getMilkCollected());
+                clpPm = coll;
+            }
+            valuePm = String.valueOf(vColPm);
         }
 
 
@@ -229,7 +252,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                 if (editable != null && editable.length() > 0) {
                     if (unitsModel.getUnitprice() != null) {
                         Double price = Double.valueOf(unitsModel.getUnitprice());
-                        unitTotal.setText(String.valueOf(Double.valueOf(edtTodayAm.getText().toString()) * price));
+                        unitTotal.setText(String.valueOf(Double.valueOf(Objects.requireNonNull(edtTodayAm.getText()).toString()) * Double.valueOf(price)));
 
                     }
                 } else {
@@ -254,7 +277,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                 if (editable != null && editable.length() > 0) {
                     if (unitsModel.getUnitprice() != null) {
                         Double price = Double.valueOf(unitsModel.getUnitprice());
-                        unitTotal.setText(String.valueOf(Double.valueOf(edtTodayPm.getText().toString()) * price));
+                        unitTotal.setText(String.valueOf(Double.valueOf(edtTodayPm.getText().toString()) * Double.valueOf(price)));
 
                     }
                 } else {
@@ -263,36 +286,43 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             }
         });
 
-
         if (DateTimeUtils.Companion.isAM(DateTimeUtils.Companion.getTodayDate())) {
+            edtTodayAm.setFocusable(true);
             edtTodayAm.setEnabled(true);
-            edtTodayAm.requestFocus();
-            edtTodayPm.setEnabled(false);
-            isAm = true;
-            ampm = "AM";
-            if (value != null) {
-                edtTodayAm.setText(value);
-                try {
-                    edtTodayAm.setSelection(value.length());
-                } catch (Exception nm) {
-                    nm.printStackTrace();
-                }
-            }
+
+            edtTodayPm.setFocusable(false);
+            edtTodayPm.setEnabled(true);
+
 
         } else {
-            isAm = false;
-            edtTodayAm.setEnabled(false);
+            edtTodayAm.setFocusable(false);
+            edtTodayAm.setEnabled(true);
+
+            edtTodayPm.setFocusable(true);
             edtTodayPm.setEnabled(true);
-            edtTodayPm.requestFocus();
-            ampm = "PM";
-            if (value != null) {
-                edtTodayPm.setText(value);
+
+        }
+
+
+        if (valueAm != null) {
+            edtTodayAm.setText(valueAm);
+
                 try {
-                    edtTodayPm.setSelection(value.length());
+                    edtTodayAm.setSelection(valueAm.length());
                 } catch (Exception nm) {
                     nm.printStackTrace();
                 }
+
+        }
+        if (valuePm != null) {
+            edtTodayPm.setText(valuePm);
+
+            try {
+                edtTodayPm.setSelection(valuePm.length());
+            } catch (Exception nm) {
+                nm.printStackTrace();
             }
+
         }
 
 
@@ -313,19 +343,22 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         txtTitle.setText("Route");
 
         btnPositive.setOnClickListener(view -> {
-            String milk = "";
-            if (isAm && !TextUtils.isEmpty(edtTodayAm.getText().toString())) {
-
-                milk = edtTodayAm.getText().toString();
+            String milkAm = null;
+            String milkPm = null;
+            if (!TextUtils.isEmpty(edtTodayAm.getText().toString())) {
+                milkAm = edtTodayAm.getText().toString();
                 alertDialogAndroid.dismiss();
 
-            } else if (!isAm && !TextUtils.isEmpty(edtTodayPm.getText().toString())) {
-
-                milk = edtTodayPm.getText().toString();
+            } else if (!TextUtils.isEmpty(edtTodayPm.getText().toString())) {
+                milkPm = edtTodayPm.getText().toString();
                 alertDialogAndroid.dismiss();
+
             }
 
-            if (value == null || clp == null) {
+
+            if (valueAm == null || clpAm == null && milkAm != null) {
+
+
                 Collection c = new Collection();
                 c.setCycleCode(famerModel.getCyclecode());
                 c.setFarmerCode(famerModel.getCode());
@@ -334,8 +367,8 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                 c.setDayName(today.getText().toString());
                 c.setLoanAmountGivenOutPrice("0");
                 c.setDayDate(DateTimeUtils.Companion.getToday());
-                c.setTimeOfDay(ampm);
-                c.setMilkCollected(milk);
+                c.setTimeOfDay("AM");
+                c.setMilkCollected(milkAm);
                 c.setLoanAmountGivenOutPrice("0");
                 c.setOrderGivenOutPrice("0");
 
@@ -351,21 +384,77 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
                 mViewModel.createCollections(c, false).observe(FragementFarmersList.this, responseModel -> {
                     if (responseModel.getResultCode() == 1) {
+                    } else {
                         snack(responseModel.getResultDescription());
+
                     }
 
 
                 });
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
                 mViewModel.updateFarmer(famerModel, false);
-            } else {
-                clp.setMilkCollected(milk);
-                mViewModel.updateCollection(clp).observe(FragementFarmersList.this, new Observer<ResponseModel>() {
-                    @Override
-                    public void onChanged(@Nullable ResponseModel responseModel) {
-                        if (responseModel.getResultCode() == 1) {
-                            snack(responseModel.getResultDescription());
-                        }
+            }
+
+            if (valuePm == null || clpPm == null && milkPm != null) {
+
+
+                Collection c = new Collection();
+                c.setCycleCode(famerModel.getCyclecode());
+                c.setFarmerCode(famerModel.getCode());
+                c.setFarmerName(famerModel.getNames());
+                c.setCycleId(famerModel.getCode());
+                c.setDayName(today.getText().toString());
+                c.setLoanAmountGivenOutPrice("0");
+                c.setDayDate(DateTimeUtils.Companion.getToday());
+                c.setTimeOfDay("PM");
+                c.setMilkCollected(milkPm);
+                c.setLoanAmountGivenOutPrice("0");
+                c.setOrderGivenOutPrice("0");
+
+                c.setLoanId("");
+                c.setOrderId("");
+                c.setSynced(0);
+                c.setSynced(false);
+                c.setApproved(0);
+
+
+                //mViewModel.getL
+
+
+                mViewModel.createCollections(c, false).observe(FragementFarmersList.this, responseModel -> {
+                    if (responseModel.getResultCode() == 1) {
+                    } else {
+                        snack(responseModel.getResultDescription());
+
+                    }
+
+
+                });
+                famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
+                mViewModel.updateFarmer(famerModel, false);
+            }
+
+
+            if (clpAm != null) {
+                clpAm.setMilkCollected(milkAm);
+                mViewModel.updateCollection(clpAm).observe(FragementFarmersList.this, responseModel -> {
+                    if (responseModel.getResultCode() == 1) {
+                    } else {
+                        snack(responseModel.getResultDescription());
+
+                    }
+                });
+                famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
+                mViewModel.updateFarmer(famerModel, false);
+
+            }
+            if (clpPm != null) {
+                clpPm.setMilkCollected(milkAm);
+                mViewModel.updateCollection(clpPm).observe(FragementFarmersList.this, responseModel -> {
+                    if (responseModel.getResultCode() == 1) {
+                    } else {
+                        snack(responseModel.getResultDescription());
+
                     }
                 });
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
@@ -373,7 +462,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
             }
 
-            // c.setMilkCollected();
+
         });
         btnNeutral.setOnClickListener(view -> {
 
@@ -1104,12 +1193,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             AlertDialog.Builder d = new AlertDialog.Builder(getContext());
             d.setMessage(msg);
             d.setCancelable(true);
-            d.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            });
+            d.setPositiveButton("Okay", (dialogInterface, i) -> dialogInterface.dismiss());
             d.show();
 
         }
