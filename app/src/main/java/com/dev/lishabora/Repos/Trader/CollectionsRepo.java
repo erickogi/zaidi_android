@@ -47,6 +47,11 @@ public class CollectionsRepo {
         return collectionsDao.getCollectionByDateByFarmerByTime(code, today, ampm);
 
     }
+
+    public Collection getCollectionByDateByFarmerByTimeSingle(String code, String today, String ampm) {
+        return collectionsDao.getCollectionByDateByFarmerByTimeSingle(code, today, ampm);
+
+    }
     public LiveData<List<Collection>> getCollectionByPayout(String payout) {
         return collectionsDao.getCollectionByPayoutNumber(payout);
     }

@@ -63,7 +63,7 @@ public interface CollectionsDao {
     @Delete
     void deleteRecord(Collection collection);
 
-    @Query("SELECT (milkCollected - SUM(loanAmountGivenOutPrice+orderGivenOutPrice)) FROM COLLECTIONTRANSACTIONS WHERE farmerCode =:farmercode")
+    @Query("SELECT (SUM(milkCollected) - SUM(loanAmountGivenOutPrice+orderGivenOutPrice)) FROM COLLECTIONTRANSACTIONS WHERE farmerCode =:farmercode")
     double getBalanceByFarmerCode(String farmercode);
 
 
@@ -73,6 +73,10 @@ public interface CollectionsDao {
 
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE farmerCode = :code AND  timeOfDay =:ampm AND dayDate LIKE :today")
     List<Collection> getCollectionByDateByFarmerByTime(String code, String today, String ampm);
+
+    @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE farmerCode = :code AND  timeOfDay =:ampm AND dayDate LIKE :today")
+    Collection getCollectionByDateByFarmerByTimeSingle(String code, String today, String ampm);
+
 
 
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE cycleCode = :cycleCode ORDER BY id DESC LIMIT 1")

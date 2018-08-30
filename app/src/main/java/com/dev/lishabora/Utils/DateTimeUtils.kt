@@ -21,7 +21,7 @@ class DateTimeUtils {
         var FormatSmall: String = "yyyy-MM-dd"
 
 
-        var DisplayDatePattern1 = "dd/MMM/yyyy"
+        var DisplayDatePattern1 = "dd-MMM"
         var DisplayDatePattern2 = "dd/MMM/yyyy HH:mm:ss"
 
 

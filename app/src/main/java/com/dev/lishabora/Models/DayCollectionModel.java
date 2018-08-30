@@ -23,6 +23,28 @@ public class DayCollectionModel implements Serializable {
     private String orderAm;
     private String orderPm;
 
+
+    private String amPmLoan;
+    private String amPmOrders;
+
+    public String getAmPmLoan() {
+        String amPm = String.valueOf(Double.valueOf(loanAm) + Double.valueOf(loanPm));
+        return amPm;
+    }
+
+    public void setAmPmLoan(String amPmLoan) {
+        this.amPmLoan = amPmLoan;
+    }
+
+    public String getAmPmOrders() {
+        String amPm = String.valueOf(Double.valueOf(orderAm) + Double.valueOf(orderPm));
+        return amPm;
+    }
+
+    public void setAmPmOrders(String amPmOrders) {
+        this.amPmOrders = amPmOrders;
+    }
+
     public DayCollectionModel() {
     }
 

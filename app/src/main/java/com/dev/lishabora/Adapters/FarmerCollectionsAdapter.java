@@ -57,7 +57,7 @@ public class FarmerCollectionsAdapter extends RecyclerView.Adapter<FarmerCollect
     public FarmerCollectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = null;
 
-        itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.payout_farmers_collections_card, parent, false);
+        itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.payout_farmers_collections_card1, parent, false);
 
         return new FarmerCollectionViewHolder(itemView, listener, isEditable);
     }
@@ -95,41 +95,22 @@ public class FarmerCollectionsAdapter extends RecyclerView.Adapter<FarmerCollect
 
         }
 
+        holder.loanTotalPm.setText(model.getAmPmLoan());
 
-        holder.loanTotalAm.setText(model.getLoanAm());
-        if (!model.getLoanAm().equals("0.0")) {
-            holder.loanTotalAm.setTextColor(context.getResources().getColor(R.color.colorPrimary));
-            holder.loanTotalAm.setTypeface(Typeface.DEFAULT_BOLD);
-
-        } else {
-            holder.loanTotalAm.setTypeface(Typeface.DEFAULT);
-
-            holder.loanTotalAm.setTextColor(context.getResources().getColor(R.color.black));
-
-        }
-        holder.loanTotalPm.setText(model.getLoanPm());
-        if (!model.getLoanPm().equals("0.0")) {
+        if (!model.getAmPmLoan().equals("0.0")) {
             holder.loanTotalPm.setTextColor(context.getResources().getColor(R.color.colorPrimary));
             holder.loanTotalPm.setTypeface(Typeface.DEFAULT_BOLD);
+
         } else {
             holder.loanTotalPm.setTypeface(Typeface.DEFAULT);
 
             holder.loanTotalPm.setTextColor(context.getResources().getColor(R.color.black));
 
         }
-        holder.orderTotalAm.setText(model.getOrderAm());
-        if (!model.getOrderAm().equals("0.0")) {
-            holder.orderTotalAm.setTextColor(context.getResources().getColor(R.color.colorPrimary));
-            holder.orderTotalAm.setTypeface(Typeface.DEFAULT_BOLD);
 
-        } else {
-            holder.orderTotalAm.setTypeface(Typeface.DEFAULT);
+        holder.orderTotalPm.setText(model.getAmPmOrders());
 
-            holder.orderTotalAm.setTextColor(context.getResources().getColor(R.color.black));
-
-        }
-        holder.orderTotalPm.setText(model.getOrderPm());
-        if (!model.getOrderPm().equals("0.0")) {
+        if (!model.getAmPmOrders().equals("0.0")) {
             holder.orderTotalPm.setTextColor(context.getResources().getColor(R.color.colorPrimary));
             holder.orderTotalPm.setTypeface(Typeface.DEFAULT_BOLD);
 
@@ -139,6 +120,50 @@ public class FarmerCollectionsAdapter extends RecyclerView.Adapter<FarmerCollect
             holder.orderTotalPm.setTextColor(context.getResources().getColor(R.color.black));
 
         }
+
+//        holder.loanTotalAm.setText(model.getLoanAm());
+//        if (!model.getLoanAm().equals("0.0")) {
+//            holder.loanTotalAm.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+//            holder.loanTotalAm.setTypeface(Typeface.DEFAULT_BOLD);
+//
+//        } else {
+//            holder.loanTotalAm.setTypeface(Typeface.DEFAULT);
+//
+//            holder.loanTotalAm.setTextColor(context.getResources().getColor(R.color.black));
+//
+//        }
+//        holder.loanTotalPm.setText(model.getLoanPm());
+//        if (!model.getLoanPm().equals("0.0")) {
+//            holder.loanTotalPm.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+//            holder.loanTotalPm.setTypeface(Typeface.DEFAULT_BOLD);
+//        } else {
+//            holder.loanTotalPm.setTypeface(Typeface.DEFAULT);
+//
+//            holder.loanTotalPm.setTextColor(context.getResources().getColor(R.color.black));
+//
+//        }
+//        holder.orderTotalAm.setText(model.getOrderAm());
+//        if (!model.getOrderAm().equals("0.0")) {
+//            holder.orderTotalAm.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+//            holder.orderTotalAm.setTypeface(Typeface.DEFAULT_BOLD);
+//
+//        } else {
+//            holder.orderTotalAm.setTypeface(Typeface.DEFAULT);
+//
+//            holder.orderTotalAm.setTextColor(context.getResources().getColor(R.color.black));
+//
+//        }
+//        holder.orderTotalPm.setText(model.getOrderPm());
+//        if (!model.getOrderPm().equals("0.0")) {
+//            holder.orderTotalPm.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+//            holder.orderTotalPm.setTypeface(Typeface.DEFAULT_BOLD);
+//
+//        } else {
+//            holder.orderTotalPm.setTypeface(Typeface.DEFAULT);
+//
+//            holder.orderTotalPm.setTextColor(context.getResources().getColor(R.color.black));
+//
+//        }
 
         if (isEditable) {
             holder.milkTotalPm.setEnabled(true);
