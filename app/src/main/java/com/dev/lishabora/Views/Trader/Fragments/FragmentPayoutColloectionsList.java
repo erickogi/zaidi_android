@@ -129,6 +129,9 @@ public class FragmentPayoutColloectionsList extends Fragment {
         btnApprove = view.findViewById(R.id.btn_approve);
         btnApprove.setVisibility(View.GONE);
 
+        LinearLayout linearLayoutAmPm = view.findViewById(R.id.linear_am_pm);
+        linearLayoutAmPm.setVisibility(View.VISIBLE);
+
         payouts = new Payouts();
         if (getArguments() != null) {
             payouts = (Payouts) getArguments().getSerializable("data");

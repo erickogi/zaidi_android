@@ -49,4 +49,8 @@ public interface ProductsDao {
     void deleteRecord(ProductsModel UnitsModel);
 
 
+    @Query("SELECT COUNT(id) FROM PRODUCTS ")
+    int getCount();
+
+
 }

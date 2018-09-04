@@ -5,29 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:drawable/picture_frame"
+
     app:strokeColor="@color/divider"
     app:strokeWidth="2dp"
 
     >
 
     <RelativeLayout
+
         android:id="@+id/background"
-        android:background="@color/green_color_picker"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_border_tv">
 
         <LinearLayout
-            android:layout_marginStart="4dp"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:background="@color/white"
-            android:orientation="vertical"
-            android:padding="4dp">
+            android:orientation="vertical">
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
                 android:orientation="horizontal"
                 android:padding="3dp">
 
@@ -37,36 +40,43 @@
                     android:orientation="vertical">
 
                     <LinearLayout
-                        android:visibility="gone"
-                        android:background="@color/divider"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:orientation="horizontal">
+                        android:background="@color/divider"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <com.dev.customfonts.MyTextView_Roboto_Bold
 
                             android:id="@+id/txt_name_lbl"
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
 
-                            android:visibility="gone"
                             android:text="Names  "
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                             android:textColor="#000000"
                             android:textSize="13.5sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:visibility="gone" />
 
 
+                        <TextView
+                            android:id="@+id/txt_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:padding="3dp"
+                            android:text="12/12/2018"
+                            android:textAlignment="viewEnd"
+                            android:textSize="10dp"
+                            android:textStyle="italic" />
                     </LinearLayout>
 
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_marginTop="2dp"
-                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
                         <com.dev.customfonts.MyTextView_Roboto_Bold
@@ -74,73 +84,55 @@
                             android:layout_width="0dp"
 
 
-                            android:layout_weight="2"
                             android:layout_height="wrap_content"
-                            android:text="Route Names"
-                            android:textColor="@color/black"
+                            android:layout_weight="2"
+                            android:text="Products's Names"
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                            android:textSize="14.5sp" />
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
+
                         <com.dev.customfonts.MyTextView_Roboto_Bold
-                            android:id="@+id/txt_route_farmers"
-                            android:gravity="center"
+                            android:id="@+id/txt_qty"
                             android:layout_width="0dp"
 
-                            android:textColor="@color/black"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="34"
+                            android:layout_weight="0.3"
+                            android:text="1"
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                            android:textColor="@color/black"
                             android:textSize="13.5sp" />
 
-                        <LinearLayout
+                        <com.dev.customfonts.MyTextView_Roboto_Bold
+                            android:id="@+id/txt_cost_price"
+                            android:layout_width="0dp"
+
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="3400 kSH"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                            android:textColor="@color/black"
+                            android:textSize="13.5sp" />
+
+
+                        <com.dev.customfonts.MyTextView_Roboto_Bold
+                            android:id="@+id/txt_selling_price"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+
                             android:layout_weight="1"
-                            android:gravity="end">
 
-                            <View
-
-                                android:id="@+id/status_view"
-                                android:layout_width="10dp"
-                                android:layout_height="10dp"
-                                android:layout_gravity="center"
-                                android:layout_marginEnd="5dp"
-                                android:background="@color/green_color_picker" />
-
-                            <TextView
-                                android:id="@+id/txt_status"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="2dp"
-                                android:text="Active "
-                                android:textColor="@color/green_color_picker"
-                                android:textStyle="italic|bold" />
-
-                        </LinearLayout>
+                            android:text="40000"
+                            android:textAlignment="viewStart"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                            android:textColor="@color/black"
+                            android:textSize="13.5sp" />
 
                     </LinearLayout>
-
 
                 </LinearLayout>
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/divider"
-                android:visibility="gone" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="3dp"
-                android:visibility="gone">
-
-
-            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"

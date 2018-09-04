@@ -1,15 +1,10 @@
 package com.dev.lishabora.Models;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.Index;
-import android.arch.persistence.room.PrimaryKey;
 
 import java.io.Serializable;
 
-@Entity(tableName = "products", indices = {@Index(value = {"id", "code"}, unique = true)})
-public class ProductsModel implements Serializable {
-    @PrimaryKey(autoGenerate = true)
+
+public class ProductOrderModel implements Serializable {
     private int id;
     private int code;
     private String names;
@@ -20,10 +15,48 @@ public class ProductsModel implements Serializable {
     private String transactiontime;
     private String transactedby;
     private String subscribed;
+
+    private String quantity;
+    private String totalprice;
+
     private int status;
 
-    @Ignore
+
     private boolean isSelected = false;
+
+
+    public ProductOrderModel(int id, int code, String names, String costprice, String buyingprice, String sellingprice, String allowablediscount, String transactiontime, String transactedby, String subscribed, String quantity, String totalprice, int status, boolean isSelected) {
+        this.id = id;
+        this.code = code;
+        this.names = names;
+        this.costprice = costprice;
+        this.buyingprice = buyingprice;
+        this.sellingprice = sellingprice;
+        this.allowablediscount = allowablediscount;
+        this.transactiontime = transactiontime;
+        this.transactedby = transactedby;
+        this.subscribed = subscribed;
+        this.quantity = quantity;
+        this.totalprice = totalprice;
+        this.status = status;
+        this.isSelected = isSelected;
+    }
+
+    public String getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(String quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getTotalprice() {
+        return totalprice;
+    }
+
+    public void setTotalprice(String totalprice) {
+        this.totalprice = totalprice;
+    }
 
     public String getAllowablediscount() {
         if (allowablediscount != null) {

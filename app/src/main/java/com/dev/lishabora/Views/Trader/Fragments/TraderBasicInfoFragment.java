@@ -154,6 +154,8 @@ public class TraderBasicInfoFragment extends Fragment implements BlockingStep {
     @Override
     public void onSelected() {
         view = getView();
+        Objects.requireNonNull(getActivity()).setTitle("Basic Details");
+
         initData();
 
 

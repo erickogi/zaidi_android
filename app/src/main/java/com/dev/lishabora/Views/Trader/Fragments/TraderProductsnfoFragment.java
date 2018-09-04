@@ -84,12 +84,13 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_trader_routes, container, false);
+        return inflater.inflate(R.layout.fragment_trader_products, container, false);
 
     }
 
@@ -255,7 +256,6 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
 
         listAdapter.notifyDataSetChanged();
         recyclerView.setAdapter(listAdapter);
-        //emptyState(listAdapter.getItemCount() > 0, "We couldn't find any farmers records", empty_layout, null, emptyTxt);
 
     }
 
@@ -304,6 +304,8 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
 
     @Override
     public void onSelected() {
+        Objects.requireNonNull(getActivity()).setTitle("Products");
+
         initData();
         if (productsModel == null) {
             productsModel = new LinkedList<>();
@@ -316,6 +318,7 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
         initList();
         populateList();
         getProducts();
+
 
 
     }
@@ -334,7 +337,7 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
 
         tViewModel.getProducts(false).observe(TraderProductsnfoFragment.this, productsModels -> {
             avi.smoothToHide();
-            update(productsModel);
+            update(productsModels);
 
 
         });
@@ -397,18 +400,7 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
     }
 
     private void filterProducts() {
-        filteredProductsModel.clear();
-        if (productsModel != null && productsModel.size() > 0) {
-            for (ProductsModel productsModel : productsModel) {
-                if (productsModel.getNames().toLowerCase().contains(filterText) ||
-                        productsModel.getCostprice().toLowerCase().contains(filterText) ||
-                        productsModel.getSellingprice().toLowerCase().contains(filterText)) {
-                    filteredProductsModel.add(productsModel);
-                }
-
-            }
-            listAdapter.notifyDataSetChanged();
-        }
+        listAdapter.refresh(productsModel);
 
     }
 
@@ -475,9 +467,11 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
 
                 tViewModel.createProducts(selectedProducts, false).observe(TraderProductsnfoFragment.this, responseModel -> {
                     avi.smoothToHide();
+                    Snackbar.make(view, "" + tViewModel.getProductsCount(), Snackbar.LENGTH_LONG).show();
+
                     dialog.dismiss();
                     if (responseModel != null) {
-                        Snackbar.make(view, responseModel.getResultDescription(), Snackbar.LENGTH_LONG).show();
+                        // Snackbar.make(view, responseModel.getResultDescription(), Snackbar.LENGTH_LONG).show();
                     }
                 });
 

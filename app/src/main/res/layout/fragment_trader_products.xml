@@ -4,7 +4,53 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:id="@+id/linear_titles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:orientation="horizontal"
+        android:padding="4dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Product"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@color/divider" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Buying Price"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@color/divider" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Selling Price"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
+
 
         android:id="@+id/recyclerView"
 
@@ -12,7 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        android:layout_below="@+id/search"
+        android:layout_below="@+id/linear_titles"
         android:layout_centerHorizontal="true"
         android:background="@color/divider"
         android:nestedScrollingEnabled="false"
@@ -24,6 +70,17 @@
 
 
     </android.support.v7.widget.RecyclerView>
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/avi"
+        style="@style/AVLoadingIndicatorView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        app:indicatorColor="@color/colorPrimaryDark"
+        app:indicatorName="BallSpinFadeLoaderIndicator" />
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -37,5 +94,6 @@
         android:layout_margin="@dimen/fab_margin"
         android:visibility="visible"
         app:srcCompat="@android:drawable/ic_input_add" />
+
 
 </RelativeLayout>

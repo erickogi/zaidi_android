@@ -353,9 +353,9 @@
 
                     style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
 
+                    android:layout_weight="1.2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.2"
 
                     android:textColorHint="@color/black">
 
@@ -386,7 +386,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.2"
-
                     android:textColorHint="@color/black">
 
                     <android.support.design.widget.TextInputEditText
@@ -422,7 +421,7 @@
                 <com.dev.customfonts.MyTextView_Roboto_Bold
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:gravity="center"
                     android:text="Ltrs"
                     android:id="@+id/txtUnitName"
@@ -436,9 +435,9 @@
                     android:background="@color/black" />
 
                 <com.dev.customfonts.MyTextView_Roboto_Bold
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+
                     android:gravity="center"
                     android:text="`@"
                     android:textSize="15sp" />
@@ -458,9 +457,9 @@
                     android:background="@color/black" />
 
                 <com.dev.customfonts.MyTextView_Roboto_Bold
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+
                     android:gravity="center"
                     android:text="/="
                     android:textSize="15sp" />

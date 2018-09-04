@@ -268,6 +268,12 @@ public class TraderViewModel extends AndroidViewModel
 
     }
 
+    public int getProductsCount() {
+        return (productsRepo.getCount());
+
+
+    }
+
     public LiveData<FamerModel> getLastFarmer() {
         if (farmer == null) {
             farmer = new MutableLiveData();
@@ -342,37 +348,8 @@ public class TraderViewModel extends AndroidViewModel
             products = new MutableLiveData();
         }
 
-        if (isOnline) {
-            Request.Companion.getResponse(ApiConstants.Companion.getProducts(), getTraderRoutesObject(), "", new ResponseCallback() {
-                        @Override
-                        public void response(ResponseModel responseModel) {
-                            if (responseModel.getResultCode() == 1) {
-                                JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
-                                Type listType = new TypeToken<LinkedList<RoutesModel>>() {
-                                }.getType();
-                                // routesModel = ;
-                                Log.d("ReTrUp", "routes update called");
-                                routesRepo.insertMultipleRoutes(gson.fromJson(jsonArray, listType));
 
-                            }
-
-                        }
-
-                        @Override
-                        public void response(ResponseObject responseModel) {
-                            JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
-                            Type listType = new TypeToken<LinkedList<RoutesModel>>() {
-                            }.getType();
-                            // routesModel = ;
-                            Log.d("ReTrUp", "routes update called");
-                            routesRepo.insertMultipleRoutes(gson.fromJson(jsonArray, listType));
-
-                        }
-                    }
-            );
-        }
-        products = (productsRepo.fetchAllData(false));
-        Log.d("fetchall", "inserting repo" + products);
+        products = productsRepo.fetchAllData(false);
 
 
         return products;

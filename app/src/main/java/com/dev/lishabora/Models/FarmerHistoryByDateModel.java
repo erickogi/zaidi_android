@@ -10,6 +10,7 @@ public class FarmerHistoryByDateModel {
     private String cycleCode;
 
     public FarmerHistoryByDateModel() {
+
     }
 
 

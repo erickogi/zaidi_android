@@ -68,7 +68,6 @@ public class TraderRoutesInfoFragment extends Fragment implements BlockingStep {
     private TextView emptyTxt, txt_network_state;
     private RecyclerView recyclerView;
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
-    private LinearLayout linearLayoutEmpty;
 
     public void hideKeyboardFrom(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -89,7 +88,7 @@ public class TraderRoutesInfoFragment extends Fragment implements BlockingStep {
             mViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
 
         }
-        mViewModel.getRoutes(new PrefrenceManager(getContext()).isRoutesListFirstTime()).observe(TraderRoutesInfoFragment.this, routesModels -> {
+        mViewModel.getRoutes(false).observe(TraderRoutesInfoFragment.this, routesModels -> {
             avi.smoothToHide();
             update(routesModels);
         });
@@ -99,6 +98,7 @@ public class TraderRoutesInfoFragment extends Fragment implements BlockingStep {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Nullable
@@ -140,13 +140,7 @@ public class TraderRoutesInfoFragment extends Fragment implements BlockingStep {
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_add_route, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         alertDialogBuilderUserInput.setView(mView);
-//        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
-//        alertDialogBuilderUserInput.setTitle("Route");
-
-
         avi = mView.findViewById(R.id.avi);
-
-
         alertDialogBuilderUserInput
                 .setCancelable(false);
 //                .setPositiveButton("Save", (dialogBox, id) -> {
@@ -459,6 +453,8 @@ public class TraderRoutesInfoFragment extends Fragment implements BlockingStep {
 
     @Override
     public void onSelected() {
+        Objects.requireNonNull(getActivity()).setTitle("Routes");
+
         initData();
         if (routesModels == null) {
             routesModels = new LinkedList<>();
@@ -514,7 +510,6 @@ public class TraderRoutesInfoFragment extends Fragment implements BlockingStep {
                 isAct = 2;
             }
             PrefrenceManager prefrenceManager = new PrefrenceManager(getContext());
-
 
             RoutesModel routesModel = new RoutesModel();
             routesModel.setCode(new GeneralUtills(getContext()).getRandon(9999, 1000) + "");

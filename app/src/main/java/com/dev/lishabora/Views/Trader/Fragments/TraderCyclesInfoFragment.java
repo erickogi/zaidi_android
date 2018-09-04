@@ -47,6 +47,8 @@ public class TraderCyclesInfoFragment extends Fragment implements BlockingStep, 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         prefrenceManager = new PrefrenceManager(getContext());
+
+
     }
 
     @Nullable
@@ -220,6 +222,7 @@ public class TraderCyclesInfoFragment extends Fragment implements BlockingStep, 
 
     @Override
     public void onSelected() {
+        Objects.requireNonNull(getActivity()).setTitle("Cycles");
         initData();
 
     }

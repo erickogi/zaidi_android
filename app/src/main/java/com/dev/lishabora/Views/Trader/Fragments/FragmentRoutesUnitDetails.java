@@ -152,14 +152,7 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
     }
 
     private void setEditData(FamerModel fm) {
-//        FarmerConst.getFamerModel().setRoute(edtRouteName.getText().toString());
-//        FarmerConst.getFamerModel().setRoutename(edtRouteName.getText().toString());
-//        FarmerConst.getFamerModel().setRoutecode(edtRouteCode.getText().toString());
-//        FarmerConst.getFamerModel().setUnitcapacity(edtUnitMeasurement.getText().toString());
-//        FarmerConst.getFamerModel().setUnitname(spinnerUnit.getItems().get(spinnerUnit.getSelectedIndex()).toString());
-//        FarmerConst.getFamerModel().setUnitcode(edtUnitName.getText().toString());
-//        FarmerConst.getFamerModel().setUnitcapacity(edtUnitMeasurement.getText().toString());
-//        FarmerConst.getFamerModel().setUnitprice(edtUnitPrice.getText().toString());
+        FarmerConst.getFamerModel().setUnitprice(edtUnitPrice.getText().toString());
 
         edtRouteName.setText(fm.getRoutename());
         edtRouteCode.setText(fm.getRoutecode());
@@ -191,7 +184,7 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
 
     private void initData() {
 
-        mViewModel.getRoutes(prefrenceManager.isRoutesListFirstTime()).observe(this, routesModels -> {
+        mViewModel.getRoutes(false).observe(this, routesModels -> {
             if (routesModels != null && routesModels.size() > 0) {
                 prefrenceManager.setIsRoutesListFirst(false);
 

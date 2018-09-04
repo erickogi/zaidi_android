@@ -529,7 +529,7 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
                     spinner2.setItems(routes);
                     //filterFarmers();
                 } else {
-                    getRoutesOnline();
+                    // getRoutesOnline();
                 }
                 //spinner2.setItems(routesModels);
             });
@@ -1045,7 +1045,7 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
             avi.smoothToShow();
         }
         TraderViewModel mViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
-        mViewModel.getRoutes(isRoutesFirst).observe(this, routesModels -> {
+        mViewModel.getRoutes(false).observe(this, routesModels -> {
             if (routesModels != null && routesModels.size() > 0) {
                 prefrenceManager.setIsRoutesListFirst(false);
                 this.getRoutess = routesModels;

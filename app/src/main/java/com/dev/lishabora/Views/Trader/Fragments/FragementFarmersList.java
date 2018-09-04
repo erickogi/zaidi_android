@@ -56,7 +56,9 @@ import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Trader.Activities.CreateFarmerActivity;
 import com.dev.lishabora.Views.Trader.Activities.FarmerProfile;
 import com.dev.lishabora.Views.Trader.Activities.FirstTimeLaunch;
+import com.dev.lishabora.Views.Trader.Activities.GiveOrder;
 import com.dev.lishabora.Views.Trader.FarmerConst;
+import com.dev.lishabora.Views.Trader.OrderConstants;
 import com.dev.lishaboramobile.R;
 import com.google.gson.Gson;
 import com.jaredrummler.materialspinner.MaterialSpinner;
@@ -1016,7 +1018,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                     spinner2.setItems(routes);
                     //filterFarmers();
                 } else {
-                    getRoutesOnline();
+                    // getRoutesOnline();
                 }
                 //spinner2.setItems(routesModels);
             });
@@ -1356,6 +1358,22 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                     // FragementFarmersList.this.editTrader(famerModel, FragementFarmersList.this.getUnits(), FragementFarmersList.this.getCycles(), FragementFarmersList.this.getRoutess(), false);
 
                     break;
+
+                case R.id.Loans:
+                    fragment = new FragmentGiveLoan();
+                    Bundle args = new Bundle();
+                    args.putSerializable("farmer", famerModel);
+                    fragment.setArguments(args);
+                    popOutFragments();
+                    setUpView();
+                    break;
+
+                case R.id.Orders:
+
+                    OrderConstants.setFamerModel(famerModel);
+                    startActivity(new Intent(getActivity(), GiveOrder.class));
+
+                    break;
                 default:
             }
             return false;
@@ -1561,7 +1579,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             avi.smoothToShow();
         }
         TraderViewModel mViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
-        mViewModel.getRoutes(isRoutesFirst).observe(this, routesModels -> {
+        mViewModel.getRoutes(false).observe(this, routesModels -> {
             if (routesModels != null && routesModels.size() > 0) {
                 prefrenceManager.setIsRoutesListFirst(false);
                 this.getRoutess = routesModels;

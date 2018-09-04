@@ -30,7 +30,7 @@ public class ProductsRepo {
         } else {
 
             productsDao = db.productsDao();
-            Log.d("fetchall", "fetching repo" + isOnline);
+            Log.d("fetchall", "fetching repo  " + isOnline);
 
             return productsDao.fetchAllData();
         }
@@ -93,6 +93,10 @@ public class ProductsRepo {
 
     public LiveData<List<ProductsModel>> searchByNames(String names) {
         return db.productsDao().searchByNames(names);
+    }
+
+    public int getCount() {
+        return db.productsDao().getCount();
     }
 
     private static class insertUnitAsyncTask extends AsyncTask<ProductsModel, Void, Boolean> {

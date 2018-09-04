@@ -68,17 +68,6 @@ public class FragmentRoutes extends Fragment {
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
     private LinearLayout linearLayoutEmpty;
 
-    //    private void populateTraders() {
-//        mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-//        recyclerView.setLayoutManager(mStaggeredLayoutManager);
-//        recyclerView.setItemAnimator(new DefaultItemAnimator());
-//
-//
-//
-//        listAdapter.notifyDataSetChanged();
-//        recyclerView.setAdapter(listAdapter);
-//
-//    }
     @Override
     public void onStart() {
         super.onStart();
@@ -110,12 +99,9 @@ public class FragmentRoutes extends Fragment {
             mViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
 
         }
-        mViewModel.getRoutes(new PrefrenceManager(getContext()).isRoutesListFirstTime()).observe(FragmentRoutes.this, new Observer<List<RoutesModel>>() {
-            @Override
-            public void onChanged(@Nullable List<RoutesModel> routesModels) {
-                avi.smoothToHide();
-                update(routesModels);
-            }
+        mViewModel.getRoutes(false).observe(FragmentRoutes.this, routesModels -> {
+            avi.smoothToHide();
+            update(routesModels);
         });
     }
 
@@ -170,8 +156,6 @@ public class FragmentRoutes extends Fragment {
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_add_route, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         alertDialogBuilderUserInput.setView(mView);
-//        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
-//        alertDialogBuilderUserInput.setTitle("Route");
 
 
         avi = mView.findViewById(R.id.avi);
@@ -296,7 +280,7 @@ public class FragmentRoutes extends Fragment {
 
             @Override
             public void onClickListener(int position) {
-
+                editRoute(filteredRoutesModels.get(position), position);
 
             }
 
@@ -435,7 +419,9 @@ public class FragmentRoutes extends Fragment {
         imgIcon = mView.findViewById(R.id.img_icon);
 
 
-        btnNeutral.setVisibility(View.GONE);
+        btnNeutral.setVisibility(View.VISIBLE);
+        btnNeutral.setText("Delete");
+        btnNeutral.setBackgroundColor(getContext().getResources().getColor(R.color.red));
         lTitle.setVisibility(View.GONE);
         txtTitle.setVisibility(View.VISIBLE);
         imgIcon.setVisibility(View.VISIBLE);
@@ -444,7 +430,11 @@ public class FragmentRoutes extends Fragment {
 
         btnPositive.setOnClickListener(new EditCustomListener(alertDialogAndroid, routesModel));
         btnNeutral.setOnClickListener(view -> {
-
+            mViewModel.deleteRoute(routesModel, null, false).observe(FragmentRoutes.this, responseModel -> {
+                avi.smoothToHide();
+                MyToast.toast(responseModel.getResultDescription(), getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                alertDialogAndroid.dismiss();
+            });
         });
         btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
 

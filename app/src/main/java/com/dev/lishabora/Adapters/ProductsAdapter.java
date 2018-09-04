@@ -11,6 +11,7 @@ import com.dev.lishabora.Models.ProductsModel;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
 
+import java.util.LinkedList;
 import java.util.List;
 
 //import com.dev.lishaboramobile.Trader.Models.ProductsModel;
@@ -53,9 +54,9 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsViewHolder> {
         ProductsModel productsModel = modelList.get(position);
 
         holder.selling.setText(productsModel.getSellingprice());
-//        holder.id.setText(productsModel.getId());
+
         holder.name.setText(productsModel.getNames());
-        holder.cost.setText(productsModel.getCostprice());
+        holder.cost.setText(productsModel.getBuyingprice());
         holder.status.setText("" + productsModel.getStatus());
         holder.txtDate.setText("");
         if (productsModel.isSelected()) {
@@ -103,4 +104,9 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsViewHolder> {
     }
 
 
+    public void refresh(LinkedList<ProductsModel> filteredProductsModel) {
+        modelList = filteredProductsModel;
+        notifyDataSetChanged();
+
+    }
 }
