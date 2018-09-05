@@ -24,4 +24,12 @@ public class OrderConstants {
     public static void setProductOrderModels(List<ProductOrderModel> productOrderModelss) {
         productOrderModels = productOrderModelss;
     }
+
+    public static void addProductOrders(List<ProductOrderModel> productOrderModelss) {
+        if (productOrderModels != null) {
+            productOrderModels.addAll(productOrderModelss);
+        } else {
+            productOrderModels = productOrderModelss;
+        }
+    }
 }

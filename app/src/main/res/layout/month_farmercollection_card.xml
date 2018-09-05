@@ -76,11 +76,6 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Milk"
-                    android:textColor="@color/black" />
 
                 <TextView
                     android:id="@+id/txt_milk"
@@ -103,11 +98,6 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Loan"
-                    android:textColor="@color/black" />
 
                 <TextView
                     android:id="@+id/txt_loans"
@@ -132,11 +122,6 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Orders"
-                    android:textColor="@color/black" />
 
                 <TextView
                     android:id="@+id/txt_orders"

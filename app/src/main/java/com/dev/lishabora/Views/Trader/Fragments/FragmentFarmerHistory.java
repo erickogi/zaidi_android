@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.dev.lishabora.Adapters.MonthlyFarmerCollAdapter;
 import com.dev.lishabora.Adapters.PayoutesAdapter;
@@ -44,6 +45,7 @@ public class FragmentFarmerHistory extends Fragment {
     private PayoutsVewModel payoutsVewModel;
     private TraderViewModel traderViewModel;
     double total, milk, loans, orders;
+    private LinearLayout linearLayoutTitles;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,6 +68,7 @@ public class FragmentFarmerHistory extends Fragment {
         this.view = view;
         famerModel = (FamerModel) getArguments().getSerializable("farmer");
         spinner = view.findViewById(R.id.spinner);
+        linearLayoutTitles = view.findViewById(R.id.linear_titles);
 
 
     }
@@ -85,8 +88,10 @@ public class FragmentFarmerHistory extends Fragment {
 
             if (position == 0) {
                 initData();
+                linearLayoutTitles.setVisibility(View.VISIBLE);
             } else if (position == 1) {
                 initByPayouts();
+                linearLayoutTitles.setVisibility(View.GONE);
             }
         });
         spinner.setSelectedIndex(0);

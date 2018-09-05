@@ -671,9 +671,6 @@ public class FragmentCurrentFarmerPayout extends Fragment {
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_edit_collection, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
         alertDialogBuilderUserInput.setView(mView);
-//        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
-//        alertDialogBuilderUserInput.setTitle("Route");
-
 
         avi = mView.findViewById(R.id.avi);
         TextInputEditText edtVL = mView.findViewById(R.id.edt_value);
@@ -687,9 +684,9 @@ public class FragmentCurrentFarmerPayout extends Fragment {
             ti = " PM";
         }
         String tp = "";
-        if (type == 0) {
+        if (type == 1) {
             tp = " Milk collection";
-        } else if (type == 1) {
+        } else if (type == 2) {
             tp = " Loan";
         } else {
             tp = " Order ";

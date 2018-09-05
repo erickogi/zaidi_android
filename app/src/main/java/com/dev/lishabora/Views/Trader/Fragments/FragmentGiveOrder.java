@@ -149,12 +149,30 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
                 initMonthlyList(null);
             }
         });
-        btngetOrders.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                traderViewModel.getProducts(false).observe(FragmentGiveOrder.this, productsModels -> subscribeProduct(productsModels));
+        btngetOrders.setOnClickListener(view -> traderViewModel.getProducts(false).observe(FragmentGiveOrder.this, productsModels -> {
+            if (productsModels != null) {
+                filterList(productsModels);
             }
-        });
+        }));
+    }
+
+    private void filterList(List<ProductsModel> productsModels) {
+
+        if (OrderConstants.getProductOrderModels() == null || OrderConstants.getProductOrderModels().size() < 1) {
+            subscribeProduct(productsModels);
+        } else {
+            for (ProductOrderModel p : OrderConstants.getProductOrderModels()) {
+                for (int a = 0; a < productsModels.size(); a++) {
+                    if (productsModels.get(a).getCode() == p.getCode()) {
+                        productsModels.remove(a);
+                    }
+                }
+            }
+            subscribeProduct(productsModels);
+
+
+        }
+
     }
 
     private void createMonthlyList(List<Collection> collections) {
@@ -426,10 +444,10 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
 
     public void initList() {
         recyclerView = view.findViewById(R.id.recyclerView);
-        if (productOrderModels == null) {
-            productOrderModels = new LinkedList<>();
+        if (OrderConstants.getProductOrderModels() == null) {
+            OrderConstants.setProductOrderModels(new LinkedList<>());
         }
-        listAdapter = new ProductOrderAdapter(getActivity(), productOrderModels, new OnclickRecyclerListener() {
+        listAdapter = new ProductOrderAdapter(getActivity(), OrderConstants.getProductOrderModels(), new OnclickRecyclerListener() {
             @Override
             public void onSwipe(int adapterPosition, int direction) {
 
@@ -438,7 +456,7 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
             @Override
             public void onClickListener(int position) {
 
-
+                editProduct(OrderConstants.getProductOrderModels().get(position), position);
             }
 
             @Override
@@ -567,15 +585,30 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
 
                 List<ProductOrderModel> productOrderModels = new LinkedList<>();
                 for (ProductsModel p : selectedProducts) {
-                    // public ProductOrderModel(int id, int code, String names, String costprice, String buyingprice, String sellingprice, String allowablediscount, String transactiontime, String transactedby, String subscribed, String quantity, String totalprice, int status, boolean isSelected)
-                    productOrderModels.add(new ProductOrderModel(p.getId(), p.getCode(), p.getNames(), p.getCostprice(), p.getBuyingprice(),
-                            p.getSellingprice(), p.getAllowablediscount(), DateTimeUtils.Companion.getNow(), p.getTransactedby(), p.getSubscribed(),
-                            "1", p.getSellingprice(), 1, true));
+                    // public ProductOrderModel(int id, int code, String names, String costprice, String buyingprice,
+                    // String sellingprice, String allowablediscount, String transactiontime,
+                    // String transactedby, String subscribed, String quantity,
+                    // String totalprice,
+                    // int status,
+                    // boolean isSelected)
+                    productOrderModels.add(new ProductOrderModel(
+                            p.getId(),
+                            p.getCode(),
+                            p.getNames(),
+                            p.getCostprice(),
+                            p.getBuyingprice(),
+                            p.getSellingprice(),
+                            p.getAllowablediscount(),
+                            DateTimeUtils.Companion.getNow(),
+                            p.getTransactedby(),
+                            p.getSubscribed(),
+                            "1",
+                            p.getSellingprice(), 1, true));
 
 
                 }
 
-                OrderConstants.setProductOrderModels(productOrderModels);
+                OrderConstants.addProductOrders(productOrderModels);
                 dialog.dismiss();
                 refreshList();
 
@@ -633,6 +666,15 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
 
             OrderConstants.getProductOrderModels().get(pos).setQuantity(model.getQuantity());
             OrderConstants.getProductOrderModels().get(pos).setSellingprice(model.getSellingprice());
+
+
+            try {
+                Double total = (Double.valueOf(model.getQuantity()) * Double.valueOf(model.getSellingprice()));
+                OrderConstants.getProductOrderModels().get(pos).setTotalprice(String.valueOf(total));
+
+            } catch (Exception nm) {
+                nm.printStackTrace();
+            }
 
 
             dialog.dismiss();

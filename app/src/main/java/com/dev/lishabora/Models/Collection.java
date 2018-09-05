@@ -38,10 +38,12 @@ public class Collection {
 
     private String loanAmountGivenOutPrice;//
     private String loanId;//as in loans out tables
+    private String loanDetails;//as in loans out tables
 
 
     private String orderGivenOutPrice;
     private String orderId;//as in orders out table
+    private String orderDetails;//as in orders out table
     private String productId;//as in orders out table as in product table
 
 
@@ -288,5 +290,21 @@ public class Collection {
 
     public void setCycleId(String cycleId) {
         this.cycleId = cycleId;
+    }
+
+    public String getLoanDetails() {
+        return loanDetails;
+    }
+
+    public void setLoanDetails(String loanDetails) {
+        this.loanDetails = loanDetails;
+    }
+
+    public String getOrderDetails() {
+        return orderDetails;
+    }
+
+    public void setOrderDetails(String orderDetails) {
+        this.orderDetails = orderDetails;
     }
 }

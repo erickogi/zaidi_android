@@ -9,7 +9,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         style="@style/Widget.MaterialComponents.CardView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@android:drawable/picture_frame"
         app:cardUseCompatPadding="true"
         app:strokeColor="@color/divider"
@@ -24,7 +24,7 @@
         <LinearLayout
             android:id="@+id/background"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@drawable/rounded_border_tv"
 
             android:orientation="vertical">
@@ -66,156 +66,6 @@
 
             </LinearLayout>
 
-            <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/spinner_months"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-
-
-                android:hint="Choose Month"
-                app:ms_arrow_tint="@color/green_color_picker"
-
-                app:ms_hint_color="@color/green_color_picker"
-                app:ms_text_color="@color/black" />
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/divider" />
-
-            <LinearLayout
-                android:id="@+id/linear_totals"
-                android:layout_width="match_parent"
-
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/rl_header"
-                android:layout_marginStart="4dp"
-                android:background="@color/white"
-                android:orientation="horizontal"
-                android:padding="3dp"
-                android:weightSum="4">
-
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    android:text="Totals"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="3dp"
-                    android:background="@color/divider" />
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Milk"
-                        android:textColor="@color/black" />
-
-                    <TextView
-                        android:id="@+id/txt_milk"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="200.9 Ltrs" />
-                </LinearLayout>
-
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="3dp"
-                    android:background="@color/divider" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Loan"
-                        android:textColor="@color/black" />
-
-                    <TextView
-                        android:id="@+id/txt_loans"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-
-                        android:text="1200 /=" />
-
-                </LinearLayout>
-
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="3dp"
-                    android:background="@color/divider" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Orders"
-                        android:textColor="@color/black" />
-
-                    <TextView
-                        android:id="@+id/txt_orders"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="0.0 Ksh" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Bal"
-                        android:textColor="@color/black" />
-
-                    <TextView
-                        android:id="@+id/txt_balance"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="0.0 Ksh" />
-
-                </LinearLayout>
-
-
-            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -236,7 +86,8 @@
                     android:id="@+id/edt_value"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Loan Amount (Ksh)"
+                    android:enabled="false"
+                    android:hint="Total Amount (Ksh)"
                     android:inputType="number" />
 
             </android.support.design.widget.TextInputLayout>
@@ -311,10 +162,10 @@
                 android:weightSum="2">
 
                 <RadioButton
-                    android:checked="true"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:checked="true"
                     android:text="Equal Installmentsts" />
 
                 <RadioButton
@@ -363,57 +214,8 @@
 
             </LinearLayout>
 
-            <android.support.v7.widget.RecyclerView
-
-
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-
-                android:layout_height="match_parent"
-
-
-                android:layout_below="@+id/rl_header"
-                android:layout_centerHorizontal="true"
-
-                android:layout_margin="4dp"
-                android:nestedScrollingEnabled="false"
-                android:scrollIndicators="start|end"
-                android:scrollbarSize="6dp"
-                android:scrollbars="vertical"
-                android:visibility="gone"
-
-                >
-
-
-            </android.support.v7.widget.RecyclerView>
-
 
         </LinearLayout>
     </android.support.design.card.MaterialCardView>
 
-    <android.support.design.button.MaterialButton
-
-        android:id="@+id/btn_give_loan"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="4dp"
-
-        android:layout_marginBottom="10dp"
-
-
-        android:text="Give Loan"
-        android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
-        android:textColor="@color/black"
-
-        android:textSize="16.5sp"
-        app:cornerRadius="5dp"
-        app:icon="@drawable/ic_next"
-        app:iconPadding="4dp"
-        app:iconTint="@color/black"
-        app:rippleColor="@color/accent"
-        app:strokeColor="@color/black"
-
-        app:strokeWidth="2dp" />
 </RelativeLayout>

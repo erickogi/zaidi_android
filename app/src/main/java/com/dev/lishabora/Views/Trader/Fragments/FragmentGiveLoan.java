@@ -22,12 +22,14 @@ import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.FarmerHistoryByDateModel;
+import com.dev.lishabora.Models.LoanModel;
 import com.dev.lishabora.Models.MonthsDates;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishaboramobile.R;
+import com.google.gson.Gson;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import java.util.LinkedList;
@@ -139,7 +141,7 @@ public class FragmentGiveLoan extends Fragment {
 
     }
 
-    private void giveLoan(String l) {
+    private void giveLoan(String l, String loanDetails) {
 
         if (DateTimeUtils.Companion.isAM(DateTimeUtils.Companion.getTodayDate())) {
 
@@ -191,6 +193,7 @@ public class FragmentGiveLoan extends Fragment {
                 c.setTimeOfDay("AM");
                 c.setMilkCollected("0");
                 c.setLoanAmountGivenOutPrice(l);
+                c.setLoanDetails(loanDetails);
                 c.setOrderGivenOutPrice("0");
 
                 c.setLoanId("");
@@ -217,6 +220,7 @@ public class FragmentGiveLoan extends Fragment {
 
                 if (AmCollModel != null) {
                     AmCollModel.setLoanAmountGivenOutPrice(l);
+                    AmCollModel.setLoanDetails(loanDetails);
                 }
                 traderViewModel.updateCollection(AmCollModel).observe(FragmentGiveLoan.this, responseModel -> {
                     if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
@@ -245,6 +249,7 @@ public class FragmentGiveLoan extends Fragment {
                 c.setTimeOfDay("PM");
                 c.setMilkCollected("0");
                 c.setLoanAmountGivenOutPrice(l);
+                c.setLoanDetails(loanDetails);
                 c.setOrderGivenOutPrice("0");
 
                 c.setLoanId("");
@@ -270,6 +275,7 @@ public class FragmentGiveLoan extends Fragment {
             } else {
 
                 PmCollModel.setLoanAmountGivenOutPrice(l);
+                PmCollModel.setLoanDetails(loanDetails);
                 traderViewModel.updateCollection(PmCollModel).observe(FragmentGiveLoan.this, responseModel -> {
                     if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
                     } else {
@@ -301,12 +307,25 @@ public class FragmentGiveLoan extends Fragment {
     }
 
     private void initView() {
-        id = view.findViewById(R.id.txt_id);
-        name = view.findViewById(R.id.txt_name);
         btnGiveLoan = view.findViewById(R.id.btn_give_loan);
 
         spinnerMonths = view.findViewById(R.id.spinner_months);
+
+        id = view.findViewById(R.id.txt_id);
+        name = view.findViewById(R.id.txt_name);
+
         edtAmount = view.findViewById(R.id.edt_value);
+        txtQty = view.findViewById(R.id.txt_qty);
+        txtPrice = view.findViewById(R.id.txt_installment);
+
+        imgAdd = view.findViewById(R.id.img_add);
+        imgRemove = view.findViewById(R.id.img_remove);
+
+        imgAdd.setOnClickListener(view -> calc(imgAdd, txtQty));
+
+
+        imgRemove.setOnClickListener(view -> calc(imgRemove, txtQty));
+
 
         milk = view.findViewById(R.id.txt_milk);
         loan = view.findViewById(R.id.txt_loans);
@@ -320,16 +339,6 @@ public class FragmentGiveLoan extends Fragment {
             }
         });
 
-        txtQty = view.findViewById(R.id.txt_qty);
-        txtPrice = view.findViewById(R.id.txt_installment);
-
-        imgAdd = view.findViewById(R.id.img_add);
-        imgRemove = view.findViewById(R.id.img_remove);
-
-        imgAdd.setOnClickListener(view -> calc(imgAdd, txtQty));
-
-
-        imgRemove.setOnClickListener(view -> calc(imgRemove, txtQty));
 
         edtAmount.addTextChangedListener(new TextWatcher() {
             @Override
@@ -359,15 +368,20 @@ public class FragmentGiveLoan extends Fragment {
                 txtPrice.setText(String.valueOf(GeneralUtills.Companion.round(installmentValue, 2)));
             }
         });
+
+
         getCollection(famerModel.getCode(), DateTimeUtils.Companion.getToday(), edtAmount);
 
 
-        btnGiveLoan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!TextUtils.isEmpty(edtAmount.getText().toString())) {
-                    giveLoan(edtAmount.getText().toString());
-                }
+        btnGiveLoan.setOnClickListener(view -> {
+            if (!TextUtils.isEmpty(edtAmount.getText().toString())) {
+
+
+                LoanModel loanModel = new LoanModel();
+                loanModel.setLoanAmount(edtAmount.getText().toString());
+                loanModel.setInstallmentAmount(txtPrice.getText().toString());
+                loanModel.setInstallmentsNo(txtQty.getText().toString());
+                giveLoan(edtAmount.getText().toString(), new Gson().toJson(loanModel));
             }
         });
     }
