@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.telephony.TelephonyManager
-import android.util.Log
+import timber.log.Timber
 import java.sql.DriverManager.println
 
 /**
@@ -30,7 +30,7 @@ class NetworkUtils(private val context: Context) {
                 return cm.activeNetworkInfo
             } catch (e: Exception) {
                 println("CheckConnectivity Exception: " + e.message)
-                Log.v("connectivity", e.toString())
+                Timber.v(e.toString())
                 return null
             }
 

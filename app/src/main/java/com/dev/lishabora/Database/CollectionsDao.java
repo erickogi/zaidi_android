@@ -63,7 +63,7 @@ public interface CollectionsDao {
     @Delete
     void deleteRecord(Collection collection);
 
-    @Query("SELECT (SUM(milkCollected) - SUM(loanAmountGivenOutPrice+orderGivenOutPrice)) FROM COLLECTIONTRANSACTIONS WHERE farmerCode =:farmercode")
+    @Query("SELECT (SUM(milkCollectedValueKsh) - SUM(loanAmountGivenOutPrice+orderGivenOutPrice)) FROM COLLECTIONTRANSACTIONS WHERE farmerCode =:farmercode")
     double getBalanceByFarmerCode(String farmercode);
 
 
@@ -83,8 +83,15 @@ public interface CollectionsDao {
     Collection getLast(String cycleCode);
 
 
+    @Query("SELECT SUM(milkCollectedValueLtrs) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutnumber = :payoutNumber")
+    LiveData<Double> getSumOfMilkFarmerPayoutLtrs(String farmercode, int payoutNumber);
+
+    @Query("SELECT SUM(milkCollectedValueKsh) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutnumber = :payoutNumber")
+    LiveData<Double> getSumOfMilkFarmerPayoutKsh(String farmercode, int payoutNumber);
+
     @Query("SELECT SUM(milkCollected) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutnumber = :payoutNumber")
     LiveData<Double> getSumOfMilkFarmerPayout(String farmercode, int payoutNumber);
+
 
     @Query("SELECT SUM(loanAmountGivenOutPrice) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutnumber = :payoutNumber")
     LiveData<Double> getSumOfLoanFarmerPayout(String farmercode, int payoutNumber);

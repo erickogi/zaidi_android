@@ -5,7 +5,6 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
@@ -23,6 +22,8 @@ import com.dev.lishabora.Views.Trader.FarmerConst;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import timber.log.Timber;
 
 public class PayoutsVewModel extends AndroidViewModel {
     FarmerRepo farmerRepo;
@@ -115,6 +116,8 @@ public class PayoutsVewModel extends AndroidViewModel {
     }
 
     LiveData<Double> milkTotal;
+    LiveData<Double> milkTotalLtrs;
+    LiveData<Double> milkTotalKsh;
 
     public Payouts getLastPayout(String cycleCode) {
         return payoutsRepo.getLast(cycleCode);
@@ -142,7 +145,7 @@ public class PayoutsVewModel extends AndroidViewModel {
     }
 
     public LiveData<List<FamerModel>> getFarmersByCycle(String code) {
-        Log.d("farmersPayouts", "Db called ");
+        Timber.d("Db called ");
 
         if (farmers == null) {
             farmers = new MutableLiveData();
@@ -185,7 +188,7 @@ public class PayoutsVewModel extends AndroidViewModel {
 
     public LiveData<List<FamerModel>> getFarmerByStatusRoute(int status, String route) {
 
-        Log.d("byRouteByStatus", "Status " + status + "\n Route " + route);
+        Timber.tag("byRouteByStatus").d("Status " + status + "\n Route " + route);
 
         if (farmers == null) {
             farmers = new MutableLiveData();
@@ -270,7 +273,7 @@ public class PayoutsVewModel extends AndroidViewModel {
     }
 
     public List<FamerModel> getFarmersByCycleONe(String code) {
-        Log.d("farmersPayouts", "Db called ");
+        Timber.tag("farmersPayouts").d("Db called ");
 
         if (farmersListOne == null) {
             farmersListOne = new LinkedList<>();
@@ -317,6 +320,24 @@ public class PayoutsVewModel extends AndroidViewModel {
         milkTotal = collectionsRepo.getSumOfMilkFarmerPayout(farmercode, payoutNumber);
 
         return milkTotal;
+    }
+
+    public LiveData<Double> getSumOfMilkForPayoutLtrs(String farmercode, int payoutNumber) {
+        if (milkTotalLtrs == null) {
+            milkTotalLtrs = new MutableLiveData<>();
+        }
+        milkTotalLtrs = collectionsRepo.getSumOfMilkFarmerPayoutLtrs(farmercode, payoutNumber);
+
+        return milkTotalLtrs;
+    }
+
+    public LiveData<Double> getSumOfMilkForPayoutKsh(String farmercode, int payoutNumber) {
+        if (milkTotalKsh == null) {
+            milkTotalKsh = new MutableLiveData<>();
+        }
+        milkTotalKsh = collectionsRepo.getSumOfMilkFarmerPayoutKsh(farmercode, payoutNumber);
+
+        return milkTotalKsh;
     }
 
     public LiveData<Double> getSumOfLoansForPayout(String farmercode, int payoutNumber) {

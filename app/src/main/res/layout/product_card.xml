@@ -100,7 +100,7 @@
                             android:textColor="@color/black"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="3400 kSH"
+                            android:text="0.0 /="
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                                 android:textSize="13.5sp" />
 
@@ -114,7 +114,7 @@
                                 android:layout_weight="1"
 
                                 android:textColor="@color/black"
-                                android:text="40000"
+                                android:text="0.0 /="
                                 android:textAlignment="viewStart"
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                                 android:textSize="13.5sp" />

@@ -26,6 +26,8 @@ import com.google.gson.Gson;
 import com.hololo.library.otpview.OTPView;
 import com.wang.avi.AVLoadingIndicatorView;
 
+import timber.log.Timber;
+
 
 public class ForgotPassOtpFragment extends Fragment implements View.OnClickListener {
 
@@ -126,7 +128,7 @@ public class ForgotPassOtpFragment extends Fragment implements View.OnClickListe
 
         if (getArguments() != null) {
             responseModel = (ResponseObject) getArguments().getSerializable("response");
-            Log.d("responsemodel", responseModel.getResultDescription());
+            Timber.d(responseModel.getResultDescription());
         } else {
             responseModel = LoginConsts.getResponseObject();
         }
@@ -215,7 +217,7 @@ public class ForgotPassOtpFragment extends Fragment implements View.OnClickListe
 
 
             default:
-                Log.d(TAG, " No action on click");
+                Timber.d(" No action on click");
         }
     }
 

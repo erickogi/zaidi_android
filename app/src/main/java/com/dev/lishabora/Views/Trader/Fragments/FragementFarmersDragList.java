@@ -21,7 +21,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -67,6 +66,7 @@ import java.util.Objects;
 import github.nisrulz.recyclerviewhelper.RVHItemClickListener;
 import github.nisrulz.recyclerviewhelper.RVHItemDividerDecoration;
 import github.nisrulz.recyclerviewhelper.RVHItemTouchHelperCallback;
+import timber.log.Timber;
 
 import static com.dev.lishabora.Models.FamerModel.farmerDateComparator;
 import static com.dev.lishabora.Models.FamerModel.farmerNameComparator;
@@ -274,10 +274,10 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
 
     public void update(List<FamerModel> famerModels) {
 
-        Log.d("ReTr", "update started");
+        Timber.d("update started");
 
         if (FarmerConst.getFamerModels() != null && listAdapter != null) {
-            Log.d("ReTr", "update started");
+            Timber.d("update started");
 
             FarmerConst.getFamerModels().clear();
             FarmerConst.getFamerModels().addAll(famerModels);
@@ -467,7 +467,7 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
     }
 
     private int getSelectedAccountStatus() {
-        Log.d("Acsel", "" + spinner1.getSelectedIndex());
+        Timber.d("Selected Status" + spinner1.getSelectedIndex());
         return spinner1.getSelectedIndex();
     }
 
@@ -740,7 +740,6 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
                     .setAction("Action", null).show();
 
         }
-        Log.d("SnackMessage", msg);
     }
 
 
@@ -832,7 +831,7 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
                 case R.id.edit:
 
 
-                    Log.d("farmerdialog", "edit clicked");
+                    Timber.d("edit clicked");
                     FragementFarmersDragList.this.editTrader(famerModel, FragementFarmersDragList.this.getUnits(), FragementFarmersDragList.this.getCycles(), FragementFarmersDragList.this.getRoutess(), true);
                     break;
                 case R.id.view:
@@ -861,7 +860,7 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
 
     public void editTrader(FamerModel famerModel, List<UnitsModel> unitsModels,
                            List<Cycles> cycles, List<RoutesModel> routesModels, boolean isEditale) {
-        Log.d("farmerdialog", "in edit");
+        Timber.d("in edit");
 
         if (context != null) {
             LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
@@ -1033,7 +1032,7 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
             btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
 
         } else {
-            Log.d("farmerdialog", "context nulll edit clicked");
+            Timber.d("context nulll edit clicked");
 
         }
 

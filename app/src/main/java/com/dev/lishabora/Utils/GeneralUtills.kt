@@ -6,9 +6,9 @@ import android.graphics.BitmapFactory
 import android.support.design.widget.TextInputEditText
 import android.text.TextUtils
 import android.util.Base64
-import android.util.Log
 import android.widget.*
 import com.dev.lishaboramobile.R
+import timber.log.Timber
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
@@ -232,7 +232,7 @@ class GeneralUtills {
 
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
-            Log.d("loadException", e.toString())
+            Timber.d(e.toString())
         }
 
         return b

@@ -1,6 +1,5 @@
 package com.dev.lishabora.Utils.Network
 
-import android.util.Log
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
@@ -11,6 +10,7 @@ import com.dev.lishabora.Utils.ResponseCallback
 import com.google.gson.Gson
 import org.json.JSONArray
 import org.json.JSONObject
+import timber.log.Timber
 import java.util.*
 
 class Request {
@@ -140,7 +140,7 @@ class Request {
 
                         val gson = Gson()
                         responseModelSingle = gson.fromJson(response, ResponseObject::class.java)
-                        Log.d("2ReTrRe", gson.toJson(responseModelSingle))
+                        Timber.tag("2ReTrRe").d(gson.toJson(responseModelSingle))
 
                         responseCallback.response(responseModelSingle)
 
@@ -188,7 +188,7 @@ class Request {
                         override fun onError(error: ANError) {
                             // handle error
 
-                            Log.d("eww", error.toString())
+                            Timber.tag("eww").d(error.toString())
                             listener.onError(error)
                             //  listener.onError(error)
                         }
@@ -203,7 +203,7 @@ class Request {
                 mtoken = token
 
             }
-            Log.d("ReTrReq", params.toString() + " Url : " + url)
+            Timber.tag("ReTrReq").d("%s%s", params.toString() + " Url : ", url)
 
 
             AndroidNetworking.post(url)
@@ -220,7 +220,7 @@ class Request {
                     .getAsString(object : StringRequestListener {
                         override fun onResponse(response: String) {
                             // do anything with response
-                            Log.d("ReTrRe", response)
+                            Timber.tag("ReTrRe").d(response)
                             listener.onSuccess(response)
 
                         }
@@ -228,7 +228,7 @@ class Request {
                         override fun onError(error: ANError) {
                             // handle error
 
-                            Log.d("ReTrRe", error.toString())
+                            Timber.tag("ReTrRe").d(error.toString())
                             listener.onError(error)
                             //  listener.onError(error)
                         }
@@ -243,7 +243,7 @@ class Request {
                 mtoken = token
 
             }
-            Log.d("ReTrReq", params.toString() + " Url : " + url)
+            Timber.tag("ReTrReq").d(params.toString() + " Url : " + url)
 
 
             AndroidNetworking.post(url)
@@ -260,7 +260,7 @@ class Request {
                     .getAsString(object : StringRequestListener {
                         override fun onResponse(response: String) {
                             // do anything with response
-                            Log.d("ReTrRe", response)
+                            Timber.tag("ReTrRe").d(response)
                             listener.onSuccess(response)
 
                         }
@@ -268,7 +268,7 @@ class Request {
                         override fun onError(error: ANError) {
                             // handle error
 
-                            Log.d("ReTrRe", error.toString())
+                            Timber.tag("ReTrRe").d(error.toString())
                             listener.onError(error)
                             //  listener.onError(error)
                         }
@@ -318,8 +318,8 @@ class Request {
 
             }
 
-            Log.d("putrequest", params.toString())
-            Log.d("putrequest", url)
+            Timber.tag("putrequest").d(params.toString())
+            Timber.tag("putrequest").d(url)
 
             AndroidNetworking.put(url)
 
@@ -357,7 +357,7 @@ class Request {
                 mtoken = token
 
             }
-            Log.d("deleterequest", url)
+            Timber.tag("deleterequest").d(url)
             //Log.d("deleterequest", url)
 
 

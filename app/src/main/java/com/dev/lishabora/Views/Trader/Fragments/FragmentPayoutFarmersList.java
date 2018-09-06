@@ -1,5 +1,6 @@
 package com.dev.lishabora.Views.Trader.Fragments;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +12,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +41,14 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+
+import timber.log.Timber;
+
+import static com.dev.lishabora.Views.CommonFuncs.getBalance;
+import static com.dev.lishabora.Views.CommonFuncs.getFarmerStatus;
+import static com.dev.lishabora.Views.CommonFuncs.getLoan;
+import static com.dev.lishabora.Views.CommonFuncs.getMilk;
+import static com.dev.lishabora.Views.CommonFuncs.getOrder;
 
 public class FragmentPayoutFarmersList extends Fragment {
     public TextView status, startDate, cycleName, endDate, milkTotal, loanTotal, orderTotal, balance, approvedCount, unApprovedCount;
@@ -87,13 +95,27 @@ public class FragmentPayoutFarmersList extends Fragment {
                         new TypeToken<ArrayList<PayoutFarmersCollectionModel>>() {
                         }.getType());
 
-                Gson g = new Gson();
-                Log.d("farmerCilcked", "clicked " + position);
-                Intent intent = new Intent(getActivity(), PayCard.class);
-                intent.putExtra("data", dayCollectionModels.get(position));
-                intent.putExtra("payout", payouts);
-                intent.putExtra("farmers", element);
-                startActivity(intent);
+                payoutsVewModel.getFarmerByCode(dayCollectionModels.get(position).getFarmercode()).observe(FragmentPayoutFarmersList.this, new Observer<FamerModel>() {
+                    @Override
+                    public void onChanged(@Nullable FamerModel famerModel) {
+                        if (famerModel != null) {
+                            Gson g = new Gson();
+                            Timber.tag("farmerCilcked").d("clicked " + position);
+                            Intent intent = new Intent(getActivity(), PayCard.class);
+                            intent.putExtra("data", dayCollectionModels.get(position));
+                            intent.putExtra("payout", payouts);
+                            intent.putExtra("farmers", element);
+                            intent.putExtra("farmer", famerModel);
+
+                            startActivity(intent);
+                        } else {
+                            Timber.tag("farmerCilcked").d("clicked " + position + "  eRROR Farmern Not found");
+
+                        }
+
+                    }
+                });
+
 
             }
 
@@ -243,11 +265,13 @@ public class FragmentPayoutFarmersList extends Fragment {
         startDate.setText(model.getStartDate());
         endDate.setText(model.getEndDate());
         cycleName.setText(model.getCyclename());
-        milkTotal.setText(model.getMilkTotal());
-        loanTotal.setText(model.getLoanTotal());
-        orderTotal.setText(model.getOrderTotal());
 
-        balance.setText(model.getBalance());
+        milkTotal.setText(String.format("%s %s", model.getMilkTotal(), getActivity().getString(R.string.ltrs)));
+        loanTotal.setText(String.format("%s %s", model.getLoanTotal(), getActivity().getString(R.string.ksh)));
+        orderTotal.setText(String.format("%s %s", model.getOrderTotal(), getActivity().getString(R.string.ksh)));
+
+
+        balance.setText(String.format("%s %s", model.getBalance(), getActivity().getString(R.string.ksh)));
         approvedCount.setText(model.getApprovedCards());
         unApprovedCount.setText(model.getPendingCards());
 
@@ -271,12 +295,12 @@ public class FragmentPayoutFarmersList extends Fragment {
         payoutsVewModel.getFarmersByCycle("" + payouts.getCycleCode()).observe(this, famerModels -> {
             if (famerModels != null) {
                 FragmentPayoutFarmersList.this.famerModels = famerModels;
-                Log.d("farmersPayouts", "Farmers found " + famerModels.size());
+                Timber.tag("farmersPayouts").d("Farmers found " + famerModels.size());
 
                 loadCollectionPayouts();
 
             } else {
-                Log.d("farmersPayouts", "Farmers found null ");
+                Timber.tag("farmersPayouts").d("Farmers found null ");
 
             }
         });
@@ -286,7 +310,7 @@ public class FragmentPayoutFarmersList extends Fragment {
 
         payoutsVewModel.getCollectionByDateByPayout("" + payouts.getPayoutnumber()).observe(this, collections -> {
             if (collections != null) {
-                Log.d("farmersPayouts", "Collections found " + collections.size());
+                Timber.tag("farmersPayouts").d("Collections found " + collections.size());
 
                 FragmentPayoutFarmersList.this.collections = collections;
                 setUpFarmerCollectionList();
@@ -300,13 +324,21 @@ public class FragmentPayoutFarmersList extends Fragment {
         List<PayoutFarmersCollectionModel> collectionModels = new LinkedList<>();
 
         for (FamerModel famerModel : famerModels) {
-            String milkTotal = getMilk(famerModel.getCode());
-            String loanTotal = getLoan(famerModel.getCode());
-            String orderTotal = getOrder(famerModel.getCode());
-            int status = getFarmerStatus(famerModel.getCode());
+            String milkTotal = getMilk(famerModel.getCode(), collections).getUnitQty();
+            String milkTotalKsh = getMilk(famerModel.getCode(), collections).getValueKsh();
+            String milkTotalLtrs = getMilk(famerModel.getCode(), collections).getValueLtrs();
+            String loanTotal = getLoan(famerModel.getCode(), collections);
+            String orderTotal = getOrder(famerModel.getCode(), collections);
+            int status = getFarmerStatus(famerModel.getCode(), collections);
+
+
+
+
             String statusText = "";
             statusText = status == 0 ? "Pending" : "Approved";
-            String balance = getBalance(milkTotal, loanTotal, orderTotal);
+
+
+            String balance = getBalance(milkTotalKsh, loanTotal, orderTotal);
             collectionModels.add(new PayoutFarmersCollectionModel(
                     famerModel.getCode(),
                     famerModel.getNames(),
@@ -315,7 +347,8 @@ public class FragmentPayoutFarmersList extends Fragment {
                     orderTotal,
                     status,
                     statusText,
-                    balance, payouts.getPayoutnumber(), famerModel.getCyclecode()
+                    balance, payouts.getPayoutnumber(),
+                    famerModel.getCyclecode(), milkTotalKsh, milkTotalLtrs
             ));
 
 
@@ -326,93 +359,6 @@ public class FragmentPayoutFarmersList extends Fragment {
 
     }
 
-    private int getFarmerStatus(String code) {
-        int status = 0;
-        int collectsNo = 0;
-        for (Collection c : collections) {
-            if (c.getFarmerCode().equals(code)) {
-                collectsNo++;
-                try {
-                    status += c.getApproved();
-                } catch (Exception nm) {
-                    nm.printStackTrace();
-                }
-            }
-
-        }
-        if (status >= collectsNo) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-
-    private String getBalance(String milkTotal, String loanTotal, String orderTotal) {
-        double balance = 0.0;
-        try {
-            balance = Double.valueOf(milkTotal);
-        } catch (Exception nm) {
-            nm.printStackTrace();
-        }
-        try {
-            return String.valueOf(Double.valueOf(milkTotal) - (Double.valueOf(loanTotal) + Double.valueOf(orderTotal)));
-
-        } catch (Exception nm) {
-            nm.printStackTrace();
-        }
-        return String.valueOf(balance);
-    }
-
-
-    private String getOrder(String farmercode) {
-        double orderTotal = 0.0;
-
-        for (Collection c : collections) {
-            if (c.getFarmerCode().equals(farmercode)) {
-                try {
-                    orderTotal += Double.valueOf(c.getOrderGivenOutPrice());
-                } catch (Exception nm) {
-                    nm.printStackTrace();
-                }
-            }
-        }
-
-        return String.valueOf(orderTotal);
-
-    }
-
-    private String getLoan(String farmercode) {
-        double loanTotal = 0.0;
-        for (Collection c : collections) {
-            if (c.getFarmerCode().equals(farmercode)) {
-                try {
-                    loanTotal += Double.valueOf(c.getLoanAmountGivenOutPrice());
-                } catch (Exception nm) {
-                    nm.printStackTrace();
-                }
-            }
-        }
-        return String.valueOf(loanTotal);
-
-
-    }
-
-    private String getMilk(String farmercode) {
-        double milkTotal = 0.0;
-
-        for (Collection c : collections) {
-            if (c.getFarmerCode().equals(farmercode)) {
-                try {
-                    milkTotal += Double.valueOf(c.getMilkCollected());
-                } catch (Exception nm) {
-                    nm.printStackTrace();
-                }
-            }
-        }
-        return String.valueOf(milkTotal);
-
-
-    }
 
     private void setUpList(List<PayoutFarmersCollectionModel> dayCollectionModels) {
         this.dayCollectionModels = dayCollectionModels;

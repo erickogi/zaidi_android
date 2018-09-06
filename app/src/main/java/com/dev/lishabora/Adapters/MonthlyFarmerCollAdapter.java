@@ -14,6 +14,8 @@ import com.dev.lishaboramobile.R;
 
 import java.util.List;
 
+import static com.dev.lishaboramobile.R.string.ksh;
+
 
 public class MonthlyFarmerCollAdapter extends RecyclerView.Adapter<MonthsFarmerCollViewHolder> {
 
@@ -55,21 +57,22 @@ public class MonthlyFarmerCollAdapter extends RecyclerView.Adapter<MonthsFarmerC
         holder.month.setText(model.getMonthsDates().getMonthName());
 
 
-        holder.milk.setText(model.getMilktotal());
+        holder.milk.setText(String.format("%s %s", model.getMilktotal(), context.getString(R.string.ltrs)));
         if (!model.getMilktotal().equals("0.0")) {
             holder.milk.setTextColor(context.getResources().getColor(R.color.colorPrimary));
             holder.milk.setTypeface(Typeface.DEFAULT_BOLD);
 
+
         } else {
             holder.milk.setTypeface(Typeface.DEFAULT);
-
             holder.milk.setTextColor(context.getResources().getColor(R.color.black));
 
         }
 
 
-        holder.loan.setText(model.getLoanTotal());
+        holder.loan.setText(String.format("%s %s", model.getLoanTotal(), context.getString(ksh)));
         if (!model.getLoanTotal().equals("0.0")) {
+
             holder.loan.setTextColor(context.getResources().getColor(R.color.colorPrimary));
             holder.loan.setTypeface(Typeface.DEFAULT_BOLD);
 
@@ -80,7 +83,7 @@ public class MonthlyFarmerCollAdapter extends RecyclerView.Adapter<MonthsFarmerC
 
         }
 
-        holder.order.setText(model.getOrderTotal());
+        holder.order.setText(String.format("%s %s", model.getOrderTotal(), context.getString(ksh)));
         if (!model.getOrderTotal().equals("0.0")) {
             holder.order.setTextColor(context.getResources().getColor(R.color.colorPrimary));
             holder.order.setTypeface(Typeface.DEFAULT_BOLD);

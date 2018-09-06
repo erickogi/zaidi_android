@@ -4,11 +4,21 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.GiveOrderAdapter;
+import com.dev.lishabora.Models.Collection;
+import com.dev.lishabora.Models.Cycles;
+import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.OrderModel;
+import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Trader.OrderConstants;
@@ -16,7 +26,7 @@ import com.dev.lishaboramobile.R;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 
-import java.util.LinkedList;
+import java.util.Objects;
 
 public class GiveOrder extends AppCompatActivity implements StepperLayout.StepperListener {
     private StepperLayout mStepperLayout;
@@ -24,6 +34,23 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
     private PrefrenceManager prefrenceManager;
     private TraderViewModel mViewModel;
     private int pos;
+    public TextView status, id, name, balance, milk, loan, order;
+    ImageView imgAdd, imgRemove, imgDelete;
+    TextView txtQty, txtPrice;
+    TextInputEditText edtAmount;
+    Button btnGiveLoan;
+    String ampm = "";
+    Cycles c;
+    String AmStringValue = null;
+    String PmStringValue = null;
+    Double AmDoubleValue = 0.0;
+    Double PmDoubleValue = 0.0;
+    Collection AmCollModel = null;
+    Collection PmCollModel = null;
+    boolean hasAmChanged = false;
+    boolean hasPmChanged = false;
+    private FamerModel famerModel;
+    private TraderViewModel traderViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +59,13 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        OrderConstants.setProductOrderModels(new LinkedList<>());
+        traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
+        famerModel = (FamerModel) getIntent().getSerializableExtra("farmer");
+
+
+        OrderConstants.setProductOrderModels(null);
+        OrderConstants.setOrderModel(null);
+        OrderConstants.setOrderData(null);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -51,9 +84,178 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
 
     @Override
     public void onCompleted(View completeButton) {
-        finish();
+        OrderModel orderModel = OrderConstants.getOrderModel();
+        String orderData = OrderConstants.getOrderData();
+
+        if (orderData != null && orderModel != null && famerModel != null) {
+
+            makeOrder(orderModel, orderData);
+        } else {
+            Toast.makeText(GiveOrder.this, "No orders Found recoded", Toast.LENGTH_LONG).show();
+        }
+        //finish();
 
     }
+
+    private void makeOrder(OrderModel orderModel, String orderData) {
+        giveOrder(orderModel.getOrderAmount(), orderData);
+    }
+
+
+    private void giveOrder(String o, String orderDetails) {
+
+        if (DateTimeUtils.Companion.isAM(DateTimeUtils.Companion.getTodayDate())) {
+
+            ampm = "AM";
+
+        } else {
+
+            ampm = "PM";
+        }
+
+
+        AmStringValue = null;
+        PmStringValue = null;
+        AmDoubleValue = 0.0;
+        PmDoubleValue = 0.0;
+
+
+        AmCollModel = null;
+        PmCollModel = null;
+
+
+        AmCollModel = traderViewModel.getCollectionByDateByFarmerByTimeSngle(famerModel.getCode(), DateTimeUtils.Companion.getToday(), "AM");
+        PmCollModel = traderViewModel.getCollectionByDateByFarmerByTimeSngle(famerModel.getCode(), DateTimeUtils.Companion.getToday(), "PM");
+
+
+        if (AmCollModel != null) {
+            AmDoubleValue = AmDoubleValue + Double.valueOf(AmCollModel.getOrderGivenOutPrice());
+            AmStringValue = String.valueOf(AmDoubleValue);
+        }
+
+        if (PmCollModel != null) {
+
+            PmDoubleValue = PmDoubleValue + Double.valueOf(PmCollModel.getOrderGivenOutPrice());
+            PmStringValue = String.valueOf(PmDoubleValue);
+        }
+
+
+        if (ampm.equals("AM")) {
+
+            if (AmStringValue == null && AmDoubleValue == 0.0 && AmCollModel == null) {
+                Collection c = new Collection();
+                c.setCycleCode(famerModel.getCyclecode());
+                c.setFarmerCode(famerModel.getCode());
+                c.setFarmerName(famerModel.getNames());
+                c.setCycleId(famerModel.getCode());
+                c.setDayName(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "E"));
+                c.setLoanAmountGivenOutPrice("0");
+                c.setDayDate(DateTimeUtils.Companion.getToday());
+                c.setTimeOfDay("AM");
+                c.setMilkCollected("0");
+                c.setLoanAmountGivenOutPrice("0");
+                c.setLoanDetails("");
+                c.setOrderGivenOutPrice(o);
+                c.setOrderDetails(orderDetails);
+
+                c.setLoanId("");
+                c.setOrderId("");
+                c.setSynced(0);
+                c.setSynced(false);
+                c.setApproved(0);
+
+
+                traderViewModel.createCollections(c, false).observe(this, responseModel -> {
+                    if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+                    } else {
+
+                    }
+
+
+                });
+                famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
+                traderViewModel.updateFarmer(famerModel, false);
+                finish();
+
+            } else {
+
+
+                if (AmCollModel != null) {
+                    AmCollModel.setOrderGivenOutPrice(o);
+                    AmCollModel.setOrderDetails(orderDetails);
+                }
+                traderViewModel.updateCollection(AmCollModel).observe(this, responseModel -> {
+                    if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+                    } else {
+
+
+                    }
+                });
+                famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
+                traderViewModel.updateFarmer(famerModel, false);
+                finish();
+
+            }
+
+
+        } else {
+            if (PmStringValue == null && PmDoubleValue == 0.0 && PmCollModel == null) {
+                Collection c = new Collection();
+                c.setCycleCode(famerModel.getCyclecode());
+                c.setFarmerCode(famerModel.getCode());
+                c.setFarmerName(famerModel.getNames());
+                c.setCycleId(famerModel.getCode());
+                c.setDayName(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "E"));
+                c.setLoanAmountGivenOutPrice("0");
+                c.setDayDate(DateTimeUtils.Companion.getToday());
+                c.setTimeOfDay("PM");
+                c.setMilkCollected("0");
+                c.setLoanAmountGivenOutPrice("0");
+                c.setLoanDetails("");
+                c.setOrderGivenOutPrice(o);
+                c.setOrderDetails(orderDetails);
+
+                c.setLoanId("");
+                c.setOrderId("");
+                c.setSynced(0);
+                c.setSynced(false);
+                c.setApproved(0);
+
+
+                traderViewModel.createCollections(c, false).observe(this, responseModel -> {
+                    if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+                    } else {
+
+                    }
+
+
+                });
+                famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
+                traderViewModel.updateFarmer(famerModel, false);
+                finish();
+
+
+            } else {
+
+                PmCollModel.setOrderGivenOutPrice(o);
+                PmCollModel.setOrderDetails(orderDetails);
+                traderViewModel.updateCollection(PmCollModel).observe(this, responseModel -> {
+                    if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+                    } else {
+
+
+                    }
+                });
+                famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
+                traderViewModel.updateFarmer(famerModel, false);
+                finish();
+
+            }
+        }
+
+
+    }
+
 
     @Override
     public void onError(VerificationError verificationError) {

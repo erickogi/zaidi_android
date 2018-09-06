@@ -29,9 +29,17 @@ public class Collection {
     private String cycleEndsOn;
 
 
-    private String milkCollected;
-    private String milkCollectedPrice;
+    private String milkCollected;// THis is per unit (ie 3 (300 ml)
+    private String milkCollectedPrice; //THIS IS KINDA NOT USED NOW
+
+    private String milkCollectedValueKsh;  // THIS IS VALUE OF MILK COLLECTED IN KSH ( UNITCAPACITY*MILKCOLLECTED)*UNITPRICE
+    private String milkCollectedValueLtrs; // THIS IS VALUE OF MILK COLLECTED IN LTRS ( UNITCAPACITY*MILKCOLLECTED)
+
+
+    private String milkDetails;
     private String milkCollectedId;//as in milk in table
+
+
     private String timeOfDay;//AM , PM
     private String unitOfCollection;//AM , PM
 
@@ -55,6 +63,30 @@ public class Collection {
 
 
     private int approved;
+
+    public String getMilkCollectedValueKsh() {
+        return milkCollectedValueKsh;
+    }
+
+    public void setMilkCollectedValueKsh(String milkCollectedValueKsh) {
+        this.milkCollectedValueKsh = milkCollectedValueKsh;
+    }
+
+    public String getMilkCollectedValueLtrs() {
+        return milkCollectedValueLtrs;
+    }
+
+    public void setMilkCollectedValueLtrs(String milkCollectedValueLtrs) {
+        this.milkCollectedValueLtrs = milkCollectedValueLtrs;
+    }
+
+    public String getMilkDetails() {
+        return milkDetails;
+    }
+
+    public void setMilkDetails(String milkDetails) {
+        this.milkDetails = milkDetails;
+    }
 
     public int getApproved() {
         return approved;

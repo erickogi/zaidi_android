@@ -19,9 +19,10 @@ import android.widget.Spinner;
 
 import com.dev.lishabora.Adapters.PayoutesAdapter;
 import com.dev.lishabora.Models.Collection;
-import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
+import com.dev.lishabora.Views.CommonFuncs;
 import com.dev.lishabora.Views.Trader.PayoutConstants;
 import com.dev.lishaboramobile.R;
 
@@ -124,12 +125,7 @@ public class FragmentPayouts extends Fragment {
 
     }
 
-    void popOutFragments() {
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        for (int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
-            fragmentManager.popBackStack();
-        }
-    }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -186,123 +182,35 @@ public class FragmentPayouts extends Fragment {
     }
 
     private void fetch() {
-        payoutsVewModel.fetchAll(false).observe(this, payouts -> setData(payouts));
+        payoutsVewModel.fetchAll(false).observe(this, this::setData);
     }
+
 
     private void setData(List<com.dev.lishabora.Models.Payouts> payouts) {
         if (payouts != null) {
 
 
-            for (com.dev.lishabora.Models.Payouts p : payouts) {
-                List<Collection> c = payoutsVewModel.getCollectionByDateByPayoutListOne("" + p.getPayoutnumber());
+            LinkedList<Payouts> payouts1 = new LinkedList<>();
+            for (int a = 0; a < payouts.size(); a++) {
+                List<Collection> c = payoutsVewModel.getCollectionByDateByPayoutListOne("" + payouts.get(a).getPayoutnumber());
 
-
-
-                int st = 0;
-                String stText = "";
-                for (Collection coll : c) {
-
-                    milk = milk + Double.valueOf(coll.getMilkCollected());
-                    loans = loans + Double.valueOf(coll.getLoanAmountGivenOutPrice());
-                    orders = orders + Double.valueOf(coll.getOrderGivenOutPrice());
-
-
-                }
-                int status[] = getApprovedCards(c, "" + p.getPayoutnumber());
-
-                if (status[1] < status[0]) {
-                    st = 0;
-                    stText = "Pending";
-                } else {
-                    st = 1;
-                    stText = "Approved";
-                }
-
-
-
-                p.setMilkTotal(String.valueOf(milk));
-                p.setLoanTotal(String.valueOf(loans));
-                p.setOrderTotal(String.valueOf(orders));
-                p.setBalance(String.valueOf(milk - (orders + loans)));
-                p.setFarmersCount("" + payoutsVewModel.getFarmersCountByCycle("" + p.getCycleCode()));
-
-
-                p.setApprovedCards("" + status[1]);
-                p.setPendingCards("" + status[2]);
-
-                p.setStatus(p.getStatus());
-                p.setStatusName(p.getStatusName());
-                milk = 0.0;
-                total = 0.0;
-                loans = 0.0;
-                orders = 0.0;
+                payouts1.add(CommonFuncs.createPayoutsByCollection(c, payouts.get(a), payoutsVewModel));
 
 
             }
 
             if (this.payouts == null) {
                 this.payouts = new LinkedList<>();
-                this.payouts.addAll(payouts);
+                this.payouts.addAll(payouts1);
                 listAdapter.notifyDataSetChanged();
 
             } else {
                 this.payouts.clear();
-                this.payouts.addAll(payouts);
+                this.payouts.addAll(payouts1);
                 listAdapter.notifyDataSetChanged();
             }
             initList();
         }
-    }
-
-    public int[] getApprovedCards(List<Collection> collections, String pcode) {
-
-        int[] statusR = new int[3];
-        int farmerStatus = 0;
-
-
-        List<FamerModel> f = payoutsVewModel.getFarmersByCycleONe(pcode);
-
-
-        statusR[0] = f.size();
-
-
-        int approved = 0;
-
-        for (FamerModel famerModel : f) {
-            int status = 0;
-            int collectionNo = 0;
-            for (Collection c : collections) {
-
-
-                if (c.getFarmerCode().equals(famerModel.getCode())) {
-
-
-                    collectionNo = collectionNo + 1;
-
-                    try {
-                        status += c.getApproved();
-
-                    } catch (Exception nm) {
-                        nm.printStackTrace();
-                    }
-                }
-
-
-            }
-
-            if (status == collectionNo) {
-                approved += 1;
-            }
-
-
-        }
-        statusR[1] = approved;
-        statusR[2] = statusR[0] - approved;
-
-
-        return statusR;
-
-
     }
 
 

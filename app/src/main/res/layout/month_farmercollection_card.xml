@@ -81,7 +81,7 @@
                     android:id="@+id/txt_milk"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="200.9 Ltrs" />
+                    android:text="0.0 Ltrs" />
             </LinearLayout>
 
 
@@ -104,7 +104,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
-                    android:text="1200 /=" />
+                    android:text="0.0 /=" />
 
             </LinearLayout>
 
@@ -128,7 +128,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="0.0 Ksh" />
+                    android:text="0.0 /=" />
 
             </LinearLayout>
 

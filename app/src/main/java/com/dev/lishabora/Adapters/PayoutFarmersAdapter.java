@@ -52,14 +52,14 @@ public class PayoutFarmersAdapter extends RecyclerView.Adapter<PayoutFarmerListV
     public void onBindViewHolder(PayoutFarmerListViewHolder holder, int position) {
         PayoutFarmersCollectionModel model = modelList.get(position);
 
-        holder.balance.setText(model.getBalance());
+        holder.balance.setText(String.format("%s %s", model.getBalance(), context.getString(R.string.ksh)));
         holder.id.setText(model.getFarmercode());
         holder.name.setText(model.getFarmername());
 
         holder.status.setText(model.getStatusName());
 
 
-        holder.milk.setText(model.getMilktotal());
+        holder.milk.setText(String.format("%s %s", model.getMilktotalLtrs(), context.getString(R.string.ltrs)));
         if (!model.getMilktotal().equals("0.0")) {
             holder.milk.setTextColor(context.getResources().getColor(R.color.colorPrimary));
             holder.milk.setTypeface(Typeface.DEFAULT_BOLD);
@@ -72,7 +72,7 @@ public class PayoutFarmersAdapter extends RecyclerView.Adapter<PayoutFarmerListV
         }
 
 
-        holder.loan.setText(model.getLoanTotal());
+        holder.loan.setText(String.format("%s %s", model.getLoanTotal(), context.getString(R.string.ksh)));
         if (!model.getLoanTotal().equals("0.0")) {
             holder.loan.setTextColor(context.getResources().getColor(R.color.colorPrimary));
             holder.loan.setTypeface(Typeface.DEFAULT_BOLD);
@@ -84,7 +84,7 @@ public class PayoutFarmersAdapter extends RecyclerView.Adapter<PayoutFarmerListV
 
         }
 
-        holder.order.setText(model.getOrderTotal());
+        holder.order.setText(String.format("%s %s", model.getOrderTotal(), context.getString(R.string.ksh)));
         if (!model.getOrderTotal().equals("0.0")) {
             holder.order.setTextColor(context.getResources().getColor(R.color.colorPrimary));
             holder.order.setTypeface(Typeface.DEFAULT_BOLD);

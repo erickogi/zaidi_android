@@ -88,7 +88,7 @@
                             android:textColor="@color/black"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="34"
+                            android:text="0"
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                             android:textSize="13.5sp" />
 

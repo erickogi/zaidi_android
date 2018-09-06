@@ -24,7 +24,6 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,6 +41,7 @@ import com.dev.lishabora.Adapters.FarmersAdapter;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.MilkModel;
 import com.dev.lishabora.Models.RPFSearchModel;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.RoutesModel;
@@ -76,6 +76,7 @@ import java.util.Objects;
 import github.nisrulz.recyclerviewhelper.RVHItemClickListener;
 import github.nisrulz.recyclerviewhelper.RVHItemDividerDecoration;
 import github.nisrulz.recyclerviewhelper.RVHItemTouchHelperCallback;
+import timber.log.Timber;
 
 import static com.dev.lishabora.Models.FamerModel.farmerDateComparator;
 import static com.dev.lishabora.Models.FamerModel.farmerNameComparator;
@@ -284,8 +285,13 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                 hasAmChanged = true;
                 if (editable != null && editable.length() > 0) {
                     if (unitsModel.getUnitprice() != null) {
+
                         Double price = Double.valueOf(unitsModel.getUnitprice());
-                        unitTotal.setText(String.valueOf(Double.valueOf(Objects.requireNonNull(edtTodayAm.getText()).toString()) * Double.valueOf(price)));
+                        Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity()) / 1000;
+                        Double total = (Double.valueOf(edtTodayAm.getText().toString()) * unitCapacity) * price;
+
+
+                        unitTotal.setText(String.valueOf(total));
 
                     }
                 } else {
@@ -310,8 +316,13 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                 hasPmChanged = true;
                 if (editable != null && editable.length() > 0) {
                     if (unitsModel.getUnitprice() != null) {
+
                         Double price = Double.valueOf(unitsModel.getUnitprice());
-                        unitTotal.setText(String.valueOf(Double.valueOf(edtTodayPm.getText().toString()) * Double.valueOf(price)));
+                        Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity()) / 1000;
+                        Double total = (Double.valueOf(edtTodayPm.getText().toString()) * unitCapacity) * price;
+
+
+                        unitTotal.setText(String.valueOf(total));
 
                     }
                 } else {
@@ -357,26 +368,32 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             if (!TextUtils.isEmpty(edtTodayAm.getText().toString())) {
                 milkAm = edtTodayAm.getText().toString();
                 // alertDialogAndroid.dismiss();
-
-                Log.d("milkCollDebug", "Milk Am As On Button Click " + milkAm);
+                Timber.tag("milkCollDebug").d("Milk Am As On Button Click " + milkAm);
 
             }
             if (!TextUtils.isEmpty(edtTodayPm.getText().toString())) {
                 milkPm = edtTodayPm.getText().toString();
-
-                Log.d("milkCollDebug", "Milk Am As On Button Click " + milkPm);
+                Timber.tag("milkCollDebug").d("Milk Am As On Button Click " + milkPm);
 
 
             }
 
+
+
             if (hasAmChanged) {
-                Log.d("milkCollDebug", "HAS AM CHANGED TRUE ");
+                Timber.tag("milkCollDebug").d("HAS AM CHANGED TRUE ");
+
+                MilkModel milkModel = new MilkModel();
+                milkModel.setUnitQty(milkAm);
+                milkModel.setUnitsModel(unitsModel);
+
+
+
 
                 if (AmStringValue == null && AmDoubleValue == 0.0 && AmCollModel == null) {
 
-                    Log.d("milkCollDebug", "AM STRING - NULL, AM DOUBLE - NULL AM COLL MODEL - NULL DOING A NEW AM COLLECTION MILK " + milkAm);
+                    Timber.tag("milkCollDebug").d("AM STRING - NULL, AM DOUBLE - NULL AM COLL MODEL - NULL DOING A NEW AM COLLECTION MILK " + milkAm);
 
-                    //NEW COLLECTION AS THERE WERE NO PREVIOUS AM COLLECTION FOR THIS FARMER ON THIS DAY AND TIME
 
                     Collection c = new Collection();
                     c.setCycleCode(famerModel.getCyclecode());
@@ -387,7 +404,18 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                     c.setLoanAmountGivenOutPrice("0");
                     c.setDayDate(DateTimeUtils.Companion.getToday());
                     c.setTimeOfDay("AM");
+
+
                     c.setMilkCollected(milkAm);
+                    c.setMilkCollectedValueKsh(milkModel.getValueKsh());
+                    c.setMilkCollectedValueLtrs(milkModel.getValueLtrs());
+                    c.setMilkDetails(new Gson().toJson(milkModel));
+
+
+
+
+
+
                     c.setLoanAmountGivenOutPrice("0");
                     c.setOrderGivenOutPrice("0");
 
@@ -411,11 +439,18 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                     mViewModel.updateFarmer(famerModel, false);
                 } else {
 
-                    Log.d("milkCollDebug", "AM STRING -! NULL, AM DOUBLE - !NULL AM COLL MODEL - !NULL DOING AN UPDATE AM COLLECTION MILK " + milkAm);
+                    Timber.tag("milkCollDebug").d("AM STRING -! NULL, AM DOUBLE - !NULL AM COLL MODEL - !NULL DOING AN UPDATE AM COLLECTION MILK " + milkAm);
 
                     //UPDATE COLLECTION AS THERE WAS A PREVIOUS AM COLLECTION FOR THIS FARMER ON THIS DAY AND TIME
 
                     AmCollModel.setMilkCollected(milkAm);
+                    AmCollModel.setMilkCollectedValueKsh(milkModel.getValueKsh());
+                    AmCollModel.setMilkCollectedValueLtrs(milkModel.getValueLtrs());
+                    AmCollModel.setMilkDetails(new Gson().toJson(milkModel));
+
+
+
+
                     mViewModel.updateCollection(AmCollModel).observe(FragementFarmersList.this, responseModel -> {
                         if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
                         } else {
@@ -432,11 +467,15 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             }
 
             if (hasPmChanged) {
-                Log.d("milkCollDebug", "HAS PM CHANGED -TRUE ");
+                Timber.tag("milkCollDebug").d("HAS PM CHANGED -TRUE ");
+                MilkModel milkModel = new MilkModel();
+                milkModel.setUnitQty(milkPm);
+                milkModel.setUnitsModel(unitsModel);
+
 
                 if (PmStringValue == null && PmDoubleValue == 0.0 && PmCollModel == null) {
 
-                    Log.d("milkCollDebug", "PM STRING - NULL, PM DOUBLE - NULL PM COLL MODEL - NULL DOING A NEW PM COLLECTION MILK " + milkPm);
+                    Timber.tag("milkCollDebug").d("PM STRING - NULL, PM DOUBLE - NULL PM COLL MODEL - NULL DOING A NEW PM COLLECTION MILK " + milkPm);
 
                     //NEW COLLECTION AS THERE WERE NO PREVIOUS PM COLLECTION FOR THIS FARMER ON THIS DAY AND TIME
                     Collection c = new Collection();
@@ -448,7 +487,17 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                     c.setLoanAmountGivenOutPrice("0");
                     c.setDayDate(DateTimeUtils.Companion.getToday());
                     c.setTimeOfDay("PM");
+
+
                     c.setMilkCollected(milkPm);
+                    c.setMilkCollectedValueKsh(milkModel.getValueKsh());
+                    c.setMilkCollectedValueLtrs(milkModel.getValueLtrs());
+                    c.setMilkDetails(new Gson().toJson(milkModel));
+
+
+
+
+
                     c.setLoanAmountGivenOutPrice("0");
                     c.setOrderGivenOutPrice("0");
 
@@ -473,10 +522,14 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
                 } else {
                     //UPDATE COLLECTION AS THERE WAS A PREVIOUS PM COLLECTION FOR THIS FARMER ON THIS DAY AND TIME
-                    Log.d("milkCollDebug", "PM STRING -! NULL, PM DOUBLE - !NULL AM COLL MODEL - !NULL DOING AN UPDATE PM COLLECTION  MILK " + milkPm);
+                    Timber.tag("milkCollDebug").d("PM STRING -! NULL, PM DOUBLE - !NULL AM COLL MODEL - !NULL DOING AN UPDATE PM COLLECTION  MILK " + milkPm);
 
 
                     PmCollModel.setMilkCollected(milkPm);
+                    PmCollModel.setMilkCollectedValueKsh(milkModel.getValueKsh());
+                    PmCollModel.setMilkCollectedValueLtrs(milkModel.getValueLtrs());
+                    PmCollModel.setMilkDetails(new Gson().toJson(milkModel));
+
                     mViewModel.updateCollection(PmCollModel).observe(FragementFarmersList.this, responseModel -> {
                         if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
                         } else {
@@ -521,14 +574,14 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
     private String getCollection(String code, String date, TextView txtAm, TextView txtPm) {
 
-        Log.d("tagssearch", code + "  Date " + date);
+        Timber.tag("tagssearch").d(code + "  Date " + date);
         List<Collection> collections = mViewModel.getCollectionByDateByFarmer(code, date);//.observe(FragementFarmersList.this, collections -> {
 
         if (txtAm != null && txtPm != null) {
             if (collections != null) {
 
                 for (Collection c : collections) {
-                    Log.d("tagssearch", code + "  Response " + c.getMilkCollected());
+                    Timber.tag("tagssearch").d(code + "  Response " + c.getMilkCollected());
 
                     if (c.getTimeOfDay() != null) {
                         if (c.getTimeOfDay().equals("AM")) {
@@ -657,10 +710,10 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
     public void update(List<FamerModel> famerModels) {
 
-        Log.d("ReTr", "update started");
+        Timber.d("update started");
 
         if (FarmerConst.getFamerModels() != null && listAdapter != null) {
-            Log.d("ReTr", "update started");
+            Timber.d("update started");
 
             FarmerConst.getFamerModels().clear();
             FarmerConst.getFamerModels().addAll(famerModels);
@@ -917,7 +970,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     }
 
     private int getSelectedAccountStatus() {
-        Log.d("Acsel", "" + spinner1.getSelectedIndex());
+        Timber.d("Status selected" + spinner1.getSelectedIndex());
         return spinner1.getSelectedIndex();
     }
 
@@ -1252,7 +1305,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             d.show();
 
         }
-        Log.d("SnackMessage", msg);
     }
 
 
@@ -1347,9 +1399,8 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                     intent.putExtra("farmer", famerModel);
                     startActivity(intent);
 
-                    Log.d("farmerdialog", "edit clicked");
-                    //FragementFarmersList.this.editTrader(famerModel, FragementFarmersList.this.getUnits(), FragementFarmersList.this.getCycles(), FragementFarmersList.this.getRoutess(), true);
                     break;
+
                 case R.id.view:
 
                     Intent intent1 = new Intent(getActivity(), FarmerProfile.class);
@@ -1371,7 +1422,9 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                 case R.id.Orders:
 
                     OrderConstants.setFamerModel(famerModel);
-                    startActivity(new Intent(getActivity(), GiveOrder.class));
+                    Intent intent2 = new Intent(getActivity(), GiveOrder.class);
+                    intent2.putExtra("farmer", famerModel);
+                    startActivity(intent2);
 
                     break;
                 default:
@@ -1395,16 +1448,12 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
     public void editTrader(FamerModel famerModel, List<UnitsModel> unitsModels,
                            List<Cycles> cycles, List<RoutesModel> routesModels, boolean isEditale) {
-        Log.d("farmerdialog", "in edit");
 
         if (context != null) {
             LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
             View mView = layoutInflaterAndroid.inflate(R.layout.dialog_edit_farmer, null);
             AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(context));
             alertDialogBuilderUserInput.setView(mView);
-//            alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
-//            alertDialogBuilderUserInput.setTitle(famerModel.getNames() + " " + famerModel.getCode());
-
 
             UnitsModel unitsModel = new UnitsModel();
             RoutesModel routesModel = new RoutesModel();
@@ -1567,7 +1616,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
 
         } else {
-            Log.d("farmerdialog", "context nulll edit clicked");
+            Timber.d("context nulll edit clicked");
 
         }
 

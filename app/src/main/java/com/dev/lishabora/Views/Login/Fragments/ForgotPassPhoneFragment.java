@@ -12,7 +12,6 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +30,8 @@ import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import timber.log.Timber;
 
 
 public class ForgotPassPhoneFragment extends Fragment implements View.OnClickListener {
@@ -197,7 +198,7 @@ public class ForgotPassPhoneFragment extends Fragment implements View.OnClickLis
 
 
             default:
-                Log.d(TAG, " No action on click");
+                Timber.d(" No action on click");
         }
     }
 

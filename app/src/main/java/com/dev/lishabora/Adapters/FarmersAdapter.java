@@ -68,11 +68,11 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
     @Override
     public void onBindViewHolder(FarmerViewHolder holder, int position) {
         FamerModel farmer = modelList.get(position);
-        holder.balance.setText(farmer.getTotalbalance());
+        holder.balance.setText(String.format("%s%s", farmer.getTotalbalance(), context.getString(R.string.ksh)));
         holder.id.setText(farmer.getCode());
         holder.name.setText(farmer.getNames());
         holder.cycle.setText(farmer.getCyclename());
-        holder.route.setText("" + farmer.getRoutename());
+        holder.route.setText(farmer.getRoutename());
 
 
         holder.txtDate.setText(DateTimeUtils.Companion.getDisplayDate(farmer.getLastCollectionTime()));

@@ -118,7 +118,7 @@
                     android:gravity="center"
                     android:padding="4dp"
 
-                    android:text="45454"
+                    android:text="0.0 Ltrs"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
@@ -136,7 +136,7 @@
                     android:focusableInTouchMode="false"
                     android:gravity="center"
                     android:padding="4dp"
-                    android:text="40,6 Ltrs"
+                    android:text="0.0 Ltrs"
 
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -188,7 +188,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="4dp"
-                    android:text="200 /="
+                    android:text="0.0 /="
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
@@ -237,7 +237,7 @@
                     android:gravity="center"
 
                     android:padding="4dp"
-                    android:text="4000 Ksh"
+                    android:text="0.0 /="
                     android:textSize="14sp"
                     android:textStyle="bold" />
 

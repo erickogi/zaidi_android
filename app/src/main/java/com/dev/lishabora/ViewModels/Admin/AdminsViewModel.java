@@ -6,7 +6,6 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.dev.lishabora.Models.ProductsModel;
 import com.dev.lishabora.Models.ResponseModel;
@@ -27,6 +26,8 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.LinkedList;
+
+import timber.log.Timber;
 
 public class AdminsViewModel extends AndroidViewModel {
     private TraderRepo traderRepo;
@@ -164,7 +165,7 @@ public class AdminsViewModel extends AndroidViewModel {
                                 Type listType = new TypeToken<LinkedList<ProductsModel>>() {
                                 }.getType();
                                 // productsModel = ;
-                                Log.d("ReTrUp", "routes update called");
+                                Timber.d("routes update called");
                                 //update(gson.fromJson(jsonArray, listType));
 
 

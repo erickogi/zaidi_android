@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,10 +24,14 @@ import com.dev.lishabora.Adapters.CollectionsAdapter;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.DayCollectionModel;
 import com.dev.lishabora.Models.DaysDates;
+import com.dev.lishabora.Models.LoanModel;
+import com.dev.lishabora.Models.MilkModel;
+import com.dev.lishabora.Models.OrderModel;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
+import com.dev.lishabora.Views.CommonFuncs;
 import com.dev.lishabora.Views.Trader.PayoutConstants;
 import com.dev.lishaboramobile.R;
 
@@ -194,11 +197,13 @@ public class FragmentPayoutColloectionsList extends Fragment {
         startDate.setText(model.getStartDate());
         endDate.setText(model.getEndDate());
         cycleName.setText(model.getCyclename());
-        milkTotal.setText(model.getMilkTotal());
-        loanTotal.setText(model.getLoanTotal());
-        orderTotal.setText(model.getOrderTotal());
+        milkTotal.setText(String.format("%s %s", model.getMilkTotal(), getActivity().getString(R.string.ltrs)));
+        loanTotal.setText(String.format("%s %s", model.getLoanTotal(), getActivity().getString(R.string.ksh)));
+        orderTotal.setText(String.format("%s %s", model.getOrderTotal(), getActivity().getString(R.string.ksh)));
 
-        balance.setText(model.getBalance());
+
+        balance.setText(String.format("%s %s", model.getBalance(), getActivity().getString(R.string.ksh)));
+
         approvedCount.setText(model.getApprovedCards());
         unApprovedCount.setText(model.getPendingCards());
 
@@ -234,79 +239,50 @@ public class FragmentPayoutColloectionsList extends Fragment {
 
         List<DayCollectionModel> dayCollectionModels = new LinkedList<>();
         for (DaysDates d : daysDates) {
-            String milkAm = getMilk(d.getDate(), "AM");
-            String milkPm = getMilk(d.getDate(), "PM");
-            String loanAm = getLoan(d.getDate(), "AM");
-            String laonPm = getLoan(d.getDate(), "PM");
-            String orderAm = getOrder(d.getDate(), "AM");
-            String orderPm = getOrder(d.getDate(), "PM");
+            MilkModel milkModelAm = CommonFuncs.getMilk(d.getDate(), "AM", collections);
+            MilkModel milkModelPm = CommonFuncs.getMilk(d.getDate(), "PM", collections);
 
-            dayCollectionModels.add(new DayCollectionModel(payouts.getPayoutnumber(),
-                    d.getDay(), d.getDate(), milkAm,
-                    milkPm, loanAm, laonPm, orderAm,
-                    orderPm, 0, 0
+
+            String milkAm = milkModelAm.getUnitQty();
+            String milkPm = milkModelPm.getUnitQty();
+
+            LoanModel loanModelAm = CommonFuncs.getLoan(d.getDate(), "AM", collections);
+            LoanModel loanModelPm = CommonFuncs.getLoan(d.getDate(), "PM", collections);
+
+
+            String loanAm = loanModelAm.getLoanAmount();
+            String laonPm = loanModelPm.getLoanAmount();
+
+            OrderModel orderModelAm = CommonFuncs.getOrder(d.getDate(), "AM", collections);
+            OrderModel orderModelPm = CommonFuncs.getOrder(d.getDate(), "PM", collections);
+
+
+            String orderAm = orderModelAm.getOrderAmount();
+            String orderPm = orderModelPm.getOrderAmount();
+
+
+            //int collectionIdAm = getCollectionIdAm(d.getDate(), collections);
+            //int collectionIdPm = getCollectionIdPm(d.getDate(), collections);
+
+            dayCollectionModels.add(new DayCollectionModel(
+                    payouts.getPayoutnumber(),
+                    d.getDay(),
+                    d.getDate(),
+                    milkAm,
+                    milkPm,
+                    loanAm,
+                    laonPm,
+                    orderAm,
+                    orderPm, 0, 0,
+                    milkModelAm, loanModelAm, orderModelAm,
+                    milkModelPm, loanModelPm, orderModelPm
+
+
 
             ));
         }
 
         setUpList(dayCollectionModels);
-
-    }
-
-    private String getOrder(String date, String ampm) {
-        double orderTotal = 0.0;
-        if (collections != null) {
-            for (Collection c : collections) {
-
-                if (c.getDayDate().contains(date) && c.getTimeOfDay().equals(ampm)) {
-                    try {
-                        orderTotal += Double.valueOf(c.getOrderGivenOutPrice());
-                    } catch (Exception nm) {
-                        nm.printStackTrace();
-                    }
-                }
-            }
-
-        }
-        return String.valueOf(orderTotal);
-
-    }
-
-    private String getLoan(String date, String ampm) {
-        double loanTotal = 0.0;
-        if (collections != null) {
-            for (Collection c : collections) {
-                if (c.getDayDate().contains(date) && c.getTimeOfDay().equals(ampm)) {
-                    try {
-                        loanTotal += Double.valueOf(c.getLoanAmountGivenOutPrice());
-                    } catch (Exception nm) {
-                        nm.printStackTrace();
-                    }
-                }
-            }
-        }
-        return String.valueOf(loanTotal);
-
-
-    }
-
-    private String getMilk(String date, String ampm) {
-        double milkTotal = 0.0;
-        if (collections != null) {
-            for (Collection c : collections) {
-                if (c.getDayDate().equals(date) && c.getTimeOfDay().equals(ampm)) {
-                    try {
-                        milkTotal += Double.valueOf(c.getMilkCollected());
-                        Log.d("CollectionsVsDate", " Date : " + date + "  Time " + ampm + "\nColDate : " + c.getDayDate() + "  ColTime " + c.getTimeOfDay() + "\n Milk " + c.getMilkCollected());
-
-                    } catch (Exception nm) {
-                        nm.printStackTrace();
-                    }
-                }
-            }
-        }
-        return String.valueOf(milkTotal);
-
 
     }
 

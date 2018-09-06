@@ -1,6 +1,7 @@
 package com.dev.lishabora.Views.Trader;
 
 import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.OrderModel;
 import com.dev.lishabora.Models.ProductOrderModel;
 
 import java.util.List;
@@ -9,6 +10,9 @@ public class OrderConstants {
     private static List<ProductOrderModel> productOrderModels;
     private static FamerModel famerModel;
 
+
+    private static String orderData;
+    private static OrderModel orderModel;
     public static FamerModel getFamerModel() {
         return famerModel;
     }
@@ -31,5 +35,21 @@ public class OrderConstants {
         } else {
             productOrderModels = productOrderModelss;
         }
+    }
+
+    public static String getOrderData() {
+        return orderData;
+    }
+
+    public static void setOrderData(String orderData) {
+        OrderConstants.orderData = orderData;
+    }
+
+    public static OrderModel getOrderModel() {
+        return orderModel;
+    }
+
+    public static void setOrderModel(OrderModel orderModel) {
+        OrderConstants.orderModel = orderModel;
     }
 }

@@ -60,6 +60,31 @@ public class FragmentGiveLoan extends Fragment {
     private View view;
     private List<FarmerHistoryByDateModel> modelsDA = new LinkedList<>();
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
+        traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
+
+
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_give_loan, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        this.view = view;
+        famerModel = (FamerModel) getArguments().getSerializable("farmer");
+
+
+    }
+
     private String getCollection(String code, String date, TextInputEditText txt) {
 
         List<Collection> collections = traderViewModel.getCollectionByDateByFarmer(code, date);//.observe(FragementFarmersList.this, collections -> {
@@ -83,30 +108,6 @@ public class FragmentGiveLoan extends Fragment {
 
 
         return String.valueOf(tt);
-
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
-        traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
-
-
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_give_loan, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        this.view = view;
-        famerModel = (FamerModel) getArguments().getSerializable("farmer");
-
 
     }
 
@@ -168,13 +169,13 @@ public class FragmentGiveLoan extends Fragment {
 
 
         if (AmCollModel != null) {
-            AmDoubleValue = AmDoubleValue + Double.valueOf(AmCollModel.getMilkCollected());
+            AmDoubleValue = AmDoubleValue + Double.valueOf(AmCollModel.getLoanAmountGivenOutPrice());
             AmStringValue = String.valueOf(AmDoubleValue);
         }
 
         if (PmCollModel != null) {
 
-            PmDoubleValue = PmDoubleValue + Double.valueOf(PmCollModel.getMilkCollected());
+            PmDoubleValue = PmDoubleValue + Double.valueOf(PmCollModel.getLoanAmountGivenOutPrice());
             PmStringValue = String.valueOf(PmDoubleValue);
         }
 

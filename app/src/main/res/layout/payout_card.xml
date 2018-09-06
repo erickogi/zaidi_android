@@ -130,7 +130,7 @@
 
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="20000"
+                                    android:text="0.0 /="
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                                     android:textSize="13.5sp"
                                     android:textStyle="bold" />
@@ -162,7 +162,7 @@
 
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="2000 Ksh"
+                                    android:text="0.0 Ltrs"
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                                     android:textSize="13.5sp"
                                     android:textStyle="bold" />
@@ -201,7 +201,7 @@
 
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="20"
+                                    android:text="0.0 /="
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                                     android:textSize="13.5sp"
                                     android:textStyle="bold" />
@@ -234,7 +234,7 @@
 
                                     android:layout_weight="1"
 
-                                    android:text="40000"
+                                    android:text="0.0 /="
                                     android:textAlignment="viewStart"
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                                     android:textSize="13.5sp"
@@ -316,7 +316,7 @@
 
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="80%"
+                        android:text="0%"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textSize="13.5sp"
                         android:textStyle="bold" />
@@ -348,7 +348,7 @@
 
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="20%"
+                        android:text="0%"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textSize="13.5sp"
                         android:textStyle="bold" />

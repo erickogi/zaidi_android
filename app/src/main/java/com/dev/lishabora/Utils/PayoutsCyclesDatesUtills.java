@@ -1,10 +1,11 @@
 package com.dev.lishabora.Utils;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+
+import timber.log.Timber;
 
 public class PayoutsCyclesDatesUtills {
 
@@ -14,7 +15,7 @@ public class PayoutsCyclesDatesUtills {
     private static final int WEEKLY_CYCLE_CODE = 1;
 
     public static EndAndStart getPayoutStartEndDate(int cycleCode, @Nullable EndAndStart tradersEndAndStart, @Nullable EndAndStart lastEndStartDate) {
-        Log.d("period deffrence days", "" + cycleCode);
+        Timber.d("" + cycleCode);
 
         switch (cycleCode) {
             case WEEKLY_CYCLE_CODE:
@@ -137,7 +138,7 @@ public class PayoutsCyclesDatesUtills {
             dates.setStartDate(DateTimeUtils.Companion.getDatePrevious(getDaysToSubtractFromToday(todayNumber, traderStartDayNumber)));
 
             dates.setEndDate(DateTimeUtils.Companion.addDaysString(DateTimeUtils.Companion.conver2Date(dates.getStartDate()), 6));
-            Log.d("dayNumbersLog", "Traders Start No " + traderStartDayNumber + "  Today No " + todayNumber + " Difference " + difference);
+            Timber.d("Traders Start No " + traderStartDayNumber + "  Today No " + todayNumber + " Difference " + difference);
 
             return dates;
         }
@@ -181,7 +182,7 @@ public class PayoutsCyclesDatesUtills {
     }
 
     public static int getNumberByDate(String number) {
-        Log.d("dayNumbersLogD", number);
+        Timber.d(number);
         switch (number) {
             case "Sunday":
                 return 1;

@@ -146,7 +146,7 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
             if (collections != null && collections.size() > 0) {
                 createMonthlyList(collections);
             } else {
-                initMonthlyList(null);
+                initMonthlyList(new LinkedList<>());
             }
         });
         btngetOrders.setOnClickListener(view -> traderViewModel.getProducts(false).observe(FragmentGiveOrder.this, productsModels -> {
@@ -234,12 +234,17 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
         spinnerMonths.setItems(months);
         int curr = 0;
         for (int a = 0; a < months.length; a++) {
-            if (months[a].contains(m)) {
+            if (m != null && months[a].contains(m)) {
                 curr = a;
             }
         }
-        spinnerMonths.setSelectedIndex(curr);
-        setData(modelsDA.get(curr));
+
+        if (months != null && months.length >= curr && spinnerMonths.getItems() != null && spinnerMonths.getItems().size() > 0) {
+            spinnerMonths.setSelectedIndex(curr);
+        }
+        if (modelsDA != null && modelsDA.size() > 0) {
+            setData(modelsDA.get(curr));
+        }
         spinnerMonths.setOnItemSelectedListener((view, position, id, item) -> setData(modelsDA.get(position)));
 
 

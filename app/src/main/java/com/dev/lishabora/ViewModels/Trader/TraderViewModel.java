@@ -5,7 +5,6 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
@@ -41,6 +40,8 @@ import org.json.JSONObject;
 import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
+
+import timber.log.Timber;
 
 public class TraderViewModel extends AndroidViewModel
 
@@ -183,7 +184,7 @@ public class TraderViewModel extends AndroidViewModel
                             // famerModels = gson.fromJson(jsonArray, listType);
 
 
-                            Log.d("ReTrUp", "farmers update called");
+                            Timber.d("farmers update called");
                             farmerRepo.insertMultipleTraders(gson.fromJson(jsonArray, listType));
                         }
 
@@ -196,7 +197,7 @@ public class TraderViewModel extends AndroidViewModel
                             // famerModels = gson.fromJson(jsonArray, listType);
 
 
-                            Log.d("ReTrUp", "farmers update called");
+                            Timber.d("farmers update called");
                             farmerRepo.insertMultipleTraders(gson.fromJson(jsonArray, listType));
                         }
                     }
@@ -210,7 +211,7 @@ public class TraderViewModel extends AndroidViewModel
 
     public LiveData<List<FamerModel>> getFarmerByStatusRoute(int status, String route) {
 
-        Log.d("byRouteByStatus", "Status " + status + "\n Route " + route);
+        Timber.d("Status " + status + "\n Route " + route);
 
         if (farmers == null) {
             farmers = new MutableLiveData();
@@ -317,7 +318,7 @@ public class TraderViewModel extends AndroidViewModel
                                 Type listType = new TypeToken<LinkedList<RoutesModel>>() {
                                 }.getType();
                                 // routesModel = ;
-                                Log.d("ReTrUp", "routes update called");
+                                Timber.d("routes update called");
                                 routesRepo.insertMultipleRoutes(gson.fromJson(jsonArray, listType));
 
                             }
@@ -330,7 +331,7 @@ public class TraderViewModel extends AndroidViewModel
                             Type listType = new TypeToken<LinkedList<RoutesModel>>() {
                             }.getType();
                             // routesModel = ;
-                            Log.d("ReTrUp", "routes update called");
+                            Timber.d("routes update called");
                             routesRepo.insertMultipleRoutes(gson.fromJson(jsonArray, listType));
 
                         }
@@ -369,7 +370,7 @@ public class TraderViewModel extends AndroidViewModel
                                 Type listType = new TypeToken<LinkedList<UnitsModel>>() {
                                 }.getType();
                                 // routesModel = ;
-                                Log.d("ReTrUp", "routes update called");
+                                Timber.d("routes update called");
                                 unitsRepo.insertMultipleUnits(gson.fromJson(jsonArray, listType));
 
 
@@ -381,7 +382,7 @@ public class TraderViewModel extends AndroidViewModel
                                 Type listType = new TypeToken<LinkedList<UnitsModel>>() {
                                 }.getType();
                                 // routesModel = ;
-                                Log.d("ReTrUp", "routes update called");
+                                Timber.d("routes update called");
                                 unitsRepo.insertMultipleUnits(gson.fromJson(jsonArray, listType));
 
                             }
@@ -409,7 +410,7 @@ public class TraderViewModel extends AndroidViewModel
                                     Type listType = new TypeToken<LinkedList<Cycles>>() {
                                     }.getType();
                                     // routesModel = ;
-                                    Log.d("ReTrUp", "routes update called");
+                                    Timber.d("routes update called");
                                     cyclesRepo.insert(gson.fromJson(jsonArray, listType));
 
                                 } catch (Exception mn) {
@@ -425,7 +426,7 @@ public class TraderViewModel extends AndroidViewModel
                                 Type listType = new TypeToken<LinkedList<Cycles>>() {
                                 }.getType();
                                 // routesModel = ;
-                                Log.d("ReTrUp", "routes update called");
+                                Timber.d("routes update called");
                                 cyclesRepo.insert(gson.fromJson(jsonArray, listType));
 
                             }
@@ -453,7 +454,7 @@ public class TraderViewModel extends AndroidViewModel
                                 Type listType = new TypeToken<LinkedList<Cycles>>() {
                                 }.getType();
                                 // routesModel = ;
-                                Log.d("ReTrUp", "routes update called");
+                                Timber.d("routes update called");
                                 cyclesRepo.insert(gson.fromJson(jsonArray, listType));
 
 
@@ -465,7 +466,7 @@ public class TraderViewModel extends AndroidViewModel
                                 Type listType = new TypeToken<LinkedList<Cycles>>() {
                                 }.getType();
                                 // routesModel = ;
-                                Log.d("ReTrUp", "routes update called");
+                                Timber.d("routes update called");
                                 cyclesRepo.insert(gson.fromJson(jsonArray, listType));
 
                             }
@@ -1203,35 +1204,24 @@ public class TraderViewModel extends AndroidViewModel
 
 
             if (DateTimeUtils.Companion.isPastLastDay(p.getEndDate())) {
-
-
                 int tradersStartDay = prefrenceManager.getTraderModel().getCycleStartDayNumber();
                 int tradersEndDay = prefrenceManager.getTraderModel().getCycleEndDayNumber();
-
-
                 Payouts plast = getLastPayout();
-
                 Payouts payouts = new Payouts();
                 payouts.setCycleCode("" + collection.getCode());
                 payouts.setCyclename(c.getCycle());
                 payouts.setFarmersCount("" + farmerCountPerCycle);
                 payouts.setStatus(0);
-
                 PayoutsCyclesDatesUtills.EndAndStart endAndStart;
                 endAndStart = PayoutsCyclesDatesUtills.getPayoutStartEndDate(c.getCode(), new PayoutsCyclesDatesUtills.EndAndStart(tradersStartDay, tradersEndDay), new PayoutsCyclesDatesUtills.EndAndStart(p.getStartDate(), p.getEndDate()));
                 payouts.setStartDate(endAndStart.getStartDate());
                 payouts.setEndDate(endAndStart.getEndDate());
-
                 payouts.setApprovedCards("");
                 payouts.setMilkTotal("");
                 payouts.setBalance("");
                 payouts.setLoanTotal("");
                 payouts.setPayoutnumber(plast.getPayoutnumber() + 1);
-
-
                 insertPayout(payouts);
-
-
                 return getLastPayout("" + collection.getCode());
 
 

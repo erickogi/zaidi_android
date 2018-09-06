@@ -26,6 +26,8 @@ public class Payouts implements Serializable {
 
     @Ignore
     private String milkTotal;
+    private String milkTotalLtrs;
+    private String milkTotalKsh;
     @Ignore
     private String loanTotal;
     @Ignore
@@ -40,6 +42,22 @@ public class Payouts implements Serializable {
     private String statusName;
     @Ignore
     private String balance;
+
+    public String getMilkTotalLtrs() {
+        return milkTotalLtrs;
+    }
+
+    public void setMilkTotalLtrs(String milkTotalLtrs) {
+        this.milkTotalLtrs = milkTotalLtrs;
+    }
+
+    public String getMilkTotalKsh() {
+        return milkTotalKsh;
+    }
+
+    public void setMilkTotalKsh(String milkTotalKsh) {
+        this.milkTotalKsh = milkTotalKsh;
+    }
 
     public String getPendingCards() {
         return pendingCards;

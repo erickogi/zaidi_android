@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +34,8 @@ import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import timber.log.Timber;
 
 
 public class LoginFragmentPhone extends Fragment implements View.OnClickListener {
@@ -196,7 +197,7 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
 
 
             default:
-                Log.d(TAG, " No action on click");
+                Timber.d(" No action on click");
         }
     }
 
@@ -227,7 +228,7 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
                 }
 
 
-                Log.d("authl", jsonObject.toString());
+                Timber.d(jsonObject.toString());
 
                 mViewModel.phoneAuth(jsonObject).observe(this, (ResponseObject responseModel) -> {
 
@@ -314,10 +315,6 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
         fragmentManager.beginTransaction().setCustomAnimations(R.anim.left_enter, R.anim.right_out)
                 .replace(R.id.container, fragment, "fragmentWelcome").addToBackStack(null).commit();
 
-//        getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_enter, R.anim.left_out)
-//
-//                .replace(R.id.container, ForgotPassConfirmFragment.newInstance(responseModel))
-//                .commitNow();
 
     }
 

@@ -13,7 +13,6 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +39,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Objects;
+
+import timber.log.Timber;
 
 
 public class LoginFragmentPassword extends Fragment implements View.OnClickListener {
@@ -195,7 +196,7 @@ public class LoginFragmentPassword extends Fragment implements View.OnClickListe
                 break;
 
             default:
-                Log.d(TAG, " No action on click");
+                Timber.d(" No action on click");
         }
     }
 

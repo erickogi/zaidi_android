@@ -72,7 +72,7 @@ public class FarmerCollectionsAdapter extends RecyclerView.Adapter<FarmerCollect
         holder.date.setText(DateTimeUtils.Companion.getDisplayDate(model.getDate(), DateTimeUtils.Companion.getDisplayDatePattern1()));
 
 
-        holder.milkTotalAm.setText(model.getMilkAm());
+        holder.milkTotalAm.setText(String.format("%s %s", model.getMilkAm(), context.getString(R.string.ltrs)));
         if (!model.getMilkAm().equals("0.0")) {
             holder.milkTotalAm.setTextColor(context.getResources().getColor(R.color.colorPrimary));
             holder.milkTotalAm.setTypeface(Typeface.DEFAULT_BOLD);
@@ -83,7 +83,7 @@ public class FarmerCollectionsAdapter extends RecyclerView.Adapter<FarmerCollect
             holder.milkTotalAm.setTextColor(context.getResources().getColor(R.color.black));
 
         }
-        holder.milkTotalPm.setText(model.getMilkPm());
+        holder.milkTotalPm.setText(String.format("%s %s", model.getMilkPm(), context.getString(R.string.ltrs)));
         if (!model.getMilkPm().equals("0.0")) {
             holder.milkTotalPm.setTextColor(context.getResources().getColor(R.color.colorPrimary));
             holder.milkTotalPm.setTypeface(Typeface.DEFAULT_BOLD);
@@ -95,7 +95,7 @@ public class FarmerCollectionsAdapter extends RecyclerView.Adapter<FarmerCollect
 
         }
 
-        holder.loanTotalPm.setText(model.getAmPmLoan());
+        holder.loanTotalPm.setText(String.format("%s %s", model.getAmPmLoan(), context.getString(R.string.ksh)));
 
         if (!model.getAmPmLoan().equals("0.0")) {
             holder.loanTotalPm.setTextColor(context.getResources().getColor(R.color.colorPrimary));
@@ -108,7 +108,7 @@ public class FarmerCollectionsAdapter extends RecyclerView.Adapter<FarmerCollect
 
         }
 
-        holder.orderTotalPm.setText(model.getAmPmOrders());
+        holder.orderTotalPm.setText(String.format("%s %s", model.getAmPmOrders(), context.getString(R.string.ksh)));
 
         if (!model.getAmPmOrders().equals("0.0")) {
             holder.orderTotalPm.setTextColor(context.getResources().getColor(R.color.colorPrimary));

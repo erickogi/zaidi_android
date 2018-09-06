@@ -69,6 +69,16 @@ public class CollectionsRepo {
 
     }
 
+    public LiveData<Double> getSumOfMilkFarmerPayoutLtrs(String farmercode, int payoutNumber) {
+        return collectionsDao.getSumOfMilkFarmerPayoutLtrs(farmercode, payoutNumber);
+
+    }
+
+    public LiveData<Double> getSumOfMilkFarmerPayoutKsh(String farmercode, int payoutNumber) {
+        return collectionsDao.getSumOfMilkFarmerPayoutKsh(farmercode, payoutNumber);
+
+    }
+
     public LiveData<Double> getSumOfLoanFarmerPayout(String farmercode, int payoutNumber) {
         return collectionsDao.getSumOfLoanFarmerPayout(farmercode, payoutNumber);
 

@@ -12,7 +12,6 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +35,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Objects;
+
+import timber.log.Timber;
 
 
 public class ForgotPassConfirmFragment extends Fragment implements View.OnClickListener {
@@ -193,7 +194,7 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
                 break;
 
             default:
-                Log.d(TAG, " No action on click");
+                Timber.d(" No action on click");
         }
     }
 

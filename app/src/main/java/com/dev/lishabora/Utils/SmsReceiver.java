@@ -5,7 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
-import android.util.Log;
+
+import timber.log.Timber;
 
 
 /**
@@ -29,7 +30,7 @@ public class SmsReceiver extends BroadcastReceiver {
                     String senderAddress = currentMessage.getDisplayOriginatingAddress();
                     String message = currentMessage.getDisplayMessageBody();
 
-                    Log.e(TAG, "Received SMS: " + message + ", Sender: " + senderAddress);
+                    Timber.e("Received SMS: " + message + ", Sender: " + senderAddress);
 
                     // if the SMS is not from our gateway, ignore the message
                     if (!senderAddress.toLowerCase().contains(SMS_ORIGIN.toLowerCase())) {
@@ -39,7 +40,7 @@ public class SmsReceiver extends BroadcastReceiver {
                     // verification code from sms
                     String verificationCode = getVerificationCode(message);
 
-                    Log.e(TAG, "OTP received: " + verificationCode);
+                    Timber.e("OTP received: " + verificationCode);
                     Intent intent2 = new Intent("com.lisha.codereceived");
                     intent2.putExtra("code", verificationCode);
                     context.sendBroadcast(intent2);
@@ -48,7 +49,7 @@ public class SmsReceiver extends BroadcastReceiver {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, "Exception: " + e.getMessage());
+            Timber.e("Exception: " + e.getMessage());
         }
     }
 

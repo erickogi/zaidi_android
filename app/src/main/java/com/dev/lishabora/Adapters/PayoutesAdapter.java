@@ -61,11 +61,11 @@ public class PayoutesAdapter extends RecyclerView.Adapter<PayoutsViewHolder> {
 
         holder.cycleName.setText(model.getCyclename());
         holder.status.setText(model.getStatusName());
-        holder.milkTotal.setText(model.getMilkTotal());
-        holder.loanTotal.setText(model.getLoanTotal());
-        holder.orderTotal.setText(model.getOrderTotal());
+        holder.milkTotal.setText(String.format("%s%s", model.getMilkTotalLtrs(), context.getString(R.string.ltrs)));
+        holder.loanTotal.setText(String.format("%s%s", model.getLoanTotal(), context.getString(R.string.ksh)));
+        holder.orderTotal.setText(String.format("%s%s", model.getOrderTotal(), context.getString(R.string.ksh)));
 
-        holder.balance.setText(model.getBalance());
+        holder.balance.setText(String.format("%s%s", model.getBalance(), context.getString(R.string.ksh)));
 
 
         holder.approvedCount.setText(model.getApprovedCards());

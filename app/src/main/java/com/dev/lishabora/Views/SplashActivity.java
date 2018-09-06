@@ -10,6 +10,8 @@ import com.dev.lishabora.Views.Admin.Activities.AdminsActivity;
 import com.dev.lishabora.Views.Login.Activities.LoginActivity;
 import com.dev.lishabora.Views.Trader.Activities.TraderActivity;
 
+import timber.log.Timber;
+
 public class SplashActivity extends AppCompatActivity {
 
     @Override
@@ -25,6 +27,8 @@ public class SplashActivity extends AppCompatActivity {
         PrefrenceManager globalPrefs = new PrefrenceManager(this);
         Intent intent;
         if (globalPrefs.isLoggedIn()) {
+            Timber.d("I have tried Log");
+
             switch (globalPrefs.getTypeLoggedIn()) {
                 case LoginController.ADMIN:
                     intent = new Intent(this, AdminsActivity.class);

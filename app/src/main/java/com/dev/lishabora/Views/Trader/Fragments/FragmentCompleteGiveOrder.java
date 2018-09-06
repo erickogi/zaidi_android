@@ -14,10 +14,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.dev.lishabora.Models.OrderModel;
 import com.dev.lishabora.Models.ProductOrderModel;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Views.Trader.OrderConstants;
 import com.dev.lishaboramobile.R;
+import com.google.gson.Gson;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
@@ -92,6 +94,19 @@ public class FragmentCompleteGiveOrder extends Fragment implements BlockingStep 
 
     @Override
     public void onBackClicked(StepperLayout.OnBackClickedCallback callback) {
+
+        OrderModel orderModel = new OrderModel();
+        orderModel.setInstallmentAmount(txtPrice.getText().toString());
+        orderModel.setInstallmentNo(txtQty.getText().toString());
+        orderModel.setOrderAmount(edtAmount.getText().toString());
+        orderModel.setProductOrderModels(OrderConstants.getProductOrderModels());
+
+        Gson gson = new Gson();
+
+        String data = gson.toJson(orderModel);
+        OrderConstants.setOrderData(data);
+        OrderConstants.setOrderModel(orderModel);
+
 
         callback.goToPrevStep();
     }

@@ -1,7 +1,6 @@
 package com.dev.lishabora.Utils
 
 import android.text.format.DateUtils
-import android.util.Log
 import com.dev.lishabora.Models.DaysDates
 import com.dev.lishabora.Models.MonthsDates
 import org.joda.time.DateTime
@@ -9,6 +8,7 @@ import org.joda.time.Days
 import org.joda.time.LocalDate
 import org.joda.time.Period
 import org.joda.time.format.DateTimeFormat
+import timber.log.Timber
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -213,7 +213,7 @@ class DateTimeUtils {
             val enddate = conver2Date(endDate)!!.withHourOfDay(23)
             val n = today.isAfter(enddate)
 
-            Log.d("isAfter", " Today " + today + "  Enddate " + enddate + "  Is After " + n)
+            Timber.tag("isAfter").d(" Today " + today + "  Enddate " + enddate + "  Is After " + n)
 
             return n
 

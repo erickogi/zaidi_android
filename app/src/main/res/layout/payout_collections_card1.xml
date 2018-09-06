@@ -112,7 +112,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="200.9 Ltrs"
+                    android:text="0.0 Ltrs"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -128,7 +128,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="40,6 Ltrs"
+                    android:text="0.0 Ltrs"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -147,8 +147,7 @@
 
                 android:orientation="horizontal"
                 android:paddingTop="2dp"
-                android:paddingBottom="2dp"
-                android:weightSum="2">
+                android:paddingBottom="2dp">
 
                 <TextView
 
@@ -173,7 +172,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="200 /="
+                    android:text="0.0 /="
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -192,8 +191,7 @@
 
                 android:orientation="horizontal"
                 android:paddingTop="2dp"
-                android:paddingBottom="2dp"
-                android:weightSum="2">
+                android:paddingBottom="2dp">
 
                 <TextView
                     android:id="@+id/txt_am_orders"
@@ -217,7 +215,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="4000 Ksh"
+                    android:text="0.0 /="
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
