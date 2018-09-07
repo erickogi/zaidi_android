@@ -77,7 +77,7 @@ public class FragmentCompleteGiveOrder extends Fragment implements BlockingStep 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.view = view;
-        initView();
+
     }
 
     @Override
@@ -119,9 +119,15 @@ public class FragmentCompleteGiveOrder extends Fragment implements BlockingStep 
 
     @Override
     public void onSelected() {
-
+        initView();
         initActions();
         initData();
+
+    }
+
+
+    @Override
+    public void onError(@NonNull VerificationError error) {
 
     }
 
@@ -151,10 +157,6 @@ public class FragmentCompleteGiveOrder extends Fragment implements BlockingStep 
         txtPrice.setText(String.valueOf(GeneralUtills.Companion.round(installmentValue, 2)));
     }
 
-    @Override
-    public void onError(@NonNull VerificationError error) {
-
-    }
 
     void initView() {
         id = view.findViewById(R.id.txt_id);

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="com.dev.lishabora.Views.Trader.Activities.EditOrder">
+
+    <com.wajahatkarim3.easyflipview.EasyFlipView
+        android:id="@+id/easyFlipView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/layout_custom_alert_button"
+        android:background="@color/white"
+        app:flipDuration="400"
+        app:flipEnabled="true"
+        app:flipFrom="right"
+        app:flipOnTouch="true"
+        app:flipType="horizontal">
+
+        <!-- Back Layout Goes Here -->
+        <include layout="@layout/view_give_order" />
+
+        <!-- Front Layout Goes Here -->
+        <include layout="@layout/view_give_product" />
+
+
+    </com.wajahatkarim3.easyflipview.EasyFlipView>
+
+    <include layout="@layout/layout_custom_alert_button" />
+</RelativeLayout>

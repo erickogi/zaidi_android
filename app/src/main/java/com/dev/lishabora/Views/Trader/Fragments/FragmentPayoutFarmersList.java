@@ -29,6 +29,7 @@ import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
+import com.dev.lishabora.Views.CommonFuncs;
 import com.dev.lishabora.Views.Trader.Activities.PayCard;
 import com.dev.lishabora.Views.Trader.PayoutConstants;
 import com.dev.lishaboramobile.R;
@@ -43,12 +44,6 @@ import java.util.List;
 import java.util.Objects;
 
 import timber.log.Timber;
-
-import static com.dev.lishabora.Views.CommonFuncs.getBalance;
-import static com.dev.lishabora.Views.CommonFuncs.getFarmerStatus;
-import static com.dev.lishabora.Views.CommonFuncs.getLoan;
-import static com.dev.lishabora.Views.CommonFuncs.getMilk;
-import static com.dev.lishabora.Views.CommonFuncs.getOrder;
 
 public class FragmentPayoutFarmersList extends Fragment {
     public TextView status, startDate, cycleName, endDate, milkTotal, loanTotal, orderTotal, balance, approvedCount, unApprovedCount;
@@ -90,11 +85,8 @@ public class FragmentPayoutFarmersList extends Fragment {
             public void onClickListener(int position) {
 
                 Gson gson = new Gson();
-                String element = gson.toJson(
-                        dayCollectionModels,
-                        new TypeToken<ArrayList<PayoutFarmersCollectionModel>>() {
-                        }.getType());
-
+                String element = gson.toJson(dayCollectionModels, new TypeToken<ArrayList<PayoutFarmersCollectionModel>>() {
+                }.getType());
                 payoutsVewModel.getFarmerByCode(dayCollectionModels.get(position).getFarmercode()).observe(FragmentPayoutFarmersList.this, new Observer<FamerModel>() {
                     @Override
                     public void onChanged(@Nullable FamerModel famerModel) {
@@ -266,7 +258,7 @@ public class FragmentPayoutFarmersList extends Fragment {
         endDate.setText(model.getEndDate());
         cycleName.setText(model.getCyclename());
 
-        milkTotal.setText(String.format("%s %s", model.getMilkTotal(), getActivity().getString(R.string.ltrs)));
+        milkTotal.setText(String.format("%s %s", model.getMilkTotalLtrs(), getActivity().getString(R.string.ltrs)));
         loanTotal.setText(String.format("%s %s", model.getLoanTotal(), getActivity().getString(R.string.ksh)));
         orderTotal.setText(String.format("%s %s", model.getOrderTotal(), getActivity().getString(R.string.ksh)));
 
@@ -324,32 +316,9 @@ public class FragmentPayoutFarmersList extends Fragment {
         List<PayoutFarmersCollectionModel> collectionModels = new LinkedList<>();
 
         for (FamerModel famerModel : famerModels) {
-            String milkTotal = getMilk(famerModel.getCode(), collections).getUnitQty();
-            String milkTotalKsh = getMilk(famerModel.getCode(), collections).getValueKsh();
-            String milkTotalLtrs = getMilk(famerModel.getCode(), collections).getValueLtrs();
-            String loanTotal = getLoan(famerModel.getCode(), collections);
-            String orderTotal = getOrder(famerModel.getCode(), collections);
-            int status = getFarmerStatus(famerModel.getCode(), collections);
 
 
-
-
-            String statusText = "";
-            statusText = status == 0 ? "Pending" : "Approved";
-
-
-            String balance = getBalance(milkTotalKsh, loanTotal, orderTotal);
-            collectionModels.add(new PayoutFarmersCollectionModel(
-                    famerModel.getCode(),
-                    famerModel.getNames(),
-                    milkTotal,
-                    loanTotal,
-                    orderTotal,
-                    status,
-                    statusText,
-                    balance, payouts.getPayoutnumber(),
-                    famerModel.getCyclecode(), milkTotalKsh, milkTotalLtrs
-            ));
+            collectionModels.add(CommonFuncs.getFarmersCollectionModel(famerModel, collections, payouts));
 
 
         }

@@ -165,6 +165,8 @@
                 </LinearLayout>
 
                 <CheckBox
+
+                    style="@style/MyCheckBox"
                     android:layout_gravity="top"
                     android:layout_marginEnd="4dp"
                     android:gravity="center"

@@ -80,7 +80,7 @@
                 android:background="@color/white"
                 android:orientation="horizontal"
                 android:padding="3dp"
-                android:weightSum="4">
+                android:weightSum="5">
 
 
                 <TextView
@@ -176,9 +176,48 @@
 
                 </LinearLayout>
 
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="3dp"
+                    android:background="@color/divider" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Bal"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txt_balance"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="0.0 /="
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
             <View
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_below="@+id/linear_totals"
@@ -186,6 +225,7 @@
                 android:background="@color/divider" />
 
             <LinearLayout
+                android:visibility="gone"
                 android:id="@+id/linear_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -200,6 +240,7 @@
                 android:weightSum="3">
 
                 <LinearLayout
+                    android:visibility="visible"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -245,7 +286,6 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/txt_balance"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
 
@@ -404,6 +444,7 @@
     <android.support.v7.widget.RecyclerView
 
 
+        android:layout_above="@+id/linear_bottom"
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -415,11 +456,8 @@
 
         android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
-        android:layout_marginBottom="50dp"
 
         android:background="@color/white"
-        android:nestedScrollingEnabled="false"
-        android:scrollIndicators="start|end"
         android:scrollbarSize="6dp"
         android:scrollbars="vertical"
         android:visibility="visible"
@@ -431,6 +469,7 @@
 
 
     <LinearLayout
+        android:id="@+id/linear_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 

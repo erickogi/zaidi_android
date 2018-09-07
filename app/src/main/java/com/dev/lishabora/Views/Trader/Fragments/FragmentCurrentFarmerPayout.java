@@ -1,24 +1,20 @@
 package com.dev.lishabora.Views.Trader.Fragments;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
-import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,19 +23,21 @@ import com.dev.lishabora.Adapters.FarmerCollectionsAdapter;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.DayCollectionModel;
-import com.dev.lishabora.Models.DaysDates;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.LoanModel;
-import com.dev.lishabora.Models.MilkModel;
 import com.dev.lishabora.Models.OrderModel;
 import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
 import com.dev.lishabora.Models.Payouts;
+import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.Utils.AdvancedOnclickRecyclerListener;
+import com.dev.lishabora.Utils.CollectionCreateUpdateListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.CommonFuncs;
+import com.dev.lishabora.Views.Trader.Activities.EditOrder;
+import com.dev.lishabora.Views.Trader.OrderConstants;
 import com.dev.lishaboramobile.R;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -49,11 +47,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-import timber.log.Timber;
-
+import static android.app.Activity.RESULT_OK;
 import static com.dev.lishabora.Views.CommonFuncs.getBalance;
-import static com.dev.lishabora.Views.CommonFuncs.getCollectionIdAm;
-import static com.dev.lishabora.Views.CommonFuncs.getCollectionIdPm;
 
 public class FragmentCurrentFarmerPayout extends Fragment {
 
@@ -61,6 +56,10 @@ public class FragmentCurrentFarmerPayout extends Fragment {
     public RelativeLayout background;
     public View statusview;
     Double milkKsh = 0.0;
+    Double loanKsh = 0.0;
+    Double orderKsh = 0.0;
+
+
     private FamerModel famerModel;
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
     private PayoutsVewModel payoutsVewModel;
@@ -75,6 +74,8 @@ public class FragmentCurrentFarmerPayout extends Fragment {
     private List<Collection> collections;
     private AVLoadingIndicatorView avi;
     private View view;
+    UnitsModel u = new UnitsModel();
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -129,62 +130,7 @@ public class FragmentCurrentFarmerPayout extends Fragment {
         initData();
     }
 
-    private void setUpDayCollectionsModel(Payouts payouts, List<Collection> collections) {
-
-
-        List<DaysDates> daysDates = DateTimeUtils.Companion.getDaysAndDatesBtnDates(payouts.getStartDate(), payouts.getEndDate());
-
-        List<DayCollectionModel> dayCollectionModels = new LinkedList<>();
-        for (DaysDates d : daysDates) {
-
-            MilkModel milkModelAm = CommonFuncs.getMilk(d.getDate(), "AM", collections);
-            MilkModel milkModelPm = CommonFuncs.getMilk(d.getDate(), "PM", collections);
-
-
-            String milkAm = milkModelAm.getUnitQty();
-            String milkPm = milkModelPm.getUnitQty();
-
-            LoanModel loanModelAm = CommonFuncs.getLoan(d.getDate(), "AM", collections);
-            LoanModel loanModelPm = CommonFuncs.getLoan(d.getDate(), "PM", collections);
-
-
-            String loanAm = loanModelAm.getLoanAmount();
-            String laonPm = loanModelPm.getLoanAmount();
-
-            OrderModel orderModelAm = CommonFuncs.getOrder(d.getDate(), "AM", collections);
-            OrderModel orderModelPm = CommonFuncs.getOrder(d.getDate(), "PM", collections);
-
-
-            String orderAm = orderModelAm.getOrderAmount();
-            String orderPm = orderModelPm.getOrderAmount();
-
-
-            int collectionIdAm = getCollectionIdAm(d.getDate(), collections);
-            int collectionIdPm = getCollectionIdPm(d.getDate(), collections);
-
-            dayCollectionModels.add(new DayCollectionModel(
-                    payouts.getPayoutnumber(),
-                    d.getDay(),
-                    d.getDate(),
-                    milkAm,
-                    milkPm,
-                    loanAm,
-                    laonPm,
-                    orderAm,
-                            orderPm,
-                            collectionIdAm,
-                            collectionIdPm,
-                            milkModelAm, loanModelAm, orderModelAm,
-                            milkModelPm, loanModelPm, orderModelPm
-
-                    )
-
-            );
-        }
-
-        setUpList(dayCollectionModels);
-
-    }
+    DayCollectionModel dayCollectionModel;
 
     private void setUpList(List<DayCollectionModel> dayCollectionModels) {
         this.dayCollectionModels = dayCollectionModels;
@@ -194,6 +140,13 @@ public class FragmentCurrentFarmerPayout extends Fragment {
 
     }
 
+    private int time, type, adp;
+
+    private void setUpDayCollectionsModel(Payouts payouts, List<Collection> collections) {
+
+        setUpList(CommonFuncs.setUpDayCollectionsModel(payouts, collections));
+
+    }
 
     private void initData() {
 
@@ -209,7 +162,7 @@ public class FragmentCurrentFarmerPayout extends Fragment {
 
                 FragmentCurrentFarmerPayout.this.collections = collections;
                 setUpDayCollectionsModel(payouts, collections);
-                setData(det());
+                setData(getFarmersCollectionModel());
 
 
             });
@@ -219,67 +172,60 @@ public class FragmentCurrentFarmerPayout extends Fragment {
 
     }
 
+    public PayoutFarmersCollectionModel getFarmersCollectionModel() {
 
-    private int getFarmerStatus(String code) {
-        int status = 0;
-        int collectsNo = 0;
-        for (Collection c : collections) {
-            if (c.getFarmerCode().equals(code)) {
-                collectsNo++;
-                try {
-                    status += c.getApproved();
-                } catch (Exception nm) {
-                    nm.printStackTrace();
-                }
-            }
-
-        }
-        if (status >= collectsNo && status != 0) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-
-
-
-
-
-    public PayoutFarmersCollectionModel det() {
-        String milkTotal = CommonFuncs.getMilk(famerModel.getCode(), collections).getUnitQty();
-        String milkTotalKsh = CommonFuncs.getMilk(famerModel.getCode(), collections).getValueKsh();
-        String milkTotalLtrs = CommonFuncs.getMilk(famerModel.getCode(), collections).getValueLtrs();
-        String loanTotal = CommonFuncs.getLoan(famerModel.getCode(), collections);
-        String orderTotal = CommonFuncs.getOrder(famerModel.getCode(), collections);
-
-
-        int status = getFarmerStatus(famerModel.getCode());
-        String statusText;
-
-
-        statusText = status == 0 ? "Pending" : "Approved";
-        String balance = getBalance(famerModel.getCode(), collections);
-        return new PayoutFarmersCollectionModel(
-                famerModel.getCode(),
-                famerModel.getNames(),
-                milkTotal,
-                loanTotal,
-                orderTotal,
-                status,
-                statusText,
-                balance,
-                payouts.getPayoutnumber(),
-                famerModel.getCyclecode(),
-                milkTotalKsh, milkTotalLtrs
-        );
+        return CommonFuncs.getFarmersCollectionModel(famerModel, collections, payouts);
 
     }
 
+    private void cancelApprove(Payouts payouts, PayoutFarmersCollectionModel model) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
+        alertDialog.setMessage("Confirm that you wish to cancel " + model.getFarmername() + "'s " + payouts.getCyclename() + " Collection card").setCancelable(false).setTitle("Cancel " + model.getFarmername() + " Card");
+
+
+        alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
+
+            payoutsVewModel.cancelFarmersPayoutCard(model.getFarmercode(), model.getPayoutNumber());
+            model.setStatus(0);
+            model.setStatusName("Canceled");
+            setData(model);
+
+
+            dialogInterface.dismiss();
+
+        }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
+
+        AlertDialog alertDialogAndroid = alertDialog.create();
+        alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.show();
+    }
+
+    private void approve(Payouts payouts, PayoutFarmersCollectionModel model) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
+        alertDialog.setMessage("Confirm that you wish to approve " + model.getFarmername() + "'s " + payouts.getCyclename() + " Collection card").setCancelable(false).setTitle("Approve " + model.getFarmername() + " Card");
+
+
+        alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
+
+            payoutsVewModel.approveFarmersPayoutCard(model.getFarmercode(), model.getPayoutNumber());
+            model.setStatus(1);
+            model.setStatusName("Approved");
+            setData(model);
+
+
+            dialogInterface.dismiss();
+
+        }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
+
+        AlertDialog alertDialogAndroid = alertDialog.create();
+        alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.show();
+
+    }
 
     private void setBalance(Double milkKsh) {
-        balance.setText(String.format("%s %s", getBalance(String.valueOf(milkKsh), loan.getText().toString(), order.getText().toString()), getActivity().getString(R.string.ksh)));
+        balance.setText(String.format("%s %s", getBalance(String.valueOf(milkKsh), String.valueOf(loanKsh), String.valueOf(orderKsh)), getActivity().getString(R.string.ksh)));
     }
-
     private void setData(PayoutFarmersCollectionModel model) {
         //balance.setText(model.getBalance());
         id.setText(model.getFarmercode());
@@ -357,10 +303,12 @@ public class FragmentCurrentFarmerPayout extends Fragment {
         payoutsVewModel.getSumOfLoansForPayout(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
             loan.setText(String.format("%s %s", String.valueOf(integer), getActivity().getString(R.string.ksh)));
             //setBalance(milkKsh);
+            loanKsh = integer;
         });
         payoutsVewModel.getSumOfOrdersForPayout(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
             order.setText(String.format("%s %s", String.valueOf(integer), getActivity().getString(R.string.ksh)));
             // setBalance(milkKsh);
+            orderKsh = integer;
         });
 
         payoutsVewModel.getSumOfMilkForPayoutKsh(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
@@ -413,341 +361,56 @@ public class FragmentCurrentFarmerPayout extends Fragment {
 
     }
 
-    private void cancelApprove(Payouts payouts, PayoutFarmersCollectionModel model) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
-        alertDialog.setMessage("Confirm that you wish to cancel " + model.getFarmername() + "'s " + payouts.getCyclename() + " Collection card").setCancelable(false).setTitle("Cancel " + model.getFarmername() + " Card");
+    public void editValue(int adapterPosition, int time, int type, String value, Object o, View editable, DayCollectionModel dayCollectionModel) {
 
-
-        alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
-
-            payoutsVewModel.cancelFarmersPayoutCard(model.getFarmercode(), model.getPayoutNumber());
-            model.setStatus(0);
-            model.setStatusName("Canceled");
-            setData(model);
-
-
-            dialogInterface.dismiss();
-
-        }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
-
-        AlertDialog alertDialogAndroid = alertDialog.create();
-        alertDialogAndroid.setCancelable(false);
-        alertDialogAndroid.show();
-    }
-
-    private void approve(Payouts payouts, PayoutFarmersCollectionModel model) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
-        alertDialog.setMessage("Confirm that you wish to approve " + model.getFarmername() + "'s " + payouts.getCyclename() + " Collection card").setCancelable(false).setTitle("Approve " + model.getFarmername() + " Card");
-
-
-        alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
-
-            payoutsVewModel.approveFarmersPayoutCard(model.getFarmercode(), model.getPayoutNumber());
-            model.setStatus(1);
-            model.setStatusName("Approved");
-            setData(model);
-
-
-            dialogInterface.dismiss();
-
-        }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
-
-        AlertDialog alertDialogAndroid = alertDialog.create();
-        alertDialogAndroid.setCancelable(false);
-        alertDialogAndroid.show();
-
-    }
-
-    public void editValue(int adapterPosition, int time, int type, View editable, DayCollectionModel dayCollectionModel) {
-
-        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
-        View mView = layoutInflaterAndroid.inflate(R.layout.dialog_edit_collection, null);
-        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
-        alertDialogBuilderUserInput.setView(mView);
-
-        avi = mView.findViewById(R.id.avi);
-        LinearLayout milkUnits = mView.findViewById(R.id.milk_units);
-        TextInputEditText edtVL = mView.findViewById(R.id.edt_value);
-        TextView txt = mView.findViewById(R.id.txt_desc);
-
-
-        String ti = "";
-        if (time == 0) {
-            ti = " AM";
-        } else {
-            ti = " PM";
-        }
-        String tp = "";
         if (type == 1) {
-            milkUnits.setVisibility(View.VISIBLE);
-            tp = " Milk collection";
+            CommonFuncs.editValueMilk(adapterPosition, time, type, value, o, editable, dayCollectionModel, getContext(), avi, famerModel, (s, adapterPosition1, time1, type1, dayCollectionModel1, a) -> updateCollectionValue(s, adapterPosition1, time1, type1, dayCollectionModel1, a, null, null));
+
         } else if (type == 2) {
-            tp = " Loan";
+            CommonFuncs.editValueLoan(time, type, value, o, dayCollectionModel, getContext(), famerModel, (value1, loanModel, time12, dayCollectionModel12, alertDialogAndroid) -> {
+                updateCollectionValue(value1, adapterPosition, time12, type, dayCollectionModel12, alertDialogAndroid, loanModel, null);
+            });
+
         } else {
-            tp = " Order ";
+
+
+            OrderConstants.setFamerModel(famerModel);
+            Intent intent2 = new Intent(getActivity(), EditOrder.class);
+            intent2.putExtra("farmer", famerModel);
+            // intent2.putExtra("collection", dayCollectionModel);
+            startActivityForResult(intent2, 10004);
+
+
+            //CommonFuncs.editValueOrder(time, type, value, o, dayCollectionModel, getContext(), famerModel, (String value1, OrderModel orderModel, int time12, DayCollectionModel dayCollectionModel12, AlertDialog alertDialogAndroid) -> updateCollectionValue(value1, adapterPosition, time12, type, dayCollectionModel12, alertDialogAndroid, null, orderModel));
+
         }
-        txt.setText(" Editing " + tp + "  For  " + dayCollectionModel.getDate() + "  " + ti);
-
-
-
-        try {
-            if (!((TextView) editable).getText().toString().equals("0.0")) {
-                edtVL.setText(((TextView) editable).getText().toString());
-                edtVL.setSelection(edtVL.getText().length());
-            }
-        } catch (Exception nm) {
-            nm.printStackTrace();
-        }
-
-
-        alertDialogBuilderUserInput
-                .setCancelable(false);
-
-        AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
-        alertDialogAndroid.setCancelable(false);
-        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
-        alertDialogAndroid.show();
-
-
-
-        MaterialButton btnPositive, btnNegative, btnNeutral;
-        TextView txtTitle;
-        LinearLayout lTitle;
-        ImageView imgIcon;
-        btnPositive = mView.findViewById(R.id.btn_positive);
-        btnNegative = mView.findViewById(R.id.btn_negative);
-        btnNeutral = mView.findViewById(R.id.btn_neutral);
-        txtTitle = mView.findViewById(R.id.txt_title);
-        lTitle = mView.findViewById(R.id.linear_title);
-        imgIcon = mView.findViewById(R.id.img_icon);
-
-
-        btnNeutral.setVisibility(View.GONE);
-        lTitle.setVisibility(View.GONE);
-        txtTitle.setVisibility(View.VISIBLE);
-        imgIcon.setVisibility(View.VISIBLE);
-        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
-        txtTitle.setText("Route");
-
-        btnPositive.setOnClickListener(view -> {
-            if (TextUtils.isEmpty(edtVL.getText().toString())) {
-                updateCollection("0.0", adapterPosition, time, type, dayCollectionModel, alertDialogAndroid);
-            }
-
-            updateCollection(edtVL.getText().toString(), adapterPosition, time, type, dayCollectionModel, alertDialogAndroid);
-
-        });
-        btnNeutral.setOnClickListener(view -> {
-
-        });
-        btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
-
     }
 
-    private void updateCollection(
-            String s, int adapterPosition,
-            int time, int type,
-            DayCollectionModel dayCollectionModel,
-            AlertDialog a) {
-
-
-        Collection collection;
-        Collection ctoUpdate;
-
-        if (time == 1) {
-
-
-            if (dayCollectionModel.getCollectionIdAm() != 0) {
-                collection = payoutsVewModel.getCollectionByIdOne(dayCollectionModel.getCollectionIdAm());
-                ctoUpdate = CommonFuncs.updateCollection(s, time, type, dayCollectionModel, collection, payouts, famerModel);
-
-
-            } else {
-                Collection c = new Collection();
-                c = CommonFuncs.updateCollection(s, time, type, dayCollectionModel, null, payouts, famerModel);
-                //                c.setCycleCode(payouts.getCycleCode());
-//                c.setFarmerCode(famerModel.getCode());
-//                c.setFarmerName(famerModel.getNames());
-//                c.setCycleId(payouts.getCycleCode());
-//                c.setDayName(dayCollectionModel.getDay());
-//                c.setDayDate(dayCollectionModel.getDate());
-//                c.setTimeOfDay("AM");
-//
-//                c.setLoanAmountGivenOutPrice(dayCollectionModel.getLoanAm());
-//                c.setMilkCollected(dayCollectionModel.getMilkAm());
-//                c.setOrderGivenOutPrice(dayCollectionModel.getOrderAm());
-//
-//
-//
-//                c.setLoanId("");
-//                c.setOrderId("");
-//                c.setSynced(0);
-//                c.setSynced(false);
-//                c.setApproved(0);
-//
-//                c.setPayoutnumber(dayCollectionModel.getPayoutNumber());
-//                c.setCycleStartedOn(payouts.getStartDate());
-//
-//                if (type == 1) {
-//                    MilkModel milkModel=dayCollectionModel.getMilkModelAm();
-//                    milkModel.setUnitQty(s);
-//
-//
-//                    c.setMilkCollected(s);
-//                    c.setMilkCollectedValueKsh(milkModel.getValueKsh());
-//                    c.setMilkCollectedValueLtrs(milkModel.getValueLtrs());
-//                    c.setMilkDetails(new Gson().toJson(milkModel));
-//
-//
-//                } else if (type == 2) {
-//                    LoanModel loanModel=dayCollectionModel.getLoanModelAm();
-//                    loanModel.setLoanAmount(s);
-//
-//
-//
-//                    c.setLoanAmountGivenOutPrice(s);
-//                    c.setLoanDetails(new Gson().toJson(loanModel));
-//
-//
-//
-//
-//                } else if (type == 3) {
-//                    OrderModel orderModel=dayCollectionModel.getOrderModelAm();
-//                    orderModel.setOrderAmount(s);
-//
-//                    c.setOrderGivenOutPrice(s);
-//                    c.setOrderDetails(new Gson().toJson(orderModel));
-//
-//                }
-                payoutsVewModel.createCollections(c).observe(this, responseModel -> {
+    private void updateCollectionValue(String s, int adapterPosition, int time, int type, DayCollectionModel dayCollectionModel, AlertDialog a, @Nullable LoanModel loanModel, @Nullable OrderModel orderModel) {
+        CommonFuncs.updateCollectionValue(s, time, type, dayCollectionModel, payoutsVewModel, payouts, famerModel, loanModel, orderModel, new CollectionCreateUpdateListener() {
+            @Override
+            public void createCollection(Collection c) {
+                payoutsVewModel.createCollections(c).observe(FragmentCurrentFarmerPayout.this, responseModel -> {
                     if (responseModel != null) {
                         a.dismiss();
                         MyToast.toast(responseModel.getResultDescription(), getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
                     }
                 });
                 a.dismiss();
-                return;
-
-
             }
 
-        } else {
-            if (dayCollectionModel.getCollectionIdPm() != 0) {
-                collection = payoutsVewModel.getCollectionByIdOne(dayCollectionModel.getCollectionIdPm());
-                ctoUpdate = CommonFuncs.updateCollection(s, time, type, dayCollectionModel, collection, payouts, famerModel);
-
-            } else {
-
-
-                Collection c = new Collection();
-                c = CommonFuncs.updateCollection(s, time, type, dayCollectionModel, null, payouts, famerModel);
-                //
-//                c.setCycleCode(famerModel.getCyclecode());
-//                c.setFarmerCode(famerModel.getCode());
-//                c.setFarmerName(famerModel.getNames());
-//                c.setCycleId(famerModel.getCode());
-//                c.setDayName(dayCollectionModel.getDay());
-//                c.setLoanAmountGivenOutPrice(dayCollectionModel.getLoanPm());
-//                c.setDayDate(dayCollectionModel.getDate());
-//                c.setTimeOfDay("PM");
-//                c.setMilkCollected(dayCollectionModel.getMilkPm());
-//                c.setOrderGivenOutPrice(dayCollectionModel.getOrderPm());
-//
-//                c.setLoanId("");
-//                c.setOrderId("");
-//                c.setSynced(0);
-//                c.setSynced(false);
-//                c.setApproved(0);
-//
-//                c.setPayoutnumber(dayCollectionModel.getPayoutNumber());
-//                c.setCycleStartedOn(payouts.getStartDate());
-//
-//
-//                if (type == 1) {
-//                    MilkModel milkModel=dayCollectionModel.getMilkModelPm();
-//                    milkModel.setUnitQty(s);
-//
-//
-//                    c.setMilkCollected(s);
-//                    c.setMilkCollectedValueKsh(milkModel.getValueKsh());
-//                    c.setMilkCollectedValueLtrs(milkModel.getValueLtrs());
-//                    c.setMilkDetails(new Gson().toJson(milkModel));
-//
-//
-//                } else if (type == 2) {
-//                    LoanModel loanModel=dayCollectionModel.getLoanModelPm();
-//                    loanModel.setLoanAmount(s);
-//
-//
-//
-//                    c.setLoanAmountGivenOutPrice(s);
-//                    c.setLoanDetails(new Gson().toJson(loanModel));
-//
-//
-//
-//
-//                } else if (type == 3) {
-//                    OrderModel orderModel=dayCollectionModel.getOrderModelPm();
-//                    orderModel.setOrderAmount(s);
-//
-//                    c.setOrderGivenOutPrice(s);
-//                    c.setOrderDetails(new Gson().toJson(orderModel));
-//
-//                }
-//
-//
-//
-//
-//
-//
-//
-                payoutsVewModel.createCollections(c).observe(this, responseModel -> {
-                    if (responseModel != null) {
-                        a.dismiss();
-                        MyToast.toast(responseModel.getResultDescription(), getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
-                    }
-                });
+            @Override
+            public void updateCollection(Collection c) {
+                payoutsVewModel.updateCollection(c);
                 a.dismiss();
-                return;
             }
 
-        }
-        if (collection != null) {
-            //            if (type == 1) {
-//                MilkModel milkModel;
-//                milkModel = time == 1 ? dayCollectionModel.getMilkModelAm() : dayCollectionModel.getMilkModelPm();
-//                milkModel.setUnitQty(s);
-//                collection.setMilkCollected(s);
-//                collection.setMilkCollectedValueKsh(milkModel.getValueKsh());
-//                collection.setMilkCollectedValueLtrs(milkModel.getValueLtrs());
-//                collection.setMilkDetails(new Gson().toJson(milkModel));
-//                payoutsVewModel.updateCollection(collection);
-//                a.dismiss();
-//            } else if (type == 2) {
-//                LoanModel loanModel;
-//                loanModel = time == 1 ? dayCollectionModel.getLoanModelAm() : dayCollectionModel.getLoanModelPm();
-//                loanModel.setLoanAmount(s);
-//                collection.setLoanAmountGivenOutPrice(s);
-//                collection.setLoanDetails(new Gson().toJson(loanModel));
-//                payoutsVewModel.updateCollection(collection);
-//                a.dismiss();
-//            } else if (type == 3) {
-//                OrderModel orderModel;
-//                orderModel = time == 1 ? dayCollectionModel.getOrderModelAm() : dayCollectionModel.getOrderModelPm();
-//                orderModel.setOrderAmount(s);
-//
-//
-//
-//                collection.setOrderGivenOutPrice(s);
-//                collection.setLoanDetails(new Gson().toJson(orderModel));
-//
-            payoutsVewModel.updateCollection(ctoUpdate);
+            @Override
+            public void error(String error) {
+                MyToast.toast(error, getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
                 a.dismiss();
-            //}
-        } else {
-            Timber.d("Our coll is null" + dayCollectionModel.getCollectionIdAm() + "  " + dayCollectionModel.getCollectionIdPm());
-        }
+            }
+        });
     }
 
     public void initList() {
@@ -797,7 +460,10 @@ public class FragmentCurrentFarmerPayout extends Fragment {
 
             @Override
             public void onEditTextChanged(int adapterPosition, int time, int type, View editable) {
-                editValue(adapterPosition, time, type, editable, dayCollectionModels.get(adapterPosition));
+
+                CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
+                editValue(adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
+
 
 
             }
@@ -809,5 +475,25 @@ public class FragmentCurrentFarmerPayout extends Fragment {
 
 
     }
+
+
+    @Override
+    public void onActivityResult(
+            int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+
+            case 1004:
+                if (resultCode == RESULT_OK && data != null) {
+
+
+                }
+                break;
+
+            default:
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
 
 }

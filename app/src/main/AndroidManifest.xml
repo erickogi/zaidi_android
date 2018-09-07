@@ -77,13 +77,16 @@
         <activity
             android:name="com.dev.lishabora.Views.Trader.Activities.TraderActivity"
             android:label="@string/title_activity_trader"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name="com.dev.lishabora.Views.Trader.Activities.CreateFarmerActivity" />
         <activity
             android:name="com.dev.lishabora.Views.Login.Activities.LoginActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.dev.lishabora.Views.Admin.Activities.AdminsActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.dev.lishabora.Views.Login.ResetPassword"
@@ -93,10 +96,12 @@
             android:name="com.dev.lishabora.Views.Admin.Activities.AdimTraderProfile"
             android:label="@string/title_activity_adim_profile"
             android:parentActivityName="com.dev.lishabora.Views.Admin.Activities.AdminsActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.dev.lishabora.Views.Trader.Activities.FirstTimeLaunch"
             android:label="@string/title_activity_first_time_launch"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.dev.lishabora.Views.Trader.Activities.GiveOrder"
@@ -106,7 +111,7 @@
             android:name="com.dev.lishabora.Views.Trader.Activities.Payouts"
             android:label="@string/title_activity_payouts"
             android:parentActivityName="com.dev.lishabora.Views.Trader.Activities.TraderActivity"
-
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.dev.lishabora.Views.Trader.Activities.PayCard"
@@ -114,7 +119,11 @@
         <activity
             android:name="com.dev.lishabora.Views.Trader.Activities.FarmerProfile"
             android:label="@string/title_activity_farmer_profile"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.dev.lishabora.Views.Trader.Activities.EditOrder"
+            android:theme="@style/NoTitleDialog"></activity>
     </application>
 
 </manifest>

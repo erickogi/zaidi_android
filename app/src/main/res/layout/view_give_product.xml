@@ -3,16 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/Widget.MaterialComponents.CardView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
 
     <android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         style="@style/Widget.MaterialComponents.CardView"
-        android:layout_above="@+id/layout_custom_alert_button"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/layout_custom_alert_button"
         android:background="@android:drawable/picture_frame"
+        android:backgroundTint="@color/white"
         app:cardUseCompatPadding="true"
         app:strokeColor="@color/divider"
         app:strokeWidth="2dp">
@@ -63,6 +65,7 @@
                     android:layout_weight="1"
                     android:text="34553"
                     android:textAlignment="viewEnd"
+                    android:textColor="@color/black"
                     android:textStyle="italic" />
 
 
@@ -132,7 +135,8 @@
                         android:id="@+id/txt_milk"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="200.9 Ltrs" />
+                        android:text="200.9 Ltrs"
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
 
@@ -159,8 +163,9 @@
                         android:id="@+id/txt_loans"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="1200 /="
 
-                        android:text="1200 /=" />
+                        android:textColor="@color/black" />
 
                 </LinearLayout>
 
@@ -189,7 +194,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="0.0 Ksh" />
+                        android:text="0.0 Ksh"
+                        android:textColor="@color/black" />
 
                 </LinearLayout>
 
@@ -233,10 +239,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:gravity="center"
+                    android:layout_toStartOf="@+id/btn_add_product"
+                    android:gravity="start"
                     android:padding="2dp"
                     android:text="Click +  to add products to order "
+                    android:textAlignment="textStart"
                     android:textColor="@color/black" />
 
                 <android.support.design.button.MaterialButton
@@ -273,12 +282,13 @@
                 android:id="@+id/recyclerView"
 
                 android:layout_width="match_parent"
-
-
                 android:layout_height="match_parent"
-                android:layout_below="@+id/rl_header"
 
+
+                android:layout_below="@+id/rl_header"
                 android:layout_centerHorizontal="true"
+
+                android:background="@color/white"
                 android:nestedScrollingEnabled="false"
                 android:scrollIndicators="start|end"
                 android:scrollbarSize="6dp"

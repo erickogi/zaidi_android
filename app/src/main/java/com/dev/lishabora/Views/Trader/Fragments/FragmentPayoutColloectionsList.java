@@ -23,10 +23,6 @@ import android.widget.TextView;
 import com.dev.lishabora.Adapters.CollectionsAdapter;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.DayCollectionModel;
-import com.dev.lishabora.Models.DaysDates;
-import com.dev.lishabora.Models.LoanModel;
-import com.dev.lishabora.Models.MilkModel;
-import com.dev.lishabora.Models.OrderModel;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
@@ -197,7 +193,7 @@ public class FragmentPayoutColloectionsList extends Fragment {
         startDate.setText(model.getStartDate());
         endDate.setText(model.getEndDate());
         cycleName.setText(model.getCyclename());
-        milkTotal.setText(String.format("%s %s", model.getMilkTotal(), getActivity().getString(R.string.ltrs)));
+        milkTotal.setText(String.format("%s %s", model.getMilkTotalLtrs(), getActivity().getString(R.string.ltrs)));
         loanTotal.setText(String.format("%s %s", model.getLoanTotal(), getActivity().getString(R.string.ksh)));
         orderTotal.setText(String.format("%s %s", model.getOrderTotal(), getActivity().getString(R.string.ksh)));
 
@@ -209,7 +205,6 @@ public class FragmentPayoutColloectionsList extends Fragment {
 
 
         if (model.getStatus() == 1) {
-            // status.setText("Active");
             background.setBackgroundColor(getContext().getResources().getColor(R.color.green_color_picker));
 
 
@@ -235,54 +230,7 @@ public class FragmentPayoutColloectionsList extends Fragment {
     private void setUpDayCollectionsModel() {
 
 
-        List<DaysDates> daysDates = DateTimeUtils.Companion.getDaysAndDatesBtnDates(payouts.getStartDate(), payouts.getEndDate());
-
-        List<DayCollectionModel> dayCollectionModels = new LinkedList<>();
-        for (DaysDates d : daysDates) {
-            MilkModel milkModelAm = CommonFuncs.getMilk(d.getDate(), "AM", collections);
-            MilkModel milkModelPm = CommonFuncs.getMilk(d.getDate(), "PM", collections);
-
-
-            String milkAm = milkModelAm.getUnitQty();
-            String milkPm = milkModelPm.getUnitQty();
-
-            LoanModel loanModelAm = CommonFuncs.getLoan(d.getDate(), "AM", collections);
-            LoanModel loanModelPm = CommonFuncs.getLoan(d.getDate(), "PM", collections);
-
-
-            String loanAm = loanModelAm.getLoanAmount();
-            String laonPm = loanModelPm.getLoanAmount();
-
-            OrderModel orderModelAm = CommonFuncs.getOrder(d.getDate(), "AM", collections);
-            OrderModel orderModelPm = CommonFuncs.getOrder(d.getDate(), "PM", collections);
-
-
-            String orderAm = orderModelAm.getOrderAmount();
-            String orderPm = orderModelPm.getOrderAmount();
-
-
-            //int collectionIdAm = getCollectionIdAm(d.getDate(), collections);
-            //int collectionIdPm = getCollectionIdPm(d.getDate(), collections);
-
-            dayCollectionModels.add(new DayCollectionModel(
-                    payouts.getPayoutnumber(),
-                    d.getDay(),
-                    d.getDate(),
-                    milkAm,
-                    milkPm,
-                    loanAm,
-                    laonPm,
-                    orderAm,
-                    orderPm, 0, 0,
-                    milkModelAm, loanModelAm, orderModelAm,
-                    milkModelPm, loanModelPm, orderModelPm
-
-
-
-            ));
-        }
-
-        setUpList(dayCollectionModels);
+        setUpList(CommonFuncs.setUpDayCollectionsModel(payouts, collections));
 
     }
 

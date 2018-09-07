@@ -42,16 +42,15 @@ import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.MilkModel;
-import com.dev.lishabora.Models.RPFSearchModel;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.RoutesModel;
 import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.Draggable.helper.OnStartDragListener;
+import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.Utils.PrefrenceManager;
-import com.dev.lishabora.Utils.RequestDataCallback;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Trader.Activities.CreateFarmerActivity;
 import com.dev.lishabora.Views.Trader.Activities.FarmerProfile;
@@ -65,8 +64,6 @@ import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -246,26 +243,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         getCollection(famerModel.getCode(), DateTimeUtils.Companion.getToday(), edtTodayAm, edtTodayPm);
 
 
-//        if (AmStringValue != null) {
-//            edtTodayAm.setText(AmStringValue);
-//
-//            try {
-//                edtTodayAm.setSelection(AmStringValue.length());
-//            } catch (Exception nm) {
-//                nm.printStackTrace();
-//            }
-//
-//        }
-//        if (PmStringValue != null) {
-//            edtTodayPm.setText(PmStringValue);
-//
-//            try {
-//                edtTodayPm.setSelection(PmStringValue.length());
-//            } catch (Exception nm) {
-//                nm.printStackTrace();
-//            }
-//
-//        }
 
 
         edtTodayAm.addTextChangedListener(new TextWatcher() {
@@ -291,7 +268,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                         Double total = (Double.valueOf(edtTodayAm.getText().toString()) * unitCapacity) * price;
 
 
-                        unitTotal.setText(String.valueOf(total));
+                        unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
 
                     }
                 } else {
@@ -322,7 +299,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                         Double total = (Double.valueOf(edtTodayPm.getText().toString()) * unitCapacity) * price;
 
 
-                        unitTotal.setText(String.valueOf(total));
+                        unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
 
                     }
                 } else {
@@ -363,11 +340,10 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         txtTitle.setText("Route");
 
         btnPositive.setOnClickListener(view -> {
-            String milkAm = null;
-            String milkPm = null;
+            String milkAm = "0";
+            String milkPm = "0";
             if (!TextUtils.isEmpty(edtTodayAm.getText().toString())) {
                 milkAm = edtTodayAm.getText().toString();
-                // alertDialogAndroid.dismiss();
                 Timber.tag("milkCollDebug").d("Milk Am As On Button Click " + milkAm);
 
             }
@@ -379,10 +355,8 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             }
 
 
-
-            if (hasAmChanged) {
+            if (hasAmChanged && !TextUtils.isEmpty(edtTodayAm.getText())) {
                 Timber.tag("milkCollDebug").d("HAS AM CHANGED TRUE ");
-
                 MilkModel milkModel = new MilkModel();
                 milkModel.setUnitQty(milkAm);
                 milkModel.setUnitsModel(unitsModel);
@@ -466,7 +440,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
             }
 
-            if (hasPmChanged) {
+            if (hasPmChanged && !TextUtils.isEmpty(edtTodayPm.getText())) {
                 Timber.tag("milkCollDebug").d("HAS PM CHANGED -TRUE ");
                 MilkModel milkModel = new MilkModel();
                 milkModel.setUnitQty(milkPm);
@@ -600,10 +574,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
     }
 
-    void collectMilkShow(AlertDialog alertDialog) {
-        alertDialog.show();
-
-    }
 
 
     @Override
@@ -842,11 +812,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             fragmentManager.popBackStack();
         }
     }
-    private void startDrag() {
 
-        setDraggale(true);
-        filterFarmers();
-    }
 
 
     @Nullable
@@ -1015,44 +981,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         }
         return getRoutess != null || getRoutess.size() >= 1;
     }
-    //spinner1.setItems("Filter Automatically", "By Route", "Chronologically", "Manually", "Alphabetically", "By Account Status");
 
-    private void setUpSpinner2(int pos) {
-        switch (pos) {
-            case 0:
-
-                filterFarmers();
-                break;
-            case 2:
-                filterFarmers();
-                break;
-            case 3:
-                filterFarmers();
-                break;
-
-            case 1:
-                getRoutes();
-                //spinner2.setItems(getRoutes());
-                setUpSpinner2Listner();
-                break;
-            case 5:
-                setUpSpinner2Listner();
-                break;
-
-            case 4:
-                filterFarmersAlpahbetically();
-            default:
-
-
-        }
-    }
-
-    private void setUpSpinner2Listner() {
-        spinner2.setOnItemSelectedListener((MaterialSpinner.OnItemSelectedListener<String>) (view1, position, id, item) -> {
-
-            filterFarmers();
-        });
-    }
 
     private void getRoutes() {
         if (mViewModel != null) {
@@ -1078,27 +1007,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         }
     }
 
-    private void getRoutesOnline() {
-        if (mViewModel != null) {
-            mViewModel.getRoutes(true).observe(this, routesModels -> {
-                prefrenceManager.setIsRoutesListFirst(false);
-                if (routesModels != null && routesModels.size() > 0) {
-                    FragementFarmersList.this.routesModels = routesModels;
-                    String routes[] = new String[routesModels.size() + 1];
-                    routes[0] = "All";
-
-                    for (int a = 1; a < routesModels.size() + 1; a++) {
-                        routes[a] = routesModels.get(a - 1).getRoute();
-
-                    }
-
-                    spinner2.setItems(routes);
-                    //filterFarmers();
-                }
-                //spinner2.setItems(routesModels);
-            });
-        }
-    }
 
     private void createFarmers() {
         startActivity(new Intent(getActivity(), CreateFarmerActivity.class));
@@ -1106,36 +1014,8 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
 
 
-    private JSONObject getTraderFarmeroductsObject() {
-        RPFSearchModel rpfSearchModel = new RPFSearchModel();
-        rpfSearchModel.setEntitycode(new PrefrenceManager(getActivity()).getTraderModel().getCode());
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = new JSONObject(gson.toJson(rpfSearchModel));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
-    }
 
-    private void getFarmers() {
-        avi.smoothToShow();
-        avi.setVisibility(View.VISIBLE);
 
-        if (mViewModel == null) {
-            mViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
-
-        }
-
-        mViewModel.getFarmers(getTraderFarmeroductsObject(), prefrenceManager.isFarmerListFirstTime()).observe(FragementFarmersList.this, new Observer<List<FamerModel>>() {
-            @Override
-            public void onChanged(@Nullable List<FamerModel> famerModels) {
-                avi.smoothToHide();
-                prefrenceManager.setIsFarmerListFirst(false);
-                update(famerModels);
-            }
-        });
-    }
 
 
 
@@ -1434,194 +1314,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         popupMenu.show();
     }
 
-    private List<RoutesModel> getRoutess() {
-        return getRoutess;
-    }
-
-    private List<Cycles> getCycles() {
-        return getCycles;
-    }
-
-    private List<UnitsModel> getUnits() {
-        return getUnits;
-    }
-
-    public void editTrader(FamerModel famerModel, List<UnitsModel> unitsModels,
-                           List<Cycles> cycles, List<RoutesModel> routesModels, boolean isEditale) {
-
-        if (context != null) {
-            LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
-            View mView = layoutInflaterAndroid.inflate(R.layout.dialog_edit_farmer, null);
-            AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(context));
-            alertDialogBuilderUserInput.setView(mView);
-
-            UnitsModel unitsModel = new UnitsModel();
-            RoutesModel routesModel = new RoutesModel();
-            Cycles cyclesM = new Cycles();
-            avi = mView.findViewById(R.id.avi);
-
-            MaterialSpinner spinnerRoute, spinnerUnit;
-
-            TextInputEditText edtNames, edtMobile;
-            MaterialSpinner defaultPayment;
-            TraderViewModel mViewModel;
-            MaterialSpinner spinner;
-            TextInputEditText edtRouteName, edtRouteCode, edtUnitName, edtUnitPrice, edtUnitMeasurement;
-            LinearLayout lcycle;
-            TextView txtStartDay, txtEndDay, txtCycle;
-
-            txtStartDay = mView.findViewById(R.id.starts);
-            txtEndDay = mView.findViewById(R.id.ends);
-            txtCycle = mView.findViewById(R.id.txt_cycle);
-
-
-            try {
-                txtStartDay.setText(famerModel.getCycleStartDay());
-                txtEndDay.setText(famerModel.getCycleStartEndDay());
-                txtCycle.setText(famerModel.getCyclename());
-            } catch (Exception nm) {
-                nm.printStackTrace();
-            }
-
-
-            edtNames = mView.findViewById(R.id.edt_farmer_names);
-            edtMobile = mView.findViewById(R.id.edt_farmer_phone);
-            defaultPayment = mView.findViewById(R.id.spinnerPayments);
-
-            spinnerUnit = mView.findViewById(R.id.spinnerUnit);
-            spinnerRoute = mView.findViewById(R.id.spinnerRoute);
-            edtUnitName = mView.findViewById(R.id.edt_unit_names);
-            edtUnitPrice = mView.findViewById(R.id.edt_unit_price);
-            edtUnitMeasurement = mView.findViewById(R.id.edt_unit_size);
-            edtRouteName = mView.findViewById(R.id.edt_route_names);
-            edtRouteCode = mView.findViewById(R.id.edt_route_code);
-            spinner = mView.findViewById(R.id.spinnerCycle);
-
-            if (!isEditale) {
-                edtNames.setEnabled(false);
-                edtMobile.setEnabled(false);
-                //defaultPayment.setEnabled(false);
-
-                spinnerUnit.setEnabled(false);
-                spinnerUnit.setVisibility(View.GONE);
-                spinnerRoute.setEnabled(false);
-                spinnerRoute.setVisibility(View.GONE);
-                edtUnitName.setEnabled(false);
-                edtUnitPrice.setEnabled(false);
-                edtUnitMeasurement.setEnabled(false);
-                edtRouteName.setEnabled(false);
-                edtRouteCode.setEnabled(false);
-                spinner.setSelected(false);
-                spinner.setVisibility(View.GONE);
-                spinner.setEnabled(false);
-
-            }
-
-
-            edtNames.setText(famerModel.getNames());
-            edtMobile.setText(famerModel.getMobile());
-            edtUnitPrice.setText("" + famerModel.getUnitprice());
-            edtUnitMeasurement.setText("" + famerModel.getUnitcapacity());
-            edtRouteName.setText("" + famerModel.getRoutename());
-            edtUnitName.setText("" + famerModel.getUnitname());
-            edtRouteCode.setText("" + famerModel.getRoutecode());
-
-//Units
-            if (unitsModels != null && unitsModels.size() > 0) {
-                prefrenceManager.setIsRoutesListFirst(false);
-                String units[] = new String[unitsModels.size() + 1];
-
-                units[0] = "Choose Unit ";
-                for (int a = 0; a < unitsModels.size(); a++) {
-                    units[a + 1] = unitsModels.get(a).getUnit();
-
-                }
-                spinnerUnit.setItems(units);
-
-            }
-
-//Routes
-            if (routesModels != null && routesModels.size() > 0) {
-                prefrenceManager.setIsRoutesListFirst(false);
-
-                String routes[] = new String[routesModels.size() + 1];
-
-                routes[0] = "Choose Route";
-                for (int a = 0; a < routesModels.size(); a++) {
-                    routes[a + 1] = routesModels.get(a).getRoute();
-
-                }
-                spinnerRoute.setItems(routes);
-            }
-
-//Cycles
-            if (cycles != null && cycles.size() > 0) {
-                new PrefrenceManager(getContext()).setIsCyclesListFirst(false);
-                String units[] = new String[cycles.size()];
-
-                // units[0]="Choose Unit ";
-                for (int a = 0; a < cycles.size(); a++) {
-                    units[a] = cycles.get(a).getCycle();
-
-                }
-                spinner.setItems(units);
-
-            }
-
-
-            alertDialogBuilderUserInput
-                    .setCancelable(false);
-//                    .setPositiveButton("Update", (dialogBox, id) -> {
-//                        // ToDo get user input here
-//
-//
-//                    })
-//
-//                    .setNegativeButton("Dismiss",
-//                            (dialogBox, id) -> dialogBox.cancel());
-
-            AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
-            alertDialogAndroid.setCancelable(false);
-            alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
-            alertDialogAndroid.show();
-//
-//            Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
-//            theButton.setOnClickListener(new EditCustomListener(alertDialogAndroid, famerModel, unitsModel, routesModel, cyclesM));
-
-            MaterialButton btnPositive, btnNegative, btnNeutral;
-            TextView txtTitle;
-            LinearLayout lTitle;
-            ImageView imgIcon;
-            btnPositive = mView.findViewById(R.id.btn_positive);
-            btnNegative = mView.findViewById(R.id.btn_negative);
-            btnNeutral = mView.findViewById(R.id.btn_neutral);
-            txtTitle = mView.findViewById(R.id.txt_title);
-            lTitle = mView.findViewById(R.id.linear_title);
-            imgIcon = mView.findViewById(R.id.img_icon);
-
-
-            btnNeutral.setVisibility(View.GONE);
-            btnPositive.setVisibility(View.GONE);
-            lTitle.setVisibility(View.GONE);
-            txtTitle.setVisibility(View.VISIBLE);
-            imgIcon.setVisibility(View.VISIBLE);
-            imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
-            txtTitle.setText(famerModel.getNames() + " " + famerModel.getCode());
-
-            btnPositive.setOnClickListener(new EditCustomListener(alertDialogAndroid, famerModel, unitsModel, routesModel, cyclesM));
-            btnNeutral.setOnClickListener(view -> {
-
-            });
-            btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
-
-        } else {
-            Timber.d("context nulll edit clicked");
-
-        }
-
-    }
-
     private void initDataOffline(boolean isRoutesFirst, boolean isUnitFirst, boolean isCycles) {
 
         if (isRoutesFirst && isUnitFirst && isCycles) {
@@ -1665,32 +1357,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     }
 
 
-    private class EditCustomListener implements View.OnClickListener {
-        AlertDialog dialog;
-        boolean isDummy = false;
-        FamerModel farmer;
-        UnitsModel unitsModel;
-        RoutesModel routesModel;
-        Cycles cycles;
-
-        //int type;
-        RequestDataCallback requestDataCallback;
-
-        public EditCustomListener(AlertDialog alertDialogAndroid, FamerModel famerModel, UnitsModel u, RoutesModel r, Cycles c) {
-            dialog = alertDialogAndroid;
-            this.farmer = famerModel;
-            this.unitsModel = u;
-            this.routesModel = r;
-            this.cycles = c;
-
-        }
-
-        @Override
-        public void onClick(View v) {
-
-
-        }
-    }
 
 
 }

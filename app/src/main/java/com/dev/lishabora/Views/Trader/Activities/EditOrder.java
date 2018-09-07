@@ -1,27 +1,28 @@
-package com.dev.lishabora.Views.Trader.Fragments;
+package com.dev.lishabora.Views.Trader.Activities;
+
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.TextInputEditText;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.ProductOrderAdapter;
 import com.dev.lishabora.Adapters.ProductsAdapter;
@@ -29,18 +30,19 @@ import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.FarmerHistoryByDateModel;
 import com.dev.lishabora.Models.MonthsDates;
+import com.dev.lishabora.Models.OrderModel;
 import com.dev.lishabora.Models.ProductOrderModel;
 import com.dev.lishabora.Models.ProductsModel;
 import com.dev.lishabora.Utils.DateTimeUtils;
+import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Trader.OrderConstants;
 import com.dev.lishaboramobile.R;
+import com.google.gson.Gson;
 import com.jaredrummler.materialspinner.MaterialSpinner;
-import com.stepstone.stepper.BlockingStep;
-import com.stepstone.stepper.StepperLayout;
-import com.stepstone.stepper.VerificationError;
+import com.wajahatkarim3.easyflipview.EasyFlipView;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.jetbrains.annotations.NotNull;
@@ -49,17 +51,28 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-public class FragmentGiveOrder extends Fragment implements BlockingStep {
+public class EditOrder extends AppCompatActivity {
     public TextView status, id, name, balance, milk, loan, order;
     Button btngetOrders;
+
+    //GIVE PRODUCTS
     ProductOrderAdapter listAdapter;
+    //GIVE ORDER
+    ImageView imgAdd, imgRemove, imgDelete;
+    TextView txtQty, txtPrice;
+    TextInputEditText edtAmount;
+    //CUSTOM ALERT
+    MaterialButton btnPositive, btnNegative, btnNeutral;
+    TextView txtTitle;
+    LinearLayout lTitle;
+    ImageView imgIcon;
+    private EasyFlipView easyFlipView;
+    private EasyFlipView.FlipState currentSide;
     private ProductsAdapter listAdapterAll;
     private RecyclerView recyclerView;
     private List<ProductOrderModel> productOrderModels;
-
     private AVLoadingIndicatorView avi;
     private AVLoadingIndicatorView davi;
-
     private MaterialSpinner spinnerMonths;
     private FamerModel famerModel;
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
@@ -68,54 +81,168 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
     private View view;
     private List<FarmerHistoryByDateModel> modelsDA = new LinkedList<>();
 
-
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_edit_order);
+        easyFlipView = findViewById(R.id.easyFlipView);
+        initViewCustomDialog();
+
+        famerModel = OrderConstants.getFamerModel();
+        setUpClear();
+
+
+        currentSide = EasyFlipView.FlipState.FRONT_SIDE;
+        setFrontSideData();
+        easyFlipView.setOnFlipListener((easyFlipView, newCurrentSide) -> {
+            currentSide = newCurrentSide;
+
+            if (currentSide == EasyFlipView.FlipState.FRONT_SIDE) {
+                setFrontSideData();
+            } else {
+                setBackSideData();
+            }
+
+
+        });
+
+
+    }
+
+    private void initViewCustomDialog() {
+
+
+        btnPositive = findViewById(R.id.btn_positive);
+        btnNegative = findViewById(R.id.btn_negative);
+        btnNeutral = findViewById(R.id.btn_neutral);
+        txtTitle = findViewById(R.id.txt_title);
+        lTitle = findViewById(R.id.linear_title);
+        imgIcon = findViewById(R.id.img_icon);
+
+
+        btnNeutral.setVisibility(View.GONE);
+        btnPositive.setText("Next");
+        lTitle.setVisibility(View.GONE);
+        txtTitle.setVisibility(View.VISIBLE);
+        imgIcon.setVisibility(View.GONE);
+        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
+        txtTitle.setText("Route");
+
+        btnPositive.setOnClickListener(view -> btnPositiveClicked());
+        btnNeutral.setOnClickListener(view -> btnNeutralClicked());
+        btnNegative.setOnClickListener(view -> btnNegativeClicked());
+
+
+    }
+
+    private void btnNegativeClicked() {
+        setUpClear();
+        finish();
+    }
+
+    private void btnNeutralClicked() {
+
+        if (currentSide == EasyFlipView.FlipState.BACK_SIDE) {
+            OrderModel orderModel = new OrderModel();
+            orderModel.setInstallmentAmount(txtPrice.getText().toString());
+            orderModel.setInstallmentNo(txtQty.getText().toString());
+            orderModel.setOrderAmount(edtAmount.getText().toString());
+            orderModel.setProductOrderModels(OrderConstants.getProductOrderModels());
+
+            Gson gson = new Gson();
+
+            String data = gson.toJson(orderModel);
+            OrderConstants.setOrderData(data);
+            OrderConstants.setOrderModel(orderModel);
+
+            easyFlipView.flipTheView();
+        }
+
+    }
+
+    private void btnPositiveClicked() {
+        if (currentSide == EasyFlipView.FlipState.FRONT_SIDE) {
+            if (OrderConstants.getProductOrderModels() != null) {
+                easyFlipView.flipTheView();
+            } else {
+                Toast.makeText(EditOrder.this, "No products selected", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            finish();
+
+        }
+
+    }
+
+    private void setUpClear() {
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
         traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
 
+        //famerModel = (FamerModel) getIntent().getSerializableExtra("farmer");
+
+
+        OrderConstants.setProductOrderModels(null);
+        OrderConstants.setOrderModel(null);
+        OrderConstants.setOrderData(null);
 
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_give_product, container, false);
-    }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        this.view = view;
-        famerModel = OrderConstants.getFamerModel();
+    private void setFrontSideData() {
 
 
-    }
+        btnPositive.setText("Next");
+        btnPositive.setVisibility(View.VISIBLE);
 
-    void popOutFragments() {
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        for (int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
-            fragmentManager.popBackStack();
-        }
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+        btnNegative.setText("Dismiss");
+        btnNegative.setVisibility(View.VISIBLE);
+
+
+        btnNeutral.setText("Dismiss");
+        btnNeutral.setVisibility(View.GONE);
+
+
+        initView();
+        initList();
+
 
     }
+
+    private void setBackSideData() {
+
+
+        btnPositive.setText("Complete");
+        btnPositive.setVisibility(View.VISIBLE);
+
+
+        btnNegative.setText("Dismiss");
+        btnNegative.setVisibility(View.VISIBLE);
+
+
+        btnNeutral.setText("Back");
+        btnNeutral.setVisibility(View.VISIBLE);
+
+
+        initViewOrder();
+        initActions();
+        initData();
+    }
+
+
+    /****     ****/
+
 
     private void initView() {
-        id = view.findViewById(R.id.txt_id);
-        name = view.findViewById(R.id.txt_name);
-        btngetOrders = view.findViewById(R.id.btn_add_product);
+        id = findViewById(R.id.txt_id);
+        name = findViewById(R.id.txt_name);
+        btngetOrders = findViewById(R.id.btn_add_product);
 
-        spinnerMonths = view.findViewById(R.id.spinner_months);
+        spinnerMonths = findViewById(R.id.spinner_months);
 
-        milk = view.findViewById(R.id.txt_milk);
-        loan = view.findViewById(R.id.txt_loans);
-        order = view.findViewById(R.id.txt_orders);
+        milk = findViewById(R.id.txt_milk);
+        loan = findViewById(R.id.txt_loans);
+        order = findViewById(R.id.txt_orders);
 
         payoutsVewModel.getCollectionByFarmer(famerModel.getCode()).observe(this, collections -> {
             if (collections != null && collections.size() > 0) {
@@ -124,7 +251,7 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
                 initMonthlyList(new LinkedList<>());
             }
         });
-        btngetOrders.setOnClickListener(view -> traderViewModel.getProducts(false).observe(FragmentGiveOrder.this, productsModels -> {
+        btngetOrders.setOnClickListener(view -> traderViewModel.getProducts(false).observe(EditOrder.this, productsModels -> {
             if (productsModels != null) {
                 filterList(productsModels);
             }
@@ -178,9 +305,15 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
 
         for (Collection collection : collections) {
             if (DateTimeUtils.Companion.isInMonth(collection.getDayDate(), mds.getMonthName())) {
-                milk = milk + Double.valueOf(collection.getMilkCollected());
-                loan = loan + Double.valueOf(collection.getLoanAmountGivenOutPrice());
-                order = order + Double.valueOf(collection.getOrderGivenOutPrice());
+                if (collection.getMilkCollected() != null) {
+                    milk = milk + Double.valueOf(collection.getMilkCollected());
+                }
+                if (collection.getLoanAmountGivenOutPrice() != null) {
+                    loan = loan + Double.valueOf(collection.getLoanAmountGivenOutPrice());
+                }
+                if (collection.getOrderGivenOutPrice() != null) {
+                    order = order + Double.valueOf(collection.getOrderGivenOutPrice());
+                }
             }
 
         }
@@ -234,104 +367,13 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
 
     }
 
-    public int[] getApprovedCards(List<Collection> collections, String pcode) {
-
-        int[] statusR = new int[3];
-        int farmerStatus = 0;
-
-
-        List<FamerModel> f = payoutsVewModel.getFarmersByCycleONe(pcode);
-
-
-        statusR[0] = f.size();
-
-
-        int approved = 0;
-
-        for (FamerModel famerModel : f) {
-            int status = 0;
-            int collectionNo = 0;
-            for (Collection c : collections) {
-
-
-                if (c.getFarmerCode().equals(famerModel.getCode())) {
-
-
-                    collectionNo = collectionNo + 1;
-
-                    try {
-                        status += c.getApproved();
-
-                    } catch (Exception nm) {
-                        nm.printStackTrace();
-                    }
-                }
-
-
-            }
-
-            if (status == collectionNo) {
-                approved += 1;
-            }
-
-
-        }
-        statusR[1] = approved;
-        statusR[2] = statusR[0] - approved;
-
-
-        return statusR;
-
-
-    }
-
-    @Override
-    public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
-
-        callback.goToNextStep();
-    }
-
-    @Override
-    public void onCompleteClicked(StepperLayout.OnCompleteClickedCallback callback) {
-
-        callback.complete();
-    }
-
-    @Override
-    public void onBackClicked(StepperLayout.OnBackClickedCallback callback) {
-
-        callback.goToPrevStep();
-    }
-
-    @Nullable
-    @Override
-    public VerificationError verifyStep() {
-        if (OrderConstants.getProductOrderModels() == null) {
-            return new VerificationError("No Products selected");
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public void onSelected() {
-
-        initView();
-        initList();
-
-    }
-
-    @Override
-    public void onError(@NonNull VerificationError error) {
-
-    }
 
     private void subscribeProduct(List<ProductsModel> productsModels) {
 
         Log.d("ReTrReqd", " Dialog is has called");
-        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
+        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(this);
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_all_products_list, null);
-        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(this));
         alertDialogBuilderUserInput.setView(mView);
         alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
         alertDialogBuilderUserInput.setTitle("Products");
@@ -346,7 +388,7 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
         LinkedList<ProductsModel> selected = new LinkedList<>();
 
 
-        listAdapterAll = new ProductsAdapter(getActivity(), productsModels, new OnclickRecyclerListener() {
+        listAdapterAll = new ProductsAdapter(this, productsModels, new OnclickRecyclerListener() {
             @Override
             public void onSwipe(int adapterPosition, int direction) {
 
@@ -423,11 +465,11 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
     }
 
     public void initList() {
-        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
         if (OrderConstants.getProductOrderModels() == null) {
             OrderConstants.setProductOrderModels(new LinkedList<>());
         }
-        listAdapter = new ProductOrderAdapter(getActivity(), OrderConstants.getProductOrderModels(), new OnclickRecyclerListener() {
+        listAdapter = new ProductOrderAdapter(this, OrderConstants.getProductOrderModels(), new OnclickRecyclerListener() {
             @Override
             public void onSwipe(int adapterPosition, int direction) {
 
@@ -472,9 +514,9 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
     }
 
     private void editProduct(ProductOrderModel model, int pos) {
-        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
+        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(this);
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_give_product, null);
-        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(this));
         alertDialogBuilderUserInput.setView(mView);
 //        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
 //        alertDialogBuilderUserInput.setTitle("Route");
@@ -531,7 +573,7 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
         btnNeutral.setVisibility(View.GONE);
         btnNeutral.setText("Delete");
 
-        btnNeutral.setBackgroundColor(getContext().getResources().getColor(R.color.red));
+        btnNeutral.setBackgroundColor(this.getResources().getColor(R.color.red));
         lTitle.setVisibility(View.GONE);
         txtTitle.setVisibility(View.VISIBLE);
         imgIcon.setVisibility(View.VISIBLE);
@@ -541,6 +583,113 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
         btnPositive.setOnClickListener(new EditCustomListener(alertDialogAndroid, model, pos));
 
         btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
+
+
+    }
+
+    /********     ******/
+    public void calc(View imgAction, View txtQty) {
+        String gty = ((TextView) txtQty).getText().toString();
+
+        if (imgAction.getId() == R.id.img_add) {
+            int vq = Integer.valueOf(gty) + 1;
+            ((TextView) txtQty).setText(String.valueOf(vq));
+
+        } else {
+            int vq = Integer.valueOf(gty);
+            if (vq != 1) {
+                ((TextView) txtQty).setText(String.valueOf(vq - 1));
+            }
+        }
+
+
+        double installmentValue = 0.0;
+
+        if (edtAmount.getText() != null && !TextUtils.isEmpty(edtAmount.getText())) {
+
+            double value = Double.valueOf(edtAmount.getText().toString());
+            int insNo = Integer.valueOf(((TextView) txtQty).getText().toString());
+            if (value > 0.0) {
+                installmentValue = (value / insNo);
+            }
+        }
+
+        txtPrice.setText(String.valueOf(GeneralUtills.Companion.round(installmentValue, 2)));
+
+
+    }
+
+    private void initData() {
+
+        Double dt = 0.0;
+        if (OrderConstants.getProductOrderModels() != null) {
+
+            for (ProductOrderModel p : OrderConstants.getProductOrderModels()) {
+                if (p.getTotalprice() != null) {
+                    dt = dt + (Double.valueOf(p.getTotalprice()));
+                }
+            }
+        }
+
+        edtAmount.setText(String.valueOf(dt));
+        double installmentValue = 0.0;
+        edtAmount.getText().toString();
+        if (!TextUtils.isEmpty(edtAmount.getText().toString())) {
+            double value = Double.valueOf(edtAmount.getText().toString());
+            int insNo = Integer.valueOf(txtQty.getText().toString());
+            if (value > 0.0) {
+                installmentValue = (value / insNo);
+            }
+        }
+
+        txtPrice.setText(String.valueOf(GeneralUtills.Companion.round(installmentValue, 2)));
+    }
+
+    void initViewOrder() {
+        id = findViewById(R.id.txt_id);
+        name = findViewById(R.id.txt_name);
+
+        edtAmount = findViewById(R.id.edt_value);
+        txtQty = findViewById(R.id.txt_qty);
+        txtPrice = findViewById(R.id.txt_installment);
+
+        imgAdd = findViewById(R.id.img_add);
+        imgRemove = findViewById(R.id.img_remove);
+
+
+    }
+
+    void initActions() {
+        imgAdd.setOnClickListener(view -> calc(imgAdd, txtQty));
+        imgRemove.setOnClickListener(view -> calc(imgRemove, txtQty));
+        edtAmount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                double installmentValue = 0.0;
+
+                if (editable != null) {
+
+                    if (edtAmount.getText().toString() != null && !TextUtils.isEmpty(edtAmount.getText().toString())) {
+                        double value = Double.valueOf(edtAmount.getText().toString());
+                        int insNo = Integer.valueOf(txtQty.getText().toString());
+                        if (value > 0.0) {
+                            installmentValue = (value / insNo);
+                        }
+                    }
+                }
+                txtPrice.setText(String.valueOf(GeneralUtills.Companion.round(installmentValue, 2)));
+            }
+        });
 
 
     }

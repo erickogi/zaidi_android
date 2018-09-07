@@ -165,6 +165,7 @@ public class FarmerCollectionsAdapter extends RecyclerView.Adapter<FarmerCollect
 //
 //        }
 
+
         if (isEditable) {
             holder.milkTotalPm.setEnabled(true);
             holder.milkTotalAm.setEnabled(true);

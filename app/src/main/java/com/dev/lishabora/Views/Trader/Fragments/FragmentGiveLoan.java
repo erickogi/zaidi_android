@@ -50,10 +50,14 @@ public class FragmentGiveLoan extends Fragment {
     Double PmDoubleValue = 0.0;
     Collection AmCollModel = null;
     Collection PmCollModel = null;
+    private FamerModel famerModel;
+
+
+
     boolean hasAmChanged = false;
     boolean hasPmChanged = false;
     private MaterialSpinner spinnerMonths;
-    private FamerModel famerModel;
+
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
     private PayoutsVewModel payoutsVewModel;
     private TraderViewModel traderViewModel;

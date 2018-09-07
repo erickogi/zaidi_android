@@ -38,6 +38,7 @@ import java.util.List;
 import timber.log.Timber;
 
 import static com.dev.lishabora.Views.CommonFuncs.createPayoutsByCollection;
+import static com.dev.lishabora.Views.CommonFuncs.getFarmersCollectionModel;
 
 public class FragmentFarmerHistory extends Fragment {
     MaterialSpinner spinner;
@@ -166,17 +167,7 @@ public class FragmentFarmerHistory extends Fragment {
 
 
                 Payouts p = listpayouts.get(position);
-                PayoutFarmersCollectionModel payoutFarmersCollectionModel = new PayoutFarmersCollectionModel(
-                        famerModel.getCode(),
-                        famerModel.getNames(),
-                        p.getMilkTotal(),
-                        p.getLoanTotal(),
-                        p.getOrderTotal(),
-                        p.getStatus(),
-                        p.getStatusName(),
-                        p.getBalance(), p.getPayoutnumber(), famerModel.getCyclecode(),
-                        p.getMilkTotalKsh(), p.getMilkTotalLtrs()
-                );
+                PayoutFarmersCollectionModel payoutFarmersCollectionModel = getFarmersCollectionModel(famerModel, p);
 
 
                 Timber.tag("farmerCilcked").d("clicked " + position);
