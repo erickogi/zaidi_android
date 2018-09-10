@@ -24,6 +24,8 @@ import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 
+import java.util.Objects;
+
 public class FragmentCompleteGiveOrder extends Fragment implements BlockingStep {
     public TextView status, id, name, balance, milk, loan, order;
     ImageView imgAdd, imgRemove, imgDelete;
@@ -88,6 +90,17 @@ public class FragmentCompleteGiveOrder extends Fragment implements BlockingStep 
 
     @Override
     public void onCompleteClicked(StepperLayout.OnCompleteClickedCallback callback) {
+        OrderModel orderModel = new OrderModel();
+        orderModel.setInstallmentAmount(txtPrice.getText().toString());
+        orderModel.setInstallmentNo(txtQty.getText().toString());
+        orderModel.setOrderAmount(edtAmount.getText().toString());
+        orderModel.setProductOrderModels(OrderConstants.getProductOrderModels());
+
+        Gson gson = new Gson();
+
+        String data = gson.toJson(orderModel);
+        OrderConstants.setOrderData(data);
+        OrderConstants.setOrderModel(orderModel);
 
         callback.complete();
     }
@@ -145,8 +158,7 @@ public class FragmentCompleteGiveOrder extends Fragment implements BlockingStep 
 
         edtAmount.setText(String.valueOf(dt));
         double installmentValue = 0.0;
-        edtAmount.getText().toString();
-        if (!TextUtils.isEmpty(edtAmount.getText().toString())) {
+        if (!TextUtils.isEmpty(Objects.requireNonNull(edtAmount.getText()).toString())) {
             double value = Double.valueOf(edtAmount.getText().toString());
             int insNo = Integer.valueOf(txtQty.getText().toString());
             if (value > 0.0) {
@@ -154,7 +166,33 @@ public class FragmentCompleteGiveOrder extends Fragment implements BlockingStep 
             }
         }
 
+
         txtPrice.setText(String.valueOf(GeneralUtills.Companion.round(installmentValue, 2)));
+
+        if (OrderConstants.getOrderModel() != null) {
+            OrderModel l = OrderConstants.getOrderModel();
+
+            if (l.getInstallmentNo() != null) {
+                txtQty.setText(l.getInstallmentNo());
+
+                try {
+                    if (!TextUtils.isEmpty(Objects.requireNonNull(edtAmount.getText()).toString())) {
+                        double value = Double.valueOf(edtAmount.getText().toString());
+                        int insNo = Integer.valueOf(txtQty.getText().toString());
+                        if (value > 0.0) {
+                            installmentValue = (value / insNo);
+                        }
+                    }
+                    txtPrice.setText(String.valueOf(GeneralUtills.Companion.round(installmentValue, 2)));
+
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
+
+            }
+
+
+        }
     }
 
 

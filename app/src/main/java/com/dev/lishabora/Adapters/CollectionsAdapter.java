@@ -83,9 +83,9 @@ public class CollectionsAdapter extends RecyclerView.Adapter<CollectionViewHolde
         }
 
 
-        holder.loanTotalPm.setText(model.getAmPmLoan());
+        holder.loanTotalPm.setText(model.getLoan());
 
-        if (!model.getAmPmLoan().equals("0.0")) {
+        if (!model.getLoan().equals("0.0")) {
             holder.loanTotalPm.setTextColor(context.getResources().getColor(R.color.colorPrimary));
             holder.loanTotalPm.setTypeface(Typeface.DEFAULT_BOLD);
 
@@ -96,9 +96,9 @@ public class CollectionsAdapter extends RecyclerView.Adapter<CollectionViewHolde
 
         }
 
-        holder.orderTotalPm.setText(model.getAmPmOrders());
+        holder.orderTotalPm.setText(model.getOrder());
 
-        if (!model.getAmPmOrders().equals("0.0")) {
+        if (!model.getOrder().equals("0.0")) {
             holder.orderTotalPm.setTextColor(context.getResources().getColor(R.color.colorPrimary));
             holder.orderTotalPm.setTypeface(Typeface.DEFAULT_BOLD);
 

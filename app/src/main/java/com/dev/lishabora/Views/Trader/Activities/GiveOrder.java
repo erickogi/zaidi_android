@@ -41,12 +41,12 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
     Button btnGiveLoan;
     String ampm = "";
     Cycles c;
-    String AmStringValue = null;
-    String PmStringValue = null;
-    Double AmDoubleValue = 0.0;
-    Double PmDoubleValue = 0.0;
-    Collection AmCollModel = null;
-    Collection PmCollModel = null;
+    String StringValue = null;
+    // String PmStringValue = null;
+    Double DoubleValue = 0.0;
+    // Double PmDoubleValue = 0.0;
+    Collection CollModel = null;
+    //Collection PmCollModel = null;
     boolean hasAmChanged = false;
     boolean hasPmChanged = false;
     private FamerModel famerModel;
@@ -114,35 +114,23 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
         }
 
 
-        AmStringValue = null;
-        PmStringValue = null;
-        AmDoubleValue = 0.0;
-        PmDoubleValue = 0.0;
+        StringValue = null;
+        DoubleValue = 0.0;
 
 
-        AmCollModel = null;
-        PmCollModel = null;
+        CollModel = null;
 
 
-        AmCollModel = traderViewModel.getCollectionByDateByFarmerByTimeSngle(famerModel.getCode(), DateTimeUtils.Companion.getToday(), "AM");
-        PmCollModel = traderViewModel.getCollectionByDateByFarmerByTimeSngle(famerModel.getCode(), DateTimeUtils.Companion.getToday(), "PM");
+        CollModel = traderViewModel.getCollectionByDateByFarmerByTimeSngle(famerModel.getCode(), DateTimeUtils.Companion.getToday());
 
 
-        if (AmCollModel != null) {
-            AmDoubleValue = AmDoubleValue + Double.valueOf(AmCollModel.getOrderGivenOutPrice());
-            AmStringValue = String.valueOf(AmDoubleValue);
-        }
-
-        if (PmCollModel != null) {
-
-            PmDoubleValue = PmDoubleValue + Double.valueOf(PmCollModel.getOrderGivenOutPrice());
-            PmStringValue = String.valueOf(PmDoubleValue);
+        if (CollModel != null) {
+            DoubleValue = DoubleValue + Double.valueOf(CollModel.getOrderGivenOutPrice());
+            StringValue = String.valueOf(DoubleValue);
         }
 
 
-        if (ampm.equals("AM")) {
-
-            if (AmStringValue == null && AmDoubleValue == 0.0 && AmCollModel == null) {
+        if (CollModel == null) {
                 Collection c = new Collection();
                 c.setCycleCode(famerModel.getCyclecode());
                 c.setFarmerCode(famerModel.getCode());
@@ -151,8 +139,8 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
                 c.setDayName(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "E"));
                 c.setLoanAmountGivenOutPrice("0");
                 c.setDayDate(DateTimeUtils.Companion.getToday());
-                c.setTimeOfDay("AM");
-                c.setMilkCollected("0");
+            c.setTimeOfDay(ampm);
+            c.setMilkCollectedAm("0");
                 c.setLoanAmountGivenOutPrice("0");
                 c.setLoanDetails("");
                 c.setOrderGivenOutPrice(o);
@@ -180,11 +168,11 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
             } else {
 
 
-                if (AmCollModel != null) {
-                    AmCollModel.setOrderGivenOutPrice(o);
-                    AmCollModel.setOrderDetails(orderDetails);
-                }
-                traderViewModel.updateCollection(AmCollModel).observe(this, responseModel -> {
+            if (CollModel != null) {
+                CollModel.setOrderGivenOutPrice(o);
+                CollModel.setOrderDetails(orderDetails);
+            }
+            traderViewModel.updateCollection(CollModel).observe(this, responseModel -> {
                     if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
                     } else {
 
@@ -196,62 +184,6 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
                 finish();
 
             }
-
-
-        } else {
-            if (PmStringValue == null && PmDoubleValue == 0.0 && PmCollModel == null) {
-                Collection c = new Collection();
-                c.setCycleCode(famerModel.getCyclecode());
-                c.setFarmerCode(famerModel.getCode());
-                c.setFarmerName(famerModel.getNames());
-                c.setCycleId(famerModel.getCode());
-                c.setDayName(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "E"));
-                c.setLoanAmountGivenOutPrice("0");
-                c.setDayDate(DateTimeUtils.Companion.getToday());
-                c.setTimeOfDay("PM");
-                c.setMilkCollected("0");
-                c.setLoanAmountGivenOutPrice("0");
-                c.setLoanDetails("");
-                c.setOrderGivenOutPrice(o);
-                c.setOrderDetails(orderDetails);
-
-                c.setLoanId("");
-                c.setOrderId("");
-                c.setSynced(0);
-                c.setSynced(false);
-                c.setApproved(0);
-
-
-                traderViewModel.createCollections(c, false).observe(this, responseModel -> {
-                    if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-                    } else {
-
-                    }
-
-
-                });
-                famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                traderViewModel.updateFarmer(famerModel, false);
-                finish();
-
-
-            } else {
-
-                PmCollModel.setOrderGivenOutPrice(o);
-                PmCollModel.setOrderDetails(orderDetails);
-                traderViewModel.updateCollection(PmCollModel).observe(this, responseModel -> {
-                    if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-                    } else {
-
-
-                    }
-                });
-                famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                traderViewModel.updateFarmer(famerModel, false);
-                finish();
-
-            }
-        }
 
 
     }

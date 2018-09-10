@@ -28,6 +28,7 @@ import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
+import com.dev.lishabora.Views.CommonFuncs;
 import com.dev.lishaboramobile.R;
 import com.google.gson.Gson;
 import com.jaredrummler.materialspinner.MaterialSpinner;
@@ -44,12 +45,12 @@ public class FragmentGiveLoan extends Fragment {
     Button btnGiveLoan;
     String ampm = "";
     Cycles c;
-    String AmStringValue = null;
-    String PmStringValue = null;
-    Double AmDoubleValue = 0.0;
-    Double PmDoubleValue = 0.0;
-    Collection AmCollModel = null;
-    Collection PmCollModel = null;
+    String StringValue = null;
+    //String PmStringValue = null;
+    Double DoubleValue = 0.0;
+    // Double PmDoubleValue = 0.0;
+    Collection collModel = null;
+    // Collection PmCollModel = null;
     private FamerModel famerModel;
 
 
@@ -89,29 +90,22 @@ public class FragmentGiveLoan extends Fragment {
 
     }
 
-    private String getCollection(String code, String date, TextInputEditText txt) {
+    private void getCollection(String code, String date, TextInputEditText txt, TextView txtPrice, TextView txtQty) {
 
         List<Collection> collections = traderViewModel.getCollectionByDateByFarmer(code, date);//.observe(FragementFarmersList.this, collections -> {
 
-        Double tt = 0.0;
 
-        if (txt != null) {
-            if (collections != null) {
+        if (collections != null) {
 
-                for (Collection c : collections) {
+            LoanModel l = CommonFuncs.getLoan(collections);
+            if (l != null) {
+                txt.setText(l.getLoanAmount());
+                txtPrice.setText(l.getInstallmentAmount());
+                txtQty.setText(l.getInstallmentsNo());
 
-
-                    tt = tt + (Double.valueOf(c.getLoanAmountGivenOutPrice()));
-
-
-                }
 
             }
-            txt.setText(String.valueOf(tt));
         }
-
-
-        return String.valueOf(tt);
 
     }
 
@@ -158,35 +152,28 @@ public class FragmentGiveLoan extends Fragment {
         }
 
 
-        AmStringValue = null;
-        PmStringValue = null;
-        AmDoubleValue = 0.0;
-        PmDoubleValue = 0.0;
+        StringValue = null;
+        //PmStringValue = null;
+        DoubleValue = 0.0;
+        //PmDoubleValue = 0.0;
 
 
-        AmCollModel = null;
-        PmCollModel = null;
+        collModel = null;
+        //PmCollModel = null;
 
 
-        AmCollModel = traderViewModel.getCollectionByDateByFarmerByTimeSngle(famerModel.getCode(), DateTimeUtils.Companion.getToday(), "AM");
-        PmCollModel = traderViewModel.getCollectionByDateByFarmerByTimeSngle(famerModel.getCode(), DateTimeUtils.Companion.getToday(), "PM");
+        collModel = traderViewModel.getCollectionByDateByFarmerByTimeSngle(famerModel.getCode(), DateTimeUtils.Companion.getToday());
+        //PmCollModel = traderViewModel.getCollectionByDateByFarmerByTimeSngle(famerModel.getCode(), DateTimeUtils.Companion.getToday(), "PM");
 
 
-        if (AmCollModel != null) {
-            AmDoubleValue = AmDoubleValue + Double.valueOf(AmCollModel.getLoanAmountGivenOutPrice());
-            AmStringValue = String.valueOf(AmDoubleValue);
-        }
-
-        if (PmCollModel != null) {
-
-            PmDoubleValue = PmDoubleValue + Double.valueOf(PmCollModel.getLoanAmountGivenOutPrice());
-            PmStringValue = String.valueOf(PmDoubleValue);
+        if (collModel != null) {
+            DoubleValue = DoubleValue + Double.valueOf(collModel.getLoanAmountGivenOutPrice());
+            StringValue = String.valueOf(DoubleValue);
         }
 
 
-        if (ampm.equals("AM")) {
+        if (collModel == null) {
 
-            if (AmStringValue == null && AmDoubleValue == 0.0 && AmCollModel == null) {
                 Collection c = new Collection();
                 c.setCycleCode(famerModel.getCyclecode());
                 c.setFarmerCode(famerModel.getCode());
@@ -195,11 +182,13 @@ public class FragmentGiveLoan extends Fragment {
                 c.setDayName(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "E"));
                 c.setLoanAmountGivenOutPrice("0");
                 c.setDayDate(DateTimeUtils.Companion.getToday());
-                c.setTimeOfDay("AM");
-                c.setMilkCollected("0");
+            c.setTimeOfDay(ampm);
+            c.setMilkCollectedAm("0");
+            c.setMilkCollectedPm("0");
                 c.setLoanAmountGivenOutPrice(l);
                 c.setLoanDetails(loanDetails);
                 c.setOrderGivenOutPrice("0");
+
 
                 c.setLoanId("");
                 c.setOrderId("");
@@ -223,11 +212,11 @@ public class FragmentGiveLoan extends Fragment {
             } else {
 
 
-                if (AmCollModel != null) {
-                    AmCollModel.setLoanAmountGivenOutPrice(l);
-                    AmCollModel.setLoanDetails(loanDetails);
+            if (collModel != null) {
+                collModel.setLoanAmountGivenOutPrice(l);
+                collModel.setLoanDetails(loanDetails);
                 }
-                traderViewModel.updateCollection(AmCollModel).observe(FragmentGiveLoan.this, responseModel -> {
+            traderViewModel.updateCollection(collModel).observe(FragmentGiveLoan.this, responseModel -> {
                     if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
                     } else {
 
@@ -241,59 +230,7 @@ public class FragmentGiveLoan extends Fragment {
             }
 
 
-        } else {
-            if (PmStringValue == null && PmDoubleValue == 0.0 && PmCollModel == null) {
-                Collection c = new Collection();
-                c.setCycleCode(famerModel.getCyclecode());
-                c.setFarmerCode(famerModel.getCode());
-                c.setFarmerName(famerModel.getNames());
-                c.setCycleId(famerModel.getCode());
-                c.setDayName(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "E"));
-                c.setLoanAmountGivenOutPrice("0");
-                c.setDayDate(DateTimeUtils.Companion.getToday());
-                c.setTimeOfDay("PM");
-                c.setMilkCollected("0");
-                c.setLoanAmountGivenOutPrice(l);
-                c.setLoanDetails(loanDetails);
-                c.setOrderGivenOutPrice("0");
 
-                c.setLoanId("");
-                c.setOrderId("");
-                c.setSynced(0);
-                c.setSynced(false);
-                c.setApproved(0);
-
-
-                traderViewModel.createCollections(c, false).observe(FragmentGiveLoan.this, responseModel -> {
-                    if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-                    } else {
-
-                    }
-
-
-                });
-                famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                traderViewModel.updateFarmer(famerModel, false);
-                popOutFragments();
-
-
-            } else {
-
-                PmCollModel.setLoanAmountGivenOutPrice(l);
-                PmCollModel.setLoanDetails(loanDetails);
-                traderViewModel.updateCollection(PmCollModel).observe(FragmentGiveLoan.this, responseModel -> {
-                    if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-                    } else {
-
-
-                    }
-                });
-                famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                traderViewModel.updateFarmer(famerModel, false);
-                popOutFragments();
-
-            }
-        }
 
 
     }
@@ -375,7 +312,7 @@ public class FragmentGiveLoan extends Fragment {
         });
 
 
-        getCollection(famerModel.getCode(), DateTimeUtils.Companion.getToday(), edtAmount);
+        getCollection(famerModel.getCode(), DateTimeUtils.Companion.getToday(), edtAmount, txtPrice, txtQty);
 
 
         btnGiveLoan.setOnClickListener(view -> {
@@ -400,7 +337,7 @@ public class FragmentGiveLoan extends Fragment {
 
             for (MonthsDates mds : monthsDates) {
 
-                String[] totals = getCollectionsTotals(mds, collections);
+                String[] totals = CommonFuncs.getCollectionsTotals(mds, collections);
                 fmh.add(new FarmerHistoryByDateModel(mds, famerModel, totals[0], totals[1], totals[2], totals[3]));
 
             }
@@ -411,25 +348,6 @@ public class FragmentGiveLoan extends Fragment {
 
     }
 
-    private String[] getCollectionsTotals(MonthsDates mds, List<Collection> collections) {
-        String cycleCode = "";
-        double milk = 0.0;
-        double loan = 0.0;
-        double order = 0.0;
-
-        for (Collection collection : collections) {
-            if (DateTimeUtils.Companion.isInMonth(collection.getDayDate(), mds.getMonthName())) {
-                milk = milk + Double.valueOf(collection.getMilkCollected());
-                loan = loan + Double.valueOf(collection.getLoanAmountGivenOutPrice());
-                order = order + Double.valueOf(collection.getOrderGivenOutPrice());
-            }
-
-        }
-        double[] totals = {milk, loan, order};
-
-
-        return new String[]{String.valueOf(totals[0]), String.valueOf(totals[1]), String.valueOf(totals[2]), cycleCode};
-    }
 
     public void initMonthlyList(List<FarmerHistoryByDateModel> models) {
 
@@ -475,55 +393,5 @@ public class FragmentGiveLoan extends Fragment {
 
     }
 
-    public int[] getApprovedCards(List<Collection> collections, String pcode) {
-
-        int[] statusR = new int[3];
-        int farmerStatus = 0;
-
-
-        List<FamerModel> f = payoutsVewModel.getFarmersByCycleONe(pcode);
-
-
-        statusR[0] = f.size();
-
-
-        int approved = 0;
-
-        for (FamerModel famerModel : f) {
-            int status = 0;
-            int collectionNo = 0;
-            for (Collection c : collections) {
-
-
-                if (c.getFarmerCode().equals(famerModel.getCode())) {
-
-
-                    collectionNo = collectionNo + 1;
-
-                    try {
-                        status += c.getApproved();
-
-                    } catch (Exception nm) {
-                        nm.printStackTrace();
-                    }
-                }
-
-
-            }
-
-            if (status == collectionNo) {
-                approved += 1;
-            }
-
-
-        }
-        statusR[1] = approved;
-        statusR[2] = statusR[0] - approved;
-
-
-        return statusR;
-
-
-    }
 
 }

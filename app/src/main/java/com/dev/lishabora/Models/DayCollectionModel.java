@@ -5,8 +5,7 @@ import java.io.Serializable;
 public class DayCollectionModel implements Serializable {
 
 
-    private int collectionIdAm;
-    private int collectionIdPm;
+    private String collectionId;
 
 
     private int payoutNumber;
@@ -15,53 +14,40 @@ public class DayCollectionModel implements Serializable {
     private String date;
 
     private String milkAm;
-
-
     private String milkPm;
 
 
     private MilkModel milkModelAm;
-    private OrderModel orderModelAm;
-    private LoanModel loanModelAm;
-
     private MilkModel milkModelPm;
-    private OrderModel orderModelPm;
-    private LoanModel loanModelPm;
+
+    private String loan;
+    private LoanModel loanModel;
+
+    private String order;
+    private OrderModel orderModel;
 
 
-    private String loanAm;
-    private String loanPm;
-
-    private String orderAm;
-    private String orderPm;
-
-
-
-    private String amPmLoan;
-    private String amPmOrders;
-
-    public DayCollectionModel(int payoutNumber, String day, String date, String milkAm, String milkPm,
-                              String loanAm, String loanPm, String orderAm, String orderPm, int collectionIdAm,
-                              int collectionIdPm, MilkModel milkModelAm, LoanModel loanModelAm, OrderModel orderModelAm,
-                              MilkModel milkModelPm, LoanModel loanModelPm, OrderModel orderModelPm) {
+    public DayCollectionModel(int payoutNumber, String day, String date, String milkAm, String milkPm
+            , String collectionId,
+                              MilkModel milkModelAm,
+                              MilkModel milkModelPm, String loan, String order, String loanCollectionId, LoanModel loanModel, String orderCollectionId, OrderModel orderModel) {
         this.payoutNumber = payoutNumber;
         this.day = day;
         this.date = date;
         this.milkAm = milkAm;
         this.milkPm = milkPm;
-        this.loanAm = loanAm;
-        this.loanPm = loanPm;
-        this.orderAm = orderAm;
-        this.orderPm = orderPm;
-        this.collectionIdAm = collectionIdAm;
-        this.collectionIdPm = collectionIdPm;
+
+        this.collectionId = collectionId;
+
         this.milkModelAm = milkModelAm;
-        this.loanModelAm = loanModelAm;
-        this.orderModelAm = orderModelAm;
 
         this.milkModelPm = milkModelPm;
-        this.loanModelPm = loanModelPm;
-        this.orderModelPm = orderModelPm;
+
+        this.loan = loan;
+        this.order = order;
+
+        this.loanModel = loanModel;
+        this.orderModel = orderModel;
 
 
     }
@@ -74,21 +60,6 @@ public class DayCollectionModel implements Serializable {
         this.milkModelAm = milkModelAm;
     }
 
-    public OrderModel getOrderModelAm() {
-        return orderModelAm;
-    }
-
-    public void setOrderModelAm(OrderModel orderModelAm) {
-        this.orderModelAm = orderModelAm;
-    }
-
-    public LoanModel getLoanModelAm() {
-        return loanModelAm;
-    }
-
-    public void setLoanModelAm(LoanModel loanModelAm) {
-        this.loanModelAm = loanModelAm;
-    }
 
     public MilkModel getMilkModelPm() {
         return milkModelPm;
@@ -98,75 +69,18 @@ public class DayCollectionModel implements Serializable {
         this.milkModelPm = milkModelPm;
     }
 
-    public OrderModel getOrderModelPm() {
-        return orderModelPm;
-    }
 
-    public void setOrderModelPm(OrderModel orderModelPm) {
-        this.orderModelPm = orderModelPm;
-    }
-
-    public LoanModel getLoanModelPm() {
-        return loanModelPm;
-    }
-
-    public String getAmPmLoan() {
-        String amPm = String.valueOf(Double.valueOf(loanAm) + Double.valueOf(loanPm));
-        return amPm;
-    }
-
-    public void setAmPmLoan(String amPmLoan) {
-        this.amPmLoan = amPmLoan;
-    }
-
-    public String getAmPmOrders() {
-        String amPm = String.valueOf(Double.valueOf(orderAm) + Double.valueOf(orderPm));
-        return amPm;
-    }
-
-    public void setAmPmOrders(String amPmOrders) {
-        this.amPmOrders = amPmOrders;
-    }
 
     public DayCollectionModel() {
     }
 
-//    public DayCollectionModel(int payoutNumber, String day, String date, String milkAm, String milkPm,
-//                              String loanAm, String loanPm, String orderAm, String orderPm, int collectionIdAm, int collectionIdPm) {
-//        this.payoutNumber = payoutNumber;
-//        this.day = day;
-//        this.date = date;
-//        this.milkAm = milkAm;
-//        this.milkPm = milkPm;
-//        this.loanAm = loanAm;
-//        this.loanPm = loanPm;
-//        this.orderAm = orderAm;
-//        this.orderPm = orderPm;
-//        this.collectionIdAm = collectionIdAm;
-//        this.collectionIdPm = collectionIdPm;
-//
-//    }
 
-    public void setLoanModelPm(LoanModel loanModelPm) {
-        this.loanModelPm = loanModelPm;
+    public String getCollectionId() {
+        return collectionId;
     }
 
-
-
-    public int getCollectionIdAm() {
-        return collectionIdAm;
-    }
-
-    public void setCollectionIdAm(int collectionIdAm) {
-        this.collectionIdAm = collectionIdAm;
-    }
-
-    public int getCollectionIdPm() {
-        return collectionIdPm;
-    }
-
-    public void setCollectionIdPm(int collectionIdPm) {
-        this.collectionIdPm = collectionIdPm;
+    public void setCollectionId(String collectionId) {
+        this.collectionId = collectionId;
     }
 
     public int getPayoutNumber() {
@@ -209,35 +123,36 @@ public class DayCollectionModel implements Serializable {
         this.milkPm = milkPm;
     }
 
-    public String getLoanAm() {
-        return loanAm;
+
+    public String getLoan() {
+        return loan;
     }
 
-    public void setLoanAm(String loanAm) {
-        this.loanAm = loanAm;
+    public void setLoan(String loan) {
+        this.loan = loan;
     }
 
-    public String getLoanPm() {
-        return loanPm;
+    public LoanModel getLoanModel() {
+        return loanModel;
     }
 
-    public void setLoanPm(String loanPm) {
-        this.loanPm = loanPm;
+    public void setLoanModel(LoanModel loanModel) {
+        this.loanModel = loanModel;
     }
 
-    public String getOrderAm() {
-        return orderAm;
+    public String getOrder() {
+        return order;
     }
 
-    public void setOrderAm(String orderAm) {
-        this.orderAm = orderAm;
+    public void setOrder(String order) {
+        this.order = order;
     }
 
-    public String getOrderPm() {
-        return orderPm;
+    public OrderModel getOrderModel() {
+        return orderModel;
     }
 
-    public void setOrderPm(String orderPm) {
-        this.orderPm = orderPm;
+    public void setOrderModel(OrderModel orderModel) {
+        this.orderModel = orderModel;
     }
 }

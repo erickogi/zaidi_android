@@ -95,9 +95,9 @@ public class FarmerCollectionsAdapter extends RecyclerView.Adapter<FarmerCollect
 
         }
 
-        holder.loanTotalPm.setText(String.format("%s %s", model.getAmPmLoan(), context.getString(R.string.ksh)));
+        holder.loanTotalPm.setText(String.format("%s %s", model.getLoan(), context.getString(R.string.ksh)));
 
-        if (!model.getAmPmLoan().equals("0.0")) {
+        if (!model.getLoan().equals("0.0")) {
             holder.loanTotalPm.setTextColor(context.getResources().getColor(R.color.colorPrimary));
             holder.loanTotalPm.setTypeface(Typeface.DEFAULT_BOLD);
 
@@ -108,9 +108,9 @@ public class FarmerCollectionsAdapter extends RecyclerView.Adapter<FarmerCollect
 
         }
 
-        holder.orderTotalPm.setText(String.format("%s %s", model.getAmPmOrders(), context.getString(R.string.ksh)));
+        holder.orderTotalPm.setText(String.format("%s %s", model.getOrder(), context.getString(R.string.ksh)));
 
-        if (!model.getAmPmOrders().equals("0.0")) {
+        if (!model.getOrder().equals("0.0")) {
             holder.orderTotalPm.setTextColor(context.getResources().getColor(R.color.colorPrimary));
             holder.orderTotalPm.setTypeface(Typeface.DEFAULT_BOLD);
 

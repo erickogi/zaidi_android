@@ -364,12 +364,10 @@ public class FragmentCurrentFarmerPayout extends Fragment {
     public void editValue(int adapterPosition, int time, int type, String value, Object o, View editable, DayCollectionModel dayCollectionModel) {
 
         if (type == 1) {
-            CommonFuncs.editValueMilk(adapterPosition, time, type, value, o, editable, dayCollectionModel, getContext(), avi, famerModel, (s, adapterPosition1, time1, type1, dayCollectionModel1, a) -> updateCollectionValue(s, adapterPosition1, time1, type1, dayCollectionModel1, a, null, null));
+            CommonFuncs.editValueMilk(adapterPosition, time, type, value, o, dayCollectionModel, getContext(), avi, famerModel, (s, adapterPosition1, time1, type1, dayCollectionModel1, a) -> FragmentCurrentFarmerPayout.this.updateCollectionValue(s, time, type, dayCollectionModel1, a, null, null));
 
         } else if (type == 2) {
-            CommonFuncs.editValueLoan(time, type, value, o, dayCollectionModel, getContext(), famerModel, (value1, loanModel, time12, dayCollectionModel12, alertDialogAndroid) -> {
-                updateCollectionValue(value1, adapterPosition, time12, type, dayCollectionModel12, alertDialogAndroid, loanModel, null);
-            });
+            CommonFuncs.editValueLoan(dayCollectionModel, getContext(), famerModel, (value1, loanModel, time12, dayCollectionModel12, alertDialogAndroid) -> FragmentCurrentFarmerPayout.this.updateCollectionValue(value1, 0, type, dayCollectionModel12, alertDialogAndroid, loanModel, null));
 
         } else {
 
@@ -377,16 +375,14 @@ public class FragmentCurrentFarmerPayout extends Fragment {
             OrderConstants.setFamerModel(famerModel);
             Intent intent2 = new Intent(getActivity(), EditOrder.class);
             intent2.putExtra("farmer", famerModel);
-            // intent2.putExtra("collection", dayCollectionModel);
             startActivityForResult(intent2, 10004);
 
 
-            //CommonFuncs.editValueOrder(time, type, value, o, dayCollectionModel, getContext(), famerModel, (String value1, OrderModel orderModel, int time12, DayCollectionModel dayCollectionModel12, AlertDialog alertDialogAndroid) -> updateCollectionValue(value1, adapterPosition, time12, type, dayCollectionModel12, alertDialogAndroid, null, orderModel));
 
         }
     }
 
-    private void updateCollectionValue(String s, int adapterPosition, int time, int type, DayCollectionModel dayCollectionModel, AlertDialog a, @Nullable LoanModel loanModel, @Nullable OrderModel orderModel) {
+    private void updateCollectionValue(String s, int time, int type, DayCollectionModel dayCollectionModel, AlertDialog a, @Nullable LoanModel loanModel, @Nullable OrderModel orderModel) {
         CommonFuncs.updateCollectionValue(s, time, type, dayCollectionModel, payoutsVewModel, payouts, famerModel, loanModel, orderModel, new CollectionCreateUpdateListener() {
             @Override
             public void createCollection(Collection c) {
@@ -462,6 +458,8 @@ public class FragmentCurrentFarmerPayout extends Fragment {
             public void onEditTextChanged(int adapterPosition, int time, int type, View editable) {
 
                 CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
+
+
                 editValue(adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
 
 

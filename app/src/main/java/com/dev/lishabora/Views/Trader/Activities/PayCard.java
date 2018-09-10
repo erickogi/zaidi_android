@@ -462,13 +462,12 @@ public class PayCard extends AppCompatActivity {
 
 
         if (type == 1) {
-            CommonFuncs.editValueMilk(adapterPosition, time, type, value, o, editable, dayCollectionModel, PayCard.this, avi, famerModel, (s, adapterPosition1, time1, type1, dayCollectionModel1, a) -> updateCollectionValue(s, adapterPosition1, time1, type1, dayCollectionModel1, a, null, null));
+            CommonFuncs.editValueMilk(adapterPosition, time, type, value, o, dayCollectionModel, PayCard.this, avi, famerModel, (s, adapterPosition1, time1, type1, dayCollectionModel1, a) -> PayCard.this.updateCollectionValue(s, time, type, dayCollectionModel1, a, null, null));
 
         } else if (type == 2) {
-            CommonFuncs.editValueLoan(time, type, value, o, dayCollectionModel, PayCard.this, famerModel, (value1, loanModel, time12, dayCollectionModel12, alertDialogAndroid) -> updateCollectionValue(value1, adapterPosition, time12, type, dayCollectionModel12, alertDialogAndroid, loanModel, null));
+            CommonFuncs.editValueLoan(dayCollectionModel, PayCard.this, famerModel, (value1, loanModel, time12, dayCollectionModel12, alertDialogAndroid) -> PayCard.this.updateCollectionValue(value1, 0, type, dayCollectionModel12, alertDialogAndroid, loanModel, null));
 
         } else {
-            //CommonFuncs.editValueOrder(time, type, value, o, dayCollectionModel, PayCard.this, famerModel, (String value1, OrderModel orderModel, int time12, DayCollectionModel dayCollectionModel12, AlertDialog alertDialogAndroid) -> updateCollectionValue(value1, adapterPosition, time12, type, dayCollectionModel12, alertDialogAndroid, null, orderModel));
             OrderConstants.setFamerModel(famerModel);
             Intent intent2 = new Intent(PayCard.this, EditOrder.class);
             intent2.putExtra("farmer", famerModel);
@@ -479,7 +478,7 @@ public class PayCard extends AppCompatActivity {
         }
     }
 
-    private void updateCollectionValue(String s, int adapterPosition, int time, int type, DayCollectionModel dayCollectionModel, AlertDialog a, @Nullable LoanModel loanModel, @Nullable OrderModel orderModel) {
+    private void updateCollectionValue(String s, int time, int type, DayCollectionModel dayCollectionModel, AlertDialog a, @Nullable LoanModel loanModel, @Nullable OrderModel orderModel) {
         CommonFuncs.updateCollectionValue(s, time, type, dayCollectionModel, payoutsVewModel, payouts, famerModel, loanModel, orderModel, new CollectionCreateUpdateListener() {
             @Override
             public void createCollection(Collection c) {

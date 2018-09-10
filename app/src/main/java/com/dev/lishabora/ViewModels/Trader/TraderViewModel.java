@@ -1048,11 +1048,15 @@ public class TraderViewModel extends AndroidViewModel
     }
 
     public Collection getCollectionByDateByFarmerByTimeSngle(String code, String today, String ampm) {
-        if (collectionslist == null) {
-            collectionslist = new LinkedList<>();
-        }
+
         return collectionsRepo.getCollectionByDateByFarmerByTimeSingle(code, today, ampm);
     }
+
+    public Collection getCollectionByDateByFarmerByTimeSngle(String code, String today) {
+
+        return collectionsRepo.getCollectionByDateByFarmerByTimeSingle(code, today);
+    }
+
 
     public LiveData<List<Collection>> getCollectionByDateByPayout(String payoutnumber) {
         if (collections == null) {

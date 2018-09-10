@@ -124,9 +124,10 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     Double PmDoubleValue = 0.0;
 
 
-    Collection AmCollModel = null;
-    Collection PmCollModel = null;
+    // Collection AmCollModel = null;
+    //Collection PmCollModel = null;
 
+    Collection collModel = null;
 
     boolean hasAmChanged = false;
     boolean hasPmChanged = false;
@@ -150,23 +151,34 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         PmDoubleValue = 0.0;
 
 
-        AmCollModel = null;
-        PmCollModel = null;
+        //AmCollModel = null;
+        // PmCollModel = null;
+        collModel = null;
 
 
-        AmCollModel = mViewModel.getCollectionByDateByFarmerByTimeSngle(famerModel.getCode(), DateTimeUtils.Companion.getToday(), "AM");
-        PmCollModel = mViewModel.getCollectionByDateByFarmerByTimeSngle(famerModel.getCode(), DateTimeUtils.Companion.getToday(), "PM");
+        //AmCollModel = mViewModel.getCollectionByDateByFarmerByTimeSngle(famerModel.getCode(), DateTimeUtils.Companion.getToday() );
+        collModel = mViewModel.getCollectionByDateByFarmerByTimeSngle(famerModel.getCode(), DateTimeUtils.Companion.getToday());
 
 
-        if (AmCollModel != null) {
-            AmDoubleValue = AmDoubleValue + Double.valueOf(AmCollModel.getMilkCollected());
-            AmStringValue = String.valueOf(AmDoubleValue);
-        }
-
-        if (PmCollModel != null) {
-
-            PmDoubleValue = PmDoubleValue + Double.valueOf(PmCollModel.getMilkCollected());
-            PmStringValue = String.valueOf(PmDoubleValue);
+//        if (AmCollModel != null) {
+//            AmDoubleValue = AmDoubleValue + Double.valueOf(AmCollModel.getMilkCollected());
+//            AmStringValue = String.valueOf(AmDoubleValue);
+//        }
+//
+//        if (PmCollModel != null) {
+//
+//            PmDoubleValue = PmDoubleValue + Double.valueOf(PmCollModel.getMilkCollected());
+//            PmStringValue = String.valueOf(PmDoubleValue);
+//        }
+        if (collModel != null) {
+            if (collModel.getMilkCollectedAm() != null) {
+                AmDoubleValue = AmDoubleValue + Double.valueOf(collModel.getMilkCollectedAm());
+                AmStringValue = String.valueOf(AmDoubleValue);
+            }
+            if (collModel.getMilkCollectedPm() != null) {
+                PmDoubleValue = PmDoubleValue + Double.valueOf(collModel.getMilkCollectedIdPm());
+                PmStringValue = String.valueOf(PmDoubleValue);
+            }
         }
 
 
@@ -309,7 +321,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         });
 
         if (DateTimeUtils.Companion.isAM(DateTimeUtils.Companion.getTodayDate())) {
-
             edtTodayAm.requestFocus();
 
 
@@ -362,9 +373,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                 milkModel.setUnitsModel(unitsModel);
 
 
-
-
-                if (AmStringValue == null && AmDoubleValue == 0.0 && AmCollModel == null) {
+                if (collModel == null) {
 
                     Timber.tag("milkCollDebug").d("AM STRING - NULL, AM DOUBLE - NULL AM COLL MODEL - NULL DOING A NEW AM COLLECTION MILK " + milkAm);
 
@@ -380,10 +389,10 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                     c.setTimeOfDay("AM");
 
 
-                    c.setMilkCollected(milkAm);
-                    c.setMilkCollectedValueKsh(milkModel.getValueKsh());
-                    c.setMilkCollectedValueLtrs(milkModel.getValueLtrs());
-                    c.setMilkDetails(new Gson().toJson(milkModel));
+                    c.setMilkCollectedAm(milkAm);
+                    c.setMilkCollectedValueKshAm(milkModel.getValueKsh());
+                    c.setMilkCollectedValueLtrsAm(milkModel.getValueLtrs());
+                    c.setMilkDetailsAm(new Gson().toJson(milkModel));
 
 
 
@@ -417,15 +426,13 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
                     //UPDATE COLLECTION AS THERE WAS A PREVIOUS AM COLLECTION FOR THIS FARMER ON THIS DAY AND TIME
 
-                    AmCollModel.setMilkCollected(milkAm);
-                    AmCollModel.setMilkCollectedValueKsh(milkModel.getValueKsh());
-                    AmCollModel.setMilkCollectedValueLtrs(milkModel.getValueLtrs());
-                    AmCollModel.setMilkDetails(new Gson().toJson(milkModel));
+                    collModel.setMilkCollectedAm(milkAm);
+                    collModel.setMilkCollectedValueKshAm(milkModel.getValueKsh());
+                    collModel.setMilkCollectedValueLtrsAm(milkModel.getValueLtrs());
+                    collModel.setMilkDetailsAm(new Gson().toJson(milkModel));
 
 
-
-
-                    mViewModel.updateCollection(AmCollModel).observe(FragementFarmersList.this, responseModel -> {
+                    mViewModel.updateCollection(collModel).observe(FragementFarmersList.this, responseModel -> {
                         if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
                         } else {
                             snack(responseModel.getResultDescription());
@@ -447,11 +454,10 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                 milkModel.setUnitsModel(unitsModel);
 
 
-                if (PmStringValue == null && PmDoubleValue == 0.0 && PmCollModel == null) {
+                if (collModel == null) {
 
                     Timber.tag("milkCollDebug").d("PM STRING - NULL, PM DOUBLE - NULL PM COLL MODEL - NULL DOING A NEW PM COLLECTION MILK " + milkPm);
 
-                    //NEW COLLECTION AS THERE WERE NO PREVIOUS PM COLLECTION FOR THIS FARMER ON THIS DAY AND TIME
                     Collection c = new Collection();
                     c.setCycleCode(famerModel.getCyclecode());
                     c.setFarmerCode(famerModel.getCode());
@@ -463,10 +469,10 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                     c.setTimeOfDay("PM");
 
 
-                    c.setMilkCollected(milkPm);
-                    c.setMilkCollectedValueKsh(milkModel.getValueKsh());
-                    c.setMilkCollectedValueLtrs(milkModel.getValueLtrs());
-                    c.setMilkDetails(new Gson().toJson(milkModel));
+                    c.setMilkCollectedPm(milkPm);
+                    c.setMilkCollectedValueKshPm(milkModel.getValueKsh());
+                    c.setMilkCollectedValueLtrsPm(milkModel.getValueLtrs());
+                    c.setMilkDetailsAm(new Gson().toJson(milkModel));
 
 
 
@@ -484,6 +490,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
                     mViewModel.createCollections(c, false).observe(FragementFarmersList.this, responseModel -> {
                         if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+
                         } else {
                             snack(responseModel.getResultDescription());
 
@@ -499,12 +506,12 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                     Timber.tag("milkCollDebug").d("PM STRING -! NULL, PM DOUBLE - !NULL AM COLL MODEL - !NULL DOING AN UPDATE PM COLLECTION  MILK " + milkPm);
 
 
-                    PmCollModel.setMilkCollected(milkPm);
-                    PmCollModel.setMilkCollectedValueKsh(milkModel.getValueKsh());
-                    PmCollModel.setMilkCollectedValueLtrs(milkModel.getValueLtrs());
-                    PmCollModel.setMilkDetails(new Gson().toJson(milkModel));
+                    collModel.setMilkCollectedPm(milkPm);
+                    collModel.setMilkCollectedValueKshPm(milkModel.getValueKsh());
+                    collModel.setMilkCollectedValueLtrsPm(milkModel.getValueLtrs());
+                    collModel.setMilkDetailsPm(new Gson().toJson(milkModel));
 
-                    mViewModel.updateCollection(PmCollModel).observe(FragementFarmersList.this, responseModel -> {
+                    mViewModel.updateCollection(collModel).observe(FragementFarmersList.this, responseModel -> {
                         if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
                         } else {
                             snack(responseModel.getResultDescription());
@@ -549,22 +556,17 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     private String getCollection(String code, String date, TextView txtAm, TextView txtPm) {
 
         Timber.tag("tagssearch").d(code + "  Date " + date);
-        List<Collection> collections = mViewModel.getCollectionByDateByFarmer(code, date);//.observe(FragementFarmersList.this, collections -> {
+        Collection c = mViewModel.getCollectionByDateByFarmerByTimeSngle(code, date);//.observe(FragementFarmersList.this, collections -> {
 
         if (txtAm != null && txtPm != null) {
-            if (collections != null) {
-
-                for (Collection c : collections) {
-                    Timber.tag("tagssearch").d(code + "  Response " + c.getMilkCollected());
-
-                    if (c.getTimeOfDay() != null) {
-                        if (c.getTimeOfDay().equals("AM")) {
-                            txtAm.setText(c.getMilkCollected());
-                        } else {
-                            txtPm.setText(c.getMilkCollected());
-                        }
-                    }
+            if (c != null) {
+                if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0")) {
+                    txtAm.setText(c.getMilkCollectedAm());
                 }
+                if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0")) {
+                    txtPm.setText(c.getMilkCollectedPm());
+                }
+
 
             }
         }

@@ -13,7 +13,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,14 +28,17 @@ import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.FarmerHistoryByDateModel;
 import com.dev.lishabora.Models.MonthsDates;
+import com.dev.lishabora.Models.OrderModel;
 import com.dev.lishabora.Models.ProductOrderModel;
 import com.dev.lishabora.Models.ProductsModel;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
+import com.dev.lishabora.Views.CommonFuncs;
 import com.dev.lishabora.Views.Trader.OrderConstants;
 import com.dev.lishaboramobile.R;
+import com.google.gson.Gson;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
@@ -171,23 +173,9 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
     }
 
     private String[] getCollectionsTotals(MonthsDates mds, List<Collection> collections) {
-        String cycleCode = "";
-        double milk = 0.0;
-        double loan = 0.0;
-        double order = 0.0;
-
-        for (Collection collection : collections) {
-            if (DateTimeUtils.Companion.isInMonth(collection.getDayDate(), mds.getMonthName())) {
-                milk = milk + Double.valueOf(collection.getMilkCollected());
-                loan = loan + Double.valueOf(collection.getLoanAmountGivenOutPrice());
-                order = order + Double.valueOf(collection.getOrderGivenOutPrice());
-            }
-
-        }
-        double[] totals = {milk, loan, order};
 
 
-        return new String[]{String.valueOf(totals[0]), String.valueOf(totals[1]), String.valueOf(totals[2]), cycleCode};
+        return CommonFuncs.getCollectionsTotals(mds, collections);
     }
 
     public void initMonthlyList(List<FarmerHistoryByDateModel> models) {
@@ -234,56 +222,6 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
 
     }
 
-    public int[] getApprovedCards(List<Collection> collections, String pcode) {
-
-        int[] statusR = new int[3];
-        int farmerStatus = 0;
-
-
-        List<FamerModel> f = payoutsVewModel.getFarmersByCycleONe(pcode);
-
-
-        statusR[0] = f.size();
-
-
-        int approved = 0;
-
-        for (FamerModel famerModel : f) {
-            int status = 0;
-            int collectionNo = 0;
-            for (Collection c : collections) {
-
-
-                if (c.getFarmerCode().equals(famerModel.getCode())) {
-
-
-                    collectionNo = collectionNo + 1;
-
-                    try {
-                        status += c.getApproved();
-
-                    } catch (Exception nm) {
-                        nm.printStackTrace();
-                    }
-                }
-
-
-            }
-
-            if (status == collectionNo) {
-                approved += 1;
-            }
-
-
-        }
-        statusR[1] = approved;
-        statusR[2] = statusR[0] - approved;
-
-
-        return statusR;
-
-
-    }
 
     @Override
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
@@ -318,9 +256,33 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
 
         initView();
         initList();
+        initData();
 
     }
 
+    private void initData() {
+        getCollection(famerModel.getCode(), DateTimeUtils.Companion.getToday());
+    }
+
+    private void getCollection(String code, String date) {
+
+        List<Collection> collections = traderViewModel.getCollectionByDateByFarmer(code, date);//.observe(FragementFarmersList.this, collections -> {
+
+
+        if (collections != null) {
+
+            OrderModel l = CommonFuncs.getOrder(collections);
+
+            if (l != null) {
+
+                OrderConstants.setOrderModel(l);
+                OrderConstants.setProductOrderModels(l.getProductOrderModels());
+                OrderConstants.setOrderData(new Gson().toJson(l));
+                listAdapter.refresh(OrderConstants.getProductOrderModels());
+            }
+        }
+
+    }
     @Override
     public void onError(@NonNull VerificationError error) {
 
@@ -328,7 +290,6 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
 
     private void subscribeProduct(List<ProductsModel> productsModels) {
 
-        Log.d("ReTrReqd", " Dialog is has called");
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_all_products_list, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
@@ -560,17 +521,11 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
         @Override
         public void onClick(View v) {
             if (selectedProducts != null && selectedProducts.size() > 0) {
-                Log.d("createproducts", " products" + selectedProducts.size() + selectedProducts.get(0).getNames());
 
 
                 List<ProductOrderModel> productOrderModels = new LinkedList<>();
                 for (ProductsModel p : selectedProducts) {
-                    // public ProductOrderModel(int id, int code, String names, String costprice, String buyingprice,
-                    // String sellingprice, String allowablediscount, String transactiontime,
-                    // String transactedby, String subscribed, String quantity,
-                    // String totalprice,
-                    // int status,
-                    // boolean isSelected)
+
                     productOrderModels.add(new ProductOrderModel(
                             p.getId(),
                             p.getCode(),

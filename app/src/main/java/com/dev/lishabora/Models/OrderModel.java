@@ -8,6 +8,15 @@ public class OrderModel {
     private String installmentNo;
     private List<ProductOrderModel> productOrderModels;
     private String productsOrderModels;
+    private String collectionId;
+
+    public String getCollectionId() {
+        return collectionId;
+    }
+
+    public void setCollectionId(String collectionId) {
+        this.collectionId = collectionId;
+    }
 
     public String getOrderAmount() {
         return orderAmount;

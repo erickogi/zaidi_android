@@ -4,9 +4,19 @@ public class LoanModel {
     private String loanAmount;
     private String installmentAmount;
     private String installmentsNo;
+    private String collectionId;
+
 
     public String getLoanAmount() {
         return loanAmount;
+    }
+
+    public String getCollectionId() {
+        return collectionId;
+    }
+
+    public void setCollectionId(String collectionId) {
+        this.collectionId = collectionId;
     }
 
     public void setLoanAmount(String loanAmount) {

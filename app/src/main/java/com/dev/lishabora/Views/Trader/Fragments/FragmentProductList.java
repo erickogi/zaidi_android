@@ -74,17 +74,7 @@ public class FragmentProductList extends Fragment {
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
     private LinearLayout linearLayoutEmpty;
 
-    //    private void populateList() {
-//        mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-//        recyclerView.setLayoutManager(mStaggeredLayoutManager);
-//        recyclerView.setItemAnimator(new DefaultItemAnimator());
-//
-//
-//
-//        listAdapter.notifyDataSetChanged();
-//        recyclerView.setAdapter(listAdapter);
-//
-//    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -120,30 +110,6 @@ public class FragmentProductList extends Fragment {
         });
 
     }
-//    private void getProducts() {
-//        avi.smoothToShow();
-//        avi.setVisibility(View.VISIBLE);
-//
-//        if (mViewModel == null) {
-//            mViewModel = ViewModelProviders.of(this).get(AdminsViewModel.class);
-//
-//        }
-//        mViewModel.getProductsModels(getTraderProductsObject(), true).observe(FragmentProductList.this, new Observer<ResponseModel>() {
-//            @Override
-//            public void onChanged(@Nullable ResponseModel responseModel) {
-//                avi.smoothToHide();
-//                //snack(responseModel.getResultDescription());
-//                JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
-//                Type listType = new TypeToken<LinkedList<ProductsModel>>() {
-//                }.getType();
-//                // productsModel = ;
-//                Log.d("ReTrUp", "routes update called");
-//                update(gson.fromJson(jsonArray, listType));
-//
-//
-//            }
-//        });
-//    }
 
     private JSONObject getTraderProductsObject() {
 

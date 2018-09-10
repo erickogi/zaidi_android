@@ -51,6 +51,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.dev.lishabora.Views.CommonFuncs.getCollectionsTotals;
+
 public class EditOrder extends AppCompatActivity {
     public TextView status, id, name, balance, milk, loan, order;
     Button btngetOrders;
@@ -205,6 +207,7 @@ public class EditOrder extends AppCompatActivity {
 
         initView();
         initList();
+        initDataProducts();
 
 
     }
@@ -227,10 +230,12 @@ public class EditOrder extends AppCompatActivity {
         initViewOrder();
         initActions();
         initData();
+        initDataProducts();
+        initDataCompleteOrder();
     }
 
 
-    /****     ****/
+    /****GIVE PRODUCTS     ****/
 
 
     private void initView() {
@@ -297,31 +302,6 @@ public class EditOrder extends AppCompatActivity {
 
     }
 
-    private String[] getCollectionsTotals(MonthsDates mds, List<Collection> collections) {
-        String cycleCode = "";
-        double milk = 0.0;
-        double loan = 0.0;
-        double order = 0.0;
-
-        for (Collection collection : collections) {
-            if (DateTimeUtils.Companion.isInMonth(collection.getDayDate(), mds.getMonthName())) {
-                if (collection.getMilkCollected() != null) {
-                    milk = milk + Double.valueOf(collection.getMilkCollected());
-                }
-                if (collection.getLoanAmountGivenOutPrice() != null) {
-                    loan = loan + Double.valueOf(collection.getLoanAmountGivenOutPrice());
-                }
-                if (collection.getOrderGivenOutPrice() != null) {
-                    order = order + Double.valueOf(collection.getOrderGivenOutPrice());
-                }
-            }
-
-        }
-        double[] totals = {milk, loan, order};
-
-
-        return new String[]{String.valueOf(totals[0]), String.valueOf(totals[1]), String.valueOf(totals[2]), cycleCode};
-    }
 
     public void initMonthlyList(List<FarmerHistoryByDateModel> models) {
 
@@ -570,7 +550,7 @@ public class EditOrder extends AppCompatActivity {
         imgIcon = mView.findViewById(R.id.img_icon);
 
 
-        btnNeutral.setVisibility(View.GONE);
+        btnNeutral.setVisibility(View.VISIBLE);
         btnNeutral.setText("Delete");
 
         btnNeutral.setBackgroundColor(this.getResources().getColor(R.color.red));
@@ -580,6 +560,17 @@ public class EditOrder extends AppCompatActivity {
         imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
         txtTitle.setText("Route");
 
+        btnNeutral.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                OrderConstants.getProductOrderModels().remove(pos);
+
+                alertDialogAndroid.dismiss();
+
+                refreshList();
+            }
+        });
+
         btnPositive.setOnClickListener(new EditCustomListener(alertDialogAndroid, model, pos));
 
         btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
@@ -587,7 +578,34 @@ public class EditOrder extends AppCompatActivity {
 
     }
 
-    /********     ******/
+
+    private void initDataProducts() {
+        getCollection(famerModel.getCode(), DateTimeUtils.Companion.getToday());
+    }
+
+    private void getCollection(String code, String date) {
+
+        Collection collections = traderViewModel.getCollectionByDateByFarmerByTimeSngle(code, date);//.observe(FragementFarmersList.this, collections -> {
+
+
+        if (collections != null) {
+
+            OrderModel l = new Gson().fromJson(collections.getOrderDetails(), OrderModel.class);
+
+            if (l != null) {
+
+                OrderConstants.setOrderModel(l);
+                OrderConstants.setProductOrderModels(l.getProductOrderModels());
+                OrderConstants.setOrderData(new Gson().toJson(l));
+                listAdapter.refresh(OrderConstants.getProductOrderModels());
+            }
+        }
+
+
+    }
+
+
+    /********COMPLETE ORDER     ******/
     public void calc(View imgAction, View txtQty) {
         String gty = ((TextView) txtQty).getText().toString();
 
@@ -714,12 +732,6 @@ public class EditOrder extends AppCompatActivity {
 
                 List<ProductOrderModel> productOrderModels = new LinkedList<>();
                 for (ProductsModel p : selectedProducts) {
-                    // public ProductOrderModel(int id, int code, String names, String costprice, String buyingprice,
-                    // String sellingprice, String allowablediscount, String transactiontime,
-                    // String transactedby, String subscribed, String quantity,
-                    // String totalprice,
-                    // int status,
-                    // boolean isSelected)
                     productOrderModels.add(new ProductOrderModel(
                             p.getId(),
                             p.getCode(),
@@ -813,6 +825,58 @@ public class EditOrder extends AppCompatActivity {
         }
 
     }
+
+    private void initDataCompleteOrder() {
+
+        Double dt = 0.0;
+        if (OrderConstants.getProductOrderModels() != null) {
+
+            for (ProductOrderModel p : OrderConstants.getProductOrderModels()) {
+                if (p.getTotalprice() != null) {
+                    dt = dt + (Double.valueOf(p.getTotalprice()));
+                }
+            }
+        }
+
+        edtAmount.setText(String.valueOf(dt));
+        double installmentValue = 0.0;
+        if (!TextUtils.isEmpty(Objects.requireNonNull(edtAmount.getText()).toString())) {
+            double value = Double.valueOf(edtAmount.getText().toString());
+            int insNo = Integer.valueOf(txtQty.getText().toString());
+            if (value > 0.0) {
+                installmentValue = (value / insNo);
+            }
+        }
+
+
+        txtPrice.setText(String.valueOf(GeneralUtills.Companion.round(installmentValue, 2)));
+
+        if (OrderConstants.getOrderModel() != null) {
+            OrderModel l = OrderConstants.getOrderModel();
+
+            if (l.getInstallmentNo() != null) {
+                txtQty.setText(l.getInstallmentNo());
+
+                try {
+                    if (!TextUtils.isEmpty(Objects.requireNonNull(edtAmount.getText()).toString())) {
+                        double value = Double.valueOf(edtAmount.getText().toString());
+                        int insNo = Integer.valueOf(txtQty.getText().toString());
+                        if (value > 0.0) {
+                            installmentValue = (value / insNo);
+                        }
+                    }
+                    txtPrice.setText(String.valueOf(GeneralUtills.Companion.round(installmentValue, 2)));
+
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
+
+            }
+
+
+        }
+    }
+
 
 
 }

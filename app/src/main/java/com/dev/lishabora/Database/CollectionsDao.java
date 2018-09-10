@@ -63,7 +63,7 @@ public interface CollectionsDao {
     @Delete
     void deleteRecord(Collection collection);
 
-    @Query("SELECT (SUM(milkCollectedValueKsh) - SUM(loanAmountGivenOutPrice+orderGivenOutPrice)) FROM COLLECTIONTRANSACTIONS WHERE farmerCode =:farmercode")
+    @Query("SELECT (SUM(milkCollectedValueKshAm+milkCollectedValueKshPm) - SUM(loanAmountGivenOutPrice+orderGivenOutPrice)) FROM COLLECTIONTRANSACTIONS WHERE farmerCode =:farmercode")
     double getBalanceByFarmerCode(String farmercode);
 
 
@@ -77,19 +77,22 @@ public interface CollectionsDao {
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE farmerCode = :code AND  timeOfDay =:ampm AND dayDate LIKE :today")
     Collection getCollectionByDateByFarmerByTimeSingle(String code, String today, String ampm);
 
+    @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE farmerCode = :code  AND dayDate LIKE :today")
+    Collection getCollectionByDateByFarmerByTimeSingle(String code, String today);
+
 
 
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE cycleCode = :cycleCode ORDER BY id DESC LIMIT 1")
     Collection getLast(String cycleCode);
 
 
-    @Query("SELECT SUM(milkCollectedValueLtrs) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutnumber = :payoutNumber")
+    @Query("SELECT SUM(milkCollectedValueLtrsAm+milkCollectedValueLtrsPm) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutnumber = :payoutNumber")
     LiveData<Double> getSumOfMilkFarmerPayoutLtrs(String farmercode, int payoutNumber);
 
-    @Query("SELECT SUM(milkCollectedValueKsh) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutnumber = :payoutNumber")
+    @Query("SELECT SUM(milkCollectedValueKshAm+milkCollectedValueKshPm) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutnumber = :payoutNumber")
     LiveData<Double> getSumOfMilkFarmerPayoutKsh(String farmercode, int payoutNumber);
 
-    @Query("SELECT SUM(milkCollected) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutnumber = :payoutNumber")
+    @Query("SELECT SUM(milkCollectedAm+milkCollectedPm) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutnumber = :payoutNumber")
     LiveData<Double> getSumOfMilkFarmerPayout(String farmercode, int payoutNumber);
 
 

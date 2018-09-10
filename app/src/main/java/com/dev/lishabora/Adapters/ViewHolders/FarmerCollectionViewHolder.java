@@ -43,128 +43,12 @@ public class FarmerCollectionViewHolder extends RecyclerView.ViewHolder implemen
         orderTotalPm = itemView.findViewById(R.id.txt_pm_orders);
 
 
-//        if(isEditable) {
         milkTotalAm.setOnClickListener(this);
         milkTotalPm.setOnClickListener(this);
         orderTotalAm.setOnClickListener(this);
         orderTotalPm.setOnClickListener(this);
         loanTotalAm.setOnClickListener(this);
         loanTotalPm.setOnClickListener(this);
-//        }else {
-//            milkTotalPm.setEnabled(false);
-//            milkTotalAm.setEnabled(false);
-//            loanTotalAm.setEnabled(false);
-//            loanTotalPm.setEnabled(false);
-//            orderTotalAm.setEnabled(false);
-//            orderTotalPm.setEnabled(false);
-//
-//
-//        }
-
-
-//        milkTotalAm.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//
-//                listenerWeakReference.get().onEditTextChanged(getAdapterPosition(), 1, 1, editable);
-//            }
-//        });
-//        milkTotalPm.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//
-//                listenerWeakReference.get().onEditTextChanged(getAdapterPosition(), 2, 1, editable);
-//            }
-//        });
-//        loanTotalAm.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//
-//                listenerWeakReference.get().onEditTextChanged(getAdapterPosition(), 1, 2, editable);
-//            }
-//        });
-//        loanTotalPm.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//
-//                listenerWeakReference.get().onEditTextChanged(getAdapterPosition(), 2, 2, editable);
-//            }
-//        });
-//        orderTotalAm.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//
-//                listenerWeakReference.get().onEditTextChanged(getAdapterPosition(), 1, 3, editable);
-//            }
-//        });
-//        orderTotalPm.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//
-//                listenerWeakReference.get().onEditTextChanged(getAdapterPosition(), 2, 3, editable);
-//            }
-//        });
-
 
     }
 
