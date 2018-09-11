@@ -3,6 +3,7 @@ package com.dev.lishabora.Views.Trader.Activities;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.TextInputEditText;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 import com.dev.lishabora.Adapters.ProductOrderAdapter;
 import com.dev.lishabora.Adapters.ProductsAdapter;
 import com.dev.lishabora.Models.Collection;
+import com.dev.lishabora.Models.DayCollectionModel;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.FarmerHistoryByDateModel;
 import com.dev.lishabora.Models.MonthsDates;
@@ -62,7 +64,7 @@ public class EditOrder extends AppCompatActivity {
     //GIVE ORDER
     ImageView imgAdd, imgRemove, imgDelete;
     TextView txtQty, txtPrice;
-    TextInputEditText edtAmount;
+    TextInputEditText edtAmount, edtDeliveryFee;
     //CUSTOM ALERT
     MaterialButton btnPositive, btnNegative, btnNeutral;
     TextView txtTitle;
@@ -82,35 +84,7 @@ public class EditOrder extends AppCompatActivity {
     private TraderViewModel traderViewModel;
     private View view;
     private List<FarmerHistoryByDateModel> modelsDA = new LinkedList<>();
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_order);
-        easyFlipView = findViewById(R.id.easyFlipView);
-        initViewCustomDialog();
-
-        famerModel = OrderConstants.getFamerModel();
-        setUpClear();
-
-
-        currentSide = EasyFlipView.FlipState.FRONT_SIDE;
-        setFrontSideData();
-        easyFlipView.setOnFlipListener((easyFlipView, newCurrentSide) -> {
-            currentSide = newCurrentSide;
-
-            if (currentSide == EasyFlipView.FlipState.FRONT_SIDE) {
-                setFrontSideData();
-            } else {
-                setBackSideData();
-            }
-
-
-        });
-
-
-    }
-
+    private DayCollectionModel dayCollectionModel;
     private void initViewCustomDialog() {
 
 
@@ -145,10 +119,15 @@ public class EditOrder extends AppCompatActivity {
     private void btnNeutralClicked() {
 
         if (currentSide == EasyFlipView.FlipState.BACK_SIDE) {
+            String delivery = "0";
             OrderModel orderModel = new OrderModel();
             orderModel.setInstallmentAmount(txtPrice.getText().toString());
             orderModel.setInstallmentNo(txtQty.getText().toString());
             orderModel.setOrderAmount(edtAmount.getText().toString());
+            if (!TextUtils.isEmpty(edtDeliveryFee.getText())) {
+                delivery = edtDeliveryFee.getText().toString();
+            }
+            orderModel.setOrderDeliveryFee(delivery);
             orderModel.setProductOrderModels(OrderConstants.getProductOrderModels());
 
             Gson gson = new Gson();
@@ -170,7 +149,40 @@ public class EditOrder extends AppCompatActivity {
                 Toast.makeText(EditOrder.this, "No products selected", Toast.LENGTH_LONG).show();
             }
         } else {
+            String deliveryFee = "0";
+
+            OrderModel orderModel = new OrderModel();
+            orderModel.setInstallmentAmount(txtPrice.getText().toString());
+            orderModel.setInstallmentNo(txtQty.getText().toString());
+            orderModel.setOrderAmount(edtAmount.getText().toString());
+            if (!TextUtils.isEmpty(edtDeliveryFee.getText().toString())) {
+                deliveryFee = edtDeliveryFee.getText().toString();
+            }
+            orderModel.setOrderDeliveryFee(deliveryFee);
+            orderModel.setProductOrderModels(OrderConstants.getProductOrderModels());
+
+            Gson gson = new Gson();
+
+            String data = gson.toJson(orderModel);
+            OrderConstants.setOrderData(data);
+            OrderConstants.setOrderModel(orderModel);
+
+
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("orderData", data);
+            returnIntent.putExtra("orderDataModel", orderModel);
+
+
+            LinkedList<ProductOrderModel> p = new LinkedList<>();
+            p.addAll(OrderConstants.getProductOrderModels());
+
+            returnIntent.putExtra("orderDataProducts", p);
+            returnIntent.putExtra("dayCollection", dayCollectionModel);
+
+
+            setResult(RESULT_OK, returnIntent);
             finish();
+
 
         }
 
@@ -180,12 +192,42 @@ public class EditOrder extends AppCompatActivity {
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
         traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
 
-        //famerModel = (FamerModel) getIntent().getSerializableExtra("farmer");
 
 
         OrderConstants.setProductOrderModels(null);
         OrderConstants.setOrderModel(null);
         OrderConstants.setOrderData(null);
+
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_edit_order);
+        dayCollectionModel = (DayCollectionModel) getIntent().getSerializableExtra("dayCollection");
+        easyFlipView = findViewById(R.id.easyFlipView);
+        famerModel = OrderConstants.getFamerModel();
+
+        initViewCustomDialog();
+        setUpClear();
+        currentSide = EasyFlipView.FlipState.FRONT_SIDE;
+
+
+        setFrontSideData();
+        initDataProducts();
+
+        easyFlipView.setOnFlipListener((easyFlipView, newCurrentSide) -> {
+            currentSide = newCurrentSide;
+
+            if (currentSide == EasyFlipView.FlipState.FRONT_SIDE) {
+                setFrontSideData();
+            } else {
+                setBackSideData();
+            }
+
+
+        });
+
 
     }
 
@@ -207,7 +249,7 @@ public class EditOrder extends AppCompatActivity {
 
         initView();
         initList();
-        initDataProducts();
+
 
 
     }
@@ -230,8 +272,10 @@ public class EditOrder extends AppCompatActivity {
         initViewOrder();
         initActions();
         initData();
-        initDataProducts();
+
+
         initDataCompleteOrder();
+
     }
 
 
@@ -302,7 +346,6 @@ public class EditOrder extends AppCompatActivity {
 
     }
 
-
     public void initMonthlyList(List<FarmerHistoryByDateModel> models) {
 
         this.modelsDA = models;
@@ -346,7 +389,6 @@ public class EditOrder extends AppCompatActivity {
         order.setText(farmerHistoryByDateModel.getOrderTotal());
 
     }
-
 
     private void subscribeProduct(List<ProductsModel> productsModels) {
 
@@ -519,23 +561,12 @@ public class EditOrder extends AppCompatActivity {
 
         alertDialogBuilderUserInput
                 .setCancelable(false);
-//                .setPositiveButton("Save", (dialogBox, id) -> {
-//                    // ToDo get user input here
-//
-//
-//                })
-//
-//                .setNegativeButton("Dismiss",
-//                        (dialogBox, id) -> dialogBox.cancel());
 
         AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
         alertDialogAndroid.setCancelable(false);
         alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         alertDialogAndroid.show();
-
-//        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
-//        theButton.setOnClickListener(new EditCustomListener(alertDialogAndroid,routesModel));
 
 
         MaterialButton btnPositive, btnNegative, btnNeutral;
@@ -578,9 +609,13 @@ public class EditOrder extends AppCompatActivity {
 
     }
 
-
     private void initDataProducts() {
-        getCollection(famerModel.getCode(), DateTimeUtils.Companion.getToday());
+        OrderModel orderModel = dayCollectionModel.getOrderModel();
+        OrderConstants.setOrderModel(orderModel);
+        OrderConstants.setProductOrderModels(orderModel.getProductOrderModels());
+        listAdapter.refresh(OrderConstants.getProductOrderModels());
+
+        //getCollection(famerModel.getCode(), DateTimeUtils.Companion.getToday());
     }
 
     private void getCollection(String code, String date) {
@@ -604,10 +639,10 @@ public class EditOrder extends AppCompatActivity {
 
     }
 
-
     /********COMPLETE ORDER     ******/
     public void calc(View imgAction, View txtQty) {
         String gty = ((TextView) txtQty).getText().toString();
+        double deliveryFee = 0.0;
 
         if (imgAction.getId() == R.id.img_add) {
             int vq = Integer.valueOf(gty) + 1;
@@ -622,17 +657,24 @@ public class EditOrder extends AppCompatActivity {
 
 
         double installmentValue = 0.0;
-
+        if (edtDeliveryFee.getText() != null && !TextUtils.isEmpty(edtDeliveryFee.getText())) {
+            deliveryFee = (Double.valueOf(edtDeliveryFee.getText().toString()));
+        }
         if (edtAmount.getText() != null && !TextUtils.isEmpty(edtAmount.getText())) {
 
             double value = Double.valueOf(edtAmount.getText().toString());
+
+
             int insNo = Integer.valueOf(((TextView) txtQty).getText().toString());
             if (value > 0.0) {
-                installmentValue = (value / insNo);
+                installmentValue = ((value + deliveryFee) / insNo);
+
             }
+
         }
 
-        txtPrice.setText(String.valueOf(GeneralUtills.Companion.round(installmentValue, 2)));
+
+        txtPrice.setText(String.valueOf(GeneralUtills.Companion.round((installmentValue), 2)));
 
 
     }
@@ -640,6 +682,7 @@ public class EditOrder extends AppCompatActivity {
     private void initData() {
 
         Double dt = 0.0;
+        Double delivery = 0.0;
         if (OrderConstants.getProductOrderModels() != null) {
 
             for (ProductOrderModel p : OrderConstants.getProductOrderModels()) {
@@ -649,18 +692,32 @@ public class EditOrder extends AppCompatActivity {
             }
         }
 
+        if (OrderConstants.getOrderModel() != null) {
+            if (OrderConstants.getOrderModel().getOrderDeliveryFee() != null) {
+                delivery = Double.valueOf(OrderConstants.getOrderModel().getOrderDeliveryFee());
+            }
+        }
+
+
+        edtDeliveryFee.setText(String.valueOf(delivery));
+
         edtAmount.setText(String.valueOf(dt));
+
         double installmentValue = 0.0;
+        if (!TextUtils.isEmpty(edtDeliveryFee.getText())) {
+            delivery = Double.valueOf(edtDeliveryFee.getText().toString());
+        }
+
         edtAmount.getText().toString();
         if (!TextUtils.isEmpty(edtAmount.getText().toString())) {
             double value = Double.valueOf(edtAmount.getText().toString());
             int insNo = Integer.valueOf(txtQty.getText().toString());
             if (value > 0.0) {
-                installmentValue = (value / insNo);
+                installmentValue = ((value + delivery) / insNo);
             }
         }
 
-        txtPrice.setText(String.valueOf(GeneralUtills.Companion.round(installmentValue, 2)));
+        txtPrice.setText(String.valueOf(GeneralUtills.Companion.round((installmentValue), 2)));
     }
 
     void initViewOrder() {
@@ -668,6 +725,7 @@ public class EditOrder extends AppCompatActivity {
         name = findViewById(R.id.txt_name);
 
         edtAmount = findViewById(R.id.edt_value);
+        edtDeliveryFee = findViewById(R.id.edt_delivery);
         txtQty = findViewById(R.id.txt_qty);
         txtPrice = findViewById(R.id.txt_installment);
 
@@ -694,6 +752,10 @@ public class EditOrder extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 double installmentValue = 0.0;
+                double delivery = 0.0;
+                if (edtDeliveryFee.getText() != null && !TextUtils.isEmpty(edtDeliveryFee.getText().toString())) {
+                    delivery = Double.valueOf(edtDeliveryFee.getText().toString());
+                }
 
                 if (editable != null) {
 
@@ -701,11 +763,46 @@ public class EditOrder extends AppCompatActivity {
                         double value = Double.valueOf(edtAmount.getText().toString());
                         int insNo = Integer.valueOf(txtQty.getText().toString());
                         if (value > 0.0) {
-                            installmentValue = (value / insNo);
+                            installmentValue = ((value + delivery) / insNo);
                         }
                     }
+
+
                 }
-                txtPrice.setText(String.valueOf(GeneralUtills.Companion.round(installmentValue, 2)));
+
+                txtPrice.setText(String.valueOf(GeneralUtills.Companion.round((installmentValue), 2)));
+            }
+        });
+        edtDeliveryFee.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                double installmentValue = 0.0;
+                double delivery = 0.0;
+                if (edtDeliveryFee.getText() != null && !TextUtils.isEmpty(edtDeliveryFee.getText().toString())) {
+                    delivery = Double.valueOf(edtDeliveryFee.getText().toString());
+                }
+                if (editable != null) {
+
+                    if (edtAmount.getText().toString() != null && !TextUtils.isEmpty(edtAmount.getText().toString())) {
+                        double value = Double.valueOf(edtAmount.getText().toString());
+                        int insNo = Integer.valueOf(txtQty.getText().toString());
+                        if (value > 0.0) {
+                            installmentValue = ((value + delivery) / insNo);
+                        }
+                    }
+
+                }
+                txtPrice.setText(String.valueOf(GeneralUtills.Companion.round((installmentValue), 2)));
             }
         });
 
@@ -829,7 +926,9 @@ public class EditOrder extends AppCompatActivity {
     private void initDataCompleteOrder() {
 
         Double dt = 0.0;
+        Double delivery = 0.0;
         if (OrderConstants.getProductOrderModels() != null) {
+
 
             for (ProductOrderModel p : OrderConstants.getProductOrderModels()) {
                 if (p.getTotalprice() != null) {
@@ -840,32 +939,40 @@ public class EditOrder extends AppCompatActivity {
 
         edtAmount.setText(String.valueOf(dt));
         double installmentValue = 0.0;
+        if (!TextUtils.isEmpty(edtDeliveryFee.getText())) {
+            delivery = Double.valueOf(edtDeliveryFee.getText().toString());
+
+        }
         if (!TextUtils.isEmpty(Objects.requireNonNull(edtAmount.getText()).toString())) {
             double value = Double.valueOf(edtAmount.getText().toString());
             int insNo = Integer.valueOf(txtQty.getText().toString());
             if (value > 0.0) {
-                installmentValue = (value / insNo);
+                installmentValue = ((value + delivery) / insNo);
             }
         }
 
 
-        txtPrice.setText(String.valueOf(GeneralUtills.Companion.round(installmentValue, 2)));
+        txtPrice.setText(String.valueOf(GeneralUtills.Companion.round((installmentValue), 2)));
 
         if (OrderConstants.getOrderModel() != null) {
             OrderModel l = OrderConstants.getOrderModel();
 
             if (l.getInstallmentNo() != null) {
                 txtQty.setText(l.getInstallmentNo());
+                if (!TextUtils.isEmpty(edtDeliveryFee.getText())) {
+                    delivery = Double.valueOf(edtDeliveryFee.getText().toString());
 
+                }
                 try {
                     if (!TextUtils.isEmpty(Objects.requireNonNull(edtAmount.getText()).toString())) {
                         double value = Double.valueOf(edtAmount.getText().toString());
                         int insNo = Integer.valueOf(txtQty.getText().toString());
                         if (value > 0.0) {
-                            installmentValue = (value / insNo);
+                            installmentValue = ((value + delivery) / insNo);
                         }
                     }
-                    txtPrice.setText(String.valueOf(GeneralUtills.Companion.round(installmentValue, 2)));
+
+                    txtPrice.setText(String.valueOf(GeneralUtills.Companion.round((installmentValue), 2)));
 
                 } catch (Exception nm) {
                     nm.printStackTrace();

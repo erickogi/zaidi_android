@@ -88,6 +88,7 @@
 
 
                 <TextView
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -173,11 +174,45 @@
 
                     <TextView
                         android:id="@+id/txt_orders"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:text="0.0 Ksh" />
 
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="3dp"
+                    android:background="@color/divider" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:gravity="center"
+                        android:text="Bal"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txt_balance"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:gravity="center"
+                        android:text="30000 Ksh"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+
+                        android:textStyle="bold" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -190,6 +225,7 @@
                 android:background="@color/divider" />
 
             <LinearLayout
+                android:visibility="gone"
                 android:id="@+id/linear_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -237,28 +273,28 @@
                     android:layout_marginEnd="3dp"
                     android:background="@color/divider" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                <!--<TextView-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
 
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="Bal"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                <!--android:layout_weight="1"-->
+                <!--android:gravity="center"-->
+                <!--android:text="Bal"-->
+                <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"-->
 
-                    android:textStyle="bold" />
+                <!--android:textStyle="bold" />-->
 
-                <TextView
-                    android:id="@+id/txt_balance"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                <!--<TextView-->
+                <!--android:id="@+id/txt_balance"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
 
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="30000 Ksh"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                <!--android:layout_weight="1"-->
+                <!--android:gravity="center"-->
+                <!--android:text="30000 Ksh"-->
+                <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"-->
 
-                    android:textStyle="bold" />
+                <!--android:textStyle="bold" />-->
 
 
             </LinearLayout>
@@ -429,100 +465,10 @@
     </android.support.v7.widget.RecyclerView>
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:layout_alignParentBottom="true"
-        android:background="@color/white"
-        android:orientation="horizontal">
-
-        <android.support.design.button.MaterialButton
-            android:id="@+id/btn_approve"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="match_parent"
-
-            android:layout_height="wrap_content"
-
-            android:layout_gravity="end"
-            android:layout_margin="3dp"
-            android:layout_marginBottom="10dp"
-            android:layout_weight="1"
-            android:text="APPROVE"
-            android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
+    <include layout="@layout/view_card_approval" />
 
 
-            android:textColor="@color/black"
-            android:textSize="16.5sp"
-            app:cornerRadius="5dp"
-            app:rippleColor="@color/accent"
-            app:strokeColor="@color/black"
-
-            app:strokeWidth="2dp" />
-
-        <TextView
-            android:id="@+id/txt_approval_status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_weight="1"
-            android:text="Pending Approval : "
-            android:textAlignment="center"
-            android:textColor="@color/colorPrimary"
-            android:textSize="17dp"
-            android:textStyle="bold"
-            android:visibility="visible" />
-        <android.support.design.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:id="@+id/btn_back"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="end"
-
-            android:layout_margin="3dp"
-            android:layout_marginBottom="10dp"
-            android:layout_weight="1"
-            android:text="Back"
-            android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
-            android:textColor="@color/black"
-
-            android:textSize="16.5sp"
-            app:cornerRadius="5dp"
-            app:rippleColor="@color/accent"
-            app:strokeColor="@color/black"
-
-            app:strokeWidth="2dp" />
-
-        <android.support.design.button.MaterialButton
-            android:id="@+id/save_btn"
-            android:visibility="gone"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="match_parent"
-
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="end"
-
-            android:layout_margin="3dp"
-            android:layout_marginBottom="10dp"
-            android:layout_weight="1"
-            android:text="Save"
-            android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
-            android:textColor="@color/black"
-
-            android:textSize="16.5sp"
-            app:cornerRadius="5dp"
-            app:rippleColor="@color/accent"
-            app:strokeColor="@color/black"
-
-            app:strokeWidth="2dp" />
-
-
-    </LinearLayout>
 </RelativeLayout>
-
     <include layout="@layout/bottom_sheet" />
 
 </android.support.design.widget.CoordinatorLayout>

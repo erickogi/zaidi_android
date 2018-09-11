@@ -19,7 +19,7 @@ public class FarmerCollectionViewHolder extends RecyclerView.ViewHolder implemen
     public TextView milkTotalAm, milkTotalPm, loanTotalAm, loanTotalPm, orderTotalAm, orderTotalPm;
     public RelativeLayout background;
     public View statusview;
-    LinearLayout background_linear;
+    public LinearLayout background_linear;
     private WeakReference<AdvancedOnclickRecyclerListener> listenerWeakReference;
 
 

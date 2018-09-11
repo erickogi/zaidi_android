@@ -14,31 +14,58 @@ public class PayoutFarmersCollectionModel implements Serializable {
     private String loanTotal;
     private String orderTotal;
 
-    private int status;
+    private int cardstatus;
+    private int payoutStatus;
+
+
     private String statusName;
     private String balance;
     private String cycleCode;
     private int payoutNumber;
+
+    private String payoutStart;
+    private String payoutEnd;
 
 
     public PayoutFarmersCollectionModel() {
     }
 
     public PayoutFarmersCollectionModel(String farmercode, String farmername, String milktotal,
-                                        String loanTotal, String orderTotal, int status, String statusName,
-                                        String balance, int payoutNumber, String cycleCode, String milktotalKsh, String milktotalLtrs) {
+                                        String loanTotal, String orderTotal, int cardstatus, int payoutStatus, String statusName,
+                                        String balance, int payoutNumber, String cycleCode, String milktotalKsh,
+                                        String milktotalLtrs, String payoutStart, String payoutEnd) {
         this.farmercode = farmercode;
         this.farmername = farmername;
         this.milktotal = milktotal;
         this.loanTotal = loanTotal;
         this.orderTotal = orderTotal;
-        this.status = status;
+        this.cardstatus = cardstatus;
+        this.payoutStatus = payoutStatus;
         this.statusName = statusName;
         this.balance = balance;
         this.payoutNumber = payoutNumber;
         this.cycleCode = cycleCode;
         this.milktotalKsh = milktotalKsh;
         this.milktotalLtrs = milktotalLtrs;
+        this.payoutStart = payoutStart;
+        this.payoutEnd = payoutEnd;
+
+    }
+
+    public String getPayoutStart() {
+        return payoutStart;
+    }
+
+    public void setPayoutStart(String payoutStart) {
+        this.payoutStart = payoutStart;
+    }
+
+    public String getPayoutEnd() {
+        return payoutEnd;
+    }
+
+    public void setPayoutEnd(String payoutEnd) {
+        this.payoutEnd = payoutEnd;
     }
 
     public String getMilktotalLtrs() {
@@ -113,12 +140,20 @@ public class PayoutFarmersCollectionModel implements Serializable {
         this.orderTotal = orderTotal;
     }
 
-    public int getStatus() {
-        return status;
+    public int getCardstatus() {
+        return cardstatus;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setCardstatus(int cardstatus) {
+        this.cardstatus = cardstatus;
+    }
+
+    public int getPayoutStatus() {
+        return payoutStatus;
+    }
+
+    public void setPayoutStatus(int payoutStatus) {
+        this.payoutStatus = payoutStatus;
     }
 
     public String getStatusName() {

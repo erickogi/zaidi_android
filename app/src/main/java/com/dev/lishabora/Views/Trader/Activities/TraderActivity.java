@@ -37,6 +37,7 @@ import com.dev.lishabora.Utils.RequestDataCallback;
 import com.dev.lishabora.ViewModels.Admin.AdminsViewModel;
 import com.dev.lishabora.Views.Login.Activities.LoginActivity;
 import com.dev.lishabora.Views.Login.ResetPassword;
+import com.dev.lishabora.Views.Reports.Reports;
 import com.dev.lishabora.Views.Trader.Fragments.FragementFarmersList;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentProductList;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentRoutes;
@@ -133,6 +134,7 @@ public class TraderActivity extends AppCompatActivity {
             @Override
             public void analyticsReportsTransactionsClicked() {
 
+                startActivity(new Intent(TraderActivity.this, Reports.class));
             }
 
             @Override

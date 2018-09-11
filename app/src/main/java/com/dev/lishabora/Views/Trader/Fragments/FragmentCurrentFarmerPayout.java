@@ -31,7 +31,6 @@ import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.Utils.AdvancedOnclickRecyclerListener;
 import com.dev.lishabora.Utils.CollectionCreateUpdateListener;
-import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
@@ -49,6 +48,7 @@ import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
 import static com.dev.lishabora.Views.CommonFuncs.getBalance;
+import static com.dev.lishabora.Views.CommonFuncs.setCardActionStatus;
 
 public class FragmentCurrentFarmerPayout extends Fragment {
 
@@ -177,7 +177,6 @@ public class FragmentCurrentFarmerPayout extends Fragment {
         return CommonFuncs.getFarmersCollectionModel(famerModel, collections, payouts);
 
     }
-
     private void cancelApprove(Payouts payouts, PayoutFarmersCollectionModel model) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
         alertDialog.setMessage("Confirm that you wish to cancel " + model.getFarmername() + "'s " + payouts.getCyclename() + " Collection card").setCancelable(false).setTitle("Cancel " + model.getFarmername() + " Card");
@@ -186,7 +185,7 @@ public class FragmentCurrentFarmerPayout extends Fragment {
         alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
 
             payoutsVewModel.cancelFarmersPayoutCard(model.getFarmercode(), model.getPayoutNumber());
-            model.setStatus(0);
+            model.setCardstatus(0);
             model.setStatusName("Canceled");
             setData(model);
 
@@ -199,7 +198,6 @@ public class FragmentCurrentFarmerPayout extends Fragment {
         alertDialogAndroid.setCancelable(false);
         alertDialogAndroid.show();
     }
-
     private void approve(Payouts payouts, PayoutFarmersCollectionModel model) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
         alertDialog.setMessage("Confirm that you wish to approve " + model.getFarmername() + "'s " + payouts.getCyclename() + " Collection card").setCancelable(false).setTitle("Approve " + model.getFarmername() + " Card");
@@ -208,7 +206,7 @@ public class FragmentCurrentFarmerPayout extends Fragment {
         alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
 
             payoutsVewModel.approveFarmersPayoutCard(model.getFarmercode(), model.getPayoutNumber());
-            model.setStatus(1);
+            model.setCardstatus(1);
             model.setStatusName("Approved");
             setData(model);
 
@@ -222,6 +220,7 @@ public class FragmentCurrentFarmerPayout extends Fragment {
         alertDialogAndroid.show();
 
     }
+
 
     private void setBalance(Double milkKsh) {
         balance.setText(String.format("%s %s", getBalance(String.valueOf(milkKsh), String.valueOf(loanKsh), String.valueOf(orderKsh)), getActivity().getString(R.string.ksh)));
@@ -272,14 +271,14 @@ public class FragmentCurrentFarmerPayout extends Fragment {
 
         }
 
-        if (model.getStatus() == 1) {
+        if (model.getCardstatus() == 1) {
             //  status.setText("Active");
             status.setTextColor(this.getResources().getColor(R.color.green_color_picker));
             background.setBackgroundColor(this.getResources().getColor(R.color.green_color_picker));
             statusview.setBackgroundColor(this.getResources().getColor(R.color.green_color_picker));
 
 
-        } else if (model.getStatus() == 0) {
+        } else if (model.getCardstatus() == 0) {
 
             //  status.setText("Deleted");
             status.setTextColor(this.getResources().getColor(R.color.red));
@@ -320,43 +319,8 @@ public class FragmentCurrentFarmerPayout extends Fragment {
         btnBack.setOnClickListener(view1 -> cancelApprove(payouts, model));
 
 
-        if (model.getStatus() == 0 && (DateTimeUtils.Companion.getToday().equals(payouts.getEndDate())
-                || DateTimeUtils.Companion.isPastLastDay(payouts.getEndDate()))) {
-            btnApprove.setVisibility(View.VISIBLE);
-            txtApprovalStatus.setVisibility(View.GONE);
-            btnBack.setVisibility(View.GONE);
+        setCardActionStatus(model, getContext(), btnApprove, btnBack, txtApprovalStatus);
 
-
-        } else if (model.getStatus() == 1) {
-            txtApprovalStatus.setText("Approved");
-            txtApprovalStatus.setVisibility(View.VISIBLE);
-            txtApprovalStatus.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-
-            if (payouts.getStatus() == 0) {
-                btnApprove.setVisibility(View.GONE);
-                btnBack.setVisibility(View.VISIBLE);
-                btnBack.setText("Cancel Approval");
-
-                txtApprovalStatus.setVisibility(View.VISIBLE);
-            } else {
-                btnBack.setVisibility(View.GONE);
-                btnApprove.setVisibility(View.GONE);
-                txtApprovalStatus.setText("Approved");
-                txtApprovalStatus.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-
-                txtApprovalStatus.setVisibility(View.VISIBLE);
-            }
-        } else if (model.getStatus() == 0 && (!DateTimeUtils.Companion.getToday().equals(payouts.getEndDate())
-                || !DateTimeUtils.Companion.isPastLastDay(payouts.getEndDate()))) {
-            txtApprovalStatus.setText("Pending");
-            txtApprovalStatus.setTextColor(getContext().getResources().getColor(R.color.red));
-
-            txtApprovalStatus.setVisibility(View.VISIBLE);
-            btnBack.setVisibility(View.GONE);
-            btnApprove.setVisibility(View.GONE);
-
-
-        }
 
 
     }
@@ -375,6 +339,7 @@ public class FragmentCurrentFarmerPayout extends Fragment {
             OrderConstants.setFamerModel(famerModel);
             Intent intent2 = new Intent(getActivity(), EditOrder.class);
             intent2.putExtra("farmer", famerModel);
+            intent2.putExtra("dayCollection", dayCollectionModel);
             startActivityForResult(intent2, 10004);
 
 
@@ -388,23 +353,31 @@ public class FragmentCurrentFarmerPayout extends Fragment {
             public void createCollection(Collection c) {
                 payoutsVewModel.createCollections(c).observe(FragmentCurrentFarmerPayout.this, responseModel -> {
                     if (responseModel != null) {
-                        a.dismiss();
+                        if (a != null) {
+                            a.dismiss();
+                        }
                         MyToast.toast(responseModel.getResultDescription(), getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
                     }
                 });
-                a.dismiss();
+                if (a != null) {
+                    a.dismiss();
+                }
             }
 
             @Override
             public void updateCollection(Collection c) {
                 payoutsVewModel.updateCollection(c);
-                a.dismiss();
+                if (a != null) {
+                    a.dismiss();
+                }
             }
 
             @Override
             public void error(String error) {
                 MyToast.toast(error, getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
-                a.dismiss();
+                if (a != null) {
+                    a.dismiss();
+                }
             }
         });
     }
@@ -481,8 +454,16 @@ public class FragmentCurrentFarmerPayout extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
 
-            case 1004:
+            case 10004:
+
                 if (resultCode == RESULT_OK && data != null) {
+                    String orderData = "";
+                    OrderModel orderModel;
+                    DayCollectionModel dayCollectionModel;
+                    orderModel = (OrderModel) data.getSerializableExtra("orderDataModel");
+                    orderData = data.getStringExtra("orderData");
+                    dayCollectionModel = (DayCollectionModel) data.getSerializableExtra("dayCollection");
+                    updateCollectionValue(orderModel.getTotalOrderAmount(), 0, 3, dayCollectionModel, null, null, orderModel);
 
 
                 }

@@ -80,10 +80,11 @@
                 android:background="@color/white"
                 android:orientation="horizontal"
                 android:padding="3dp"
-                android:weightSum="5">
+                android:weightSum="4">
 
 
                 <TextView
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -467,102 +468,8 @@
 
     </android.support.v7.widget.RecyclerView>
 
-
-    <LinearLayout
+    <include
         android:id="@+id/linear_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        layout="@layout/view_card_approval" />
 
-        android:gravity="top"
-        android:layout_alignParentBottom="true"
-        android:background="@color/white"
-        android:orientation="horizontal">
-
-        <android.support.design.button.MaterialButton
-            android:id="@+id/btn_approve"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="match_parent"
-
-            android:layout_height="wrap_content"
-
-            android:layout_gravity="end"
-            android:layout_margin="3dp"
-            android:layout_marginBottom="10dp"
-            android:layout_weight="1"
-            android:text="APPROVE"
-            android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
-
-
-            android:textColor="@color/black"
-            android:textSize="16.5sp"
-            app:cornerRadius="5dp"
-            app:rippleColor="@color/accent"
-            app:strokeColor="@color/black"
-
-            app:strokeWidth="2dp" />
-
-        <TextView
-            android:id="@+id/txt_approval_status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:layout_weight="1"
-            android:gravity="top"
-            android:text="Pending Approval : "
-            android:textAlignment="center"
-            android:textColor="@color/colorPrimary"
-            android:textSize="17dp"
-            android:textStyle="bold"
-            android:visibility="visible" />
-
-        <android.support.design.button.MaterialButton
-            android:id="@+id/btn_back"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="match_parent"
-
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="end"
-
-            android:layout_margin="3dp"
-            android:layout_marginBottom="10dp"
-            android:layout_weight="1"
-            android:text="Back"
-            android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
-            android:textColor="@color/black"
-
-            android:textSize="16.5sp"
-            app:cornerRadius="5dp"
-            app:rippleColor="@color/accent"
-            app:strokeColor="@color/black"
-
-            app:strokeWidth="2dp" />
-
-
-        <android.support.design.button.MaterialButton
-            android:id="@+id/save_btn"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="end"
-            android:layout_margin="3dp"
-
-            android:layout_marginBottom="10dp"
-            android:layout_weight="1"
-            android:text="Save"
-            android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
-            android:textColor="@color/black"
-            android:textSize="16.5sp"
-
-            android:visibility="gone"
-            app:cornerRadius="5dp"
-            app:rippleColor="@color/accent"
-            app:strokeColor="@color/black"
-
-            app:strokeWidth="2dp" />
-
-
-    </LinearLayout>
 </RelativeLayout>

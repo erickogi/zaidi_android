@@ -219,6 +219,18 @@ class DateTimeUtils {
 
         }
 
+        fun isPastLastDay(endDate: String, allowace: Int): Boolean {
+
+            val today = getTodayDate().withHourOfDay(0).plusDays(allowace)
+            val enddate = conver2Date(endDate)!!.withHourOfDay(23)
+            val n = today.isAfter(enddate)
+
+            Timber.tag("isAfter").d(" Today " + today + "  Enddate " + enddate + "  Is After " + n)
+
+            return n
+
+        }
+
         fun getMonth(date: String): String? {
 
 

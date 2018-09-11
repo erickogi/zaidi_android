@@ -26,11 +26,15 @@ public class DayCollectionModel implements Serializable {
     private String order;
     private OrderModel orderModel;
 
+    private int payoutStatus;
+
+
 
     public DayCollectionModel(int payoutNumber, String day, String date, String milkAm, String milkPm
             , String collectionId,
                               MilkModel milkModelAm,
-                              MilkModel milkModelPm, String loan, String order, String loanCollectionId, LoanModel loanModel, String orderCollectionId, OrderModel orderModel) {
+                              MilkModel milkModelPm, String loan, String order,
+                              String loanCollectionId, LoanModel loanModel, String orderCollectionId, OrderModel orderModel, int payoutStatus) {
         this.payoutNumber = payoutNumber;
         this.day = day;
         this.date = date;
@@ -48,8 +52,17 @@ public class DayCollectionModel implements Serializable {
 
         this.loanModel = loanModel;
         this.orderModel = orderModel;
+        this.payoutStatus = payoutStatus;
 
 
+    }
+
+    public int getPayoutStatus() {
+        return payoutStatus;
+    }
+
+    public void setPayoutStatus(int payoutStatus) {
+        this.payoutStatus = payoutStatus;
     }
 
     public MilkModel getMilkModelAm() {

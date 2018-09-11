@@ -35,7 +35,6 @@ import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.LoanEditValueListener;
 import com.dev.lishabora.Utils.MilkEditValueListener;
-import com.dev.lishabora.Utils.OrderEditValueListener;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishaboramobile.R;
 import com.google.gson.Gson;
@@ -229,23 +228,25 @@ public class CommonFuncs {
                     if (ampm == "AM") {
                         try {
                             milkTotal += Double.valueOf(c.getMilkCollectedAm());
+                            MilkModel mm = new Gson().fromJson(c.getMilkDetailsAm(), MilkModel.class);
+                            if (mm != null) {
+                                m = mm;
+                            }
                         } catch (Exception nm) {
                             nm.printStackTrace();
                         }
-                        MilkModel mm = new Gson().fromJson(c.getMilkDetailsAm(), MilkModel.class);
-                        if (mm != null) {
-                            m = mm;
-                        }
+
                     } else {
                         try {
                             milkTotal += Double.valueOf(c.getMilkCollectedPm());
+                            MilkModel mm = new Gson().fromJson(c.getMilkDetailsPm(), MilkModel.class);
+                            if (mm != null) {
+                                m = mm;
+                            }
                         } catch (Exception nm) {
                             nm.printStackTrace();
                         }
-                        MilkModel mm = new Gson().fromJson(c.getMilkDetailsPm(), MilkModel.class);
-                        if (mm != null) {
-                            m = mm;
-                        }
+
                     }
 
 
@@ -531,7 +532,7 @@ public class CommonFuncs {
 
 
                 collection.setOrderGivenOutPrice(s);
-                collection.setLoanDetails(new Gson().toJson(orderModel));
+                collection.setOrderDetails(new Gson().toJson(orderModel));
 
 
                 return collection;
@@ -760,7 +761,9 @@ public class CommonFuncs {
                             milkPm,
                     collectionId,
                     milkModelAm,
-                    milkModelPm, loan, order, loanModel.getCollectionId(), loanModel, orderModel.getCollectionId(), orderModel
+                    milkModelPm, loan, order,
+                    loanModel.getCollectionId(),
+                    loanModel, orderModel.getCollectionId(), orderModel, payouts.getStatus()
 
                     )
 
@@ -820,11 +823,11 @@ public class CommonFuncs {
         String orderTotal = CommonFuncs.getOrder(famerModel.getCode(), collections);
 
 
-        int status = getFarmerStatus(famerModel.getCode(), collections);
+        int cardstatus = getFarmerStatus(famerModel.getCode(), collections);
         String statusText;
 
 
-        statusText = status == 0 ? "Pending" : "Approved";
+        statusText = cardstatus == 0 ? "Pending" : "Approved";
         String balance = getBalance(milkTotalKsh, loanTotal, orderTotal);
         return new PayoutFarmersCollectionModel(
                 famerModel.getCode(),
@@ -832,12 +835,13 @@ public class CommonFuncs {
                 milkTotal,
                 loanTotal,
                 orderTotal,
-                status,
+                cardstatus,
+                payouts.getStatus(),
                 statusText,
                 balance,
                 payouts.getPayoutnumber(),
                 famerModel.getCyclecode(),
-                milkTotalKsh, milkTotalLtrs
+                milkTotalKsh, milkTotalLtrs, payouts.getStartDate(), payouts.getEndDate()
         );
 
     }
@@ -850,9 +854,10 @@ public class CommonFuncs {
                 p.getLoanTotal(),
                 p.getOrderTotal(),
                 p.getStatus(),
+                p.getStatus(),
                 p.getStatusName(),
                 p.getBalance(), p.getPayoutnumber(), famerModel.getCyclecode(),
-                p.getMilkTotalKsh(), p.getMilkTotalLtrs()
+                p.getMilkTotalKsh(), p.getMilkTotalLtrs(), p.getStartDate(), p.getEndDate()
         );
     }
 
@@ -1076,15 +1081,19 @@ public class CommonFuncs {
         txtTitle.setText("Loan");
 
         btnPositive.setOnClickListener(view -> {
+            String value = "0";
             if (!TextUtils.isEmpty(edtAmount.getText().toString())) {
 
+                value = edtAmount.getText().toString();
 
-                LoanModel loanModel = new LoanModel();
-                loanModel.setLoanAmount(edtAmount.getText().toString());
-                loanModel.setInstallmentAmount(txtPrice.getText().toString());
-                loanModel.setInstallmentsNo(txtQty.getText().toString());//giveLoan(edtAmount.getText().toString(), new Gson().toJson(loanModel));
-                listener.updateCollection(edtAmount.getText().toString(), loanModel, 0, dayCollectionModel, alertDialogAndroid);
             }
+
+            LoanModel loanModel = new LoanModel();
+            loanModel.setLoanAmount(value);
+            loanModel.setInstallmentAmount(txtPrice.getText().toString());
+            loanModel.setInstallmentsNo(txtQty.getText().toString());//giveLoan(edtAmount.getText().toString(), new Gson().toJson(loanModel));
+            listener.updateCollection(edtAmount.getText().toString(), loanModel, 0, dayCollectionModel, alertDialogAndroid);
+
         });
         btnNeutral.setOnClickListener(view -> {
 
@@ -1094,120 +1103,6 @@ public class CommonFuncs {
 
     }
 
-    public static void editValueOrder(int time, int type, String value, Object o, DayCollectionModel dayCollectionModel, Context context, FamerModel famerModel, OrderEditValueListener listener) {
-//        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
-//        View mView = layoutInflaterAndroid.inflate(R.layout.dialog_edit_loan, null);
-//        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(context));
-//        alertDialogBuilderUserInput.setView(mView);
-//
-//        TextView status, id, name, balance, milk, loan, order;
-//        ImageView imgAdd, imgRemove, imgDelete;
-//        TextView txtQty, txtPrice;
-//        TextInputEditText edtAmount;
-//
-//
-//        id = mView.findViewById(R.id.txt_id);
-//        name = mView.findViewById(R.id.txt_name);
-//
-//        edtAmount = mView.findViewById(R.id.edt_value);
-//        txtQty = mView.findViewById(R.id.txt_qty);
-//        txtPrice = mView.findViewById(R.id.txt_installment);
-//
-//        imgAdd = mView.findViewById(R.id.img_add);
-//        imgRemove = mView.findViewById(R.id.img_remove);
-//
-//        imgAdd.setOnClickListener(view -> calc(imgAdd, txtQty,edtAmount,txtPrice));
-//        imgRemove.setOnClickListener(view -> calc(imgRemove, txtQty,edtAmount,txtPrice));
-//
-//
-//        edtAmount.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//                double installmentValue = 0.0;
-//
-//                if (editable != null) {
-//
-//                    if (edtAmount.getText().toString() != null && !TextUtils.isEmpty(edtAmount.getText().toString())) {
-//                        double value = Double.valueOf(edtAmount.getText().toString());
-//                        int insNo = Integer.valueOf(txtQty.getText().toString());
-//                        if (value > 0.0) {
-//                            installmentValue = (value / insNo);
-//                        }
-//                    }
-//                }
-//                txtPrice.setText(String.valueOf(GeneralUtills.Companion.round(installmentValue, 2)));
-//            }
-//        });
-//        edtAmount.setText(value);
-//        id.setText(famerModel.getCode());
-//        name.setText(famerModel.getNames());
-//
-//
-
-
-//
-//
-//
-//
-//
-//
-//        alertDialogBuilderUserInput.setCancelable(false);
-//        AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
-//        alertDialogAndroid.setCancelable(false);
-//        Objects.requireNonNull(alertDialogAndroid.getWindow()).setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-//        alertDialogAndroid.show();
-//
-//
-//
-//        MaterialButton btnPositive, btnNegative, btnNeutral;
-//        TextView txtTitle;
-//        LinearLayout lTitle;
-//        ImageView imgIcon;
-//        btnPositive = mView.findViewById(R.id.btn_positive);
-//        btnNegative = mView.findViewById(R.id.btn_negative);
-//        btnNeutral = mView.findViewById(R.id.btn_neutral);
-//        txtTitle = mView.findViewById(R.id.txt_title);
-//        lTitle = mView.findViewById(R.id.linear_title);
-//        imgIcon = mView.findViewById(R.id.img_icon);
-//
-//
-//        btnNeutral.setVisibility(View.GONE);
-//        lTitle.setVisibility(View.GONE);
-//        txtTitle.setVisibility(View.VISIBLE);
-//        imgIcon.setVisibility(View.VISIBLE);
-//        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
-//        txtTitle.setText("Loan");
-//
-//        btnPositive.setOnClickListener(view -> {
-//            if (!TextUtils.isEmpty(edtAmount.getText().toString())) {
-//
-//
-//                LoanModel loanModel = new LoanModel();
-//                loanModel.setLoanAmount(edtAmount.getText().toString());
-//                loanModel.setInstallmentAmount(txtPrice.getText().toString());
-//                loanModel.setInstallmentsNo(txtQty.getText().toString());
-//                //giveLoan(edtAmount.getText().toString(), new Gson().toJson(loanModel));
-//                listener.updateCollection(edtAmount.getText().toString(),loanModel,time,dayCollectionModel,alertDialogAndroid);
-//            }
-//        });
-//        btnNeutral.setOnClickListener(view -> {
-//
-//        });
-//        btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
-//
-
-
-    }
 
     public static void updateCollectionValue(String s, int time, int type, DayCollectionModel dayCollectionModel, PayoutsVewModel payoutsVewModel, Payouts payouts, FamerModel famerModel, LoanModel loanModel, OrderModel orderModel, CollectionCreateUpdateListener listener) {
 
@@ -1272,6 +1167,107 @@ public class CommonFuncs {
 
     }
 
+
+    public static void setCardActionStatus(PayoutFarmersCollectionModel model, Context context,
+                                           MaterialButton btnApprove, MaterialButton btnBack, TextView txtApprovalStatus) {
+        if (model.getCardstatus() == 0 // Card not approved
+                && (DateTimeUtils.Companion.getToday().equals(model.getPayoutEnd())  //TODAY IS  THIS PAYOUT END DATE
+                || DateTimeUtils.Companion.isPastLastDay(model.getPayoutEnd())   // TODAY IS PAST THIS PAYOUT END DATE
+        )) {
+
+            /****** HERE THE PAYOUT IS PENDING , THIS CARD IS PENDING APPROVAL  ******/
+            btnApprove.setVisibility(View.VISIBLE);
+            txtApprovalStatus.setVisibility(View.GONE);
+            btnBack.setVisibility(View.GONE);
+
+
+        } else if (model.getCardstatus() == 1) {
+
+            /****THIS CARD HAS BEEN APPROVED  ****/
+
+
+            txtApprovalStatus.setText("Approved");
+            txtApprovalStatus.setVisibility(View.VISIBLE);
+            txtApprovalStatus.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+
+
+            if (model.getPayoutStatus() == 0) {
+                /*******THIS CARD IS APPROVED BUT WHOLE PAYOUT IS PENDING SO ONE CAN STILL CANCEL CARDS APPROVAL ******/
+
+                btnApprove.setVisibility(View.GONE);
+                btnBack.setVisibility(View.VISIBLE);
+                btnBack.setText("Cancel Approval");
+                txtApprovalStatus.setVisibility(View.VISIBLE);
+
+            } else {
+
+                /*******THIS CARD IS APPROVED AND WHOLE PAYOUT IS APPROVED SO ONE CANNOT  CANCEL CARDS APPROVAL ******/
+
+                btnBack.setVisibility(View.GONE);
+                btnApprove.setVisibility(View.GONE);
+                txtApprovalStatus.setText("Approved");
+                txtApprovalStatus.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+
+                txtApprovalStatus.setVisibility(View.VISIBLE);
+            }
+        } else if (model.getCardstatus() == 0 && (!DateTimeUtils.Companion.getToday().equals(model.getPayoutEnd())
+                || !DateTimeUtils.Companion.isPastLastDay(model.getPayoutEnd()))) {
+
+
+            txtApprovalStatus.setText("Pending");
+            txtApprovalStatus.setTextColor(context.getResources().getColor(R.color.red));
+            txtApprovalStatus.setVisibility(View.VISIBLE);
+            btnBack.setVisibility(View.GONE);
+            btnApprove.setVisibility(View.GONE);
+
+
+        }
+
+    }
+
+    public static void setPayoutActionStatus(Payouts payouts, Context context, MaterialButton btnApprove, TextView txtApprovalStatus) {
+
+        if (payouts.getStatus() == 1) {
+            btnApprove.setVisibility(View.GONE);
+            txtApprovalStatus.setText("Approved");
+            txtApprovalStatus.setVisibility(View.VISIBLE);
+            txtApprovalStatus.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+
+
+        } else {
+            if (DateTimeUtils.Companion.getToday().equals(payouts.getEndDate()) ||
+                    DateTimeUtils.Companion.isPastLastDay(payouts.getEndDate())) {
+
+                btnApprove.setVisibility(View.VISIBLE);
+                btnApprove.setText("Approve Payout");
+                txtApprovalStatus.setVisibility(View.GONE);
+
+
+            } else {
+                txtApprovalStatus.setText("Pending");
+                txtApprovalStatus.setTextColor(context.getResources().getColor(R.color.red));
+                txtApprovalStatus.setVisibility(View.VISIBLE);
+                btnApprove.setVisibility(View.GONE);
+            }
+
+
+        }
+
+
+    }
+
+    public static Payouts createPayout(Payouts payouts, PayoutsVewModel payoutsVewModel) {
+        if (payouts != null) {
+
+
+            List<Collection> c = payoutsVewModel.getCollectionByDateByPayoutListOne("" + payouts.getPayoutnumber());
+            return CommonFuncs.createPayoutsByCollection(c, payouts, payoutsVewModel);
+
+
+        }
+        return null;
+    }
+
     public static class ValueObject {
         private String value;
         private Object o;
@@ -1296,6 +1292,8 @@ public class CommonFuncs {
         public void setO(Object o) {
             this.o = o;
         }
+
+
     }
 
 

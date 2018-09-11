@@ -15,7 +15,7 @@ public class CollectionViewHolder extends RecyclerView.ViewHolder implements Vie
 
     public TextView date, day, milkTotalAm, milkTotalPm, loanTotalAm, loanTotalPm, orderTotalAm, orderTotalPm;
     public RelativeLayout background;
-    LinearLayout background_linear;
+    public LinearLayout background_linear;
     public View statusview;
     private WeakReference<OnclickRecyclerListener> listenerWeakReference;
 
@@ -25,6 +25,7 @@ public class CollectionViewHolder extends RecyclerView.ViewHolder implements Vie
         listenerWeakReference = new WeakReference<>(onclickRecyclerListener);
         itemView.setOnClickListener(this);
         itemView.setOnLongClickListener(this);
+
         statusview = itemView.findViewById(R.id.status_view);
         background = itemView.findViewById(R.id.background);
         background_linear = itemView.findViewById(R.id.background_linear);

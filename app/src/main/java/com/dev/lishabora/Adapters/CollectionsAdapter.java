@@ -58,6 +58,12 @@ public class CollectionsAdapter extends RecyclerView.Adapter<CollectionViewHolde
 
         holder.date.setText(DateTimeUtils.Companion.getDisplayDate(model.getDate(), DateTimeUtils.Companion.getDisplayDatePattern1()));
 
+        if (DateTimeUtils.Companion.isPastLastDay(model.getDate(), 1)) {
+            holder.background_linear.setBackgroundColor(context.getResources().getColor(R.color.white));
+        } else {
+            holder.background_linear.setBackgroundColor(context.getResources().getColor(R.color.divider));
+
+        }
 
         holder.milkTotalAm.setText(model.getMilkAm());
         if (!model.getMilkAm().equals("0.0")) {
@@ -106,6 +112,27 @@ public class CollectionsAdapter extends RecyclerView.Adapter<CollectionViewHolde
             holder.orderTotalPm.setTypeface(Typeface.DEFAULT);
 
             holder.orderTotalPm.setTextColor(context.getResources().getColor(R.color.black));
+
+        }
+
+
+        if (!DateTimeUtils.Companion.isPastLastDay(model.getDate(), 1)) {
+            holder.milkTotalPm.setEnabled(true);
+            holder.milkTotalAm.setEnabled(true);
+            holder.loanTotalAm.setEnabled(true);
+            holder.loanTotalPm.setEnabled(true);
+            holder.orderTotalAm.setEnabled(true);
+            holder.orderTotalPm.setEnabled(true);
+
+
+        } else {
+            holder.milkTotalPm.setEnabled(false);
+            holder.milkTotalAm.setEnabled(false);
+            holder.loanTotalAm.setEnabled(false);
+            holder.loanTotalPm.setEnabled(false);
+            holder.orderTotalAm.setEnabled(false);
+            holder.orderTotalPm.setEnabled(false);
+
 
         }
 //

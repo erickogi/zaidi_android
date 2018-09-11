@@ -98,7 +98,7 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
     }
 
     private void makeOrder(OrderModel orderModel, String orderData) {
-        giveOrder(orderModel.getOrderAmount(), orderData);
+        giveOrder(orderModel.getTotalOrderAmount(), orderData);
     }
 
 

@@ -45,8 +45,6 @@ public class Payouts extends AppCompatActivity {
         lspinner = findViewById(R.id.linear_spinner);
         spinner = findViewById(R.id.spinner);
 
-        //  fragment = new FragmentPayouts();
-        // popOutFragments();
         setUpMainFragment();
         setTitle("Payouts");
 

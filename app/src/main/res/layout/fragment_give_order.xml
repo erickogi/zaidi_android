@@ -72,25 +72,55 @@
                 android:layout_height="2dp"
                 android:background="@color/divider" />
 
-
-            <android.support.design.widget.TextInputLayout
-
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_totals"
-                android:layout_margin="3dp"
-                android:textColorHint="@color/black">
+                android:orientation="horizontal">
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/edt_value"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:enabled="false"
-                    android:hint="Total Amount (Ksh)"
-                    android:inputType="number" />
+                <android.support.design.widget.TextInputLayout
 
-            </android.support.design.widget.TextInputLayout>
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/linear_totals"
+                    android:layout_weight="1"
+
+                    android:textColorHint="@color/black">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/edt_value"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:enabled="false"
+                        android:hint="Value (Ksh)"
+                        android:inputType="number"
+                        android:textColor="@color/black" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/linear_totals"
+                    android:layout_weight="1"
+
+                    android:textColorHint="@color/black">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/edt_delivery"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:enabled="true"
+                        android:hint="Delivery Fee (Ksh)"
+                        android:inputType="numberDecimal"
+                        android:textColor="@color/black" />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="wrap_content"

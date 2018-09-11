@@ -30,7 +30,7 @@ public class FragmentCompleteGiveOrder extends Fragment implements BlockingStep 
     public TextView status, id, name, balance, milk, loan, order;
     ImageView imgAdd, imgRemove, imgDelete;
     TextView txtQty, txtPrice;
-    TextInputEditText edtAmount;
+    TextInputEditText edtAmount, edtDeliveryFee;
     private View view;
 
     public void calc(View imgAction, View txtQty) {
@@ -48,16 +48,21 @@ public class FragmentCompleteGiveOrder extends Fragment implements BlockingStep 
         }
 
 
+        double delivery = 0.0;
         double installmentValue = 0.0;
+        if (edtDeliveryFee.getText() != null && !TextUtils.isEmpty(edtDeliveryFee.getText())) {
+            delivery = Double.valueOf(edtDeliveryFee.getText().toString());
 
+        }
         if (edtAmount.getText() != null && !TextUtils.isEmpty(edtAmount.getText())) {
 
             double value = Double.valueOf(edtAmount.getText().toString());
             int insNo = Integer.valueOf(((TextView) txtQty).getText().toString());
             if (value > 0.0) {
-                installmentValue = (value / insNo);
+                installmentValue = ((value + delivery) / insNo);
             }
         }
+
 
         txtPrice.setText(String.valueOf(GeneralUtills.Companion.round(installmentValue, 2)));
 
@@ -94,6 +99,14 @@ public class FragmentCompleteGiveOrder extends Fragment implements BlockingStep 
         orderModel.setInstallmentAmount(txtPrice.getText().toString());
         orderModel.setInstallmentNo(txtQty.getText().toString());
         orderModel.setOrderAmount(edtAmount.getText().toString());
+
+        String delivery = "0";
+
+        if (!TextUtils.isEmpty(edtDeliveryFee.getText())) {
+            delivery = edtDeliveryFee.getText().toString();
+        }
+        orderModel.setOrderDeliveryFee(delivery);
+
         orderModel.setProductOrderModels(OrderConstants.getProductOrderModels());
 
         Gson gson = new Gson();
@@ -112,6 +125,13 @@ public class FragmentCompleteGiveOrder extends Fragment implements BlockingStep 
         orderModel.setInstallmentAmount(txtPrice.getText().toString());
         orderModel.setInstallmentNo(txtQty.getText().toString());
         orderModel.setOrderAmount(edtAmount.getText().toString());
+        String delivery = "0";
+
+        if (!TextUtils.isEmpty(edtDeliveryFee.getText())) {
+            delivery = edtDeliveryFee.getText().toString();
+        }
+        orderModel.setOrderDeliveryFee(delivery);
+
         orderModel.setProductOrderModels(OrderConstants.getProductOrderModels());
 
         Gson gson = new Gson();
@@ -147,6 +167,7 @@ public class FragmentCompleteGiveOrder extends Fragment implements BlockingStep 
     private void initData() {
 
         Double dt = 0.0;
+        Double delivery = 0.0;
         if (OrderConstants.getProductOrderModels() != null) {
 
             for (ProductOrderModel p : OrderConstants.getProductOrderModels()) {
@@ -155,19 +176,25 @@ public class FragmentCompleteGiveOrder extends Fragment implements BlockingStep 
                 }
             }
         }
+        if (OrderConstants.getOrderModel() != null && OrderConstants.getOrderModel().getOrderDeliveryFee() != null) {
+            delivery = Double.valueOf(OrderConstants.getOrderModel().getOrderDeliveryFee());
+        }
 
         edtAmount.setText(String.valueOf(dt));
+        edtDeliveryFee.setText(String.valueOf(delivery));
+
+
         double installmentValue = 0.0;
         if (!TextUtils.isEmpty(Objects.requireNonNull(edtAmount.getText()).toString())) {
             double value = Double.valueOf(edtAmount.getText().toString());
             int insNo = Integer.valueOf(txtQty.getText().toString());
             if (value > 0.0) {
-                installmentValue = (value / insNo);
+                installmentValue = ((value + delivery) / insNo);
             }
         }
 
 
-        txtPrice.setText(String.valueOf(GeneralUtills.Companion.round(installmentValue, 2)));
+        txtPrice.setText(String.valueOf(GeneralUtills.Companion.round((installmentValue), 2)));
 
         if (OrderConstants.getOrderModel() != null) {
             OrderModel l = OrderConstants.getOrderModel();
@@ -180,10 +207,10 @@ public class FragmentCompleteGiveOrder extends Fragment implements BlockingStep 
                         double value = Double.valueOf(edtAmount.getText().toString());
                         int insNo = Integer.valueOf(txtQty.getText().toString());
                         if (value > 0.0) {
-                            installmentValue = (value / insNo);
+                            installmentValue = ((value + delivery) / insNo);
                         }
                     }
-                    txtPrice.setText(String.valueOf(GeneralUtills.Companion.round(installmentValue, 2)));
+                    txtPrice.setText(String.valueOf(GeneralUtills.Companion.round((installmentValue), 2)));
 
                 } catch (Exception nm) {
                     nm.printStackTrace();
@@ -201,6 +228,8 @@ public class FragmentCompleteGiveOrder extends Fragment implements BlockingStep 
         name = view.findViewById(R.id.txt_name);
 
         edtAmount = view.findViewById(R.id.edt_value);
+        edtDeliveryFee = view.findViewById(R.id.edt_delivery);
+
         txtQty = view.findViewById(R.id.txt_qty);
         txtPrice = view.findViewById(R.id.txt_installment);
 
@@ -227,18 +256,56 @@ public class FragmentCompleteGiveOrder extends Fragment implements BlockingStep 
             @Override
             public void afterTextChanged(Editable editable) {
                 double installmentValue = 0.0;
-
+                double delivery = 0.0;
+                if (!TextUtils.isEmpty(edtDeliveryFee.getText())) {
+                    delivery = Double.valueOf(edtDeliveryFee.getText().toString());
+                }
                 if (editable != null) {
+
 
                     if (edtAmount.getText().toString() != null && !TextUtils.isEmpty(edtAmount.getText().toString())) {
                         double value = Double.valueOf(edtAmount.getText().toString());
                         int insNo = Integer.valueOf(txtQty.getText().toString());
                         if (value > 0.0) {
-                            installmentValue = (value / insNo);
+                            installmentValue = ((value + delivery) / insNo);
                         }
                     }
+
                 }
-                txtPrice.setText(String.valueOf(GeneralUtills.Companion.round(installmentValue, 2)));
+                txtPrice.setText(String.valueOf(GeneralUtills.Companion.round((installmentValue), 2)));
+            }
+        });
+        edtDeliveryFee.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                double installmentValue = 0.0;
+                double delivery = 0.0;
+                if (!TextUtils.isEmpty(edtDeliveryFee.getText())) {
+                    delivery = Double.valueOf(edtDeliveryFee.getText().toString());
+                }
+                if (editable != null) {
+
+
+                    if (edtAmount.getText().toString() != null && !TextUtils.isEmpty(edtAmount.getText().toString())) {
+                        double value = Double.valueOf(edtAmount.getText().toString());
+                        int insNo = Integer.valueOf(txtQty.getText().toString());
+                        if (value > 0.0) {
+                            installmentValue = ((value + delivery) / insNo);
+                        }
+                    }
+
+                }
+                txtPrice.setText(String.valueOf(GeneralUtills.Companion.round((installmentValue), 2)));
             }
         });
 

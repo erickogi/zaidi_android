@@ -1,6 +1,5 @@
 package com.dev.lishabora.Views.Trader.Fragments;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
@@ -37,6 +36,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.dev.lishabora.Views.CommonFuncs.setPayoutActionStatus;
+
 public class FragmentPayoutColloectionsList extends Fragment {
     public TextView status, startDate, cycleName, endDate, milkTotal, loanTotal, orderTotal, balance, approvedCount, unApprovedCount;
     public RelativeLayout background;
@@ -52,7 +53,8 @@ public class FragmentPayoutColloectionsList extends Fragment {
     private PayoutsVewModel payoutsVewModel;
     private List<DayCollectionModel> dayCollectionModels;
     private List<Collection> collections;
-    private MaterialButton btnApprove, btnBack;
+    TextView txtApprovalStatus;
+    private MaterialButton btnApprove;
 
     public void initList() {
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -126,10 +128,11 @@ public class FragmentPayoutColloectionsList extends Fragment {
         this.view = view;
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
         btnApprove = view.findViewById(R.id.btn_approve);
+        txtApprovalStatus = view.findViewById(R.id.txt_approval_status);
         btnApprove.setVisibility(View.GONE);
 
-        LinearLayout linearLayoutAmPm = view.findViewById(R.id.linear_am_pm);
-        linearLayoutAmPm.setVisibility(View.VISIBLE);
+        LinearLayout linearLayoutAmPm = view.findViewById(R.id.linear_farmers_titles);
+        linearLayoutAmPm.setVisibility(View.GONE);
 
         payouts = new Payouts();
         if (getArguments() != null) {
@@ -137,12 +140,13 @@ public class FragmentPayoutColloectionsList extends Fragment {
         } else {
             payouts = PayoutConstants.getPayouts();
         }
-        payoutsVewModel.getPayoutsByPayoutNumber("" + payouts.getPayoutnumber()).observe(this, new Observer<Payouts>() {
-            @Override
-            public void onChanged(@Nullable Payouts payouts) {
-                // FragmentPayoutColloectionsList.this.payouts=payouts;
-            }
-        });
+        if (payouts != null) {
+            payoutsVewModel.getPayoutsByPayoutNumber("" + payouts.getPayoutnumber()).observe(this, payouts -> {
+                this.payouts = CommonFuncs.createPayout(payouts, payoutsVewModel);
+                starterPack();
+
+            });
+        }
     }
 
     @Override
@@ -183,9 +187,12 @@ public class FragmentPayoutColloectionsList extends Fragment {
             payouts.setStatus(1);
             payouts.setStatusName("Approved");
             payoutsVewModel.updatePayout(payouts);
-            initCardHeader();
+            starterPack();
 
         });
+        setPayoutActionStatus(payouts, getContext(), btnApprove, txtApprovalStatus);
+
+
 
     }
 
@@ -242,10 +249,15 @@ public class FragmentPayoutColloectionsList extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        starterPack();
+        setSpinner();
+    }
+
+    private void starterPack() {
         initCardHeader();
         initList();
         loadCollections();
-        setSpinner();
     }
 
     private void setSpinner() {

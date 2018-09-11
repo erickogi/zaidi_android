@@ -54,6 +54,7 @@ import java.util.List;
 import timber.log.Timber;
 
 import static com.dev.lishabora.Views.CommonFuncs.getBalance;
+import static com.dev.lishabora.Views.CommonFuncs.setCardActionStatus;
 
 public class PayCard extends AppCompatActivity {
     public TextView status, id, name, balance, milk, loan, order;
@@ -107,12 +108,11 @@ public class PayCard extends AppCompatActivity {
 
     }
 
-
     private void setUpList(List<DayCollectionModel> dayCollectionModels) {
         this.dayCollectionModels = dayCollectionModels;
         this.liveModel = dayCollectionModels;
 
-        listAdapter.refresh(dayCollectionModels, payoutfarmermodel.getStatus() == 0);
+        listAdapter.refresh(dayCollectionModels, payoutfarmermodel.getCardstatus() == 0);
 
 
 
@@ -181,6 +181,27 @@ public class PayCard extends AppCompatActivity {
 
     }
 
+    private void cancelApprove(Payouts payouts, PayoutFarmersCollectionModel model) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(PayCard.this);
+        alertDialog.setMessage("Confirm that you wish to cancel " + model.getFarmername() + "'s " + payouts.getCyclename() + " Collection card").setCancelable(false).setTitle("Cancel " + model.getFarmername() + " Card");
+
+
+        alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
+
+            payoutsVewModel.cancelFarmersPayoutCard(model.getFarmercode(), model.getPayoutNumber());
+            model.setCardstatus(0);
+            model.setStatusName("Canceled");
+            setData(model);
+
+
+            dialogInterface.dismiss();
+
+        }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
+
+        AlertDialog alertDialogAndroid = alertDialog.create();
+        alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.show();
+    }
     private void approve(Payouts payouts, PayoutFarmersCollectionModel model) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(PayCard.this);
         alertDialog.setMessage("Confirm that you wish to approve " + model.getFarmername() + "'s " + payouts.getCyclename() + " Collection card").setCancelable(false).setTitle("Approve " + model.getFarmername() + " Card");
@@ -189,12 +210,11 @@ public class PayCard extends AppCompatActivity {
         alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
 
             payoutsVewModel.approveFarmersPayoutCard(model.getFarmercode(), model.getPayoutNumber());
-            model.setStatus(1);
+            model.setCardstatus(1);
             model.setStatusName("Approved");
             setData(model);
-
-
             dialogInterface.dismiss();
+
 
         }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
 
@@ -370,14 +390,14 @@ public class PayCard extends AppCompatActivity {
 
         }
 
-        if (model.getStatus() == 1) {
+        if (model.getCardstatus() == 1) {
             //  status.setText("Active");
             status.setTextColor(this.getResources().getColor(R.color.green_color_picker));
             background.setBackgroundColor(this.getResources().getColor(R.color.green_color_picker));
             statusview.setBackgroundColor(this.getResources().getColor(R.color.green_color_picker));
 
 
-        } else if (model.getStatus() == 0) {
+        } else if (model.getCardstatus() == 0) {
 
             //  status.setText("Deleted");
             status.setTextColor(this.getResources().getColor(R.color.red));
@@ -393,8 +413,6 @@ public class PayCard extends AppCompatActivity {
         }
 
         loadCollections("" + model.getPayoutNumber(), model.getFarmercode());
-
-
         payoutsVewModel.getSumOfMilkForPayoutLtrs(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
             milk.setText(String.valueOf(integer));
             setBalance(milkKsh);
@@ -414,46 +432,13 @@ public class PayCard extends AppCompatActivity {
 
 
         btnApprove.setOnClickListener(view -> approve(payouts, model));
+        btnBack.setOnClickListener(view1 -> cancelApprove(payouts, model));
+        setCardActionStatus(model, PayCard.this, btnApprove, btnBack, txtApprovalStatus);
 
 
-        if (model.getStatus() == 0 && (DateTimeUtils.Companion.getToday().equals(payouts.getEndDate())
-                || DateTimeUtils.Companion.isPastLastDay(payouts.getEndDate()))) {
-            btnApprove.setVisibility(View.VISIBLE);
-            txtApprovalStatus.setVisibility(View.GONE);
-            btnBack.setVisibility(View.GONE);
 
 
-        } else if (model.getStatus() == 1) {
-            txtApprovalStatus.setText("Approved");
-            txtApprovalStatus.setVisibility(View.VISIBLE);
-            txtApprovalStatus.setTextColor(this.getResources().getColor(R.color.colorPrimary));
 
-
-            if (payouts.getStatus() == 0) {
-                btnApprove.setVisibility(View.GONE);
-                btnBack.setVisibility(View.VISIBLE);
-                btnBack.setText("Cancel Approval");
-                txtApprovalStatus.setVisibility(View.VISIBLE);
-
-            } else {
-                btnBack.setVisibility(View.GONE);
-                btnApprove.setVisibility(View.GONE);
-                txtApprovalStatus.setText("Approved");
-                txtApprovalStatus.setTextColor(this.getResources().getColor(R.color.colorPrimary));
-
-                txtApprovalStatus.setVisibility(View.VISIBLE);
-            }
-        } else if (model.getStatus() == 0 && (!DateTimeUtils.Companion.getToday().equals(payouts.getEndDate())
-                || !DateTimeUtils.Companion.isPastLastDay(payouts.getEndDate()))) {
-            txtApprovalStatus.setText("Pending");
-            txtApprovalStatus.setTextColor(this.getResources().getColor(R.color.red));
-
-            txtApprovalStatus.setVisibility(View.VISIBLE);
-            btnBack.setVisibility(View.GONE);
-            btnApprove.setVisibility(View.GONE);
-
-
-        }
 
 
     }
@@ -471,7 +456,7 @@ public class PayCard extends AppCompatActivity {
             OrderConstants.setFamerModel(famerModel);
             Intent intent2 = new Intent(PayCard.this, EditOrder.class);
             intent2.putExtra("farmer", famerModel);
-            // intent2.putExtra("collection", dayCollectionModel);
+            intent2.putExtra("dayCollection", dayCollectionModel);
             startActivityForResult(intent2, 10004);
 
 
@@ -484,23 +469,33 @@ public class PayCard extends AppCompatActivity {
             public void createCollection(Collection c) {
                 payoutsVewModel.createCollections(c).observe(PayCard.this, responseModel -> {
                     if (responseModel != null) {
-                        a.dismiss();
+                        if (a != null) {
+                            a.dismiss();
+
+
+                        }
                         MyToast.toast(responseModel.getResultDescription(), PayCard.this, R.drawable.ic_launcher, Toast.LENGTH_LONG);
                     }
                 });
-                a.dismiss();
+                if (a != null) {
+                    a.dismiss();
+                }
             }
 
             @Override
             public void updateCollection(Collection c) {
                 payoutsVewModel.updateCollection(c);
-                a.dismiss();
+                if (a != null) {
+                    a.dismiss();
+                }
             }
 
             @Override
             public void error(String error) {
                 MyToast.toast(error, PayCard.this, R.drawable.ic_launcher, Toast.LENGTH_LONG);
-                a.dismiss();
+                if (a != null) {
+                    a.dismiss();
+                }
             }
         });
     }
@@ -554,12 +549,21 @@ public class PayCard extends AppCompatActivity {
 
             @Override
             public void onEditTextChanged(int adapterPosition, int time, int type, View editable) {
-                CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
+                if (dayCollectionModels.get(adapterPosition).getPayoutStatus() == 0) {
+                    if (DateTimeUtils.Companion.isPastLastDay(dayCollectionModels.get(adapterPosition).getDate(), 1)) {
 
 
-                editValue(adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
+                        CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
+                        editValue(adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
 
 
+                    } else {
+                        MyToast.toast("Future collections cannot be edited", PayCard.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                    }
+                } else {
+                    MyToast.toast("Cards in an approved payout cannot be edited", PayCard.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+
+                }
             }
 
         }, false);
@@ -581,6 +585,32 @@ public class PayCard extends AppCompatActivity {
 
 
     }
+
+    @Override
+    public void onActivityResult(
+            int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+
+            case 10004:
+
+                if (resultCode == RESULT_OK && data != null) {
+                    OrderModel orderModel;
+                    DayCollectionModel dayCollectionModel;
+                    orderModel = (OrderModel) data.getSerializableExtra("orderDataModel");
+                    dayCollectionModel = (DayCollectionModel) data.getSerializableExtra("dayCollection");
+                    updateCollectionValue(orderModel.getTotalOrderAmount(), 0, 3, dayCollectionModel, null, null, orderModel);
+
+
+                }
+                break;
+
+            default:
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
 
 
 

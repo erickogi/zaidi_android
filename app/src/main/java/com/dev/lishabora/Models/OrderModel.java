@@ -1,14 +1,35 @@
 package com.dev.lishabora.Models;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class OrderModel {
+public class OrderModel implements Serializable {
     private String orderAmount;
     private String installmentAmount;
     private String installmentNo;
     private List<ProductOrderModel> productOrderModels;
     private String productsOrderModels;
     private String collectionId;
+    private String orderDeliveryFee;
+
+    public String getOrderDeliveryFee() {
+        return orderDeliveryFee;
+    }
+
+    public void setOrderDeliveryFee(String orderDeliveryFee) {
+        this.orderDeliveryFee = orderDeliveryFee;
+    }
+
+    public String getTotalOrderAmount() {
+        if (orderDeliveryFee != null) {
+            return String.valueOf(Double.valueOf(orderAmount) + Double.valueOf(orderDeliveryFee));
+        } else return orderAmount;
+    }
+
+
+
+
+
 
     public String getCollectionId() {
         return collectionId;

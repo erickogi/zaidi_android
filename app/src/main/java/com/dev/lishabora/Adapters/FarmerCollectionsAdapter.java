@@ -66,11 +66,15 @@ public class FarmerCollectionsAdapter extends RecyclerView.Adapter<FarmerCollect
     @Override
     public void onBindViewHolder(FarmerCollectionViewHolder holder, int position) {
         DayCollectionModel model = modelList.get(position);
-
         holder.day.setText(model.getDay());
-        // holder.date.setText(model.getDate());
         holder.date.setText(DateTimeUtils.Companion.getDisplayDate(model.getDate(), DateTimeUtils.Companion.getDisplayDatePattern1()));
 
+        if (DateTimeUtils.Companion.isPastLastDay(model.getDate(), 1)) {
+            holder.background_linear.setBackgroundColor(context.getResources().getColor(R.color.white));
+        } else {
+            holder.background_linear.setBackgroundColor(context.getResources().getColor(R.color.divider));
+
+        }
 
         holder.milkTotalAm.setText(String.format("%s %s", model.getMilkAm(), context.getString(R.string.ltrs)));
         if (!model.getMilkAm().equals("0.0")) {
@@ -79,7 +83,6 @@ public class FarmerCollectionsAdapter extends RecyclerView.Adapter<FarmerCollect
 
         } else {
             holder.milkTotalAm.setTypeface(Typeface.DEFAULT);
-
             holder.milkTotalAm.setTextColor(context.getResources().getColor(R.color.black));
 
         }
@@ -90,7 +93,6 @@ public class FarmerCollectionsAdapter extends RecyclerView.Adapter<FarmerCollect
 
         } else {
             holder.milkTotalPm.setTypeface(Typeface.DEFAULT);
-
             holder.milkTotalPm.setTextColor(context.getResources().getColor(R.color.black));
 
         }
@@ -121,52 +123,8 @@ public class FarmerCollectionsAdapter extends RecyclerView.Adapter<FarmerCollect
 
         }
 
-//        holder.loanTotalAm.setText(model.getLoanAm());
-//        if (!model.getLoanAm().equals("0.0")) {
-//            holder.loanTotalAm.setTextColor(context.getResources().getColor(R.color.colorPrimary));
-//            holder.loanTotalAm.setTypeface(Typeface.DEFAULT_BOLD);
-//
-//        } else {
-//            holder.loanTotalAm.setTypeface(Typeface.DEFAULT);
-//
-//            holder.loanTotalAm.setTextColor(context.getResources().getColor(R.color.black));
-//
-//        }
-//        holder.loanTotalPm.setText(model.getLoanPm());
-//        if (!model.getLoanPm().equals("0.0")) {
-//            holder.loanTotalPm.setTextColor(context.getResources().getColor(R.color.colorPrimary));
-//            holder.loanTotalPm.setTypeface(Typeface.DEFAULT_BOLD);
-//        } else {
-//            holder.loanTotalPm.setTypeface(Typeface.DEFAULT);
-//
-//            holder.loanTotalPm.setTextColor(context.getResources().getColor(R.color.black));
-//
-//        }
-//        holder.orderTotalAm.setText(model.getOrderAm());
-//        if (!model.getOrderAm().equals("0.0")) {
-//            holder.orderTotalAm.setTextColor(context.getResources().getColor(R.color.colorPrimary));
-//            holder.orderTotalAm.setTypeface(Typeface.DEFAULT_BOLD);
-//
-//        } else {
-//            holder.orderTotalAm.setTypeface(Typeface.DEFAULT);
-//
-//            holder.orderTotalAm.setTextColor(context.getResources().getColor(R.color.black));
-//
-//        }
-//        holder.orderTotalPm.setText(model.getOrderPm());
-//        if (!model.getOrderPm().equals("0.0")) {
-//            holder.orderTotalPm.setTextColor(context.getResources().getColor(R.color.colorPrimary));
-//            holder.orderTotalPm.setTypeface(Typeface.DEFAULT_BOLD);
-//
-//        } else {
-//            holder.orderTotalPm.setTypeface(Typeface.DEFAULT);
-//
-//            holder.orderTotalPm.setTextColor(context.getResources().getColor(R.color.black));
-//
-//        }
 
-
-        if (isEditable) {
+        if (DateTimeUtils.Companion.isPastLastDay(model.getDate(), 1) || isEditable) {
             holder.milkTotalPm.setEnabled(true);
             holder.milkTotalAm.setEnabled(true);
             holder.loanTotalAm.setEnabled(true);

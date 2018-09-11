@@ -25,6 +25,7 @@
         </item> <!-- activated color change as you wish -->
         <item name="android:textColor">@color/colorAccent</item> <!-- checkbox text color -->
     </style>
+
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
 
         <item name="android:windowBackground">@drawable/splash_background</item>

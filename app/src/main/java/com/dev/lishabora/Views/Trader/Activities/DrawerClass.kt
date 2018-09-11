@@ -172,7 +172,7 @@ class DrawerClass {
                                 result.closeDrawer()
                             }
                             6 -> {
-                                itemListener.profileSettingsClicked()
+                                itemListener.analyticsReportsTransactionsClicked()
                                 result.closeDrawer()
                             }
 
@@ -183,6 +183,10 @@ class DrawerClass {
 
                             10 -> {
                                 itemListener.helpClicked()
+                                result.closeDrawer()
+                            }
+                            9 -> {
+                                itemListener.profileSettingsClicked()
                                 result.closeDrawer()
                             }
 

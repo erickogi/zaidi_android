@@ -356,100 +356,9 @@
                 android:layout_below="@+id/linear"
                 android:background="@color/divider" />
 
-            <LinearLayout
+            <include layout="@layout/view_payout_collection_titles" />
 
-                android:id="@+id/linear_titles"
-                android:layout_marginStart="4dp"
-
-                android:layout_marginEnd="4dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/divide"
-                android:background="@color/white"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-
-                        android:text="Milk"
-                        android:textAlignment="center"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <LinearLayout
-
-                        android:id="@+id/linear_am_pm"
-                        android:visibility="gone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="AM"
-                            android:textAlignment="center"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-
-                        <View
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:background="@color/divider" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="PM"
-                            android:textAlignment="center"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorPrimary" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Loans"
-                    android:textAlignment="center"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorPrimary" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Orders"
-                    android:textAlignment="center"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-
-            </LinearLayout>
-
+            <include layout="@layout/view_payout_farmers_titles" />
 
         </RelativeLayout>
 
@@ -468,9 +377,7 @@
 
 
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="4dp"
 
-        android:layout_marginEnd="4dp"
         android:nestedScrollingEnabled="false"
         android:scrollIndicators="start|end"
         android:scrollbarSize="6dp"
@@ -482,29 +389,8 @@
 
     </android.support.v7.widget.RecyclerView>
 
-    <android.support.design.button.MaterialButton
-        android:id="@+id/btn_approve"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="match_parent"
+    <include layout="@layout/view_payout_approval" />
 
-        android:layout_height="wrap_content"
-
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="end"
-        android:layout_margin="3dp"
-        android:layout_marginBottom="10dp"
-        android:layout_weight="1"
-        android:text="APPROVE"
-        android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
-
-
-        android:textColor="@color/black"
-        android:textSize="16.5sp"
-        app:cornerRadius="5dp"
-        app:rippleColor="@color/accent"
-        app:strokeColor="@color/black"
-
-        app:strokeWidth="2dp" />
 </RelativeLayout>
     <!--<android.support.design.bottomappbar.BottomAppBar-->
     <!--android:id="@+id/bar"-->

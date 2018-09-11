@@ -45,6 +45,8 @@ import java.util.Objects;
 
 import timber.log.Timber;
 
+import static com.dev.lishabora.Views.CommonFuncs.setPayoutActionStatus;
+
 public class FragmentPayoutFarmersList extends Fragment {
     public TextView status, startDate, cycleName, endDate, milkTotal, loanTotal, orderTotal, balance, approvedCount, unApprovedCount;
     public RelativeLayout background;
@@ -61,8 +63,8 @@ public class FragmentPayoutFarmersList extends Fragment {
     private List<PayoutFarmersCollectionModel> dayCollectionModels;
     private List<FamerModel> famerModels;
     private List<Collection> collections;
-    private MaterialButton btnApprove, btnBack;
-
+    TextView txtApprovalStatus;
+    private MaterialButton btnApprove;
 
     public void initList() {
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -151,8 +153,13 @@ public class FragmentPayoutFarmersList extends Fragment {
             payouts.setStatus(1);
             payouts.setStatusName("Approved");
             payoutsVewModel.updatePayout(payouts);
+            starterPack();
 
         });
+        setPayoutActionStatus(payouts, getContext(), btnApprove, txtApprovalStatus);
+
+
+
 
 
     }
@@ -160,11 +167,20 @@ public class FragmentPayoutFarmersList extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
 
         if (getArguments() != null) {
             payouts = (Payouts) getArguments().getSerializable("data");
         } else {
             payouts = PayoutConstants.getPayouts();
+        }
+        if (payouts != null) {
+            payoutsVewModel.getPayoutsByPayoutNumber("" + payouts.getPayoutnumber()).observe(this, payouts -> {
+                this.payouts = CommonFuncs.createPayout(payouts, payoutsVewModel);
+
+                starterPack();
+
+            });
         }
 
     }
@@ -179,12 +195,13 @@ public class FragmentPayoutFarmersList extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.view = view;
-        payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
         btnApprove = view.findViewById(R.id.btn_approve);
+        txtApprovalStatus = view.findViewById(R.id.txt_approval_status);
         btnApprove.setVisibility(View.GONE);
 
-        LinearLayout linearLayoutAmPm = view.findViewById(R.id.linear_am_pm);
+        LinearLayout linearLayoutAmPm = view.findViewById(R.id.linear_collection_titles);
         linearLayoutAmPm.setVisibility(View.GONE);
+
 
     }
 
@@ -337,6 +354,10 @@ public class FragmentPayoutFarmersList extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        starterPack();
+    }
+
+    private void starterPack() {
         initCardHeader();
         initList();
         loadFarmers();

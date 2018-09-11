@@ -1,6 +1,8 @@
 package com.dev.lishabora.Models;
 
-public class MilkModel {
+import java.io.Serializable;
+
+public class MilkModel implements Serializable {
     private String unitQty;
     private UnitsModel unitsModel;
     private String valueLtrs;

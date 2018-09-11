@@ -1,6 +1,8 @@
 package com.dev.lishabora.Models;
 
-public class LoanModel {
+import java.io.Serializable;
+
+public class LoanModel implements Serializable {
     private String loanAmount;
     private String installmentAmount;
     private String installmentsNo;

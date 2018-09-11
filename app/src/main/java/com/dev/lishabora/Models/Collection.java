@@ -401,7 +401,7 @@ public class Collection {
 
     public String getMilkDetailsAm() {
 
-        return milkDetailsAm != null ? milkDetailsAm : "0";
+        return milkDetailsAm;
 
     }
 
@@ -461,7 +461,7 @@ public class Collection {
 
     public String getMilkDetailsPm() {
 
-        return milkDetailsPm != null ? milkDetailsPm : "0";
+        return milkDetailsPm;
 
     }
 

@@ -96,14 +96,14 @@ public class PayoutFarmersAdapter extends RecyclerView.Adapter<PayoutFarmerListV
 
         }
 
-        if (model.getStatus() == 1) {
+        if (model.getCardstatus() == 1) {
             //  holder.status.setText("Active");
             holder.status.setTextColor(context.getResources().getColor(R.color.green_color_picker));
             holder.background.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
             holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
 
 
-        } else if (model.getStatus() == 0) {
+        } else if (model.getCardstatus() == 0) {
 
             //  holder.status.setText("Deleted");
             holder.status.setTextColor(context.getResources().getColor(R.color.red));
