@@ -37,6 +37,7 @@ import com.dev.lishabora.Utils.RequestDataCallback;
 import com.dev.lishabora.ViewModels.Admin.AdminsViewModel;
 import com.dev.lishabora.Views.Login.Activities.LoginActivity;
 import com.dev.lishabora.Views.Login.ResetPassword;
+import com.dev.lishabora.Views.Reports.FragmentReports;
 import com.dev.lishabora.Views.Reports.Reports;
 import com.dev.lishabora.Views.Trader.Fragments.FragementFarmersList;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentProductList;
@@ -133,8 +134,9 @@ public class TraderActivity extends AppCompatActivity {
 
             @Override
             public void analyticsReportsTransactionsClicked() {
-
-                startActivity(new Intent(TraderActivity.this, Reports.class));
+                fragment = new FragmentReports();
+                popOutFragments();
+                setUpView();
             }
 
             @Override
@@ -342,6 +344,30 @@ public class TraderActivity extends AppCompatActivity {
 
 
 
+    }
+
+    public void milkFragment(View view) {
+        Intent intent = new Intent(this, Reports.class);
+        intent.putExtra("type", 1);
+        startActivity(intent);
+    }
+
+    public void loansFragment(View view) {
+        Intent intent = new Intent(this, Reports.class);
+        intent.putExtra("type", 2);
+        startActivity(intent);
+    }
+
+    public void productsFragment(View view) {
+        Intent intent = new Intent(this, Reports.class);
+        intent.putExtra("type", 3);
+        startActivity(intent);
+    }
+
+    public void totalsFragment(View view) {
+        Intent intent = new Intent(this, Reports.class);
+        intent.putExtra("type", 4);
+        startActivity(intent);
     }
 
     private class EditCustomListener implements View.OnClickListener {

@@ -13,13 +13,23 @@ import com.dev.lishaboramobile.R;
 public class Reports extends AppCompatActivity {
     public static Fragment fragment = null;
     AHBottomNavigation bottomNavigation;
+    int type = 1;
+    Bundle bundle = new Bundle();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_milk_reports);
 
+        type = getIntent().getIntExtra("type", 1);
+        bundle.putInt("type", type);
+
+
+
+
         fragment = new FragmentList();
+        fragment.setArguments(bundle);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.frame_layout, fragment, "fragmentMain").commit();
 
@@ -46,10 +56,10 @@ public class Reports extends AppCompatActivity {
         bottomNavigation.setNotificationBackgroundColor(Color.parseColor("#F63D2B"));
 
         bottomNavigation.setOnTabSelectedListener((position, wasSelected) -> {
-            Bundle bundle = new Bundle();
             switch (position) {
                 case 0:
                     fragment = new FragmentList();
+                    fragment.setArguments(bundle);
                     popOutFragments();
                     fragment.setArguments(bundle);
                     setFragment();
@@ -57,6 +67,7 @@ public class Reports extends AppCompatActivity {
                 case 1:
                     popOutFragments();
                     fragment = new FragmentChart();
+
 
                     fragment.setArguments(bundle);
                     setFragment();

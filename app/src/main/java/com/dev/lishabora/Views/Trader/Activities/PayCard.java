@@ -443,20 +443,21 @@ public class PayCard extends AppCompatActivity {
 
     }
 
-    public void editValue(int adapterPosition, int time, int type, String value, Object o, View editable, DayCollectionModel dayCollectionModel) {
+    public void editValue(boolean isEditable, int adapterPosition, int time, int type, String value, Object o, View editable, DayCollectionModel dayCollectionModel) {
 
 
         if (type == 1) {
-            CommonFuncs.editValueMilk(adapterPosition, time, type, value, o, dayCollectionModel, PayCard.this, avi, famerModel, (s, adapterPosition1, time1, type1, dayCollectionModel1, a) -> PayCard.this.updateCollectionValue(s, time, type, dayCollectionModel1, a, null, null));
+            CommonFuncs.editValueMilk(isEditable, adapterPosition, time, type, value, o, dayCollectionModel, PayCard.this, avi, famerModel, (s, adapterPosition1, time1, type1, dayCollectionModel1, a) -> PayCard.this.updateCollectionValue(s, time, type, dayCollectionModel1, a, null, null));
 
         } else if (type == 2) {
-            CommonFuncs.editValueLoan(dayCollectionModel, PayCard.this, famerModel, (value1, loanModel, time12, dayCollectionModel12, alertDialogAndroid) -> PayCard.this.updateCollectionValue(value1, 0, type, dayCollectionModel12, alertDialogAndroid, loanModel, null));
+            CommonFuncs.editValueLoan(isEditable, dayCollectionModel, PayCard.this, famerModel, (value1, loanModel, time12, dayCollectionModel12, alertDialogAndroid) -> PayCard.this.updateCollectionValue(value1, 0, type, dayCollectionModel12, alertDialogAndroid, loanModel, null));
 
         } else {
             OrderConstants.setFamerModel(famerModel);
             Intent intent2 = new Intent(PayCard.this, EditOrder.class);
             intent2.putExtra("farmer", famerModel);
             intent2.putExtra("dayCollection", dayCollectionModel);
+            intent2.putExtra("isEditable", isEditable);
             startActivityForResult(intent2, 10004);
 
 
@@ -554,13 +555,20 @@ public class PayCard extends AppCompatActivity {
 
 
                         CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
-                        editValue(adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
+                        editValue(true, adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
 
 
                     } else {
                         MyToast.toast("Future collections cannot be edited", PayCard.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+
+                        // CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
+                        // editValue(false,adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
+
                     }
                 } else {
+                    CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
+                    editValue(false, adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
+
                     MyToast.toast("Cards in an approved payout cannot be edited", PayCard.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
 
                 }

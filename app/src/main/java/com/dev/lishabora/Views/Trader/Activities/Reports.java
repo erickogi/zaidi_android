@@ -28,16 +28,16 @@ public class Reports extends AppCompatActivity {
         });
     }
 
-    public void milkFragment(View view) {
-
-    }
-
-    public void loansFragment(View view) {
-    }
-
-    public void productsFragment(View view) {
-    }
-
-    public void totalsFragment(View view) {
-    }
+//    public void milkFragment(View view) {
+//
+//    }
+//
+//    public void loansFragment(View view) {
+//    }
+//
+//    public void productsFragment(View view) {
+//    }
+//
+//    public void totalsFragment(View view) {
+//    }
 }

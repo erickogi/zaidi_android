@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
+
 class DateTimeUtils {
     companion object {
 
@@ -287,6 +288,21 @@ class DateTimeUtils {
 
             val dateG = conver2Date(date)!!.toString("MMM/yyyy")
             return dateG.equals(month)
+
+        }
+
+        fun getLongDate(dayDateTime: String): Long {
+            try {
+                val sdf = SimpleDateFormat(FormatSmall)
+                val date = sdf.parse(dayDateTime)
+
+                return date.time
+
+            } catch (e: ParseException) {
+                e.printStackTrace()
+            }
+
+            return 0
 
         }
     }

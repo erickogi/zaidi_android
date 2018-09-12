@@ -80,6 +80,7 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
         mStepperLayout.setListener(this);
         mStepperLayout.setOffscreenPageLimit(4);
 
+
     }
 
     @Override
@@ -139,6 +140,8 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
                 c.setDayName(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "E"));
                 c.setLoanAmountGivenOutPrice("0");
                 c.setDayDate(DateTimeUtils.Companion.getToday());
+            c.setDayDateLog(DateTimeUtils.Companion.getLongDate(c.getDayDate()));
+
             c.setTimeOfDay(ampm);
             c.setMilkCollectedAm("0");
                 c.setLoanAmountGivenOutPrice("0");

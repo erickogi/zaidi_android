@@ -85,6 +85,7 @@ public class EditOrder extends AppCompatActivity {
     private View view;
     private List<FarmerHistoryByDateModel> modelsDA = new LinkedList<>();
     private DayCollectionModel dayCollectionModel;
+    private boolean isEditable;
     private void initViewCustomDialog() {
 
 
@@ -103,6 +104,14 @@ public class EditOrder extends AppCompatActivity {
         imgIcon.setVisibility(View.GONE);
         imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
         txtTitle.setText("Route");
+
+
+//        if(!isEditable){
+//            if(currentSide==EasyFlipView.FlipState.FRONT_SIDE){
+//                b
+//            }
+//            btnPositive.setEnabled(false);
+//        }
 
         btnPositive.setOnClickListener(view -> btnPositiveClicked());
         btnNeutral.setOnClickListener(view -> btnNeutralClicked());
@@ -205,6 +214,7 @@ public class EditOrder extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_order);
         dayCollectionModel = (DayCollectionModel) getIntent().getSerializableExtra("dayCollection");
+        isEditable = getIntent().getBooleanExtra("isEditable", true);
         easyFlipView = findViewById(R.id.easyFlipView);
         famerModel = OrderConstants.getFamerModel();
 
@@ -260,6 +270,10 @@ public class EditOrder extends AppCompatActivity {
         btnPositive.setText("Complete");
         btnPositive.setVisibility(View.VISIBLE);
 
+        if (!isEditable) {
+            btnPositive.setEnabled(false);
+        }
+
 
         btnNegative.setText("Dismiss");
         btnNegative.setVisibility(View.VISIBLE);
@@ -305,6 +319,11 @@ public class EditOrder extends AppCompatActivity {
                 filterList(productsModels);
             }
         }));
+
+        if (!isEditable) {
+            btngetOrders.setEnabled(false);
+            //btngetOrders.setVisibility(View.GONE);
+        }
     }
 
     private void filterList(List<ProductsModel> productsModels) {
@@ -731,7 +750,17 @@ public class EditOrder extends AppCompatActivity {
 
         imgAdd = findViewById(R.id.img_add);
         imgRemove = findViewById(R.id.img_remove);
+        if (!isEditable) {
+            // btngetOrders.setEnabled(false);
+            //btngetOrders.setVisibility(View.GONE);
+            edtDeliveryFee.setEnabled(false);
+            edtAmount.setEnabled(false);
+            imgAdd.setEnabled(false);
+            imgRemove.setEnabled(false);
 
+            imgAdd.setClickable(false);
+            imgRemove.setClickable(false);
+        }
 
     }
 

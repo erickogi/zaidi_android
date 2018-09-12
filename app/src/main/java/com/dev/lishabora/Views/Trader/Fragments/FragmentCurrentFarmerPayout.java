@@ -31,6 +31,7 @@ import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.Utils.AdvancedOnclickRecyclerListener;
 import com.dev.lishabora.Utils.CollectionCreateUpdateListener;
+import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
@@ -325,13 +326,13 @@ public class FragmentCurrentFarmerPayout extends Fragment {
 
     }
 
-    public void editValue(int adapterPosition, int time, int type, String value, Object o, View editable, DayCollectionModel dayCollectionModel) {
+    public void editValue(boolean isEditable, int adapterPosition, int time, int type, String value, Object o, View editable, DayCollectionModel dayCollectionModel) {
 
         if (type == 1) {
-            CommonFuncs.editValueMilk(adapterPosition, time, type, value, o, dayCollectionModel, getContext(), avi, famerModel, (s, adapterPosition1, time1, type1, dayCollectionModel1, a) -> FragmentCurrentFarmerPayout.this.updateCollectionValue(s, time, type, dayCollectionModel1, a, null, null));
+            CommonFuncs.editValueMilk(isEditable, adapterPosition, time, type, value, o, dayCollectionModel, getContext(), avi, famerModel, (s, adapterPosition1, time1, type1, dayCollectionModel1, a) -> FragmentCurrentFarmerPayout.this.updateCollectionValue(s, time, type, dayCollectionModel1, a, null, null));
 
         } else if (type == 2) {
-            CommonFuncs.editValueLoan(dayCollectionModel, getContext(), famerModel, (value1, loanModel, time12, dayCollectionModel12, alertDialogAndroid) -> FragmentCurrentFarmerPayout.this.updateCollectionValue(value1, 0, type, dayCollectionModel12, alertDialogAndroid, loanModel, null));
+            CommonFuncs.editValueLoan(isEditable, dayCollectionModel, getContext(), famerModel, (value1, loanModel, time12, dayCollectionModel12, alertDialogAndroid) -> FragmentCurrentFarmerPayout.this.updateCollectionValue(value1, 0, type, dayCollectionModel12, alertDialogAndroid, loanModel, null));
 
         } else {
 
@@ -340,6 +341,7 @@ public class FragmentCurrentFarmerPayout extends Fragment {
             Intent intent2 = new Intent(getActivity(), EditOrder.class);
             intent2.putExtra("farmer", famerModel);
             intent2.putExtra("dayCollection", dayCollectionModel);
+            intent2.putExtra("isEditable", isEditable);
             startActivityForResult(intent2, 10004);
 
 
@@ -430,14 +432,36 @@ public class FragmentCurrentFarmerPayout extends Fragment {
             @Override
             public void onEditTextChanged(int adapterPosition, int time, int type, View editable) {
 
-                CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
+//                CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
+//                editValue(adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
 
 
-                editValue(adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
+                if (dayCollectionModels.get(adapterPosition).getPayoutStatus() == 0) {
+                    if (DateTimeUtils.Companion.isPastLastDay(dayCollectionModels.get(adapterPosition).getDate(), 1)) {
 
 
+                        CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
+                        editValue(true, adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
 
+
+                    } else {
+                        MyToast.toast("Future collections cannot be edited", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+
+                        //CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
+                        // editValue(false,adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
+
+                    }
+                } else {
+                    CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
+                    editValue(false, adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
+
+                    MyToast.toast("Cards in an approved payout cannot be edited", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+
+                }
             }
+
+
+
 
         });
         recyclerView.setAdapter(listAdapter);

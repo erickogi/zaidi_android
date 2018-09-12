@@ -182,6 +182,8 @@ public class FragmentGiveLoan extends Fragment {
                 c.setDayName(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "E"));
                 c.setLoanAmountGivenOutPrice("0");
                 c.setDayDate(DateTimeUtils.Companion.getToday());
+            c.setDayDateLog(DateTimeUtils.Companion.getLongDate(c.getDayDate()));
+
             c.setTimeOfDay(ampm);
             c.setMilkCollectedAm("0");
             c.setMilkCollectedPm("0");

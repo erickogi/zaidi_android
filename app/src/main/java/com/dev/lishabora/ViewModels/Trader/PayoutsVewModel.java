@@ -261,6 +261,10 @@ public class PayoutsVewModel extends AndroidViewModel {
         return collectionsRepo.getCollectionByPayout(payoutnumber);
     }
 
+    public LiveData<List<Collection>> getCollectionsBetweenDates(Long date1, Long date2) {
+        return collectionsRepo.getCollectionsBetweenDates(date1, date2);
+    }
+
     public LiveData<Payouts> getPayoutsByPayoutNumber(String number) {
         return payoutsRepo.getPayoutsByPayout(number);
     }
@@ -390,6 +394,7 @@ public class PayoutsVewModel extends AndroidViewModel {
     public void cancelFarmersPayoutCard(String farmercode, int payoutNumber) {
         collectionsRepo.cancelFarmersPayoutCard(farmercode, payoutNumber);
     }
+
 
 //    public LiveData<Integer> getStatusForFarmerPayout(String farmercode, int payoutNumber) {
 //

@@ -386,6 +386,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                     c.setDayName(today.getText().toString());
                     c.setLoanAmountGivenOutPrice("0");
                     c.setDayDate(DateTimeUtils.Companion.getToday());
+                    c.setDayDateLog(DateTimeUtils.Companion.getLongDate(c.getDayDate()));
                     c.setTimeOfDay("AM");
 
 
@@ -466,6 +467,8 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                     c.setDayName(today.getText().toString());
                     c.setLoanAmountGivenOutPrice("0");
                     c.setDayDate(DateTimeUtils.Companion.getToday());
+                    c.setDayDateLog(DateTimeUtils.Companion.getLongDate(c.getDayDate()));
+
                     c.setTimeOfDay("PM");
 
 

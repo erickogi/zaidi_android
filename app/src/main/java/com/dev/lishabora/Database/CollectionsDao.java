@@ -105,4 +105,6 @@ public interface CollectionsDao {
     @Query("UPDATE COLLECTIONTRANSACTIONS SET approved =:status WHERE  payoutnumber =:payoutnumber")
     void approvePayout(int payoutnumber, int status);
 
+    @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE dayDateLog BETWEEN :date1 AND :date2")
+    LiveData<List<Collection>> getCollectionsBetweenDates(Long date1, Long date2);
 }

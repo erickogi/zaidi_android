@@ -20,6 +20,7 @@ public class Collection {
     private String dayName;
     private String dayDate;
     private String dayDateTime;
+    private Long dayDateLog;
 
 
     private int payoutnumber;
@@ -108,6 +109,16 @@ public class Collection {
 //    public void setMilkDetails(String milkDetails) {
 //        this.milkDetails = milkDetails;
 //    }
+
+
+    public Long getDayDateLog() {
+
+        return dayDateLog;
+    }
+
+    public void setDayDateLog(Long dayDateLog) {
+        this.dayDateLog = dayDateLog;
+    }
 
     public int getApproved() {
         return approved;

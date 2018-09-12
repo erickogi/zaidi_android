@@ -29,6 +29,7 @@ import com.dev.lishabora.Models.MonthsDates;
 import com.dev.lishabora.Models.OrderModel;
 import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
 import com.dev.lishabora.Models.Payouts;
+import com.dev.lishabora.Models.Reports.ReportListModel;
 import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.Utils.CollectionCreateUpdateListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
@@ -564,6 +565,7 @@ public class CommonFuncs {
 
     }
 
+
     public static String[] getCollectionsTotals(MonthsDates mds, List<Collection> collections) {
         String cycleCode = "";
         double milk = 0.0;
@@ -861,7 +863,7 @@ public class CommonFuncs {
         );
     }
 
-    public static void editValueMilk(int adapterPosition, int time, int type, String value, Object o, DayCollectionModel dayCollectionModel, Context context, AVLoadingIndicatorView avi, FamerModel famerModel, MilkEditValueListener listener) {
+    public static void editValueMilk(boolean isEditable, int adapterPosition, int time, int type, String value, Object o, DayCollectionModel dayCollectionModel, Context context, AVLoadingIndicatorView avi, FamerModel famerModel, MilkEditValueListener listener) {
 
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_edit_collection, null);
@@ -938,6 +940,7 @@ public class CommonFuncs {
         }
 
 
+
         alertDialogBuilderUserInput
                 .setCancelable(false);
         AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
@@ -965,6 +968,13 @@ public class CommonFuncs {
         imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
         txtTitle.setText("Route");
 
+        if (!isEditable) {
+            edtVL.setEnabled(false);
+            btnPositive.setVisibility(View.GONE);
+            // ed.setEnabled(false);
+        }
+
+
         btnPositive.setOnClickListener(view -> {
             if (TextUtils.isEmpty(Objects.requireNonNull(edtVL.getText()).toString())) {
                 listener.updateCollection("0.0", adapterPosition, time, type, dayCollectionModel, alertDialogAndroid);
@@ -980,7 +990,7 @@ public class CommonFuncs {
 
     }
 
-    public static void editValueLoan(DayCollectionModel dayCollectionModel, Context context, FamerModel famerModel, LoanEditValueListener listener) {
+    public static void editValueLoan(boolean isEditable, DayCollectionModel dayCollectionModel, Context context, FamerModel famerModel, LoanEditValueListener listener) {
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_edit_loan, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(context));
@@ -1054,6 +1064,7 @@ public class CommonFuncs {
         name.setText(famerModel.getNames());
 
 
+
         alertDialogBuilderUserInput.setCancelable(false);
         AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
         alertDialogAndroid.setCancelable(false);
@@ -1079,6 +1090,15 @@ public class CommonFuncs {
         imgIcon.setVisibility(View.VISIBLE);
         imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
         txtTitle.setText("Loan");
+
+        if (!isEditable) {
+            edtAmount.setEnabled(false);
+            imgAdd.setClickable(false);
+            imgRemove.setClickable(false);
+            imgAdd.setEnabled(false);
+            imgRemove.setEnabled(false);
+            btnPositive.setVisibility(View.GONE);
+        }
 
         btnPositive.setOnClickListener(view -> {
             String value = "0";
@@ -1267,6 +1287,51 @@ public class CommonFuncs {
         }
         return null;
     }
+
+    public static List<ReportListModel> generateReportListModel(List<Collection> collections, int type) {
+        List<ReportListModel> reportListModels = new LinkedList<>();
+        for (Collection c : collections) {
+
+            if (type == 1) {
+                reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), c.getMilkCollectedValueLtrsAm(), c.getMilkCollectedValueLtrsPm()));
+            } else if (type == 2) {
+                reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), null, c.getLoanAmountGivenOutPrice()));
+
+            } else if (type == 3) {
+                reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), null, c.getOrderGivenOutPrice()));
+
+            }
+
+
+        }
+        return reportListModels;
+    }
+
+    public static List<ReportListModel> generateReportListModel(MonthsDates mds, List<Collection> collections, int type) {
+
+
+        List<ReportListModel> reportListModels = new LinkedList<>();
+        for (Collection c : collections) {
+            if (DateTimeUtils.Companion.isInMonth(c.getDayDate(), mds.getMonthName())) {
+
+                if (type == 1) {
+                    reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), c.getMilkCollectedValueLtrsAm(), c.getMilkCollectedValueLtrsPm()));
+                } else if (type == 2) {
+                    reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), null, c.getLoanAmountGivenOutPrice()));
+
+                } else if (type == 3) {
+                    reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), null, c.getOrderGivenOutPrice()));
+
+                }
+            }
+
+
+        }
+        return reportListModels;
+
+
+    }
+
 
     public static class ValueObject {
         private String value;
