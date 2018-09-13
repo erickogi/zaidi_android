@@ -41,7 +41,24 @@ class GeneralUtills {
             bd = bd.setScale(places, RoundingMode.HALF_UP)
             return bd.toDouble()
         }
+
+        fun round(value: String, places: Int): String {
+
+            var d: Double
+            try {
+                d = java.lang.Double.valueOf(value)
+
+
+            } catch (ea: Exception) {
+
+                return value
+            }
+
+            return java.lang.String.valueOf(round(d, places))
+        }
     }
+
+
 
     fun getRandon(max: Int, min: Int): Int {
         val r = Random()

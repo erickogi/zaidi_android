@@ -35,6 +35,7 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
     private MaterialSpinner spinnerRoute, spinnerUnit;
     private TraderViewModel mViewModel;
     private PrefrenceManager prefrenceManager;
+    FamerModel fm = new FamerModel();
 
     private List<RoutesModel> routesModels;
     private List<UnitsModel> unitsModels;
@@ -142,12 +143,7 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
         initData();
         initActions();
 
-        if (FarmerConst.getCreateFarmerIntentType() == 1) {
-            FamerModel fm = FarmerConst.getFamerModel();
-            if (fm != null) {
-                setEditData(fm);
-            }
-        }
+
 
     }
 
@@ -158,7 +154,7 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
         edtRouteCode.setText(fm.getRoutecode());
 
         edtUnitMeasurement.setText(fm.getUnitcapacity());
-        edtUnitName.setText(fm.getUnitcode());
+        edtUnitName.setText(fm.getUnitname());
         edtUnitPrice.setText(fm.getUnitprice());
 
 
@@ -168,7 +164,7 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
         spinnerUnit.setOnItemSelectedListener((view, position, id, item) -> {
             if (position != 0) {
                 UnitsModel unitsModel = unitsModels.get(position - 1);
-                edtUnitName.setText("" + unitsModel.getCode());
+                edtUnitName.setText("" + unitsModel.getUnit());
                 edtUnitMeasurement.setText(unitsModel.getUnitcapacity());
                 edtUnitPrice.setText(unitsModel.getUnitprice());
             }
@@ -184,19 +180,39 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
 
     private void initData() {
 
+        fm = new FamerModel();
+        if (FarmerConst.getCreateFarmerIntentType() == 1) {
+            fm = FarmerConst.getFamerModel();
+            if (fm != null) {
+                setEditData(fm);
+            }
+        }
+
         mViewModel.getRoutes(false).observe(this, routesModels -> {
             if (routesModels != null && routesModels.size() > 0) {
                 prefrenceManager.setIsRoutesListFirst(false);
 
                 FragmentRoutesUnitDetails.this.routesModels = routesModels;
-                String routes[] = new String[routesModels.size() + 1];
+                String routes[] = new String[routesModels.size()];
 
-                routes[0] = "Choose Route";
+                //routes[0] = "Choose Route";
                 for (int a = 0; a < routesModels.size(); a++) {
-                    routes[a + 1] = routesModels.get(a).getRoute();
+                    routes[a] = routesModels.get(a).getRoute();
 
                 }
                 spinnerRoute.setItems(routes);
+
+                if (fm != null) {
+                    if (spinnerRoute.getItems() != null) {
+                        List<String> items = spinnerRoute.getItems();
+                        for (int a = 0; a < items.size(); a++) {
+                            if (items.get(a).contains(fm.getRoutename())) {
+                                spinnerRoute.setSelectedIndex(a);
+                            }
+                        }
+                    }
+                }
+
             }
 
         });
@@ -204,17 +220,31 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
             if (unitsModels != null && unitsModels.size() > 0) {
                 prefrenceManager.setIsRoutesListFirst(false);
                 FragmentRoutesUnitDetails.this.unitsModels = unitsModels;
-                String units[] = new String[unitsModels.size() + 1];
+                String units[] = new String[unitsModels.size()];
 
-                units[0] = "Choose Unit ";
+                //units[0] = "Choose Unit ";
                 for (int a = 0; a < unitsModels.size(); a++) {
-                    units[a + 1] = unitsModels.get(a).getUnit();
+                    units[a] = unitsModels.get(a).getUnit();
 
                 }
                 spinnerUnit.setItems(units);
 
+                if (fm != null) {
+                    if (spinnerUnit.getItems() != null) {
+
+                        List<String> items2 = spinnerUnit.getItems();
+                        for (int a = 0; a < items2.size(); a++) {
+                            if (items2.get(a).contains(fm.getUnitname())) {
+                                spinnerUnit.setSelectedIndex(a);
+                            }
+                        }
+                    }
+                }
+
             }
         });
+
+
     }
 
 }

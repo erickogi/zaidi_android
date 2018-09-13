@@ -4,6 +4,7 @@
     style="@style/Widget.MaterialComponents.CardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    app:cardUseCompatPadding="true"
     android:background="@android:drawable/picture_frame"
 
     app:strokeColor="@color/divider"
@@ -13,12 +14,14 @@
 
     <RelativeLayout
 
+
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_border_tv">
 
         <LinearLayout
+            android:padding="8dp"
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

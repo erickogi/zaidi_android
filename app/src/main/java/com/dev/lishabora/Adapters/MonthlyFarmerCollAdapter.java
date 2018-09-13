@@ -22,21 +22,28 @@ public class MonthlyFarmerCollAdapter extends RecyclerView.Adapter<MonthsFarmerC
     private Context context;
     private List<FarmerHistoryByDateModel> modelList;
     private OnclickRecyclerListener listener;
-    private boolean isChk = false;
+    private int which = 0;
 
     public MonthlyFarmerCollAdapter(Context context, List<FarmerHistoryByDateModel> modelList, OnclickRecyclerListener listener) {
         this.context = context;
         this.modelList = modelList;
         this.listener = listener;
-        this.isChk = false;
+        this.which = 999;
 
     }
+//    public MonthlyFarmerCollAdapter(Context context, List<FarmerHistoryByDateModel> modelList, OnclickRecyclerListener listener) {
+//        this.context = context;
+//        this.modelList = modelList;
+//        this.listener = listener;
+//        this.isChk = false;
+//
+//    }
 
-    public MonthlyFarmerCollAdapter(Context context, List<FarmerHistoryByDateModel> modelList, OnclickRecyclerListener listener, boolean isChk) {
+    public MonthlyFarmerCollAdapter(Context context, List<FarmerHistoryByDateModel> modelList, OnclickRecyclerListener listener, int which) {
         this.context = context;
         this.modelList = modelList;
         this.listener = listener;
-        this.isChk = isChk;
+        this.which = which;
 
     }
 
@@ -44,7 +51,7 @@ public class MonthlyFarmerCollAdapter extends RecyclerView.Adapter<MonthsFarmerC
     public MonthsFarmerCollViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = null;
 
-        itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.month_farmercollection_card, parent, false);
+        itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.history_farmercollection_card, parent, false);
 
         return new MonthsFarmerCollViewHolder(itemView, listener);
     }

@@ -1,8 +1,7 @@
-package com.dev.lishabora.Views.Trader.Fragments;
+package com.dev.lishabora.Views.Reports;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,18 +15,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dev.lishabora.Adapters.FarmerHistoryCollAdapter;
-import com.dev.lishabora.Adapters.PayoutesAdapter;
 import com.dev.lishabora.Models.Collection;
-import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.FarmerHistoryByDateModel;
 import com.dev.lishabora.Models.MonthsDates;
-import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.Views.CommonFuncs;
-import com.dev.lishabora.Views.Trader.Activities.PayCard;
 import com.dev.lishabora.Views.Trader.FarmerToolBarUI;
 import com.dev.lishaboramobile.R;
 import com.jaredrummler.materialspinner.MaterialSpinner;
@@ -40,20 +35,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-import timber.log.Timber;
-
 import static com.dev.lishabora.Views.CommonFuncs.createPayoutsByCollection;
-import static com.dev.lishabora.Views.CommonFuncs.getFarmersCollectionModel;
 
-public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.OnDateSetListener {
-    private FarmerToolBarUI toolbar;
+public class FragmentHistory extends Fragment implements DatePickerDialog.OnDateSetListener {
+    private HistoryToolBarUI toolbar;
 
     private View view;
-    private FamerModel famerModel;
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
     private PayoutsVewModel payoutsVewModel;
 
     private boolean isTO;
+    private int type;
     private View.OnClickListener fromClicked = view -> {
 
         isTO = false;
@@ -65,18 +57,19 @@ public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.
         selectDate();
 
     };
+    private List<Payouts> listpayouts;
     private MaterialSpinner.OnItemSelectedListener spinnerCatListener = (view, position, id, item) -> {
-        toolbar.show();
+        toolbar.show(type);
         reload();
 
     };
     private MaterialSpinner.OnItemSelectedListener spinnerMonthListener = (view, position, id, item) -> {
-        toolbar.show();
+        toolbar.show(type);
         reload();
 
     };
     private MaterialSpinner.OnItemSelectedListener spinnerTypeListener = (view, position, id, item) -> {
-        toolbar.show();
+        toolbar.show(type);
         reload();
 
 
@@ -88,13 +81,12 @@ public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
 
 
-
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_farmer_history, container, false);
+        return inflater.inflate(R.layout.fragment_report_list, container, false);
     }
 
     @Override
@@ -102,7 +94,7 @@ public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.
         super.onViewCreated(view, savedInstanceState);
         this.view = view;
         if (getArguments() != null) {
-            famerModel = (FamerModel) getArguments().getSerializable("farmer");
+            type = getArguments().getInt("type");
         }
         toolbar = view.findViewById(R.id.toolbar);
 
@@ -113,16 +105,8 @@ public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.
         toolbar.setOnMonthSelectListener(spinnerMonthListener);
 
 
-        toolbar.show();
+        toolbar.show(type);
         reload();
-
-
-
-
-
-
-
-
 
 
     }
@@ -133,38 +117,35 @@ public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.
 
     }
 
-
-
-
-    private List<Payouts> listpayouts;
     private void initByPayouts() {
 
-        payoutsVewModel.getPayoutsByCycleCode(famerModel.getCyclecode()).observe(this, payouts -> {
+        payoutsVewModel.getPayoutsByCycleCode("").observe(this, payouts -> {
             if (payouts != null && payouts.size() > 0) {
 
                 getCollectionsPerPayout(payouts);
 
             } else {
-                initPayoutList();
+                //initPayoutList();
 
             }
         });
 
     }
+
     private void getCollectionsPerPayout(List<Payouts> payouts) {
 
         List<Payouts> payoutsList = new LinkedList<>();
-        PayoutesAdapter payoutesAdapter = initPayoutList();
+        //PayoutesAdapter payoutesAdapter = initPayoutList();
 
         for (Payouts p : payouts) {
-            payoutsVewModel.getCollectionByDateByPayoutByFarmer("" + p.getPayoutnumber(), famerModel.getCode()).observe(this, new Observer<List<Collection>>() {
+            payoutsVewModel.getCollectionByDateByPayout("" + p.getPayoutnumber()).observe(this, new Observer<List<Collection>>() {
                 @Override
                 public void onChanged(@Nullable List<Collection> collections) {
 
                     if (collections != null) {
                         payoutsList.add(createPayoutsByCollection(collections, p, payoutsVewModel));
                         listpayouts = payoutsList;
-                        payoutesAdapter.refresh(payoutsList);
+                        //   payoutesAdapter.refresh(payoutsList);
 
                     }
 
@@ -175,76 +156,76 @@ public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.
 
 
     }
-    private PayoutesAdapter initPayoutList() {
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
-        mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(mStaggeredLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-
-        if (listpayouts == null) {
-            listpayouts = new LinkedList<>();
-        }
-        PayoutesAdapter listAdapter = new PayoutesAdapter(getActivity(), listpayouts, new OnclickRecyclerListener() {
-            @Override
-            public void onSwipe(int adapterPosition, int direction) {
-
-
-            }
-
-            @Override
-            public void onClickListener(int position) {
-
-
-                Payouts p = listpayouts.get(position);
-                PayoutFarmersCollectionModel payoutFarmersCollectionModel = getFarmersCollectionModel(famerModel, p);
-
-
-                Timber.tag("farmerCilcked").d("clicked " + position);
-                Intent intent = new Intent(getActivity(), PayCard.class);
-                intent.putExtra("data", payoutFarmersCollectionModel);
-                intent.putExtra("payout", p);
-                intent.putExtra("farmers", "null");
-                intent.putExtra("farmer", famerModel);
-                startActivity(intent);
-
-
-            }
-
-            @Override
-            public void onLongClickListener(int position) {
-
-
-            }
-
-            @Override
-            public void onCheckedClickListener(int position) {
-
-            }
-
-            @Override
-            public void onMoreClickListener(int position) {
-
-            }
-
-            @Override
-            public void onClickListener(int adapterPosition, @NotNull View view) {
-
-
-            }
-        }, true);
-        recyclerView.setAdapter(listAdapter);
-
-        listAdapter.notifyDataSetChanged();
-
-
-        return listAdapter;
-    }
+//    private PayoutesAdapter initPayoutList() {
+//        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+//        mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+//        recyclerView.setLayoutManager(mStaggeredLayoutManager);
+//        recyclerView.setItemAnimator(new DefaultItemAnimator());
+//
+//
+//        if (listpayouts == null) {
+//            listpayouts = new LinkedList<>();
+//        }
+//        PayoutesAdapter listAdapter = new PayoutesAdapter(getActivity(), listpayouts, new OnclickRecyclerListener() {
+//            @Override
+//            public void onSwipe(int adapterPosition, int direction) {
+//
+//
+//            }
+//
+//            @Override
+//            public void onClickListener(int position) {
+//
+//
+//                Payouts p = listpayouts.get(position);
+//                PayoutFarmersCollectionModel payoutFarmersCollectionModel = getFarmersCollectionModel(famerModel, p);
+//
+//
+//                Timber.tag("farmerCilcked").d("clicked " + position);
+//                Intent intent = new Intent(getActivity(), PayCard.class);
+//                intent.putExtra("data", payoutFarmersCollectionModel);
+//                intent.putExtra("payout", p);
+//                intent.putExtra("farmers", "null");
+//                intent.putExtra("farmer", famerModel);
+//                startActivity(intent);
+//
+//
+//            }
+//
+//            @Override
+//            public void onLongClickListener(int position) {
+//
+//
+//            }
+//
+//            @Override
+//            public void onCheckedClickListener(int position) {
+//
+//            }
+//
+//            @Override
+//            public void onMoreClickListener(int position) {
+//
+//            }
+//
+//            @Override
+//            public void onClickListener(int adapterPosition, @NotNull View view) {
+//
+//
+//            }
+//        }, true);
+//        recyclerView.setAdapter(listAdapter);
+//
+//        listAdapter.notifyDataSetChanged();
+//
+//
+//        return listAdapter;
+//    }
 
 
     private void initYearly() {
 
-        payoutsVewModel.getCollectionByFarmer(famerModel.getCode()).observe(this, collections -> {
+        payoutsVewModel.getCollections().observe(this, collections -> {
             if (collections != null && collections.size() > 0) {
                 initList(CommonFuncs.createHistoryList(collections, null, true));
 
@@ -259,7 +240,7 @@ public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.
 
     private void initMonth(MonthsDates monthsDates) {
 
-        payoutsVewModel.getCollectionByFarmer(famerModel.getCode()).observe(this, collections -> {
+        payoutsVewModel.getCollections().observe(this, collections -> {
             if (collections != null && collections.size() > 0) {
                 initList(CommonFuncs.createHistoryList(collections, monthsDates, false));
 
@@ -327,7 +308,7 @@ public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.
 
     private void selectDate() {
         Calendar now = Calendar.getInstance();
-        DatePickerDialog dpd = DatePickerDialog.newInstance(FragmentFarmerHistory.this,
+        DatePickerDialog dpd = DatePickerDialog.newInstance(FragmentHistory.this,
                 now.get(Calendar.YEAR),
                 now.get(Calendar.MONTH),
                 now.get(Calendar.DAY_OF_MONTH));
@@ -380,7 +361,7 @@ public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.
     }
 
     private void initDays() {
-        payoutsVewModel.getCollectionsBetweenDates(DateTimeUtils.Companion.getLongDate(toolbar.getDateFrom()), DateTimeUtils.Companion.getLongDate(toolbar.getDateTo()), famerModel.getCode()).observe(FragmentFarmerHistory.this, new Observer<List<Collection>>() {
+        payoutsVewModel.getCollectionsBetweenDates(DateTimeUtils.Companion.getLongDate(toolbar.getDateFrom()), DateTimeUtils.Companion.getLongDate(toolbar.getDateTo())).observe(FragmentHistory.this, new Observer<List<Collection>>() {
             @Override
             public void onChanged(@Nullable List<Collection> collections) {
 

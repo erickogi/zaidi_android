@@ -44,6 +44,7 @@
 
                         <com.jaredrummler.materialspinner.MaterialSpinner
                             android:id="@+id/spinnerRoute"
+                            android:hint="Route"
 
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -142,6 +143,7 @@
                         <com.jaredrummler.materialspinner.MaterialSpinner
                             android:id="@+id/spinnerUnit"
                             android:layout_width="match_parent"
+                            android:hint="Unit"
                             android:layout_height="wrap_content"
                             android:layout_margin="2dp"
                             app:ms_arrow_tint="@color/green_color_picker"
@@ -170,7 +172,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:enabled="false"
-                                android:hint="Unit Code "
+                                android:hint="Unit  "
 
                                 android:inputType="text"
                                 android:textColor="@color/black" />

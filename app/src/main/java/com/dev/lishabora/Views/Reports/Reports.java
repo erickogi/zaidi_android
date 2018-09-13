@@ -22,13 +22,11 @@ public class Reports extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_milk_reports);
 
-        type = getIntent().getIntExtra("type", 1);
+        type = getIntent().getIntExtra("type", HistoryToolBarUI.TYPE_LOAN);
         bundle.putInt("type", type);
 
 
-
-
-        fragment = new FragmentList();
+        fragment = new FragmentHistory();
         fragment.setArguments(bundle);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.frame_layout, fragment, "fragmentMain").commit();
@@ -58,7 +56,7 @@ public class Reports extends AppCompatActivity {
         bottomNavigation.setOnTabSelectedListener((position, wasSelected) -> {
             switch (position) {
                 case 0:
-                    fragment = new FragmentList();
+                    fragment = new FragmentHistory();
                     fragment.setArguments(bundle);
                     popOutFragments();
                     fragment.setArguments(bundle);
@@ -75,7 +73,7 @@ public class Reports extends AppCompatActivity {
 
                 case 2:
                     popOutFragments();
-                    fragment = new FragmentChart();
+                    fragment = new FragmentBarChart();
 
                     fragment.setArguments(bundle);
                     setFragment();

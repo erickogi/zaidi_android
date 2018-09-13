@@ -38,6 +38,7 @@ import com.dev.lishabora.ViewModels.Admin.AdminsViewModel;
 import com.dev.lishabora.Views.Login.Activities.LoginActivity;
 import com.dev.lishabora.Views.Login.ResetPassword;
 import com.dev.lishabora.Views.Reports.FragmentReports;
+import com.dev.lishabora.Views.Reports.HistoryToolBarUI;
 import com.dev.lishabora.Views.Reports.Reports;
 import com.dev.lishabora.Views.Trader.Fragments.FragementFarmersList;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentProductList;
@@ -348,25 +349,25 @@ public class TraderActivity extends AppCompatActivity {
 
     public void milkFragment(View view) {
         Intent intent = new Intent(this, Reports.class);
-        intent.putExtra("type", 1);
+        intent.putExtra("type", HistoryToolBarUI.TYPE_MILK);
         startActivity(intent);
     }
 
     public void loansFragment(View view) {
         Intent intent = new Intent(this, Reports.class);
-        intent.putExtra("type", 2);
+        intent.putExtra("type", HistoryToolBarUI.TYPE_LOAN);
         startActivity(intent);
     }
 
     public void productsFragment(View view) {
         Intent intent = new Intent(this, Reports.class);
-        intent.putExtra("type", 3);
+        intent.putExtra("type", HistoryToolBarUI.TYPE_ORDERS);
         startActivity(intent);
     }
 
     public void totalsFragment(View view) {
         Intent intent = new Intent(this, Reports.class);
-        intent.putExtra("type", 4);
+        intent.putExtra("type", HistoryToolBarUI.TYPE_ALL);
         startActivity(intent);
     }
 

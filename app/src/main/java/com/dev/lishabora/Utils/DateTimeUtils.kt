@@ -1,6 +1,7 @@
 package com.dev.lishabora.Utils
 
 import android.text.format.DateUtils
+import android.util.Log
 import com.dev.lishabora.Models.DaysDates
 import com.dev.lishabora.Models.MonthsDates
 import org.joda.time.DateTime
@@ -23,7 +24,7 @@ class DateTimeUtils {
 
 
         var DisplayDatePattern1 = "dd-MMM"
-        var DisplayDatePattern2 = "dd/MMM/yyyy HH:mm:ss"
+        var DisplayDatePattern2 = "dd-MMM-yyyy HH:mm:ss"
 
 
 
@@ -267,7 +268,7 @@ class DateTimeUtils {
             val startOfMonth = today.dayOfMonth().withMinimumValue()
 
 
-            months.add(MonthsDates((LocalDate.now()).toString("MMM/yyyy"), convert2String(startOfMonth), convert2String(endOfMonth)))
+            months.add(MonthsDates((LocalDate.now()).toString("MMM-yyyy"), convert2String(startOfMonth), convert2String(endOfMonth)))
 
             for (i in 1..limit) {
 
@@ -275,7 +276,35 @@ class DateTimeUtils {
                 val prevous = today.minus(Period.months(i))
                 val endOfMonthPrevious = prevous.dayOfMonth().withMaximumValue()
                 val startOfMonthPrevious = prevous.dayOfMonth().withMinimumValue()
-                months.add(MonthsDates(prevous.toString("MMM/yyyy"), convert2String(startOfMonthPrevious), convert2String(endOfMonthPrevious)))
+                months.add(MonthsDates(prevous.toString("MMM-yyyy"), convert2String(startOfMonthPrevious), convert2String(endOfMonthPrevious)))
+
+
+            }
+            return months
+
+
+        }
+
+        fun getMonthsInYear(limit: Int): LinkedList<MonthsDates> {
+
+            val months = LinkedList<MonthsDates>()
+            val today = DateTime().dayOfYear().withMinimumValue()
+            Log.d("datt", convert2String(today))
+            //val today = DateTime().year().withMinimumValue().withTimeAtStartOfDay();
+
+            val endOfMonth = today.dayOfMonth().withMaximumValue()
+            val startOfMonth = today.dayOfMonth().withMinimumValue()
+
+
+            months.add(MonthsDates((today).toString("MMM-yyyy"), convert2String(startOfMonth), convert2String(endOfMonth)))
+
+            for (i in 1..limit) {
+
+
+                val prevous = today.plus(Period.months(i))
+                val endOfMonthPrevious = prevous.dayOfMonth().withMaximumValue()
+                val startOfMonthPrevious = prevous.dayOfMonth().withMinimumValue()
+                months.add(MonthsDates(prevous.toString("MMM-yyyy"), convert2String(startOfMonthPrevious), convert2String(endOfMonthPrevious)))
 
 
             }
@@ -286,7 +315,7 @@ class DateTimeUtils {
 
         fun isInMonth(date: String, month: String): Boolean {
 
-            val dateG = conver2Date(date)!!.toString("MMM/yyyy")
+            val dateG = conver2Date(date)!!.toString("MMM-yyyy")
             return dateG.equals(month)
 
         }

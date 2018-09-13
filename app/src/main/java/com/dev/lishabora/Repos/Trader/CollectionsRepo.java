@@ -158,6 +158,11 @@ public class CollectionsRepo {
 
     }
 
+    public LiveData<List<Collection>> getCollectionsBetweenDates(Long date1, Long date2, String code) {
+        return collectionsDao.getCollectionsBetweenDates(date1, date2, code);
+
+    }
+
 
     private static class insertAsyncTask extends AsyncTask<Collection, Void, Boolean> {
 

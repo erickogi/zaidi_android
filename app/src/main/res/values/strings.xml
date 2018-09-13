@@ -57,8 +57,8 @@
     <string name="cycle">Cycle</string>
     <string name="active">Active</string>
     <string name="title_activity_farmer_profile">FarmerProfile</string>
-    <string name="ksh">/=</string>
-    <string name="ltrs">Ltrs</string>
+    <string name="ksh">/-</string>
+    <string name="ltrs">L</string>
     <string name="title_activity_reports">Reports</string>
     <string name="title_activity_milk_reports">MilkReports</string>
 </resources>

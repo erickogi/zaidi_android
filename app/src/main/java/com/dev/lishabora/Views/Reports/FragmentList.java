@@ -42,12 +42,13 @@ public class FragmentList extends Fragment implements DatePickerDialog.OnDateSet
     List<MonthsDates> monthsDates;
     private MaterialSpinner spinnerType, spinnerCat;
     private ImageView imageFrom, imgTo;
+    private TextView txtFrom, txtTo, txtTotal, txtValueLabel1, txtValueLabel2;
+
     private LinearLayout lspinnerType, lspinnerCat, lfrom, lto;
     private RelativeLayout rdateRange;
     private View view;
     private RecyclerView recyclerView;
     private ReportListAdapter listAdapter;
-    private TextView txtFrom, txtTo, txtTotal, txtValueLabel1, txtValueLabel2;
     private int dateImage = 0;
     private String date1, date2;
     private int dataType = 0;
@@ -101,7 +102,7 @@ public class FragmentList extends Fragment implements DatePickerDialog.OnDateSet
         imageFrom = view.findViewById(R.id.img_from);
         imgTo = view.findViewById(R.id.img_to);
 
-        txtTotal = view.findViewById(R.id.txt_total);
+        //txtTotal = view.findViewById(R.id.txt_total);
 
 
         initList();
@@ -297,6 +298,7 @@ public class FragmentList extends Fragment implements DatePickerDialog.OnDateSet
         txtTotal.setText(String.valueOf(total1 + total2));
     }
 
+
     private void selectDate() {
         Calendar now = Calendar.getInstance();
         DatePickerDialog dpd = DatePickerDialog.newInstance(FragmentList.this,
@@ -320,15 +322,7 @@ public class FragmentList extends Fragment implements DatePickerDialog.OnDateSet
         dpd.show(Objects.requireNonNull(getActivity()).getFragmentManager(), "DatePicker");
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
@@ -341,5 +335,15 @@ public class FragmentList extends Fragment implements DatePickerDialog.OnDateSet
             txtTo.setText("..To .." + date2);
             reloadData(spinnerType.getSelectedIndex(), spinnerCat.getSelectedIndex());
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }

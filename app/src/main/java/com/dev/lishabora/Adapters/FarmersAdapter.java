@@ -10,6 +10,7 @@ import com.dev.lishabora.Adapters.ViewHolders.FarmerViewHolder;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.Draggable.helper.OnStartDragListener;
+import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.Views.Trader.FarmerConst;
 import com.dev.lishaboramobile.R;
@@ -68,7 +69,13 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
     @Override
     public void onBindViewHolder(FarmerViewHolder holder, int position) {
         FamerModel farmer = modelList.get(position);
-        holder.balance.setText(String.format("%s%s", farmer.getTotalbalance(), context.getString(R.string.ksh)));
+        String v = farmer.getTotalbalance();
+        try {
+            v = String.valueOf(GeneralUtills.Companion.round(Double.valueOf(v), 0));
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+        holder.balance.setText(String.format("%s%s", v, context.getString(R.string.ksh)));
         holder.id.setText(farmer.getCode());
         holder.name.setText(farmer.getNames());
         holder.cycle.setText(farmer.getCyclename());

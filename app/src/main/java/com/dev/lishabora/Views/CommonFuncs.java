@@ -29,6 +29,7 @@ import com.dev.lishabora.Models.MonthsDates;
 import com.dev.lishabora.Models.OrderModel;
 import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
 import com.dev.lishabora.Models.Payouts;
+import com.dev.lishabora.Models.Reports.ReportLineChartModel;
 import com.dev.lishabora.Models.Reports.ReportListModel;
 import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.Utils.CollectionCreateUpdateListener;
@@ -565,12 +566,72 @@ public class CommonFuncs {
 
     }
 
+    public static LinkedList<FarmerHistoryByDateModel> createHistoryList(List<Collection> collections,
+                                                                         MonthsDates monthsDatesa,
+                                                                         boolean isForWholeYearByMonth) {
 
-    public static String[] getCollectionsTotals(MonthsDates mds, List<Collection> collections) {
+        if (isForWholeYearByMonth) {
+            List<MonthsDates> monthsDates = DateTimeUtils.Companion.getMonths(12);
+            if (monthsDates.size() > 0) {
+
+                LinkedList<FarmerHistoryByDateModel> fmh = new LinkedList<>();
+
+                for (MonthsDates mds : monthsDates) {
+
+                    String[] totals = getCollectionsTotalsAll(mds, collections);
+                    fmh.add(new FarmerHistoryByDateModel(mds.getMonthName(), totals[0], totals[1], totals[2], totals[3], totals[4]));
+
+                }
+                return fmh;
+
+            }
+        } else if (monthsDatesa != null) {
+            LinkedList<FarmerHistoryByDateModel> fmh = new LinkedList<>();
+
+            for (Collection c : collections) {
+                if (DateTimeUtils.Companion.isInMonth(c.getDayDate(), monthsDatesa.getMonthName())) {
+
+
+                    fmh.add(new FarmerHistoryByDateModel(c.getDayDate(),
+                            getTotal(c.getMilkCollectedValueLtrsAm(), c.getMilkCollectedValueLtrsPm()),
+                            c.getLoanAmountGivenOutPrice(),
+                            c.getOrderGivenOutPrice(),
+                            c.getMilkCollectedValueLtrsAm(),
+                            c.getMilkCollectedValueLtrsPm()));
+
+
+                }
+            }
+
+            return fmh;
+
+        } else {
+            LinkedList<FarmerHistoryByDateModel> fmh = new LinkedList<>();
+
+            for (Collection c : collections) {
+
+                fmh.add(new FarmerHistoryByDateModel(c.getDayDate(),
+                        getTotal(c.getMilkCollectedValueLtrsAm(), c.getMilkCollectedValueLtrsPm()),
+                        c.getLoanAmountGivenOutPrice(), c.getOrderGivenOutPrice(), c.getMilkCollectedValueLtrsAm(), c.getMilkCollectedValueLtrsPm()));
+
+
+            }
+            return fmh;
+
+        }
+        return null;
+
+
+    }
+
+    public static String[] getCollectionsTotalsAll(MonthsDates mds, List<Collection> collections) {
         String cycleCode = "";
         double milk = 0.0;
         double loan = 0.0;
         double order = 0.0;
+        double milkAm = 0.0;
+        double milkPm = 0.0;
+
 
         for (Collection collection : collections) {
             if (DateTimeUtils.Companion.isInMonth(collection.getDayDate(), mds.getMonthName())) {
@@ -584,10 +645,56 @@ public class CommonFuncs {
                 if (collection.getOrderGivenOutPrice() != null) {
                     order = order + Double.valueOf(collection.getOrderGivenOutPrice());
                 }
+
+                if (collection.getMilkCollectedValueLtrsAm() != null) {
+                    milkAm = milkAm + Double.valueOf(collection.getMilkCollectedValueLtrsAm());
+                }
+                if (collection.getMilkCollectedValueLtrsPm() != null) {
+                    milkPm = milkPm + Double.valueOf(collection.getMilkCollectedValueLtrsPm());
+                }
+
             }
 
         }
-        double[] totals = {milk, loan, order};
+        double[] totals = {milk, loan, order, milkAm, milkPm};
+
+
+        return new String[]{String.valueOf(totals[0]), String.valueOf(totals[1]), String.valueOf(totals[2]), String.valueOf(totals[3]), String.valueOf(totals[4])};
+    }
+
+    public static String[] getCollectionsTotals(MonthsDates mds, List<Collection> collections) {
+        String cycleCode = "";
+        double milk = 0.0;
+        double loan = 0.0;
+        double order = 0.0;
+        double milkAm = 0.0;
+        double milkPm = 0.0;
+
+
+        for (Collection collection : collections) {
+            if (DateTimeUtils.Companion.isInMonth(collection.getDayDate(), mds.getMonthName())) {
+                Log.d("eroordebug", "Coll" + new Gson().toJson(collection));
+                if (collection.getMilkCollectedValueLtrsAm() != null) {
+                    milk = milk + (Double.valueOf(collection.getMilkCollectedValueLtrsAm()) + Double.valueOf(collection.getMilkCollectedValueLtrsPm()));
+                }
+                if (collection.getLoanAmountGivenOutPrice() != null) {
+                    loan = loan + Double.valueOf(collection.getLoanAmountGivenOutPrice());
+                }
+                if (collection.getOrderGivenOutPrice() != null) {
+                    order = order + Double.valueOf(collection.getOrderGivenOutPrice());
+                }
+
+                if (collection.getMilkCollectedValueLtrsAm() != null) {
+                    milkAm = milkAm + Double.valueOf(collection.getMilkCollectedValueLtrsAm());
+                }
+                if (collection.getMilkCollectedValueLtrsPm() != null) {
+                    milkPm = milkPm + Double.valueOf(collection.getMilkCollectedValueLtrsPm());
+                }
+
+            }
+
+        }
+        double[] totals = {milk, loan, order, milkAm, milkPm};
 
 
         return new String[]{String.valueOf(totals[0]), String.valueOf(totals[1]), String.valueOf(totals[2]), cycleCode};
@@ -1161,7 +1268,10 @@ public class CommonFuncs {
 
         if (imgAction.getId() == R.id.img_add) {
             int vq = Integer.valueOf(gty) + 1;
-            ((TextView) txtQty).setText(String.valueOf(vq));
+            if (vq <= 10) {
+                ((TextView) txtQty).setText(String.valueOf(vq));
+            }
+            // ((TextView) txtQty).setText(String.valueOf(vq));
 
         } else {
             int vq = Integer.valueOf(gty);
@@ -1186,8 +1296,6 @@ public class CommonFuncs {
 
 
     }
-
-
     public static void setCardActionStatus(PayoutFarmersCollectionModel model, Context context,
                                            MaterialButton btnApprove, MaterialButton btnBack, TextView txtApprovalStatus) {
         if (model.getCardstatus() == 0 // Card not approved
@@ -1275,7 +1383,6 @@ public class CommonFuncs {
 
 
     }
-
     public static Payouts createPayout(Payouts payouts, PayoutsVewModel payoutsVewModel) {
         if (payouts != null) {
 
@@ -1300,13 +1407,15 @@ public class CommonFuncs {
             } else if (type == 3) {
                 reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), null, c.getOrderGivenOutPrice()));
 
+            } else if (type == 4) {
+                reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), null, getTotal(c.getMilkCollectedValueLtrsAm(), c.getMilkCollectedValueLtrsPm(), c.getLoanAmountGivenOutPrice(), c.getOrderGivenOutPrice())));
+
             }
 
 
         }
         return reportListModels;
     }
-
     public static List<ReportListModel> generateReportListModel(MonthsDates mds, List<Collection> collections, int type) {
 
 
@@ -1322,6 +1431,37 @@ public class CommonFuncs {
                 } else if (type == 3) {
                     reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), null, c.getOrderGivenOutPrice()));
 
+                } else if (type == 4) {
+                    //  reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), null, "Milk "+getTotal(c.getMilkCollectedValueLtrsAm(),c.getMilkCollectedValueLtrsPm())+" Loan "+c.getLoanAmountGivenOutPrice()+" Order "+c.getOrderGivenOutPrice()));
+
+                }
+            }
+
+
+        }
+        return reportListModels;
+
+
+    }
+
+    public static List<ReportListModel> generateListModel(MonthsDates mds, List<Collection> collections, int type) {
+
+
+        List<ReportListModel> reportListModels = new LinkedList<>();
+        for (Collection c : collections) {
+            if (DateTimeUtils.Companion.isInMonth(c.getDayDate(), mds.getMonthName())) {
+
+                if (type == 1) {
+                    reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), null, getTotal(c.getMilkCollectedValueLtrsAm(), c.getMilkCollectedValueLtrsPm())));
+                } else if (type == 2) {
+                    reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), null, c.getLoanAmountGivenOutPrice()));
+
+                } else if (type == 3) {
+                    reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), null, c.getOrderGivenOutPrice()));
+
+                } else if (type == 4) {
+                    //  reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), null, "Milk "+getTotal(c.getMilkCollectedValueLtrsAm(),c.getMilkCollectedValueLtrsPm())+" Loan "+c.getLoanAmountGivenOutPrice()+" Order "+c.getOrderGivenOutPrice()));
+
                 }
             }
 
@@ -1333,6 +1473,240 @@ public class CommonFuncs {
     }
 
 
+    public static List<DayCollectionModel> setUpDayCollectionsModel(String start, String end, List<Collection> collections) {
+
+
+        List<DaysDates> daysDates = DateTimeUtils.Companion.getDaysAndDatesBtnDates(start, end);
+
+        List<DayCollectionModel> dayCollectionModels = new LinkedList<>();
+        for (DaysDates d : daysDates) {
+
+            MilkModel milkModelAm = CommonFuncs.getMilk(d.getDate(), "AM", collections);
+            MilkModel milkModelPm = CommonFuncs.getMilk(d.getDate(), "PM", collections);
+
+
+            String milkAm = milkModelAm.getUnitQty();
+            String milkPm = milkModelPm.getUnitQty();
+
+            LoanModel loanModel = CommonFuncs.getLoanForDay(d.getDate(), collections);
+            String loan = loanModel.getLoanAmount();
+
+            OrderModel orderModel = CommonFuncs.getOrderForDay(d.getDate(), collections);
+            String order = orderModel.getOrderAmount();
+
+
+            String collectionId = getCollectionId(d.getDate(), collections);
+            dayCollectionModels.add(new DayCollectionModel(
+                            0,
+                            d.getDay(),
+                            d.getDate(),
+                            milkAm,
+                            milkPm,
+                            collectionId,
+                            milkModelAm,
+                            milkModelPm, loan, order,
+                            loanModel.getCollectionId(),
+                            loanModel, orderModel.getCollectionId(), orderModel, 0
+
+                    )
+
+            );
+        }
+
+        return dayCollectionModels;
+
+    }
+
+    public static List<DayCollectionModel> setUpMonthCollectionsModel(String start, String end, List<Collection> collections) {
+
+
+        List<DaysDates> daysDates = DateTimeUtils.Companion.getDaysAndDatesBtnDates(start, end);
+
+        List<DayCollectionModel> dayCollectionModels = new LinkedList<>();
+        for (DaysDates d : daysDates) {
+
+            MilkModel milkModelAm = CommonFuncs.getMilk(d.getDate(), "AM", collections);
+            MilkModel milkModelPm = CommonFuncs.getMilk(d.getDate(), "PM", collections);
+
+
+            String milkAm = milkModelAm.getUnitQty();
+            String milkPm = milkModelPm.getUnitQty();
+
+            LoanModel loanModel = CommonFuncs.getLoanForDay(d.getDate(), collections);
+            String loan = loanModel.getLoanAmount();
+
+            OrderModel orderModel = CommonFuncs.getOrderForDay(d.getDate(), collections);
+            String order = orderModel.getOrderAmount();
+
+
+            String collectionId = getCollectionId(d.getDate(), collections);
+            dayCollectionModels.add(new DayCollectionModel(
+                            0,
+                            d.getDay(),
+                            d.getDate(),
+                            milkAm,
+                            milkPm,
+                            collectionId,
+                            milkModelAm,
+                            milkModelPm, loan, order,
+                            loanModel.getCollectionId(),
+                            loanModel, orderModel.getCollectionId(), orderModel, 0
+
+                    )
+
+            );
+        }
+
+        return dayCollectionModels;
+
+    }
+
+    public static LinkedList<FarmerHistoryByDateModel> createMonthlyList(List<Collection> collections) {
+
+        List<MonthsDates> monthsDates = DateTimeUtils.Companion.getMonths(12);
+        if (monthsDates.size() > 0) {
+
+            LinkedList<FarmerHistoryByDateModel> fmh = new LinkedList<>();
+
+            for (MonthsDates mds : monthsDates) {
+
+                String[] totals = getCollectionsTotals(mds, collections);
+                fmh.add(new FarmerHistoryByDateModel(mds, null, totals[0], totals[1], totals[2], totals[3]));
+
+            }
+            return fmh;
+
+        }
+        return null;
+
+
+    }
+
+
+    public static List<ReportLineChartModel> getCollectionsMonthlyReport(List<Collection> collections, List<MonthsDates> monthsDates, int type) {
+        List<ReportLineChartModel> reportLineChartModels = new LinkedList<>();
+
+        for (MonthsDates m : monthsDates) {
+
+            List<ReportListModel> listModels = generateListModel(m, collections, type);
+            double total = 0.0;
+            for (ReportListModel r : listModels) {
+                total = total + Double.valueOf(r.getValue2());
+            }
+            reportLineChartModels.add(new ReportLineChartModel(m.getMonthName(), String.valueOf(total)));
+
+        }
+        return reportLineChartModels;
+
+    }
+
+    public static List<ReportLineChartModel> getCollectionsCustomReport(List<Collection> collections, List<DaysDates> daysDates, int type) {
+        List<ReportLineChartModel> reportLineChartModels = new LinkedList<>();
+
+        for (DaysDates d : daysDates) {
+
+            Double total = 0.0;
+            if (type == 1) {
+                total = getDayMilkTotal(d, collections);
+            } else if (type == 2) {
+                total = getDayLoanTotal(d, collections);
+
+            } else if (type == 3) {
+
+
+                total = getDayOrderTotal(d, collections);
+
+
+            } else if (type == 3) {
+
+
+                total = getDayOrderTotal(d, collections);
+
+
+            }
+
+
+            reportLineChartModels.add(new ReportLineChartModel(d.getDate(), String.valueOf(total)));
+
+        }
+        return reportLineChartModels;
+
+    }
+
+    static double getDayMilkTotal(DaysDates d, List<Collection> collections) {
+        MilkModel milkModelAm = CommonFuncs.getMilk(d.getDate(), "AM", collections);
+        MilkModel milkModelPm = CommonFuncs.getMilk(d.getDate(), "PM", collections);
+
+
+        String milkAm = milkModelAm.getUnitQty();
+        String milkPm = milkModelPm.getUnitQty();
+
+        double totalmilkAm = 0.0;
+        double totalmilkpm = 0.0;
+        try {
+            totalmilkAm = Double.valueOf(milkModelAm.getValueLtrs());
+
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+        try {
+            totalmilkpm = Double.valueOf(milkModelPm.getValueLtrs());
+
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+        return totalmilkAm + totalmilkpm;
+
+    }
+
+    static double getDayLoanTotal(DaysDates d, List<Collection> collections) {
+        LoanModel loanModel = CommonFuncs.getLoanForDay(d.getDate(), collections);
+        return Double.valueOf(loanModel.getLoanAmount());
+
+    }
+
+    static double getDayOrderTotal(DaysDates d, List<Collection> collections) {
+        OrderModel orderModel = CommonFuncs.getOrderForDay(d.getDate(), collections);
+        return Double.valueOf(orderModel.getOrderAmount());
+
+    }
+
+    private static String getTotal(String a1, String b1, String c1, String d1) {
+        double a = 0.0;
+        double b = 0.0;
+        double c = 0.0;
+        double d = 0.0;
+
+        if (a1 != null) {
+            a = Double.valueOf(a1);
+        }
+        if (b1 != null) {
+            b = Double.valueOf(b1);
+        }
+        if (c1 != null) {
+            c = Double.valueOf(c1);
+        }
+        if (d1 != null) {
+            d = Double.valueOf(d1);
+        }
+
+
+        return String.valueOf(a + b + c + d);
+    }
+
+    private static String getTotal(String milkCollectedValueLtrsAm, String milkCollectedValueLtrsPm) {
+        double a = 0.0;
+        double b = 0.0;
+
+        if (milkCollectedValueLtrsAm != null) {
+            a = Double.valueOf(milkCollectedValueLtrsAm);
+        }
+        if (milkCollectedValueLtrsPm != null) {
+            b = Double.valueOf(milkCollectedValueLtrsPm);
+        }
+
+        return String.valueOf(a + b);
+    }
     public static class ValueObject {
         private String value;
         private Object o;

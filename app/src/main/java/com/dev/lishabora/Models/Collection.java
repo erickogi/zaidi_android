@@ -86,29 +86,6 @@ public class Collection {
 
     private int approved;
 
-//    public String getMilkCollectedValueKsh() {
-//        return milkCollectedValueKsh;
-//    }
-//
-//    public void setMilkCollectedValueKsh(String milkCollectedValueKsh) {
-//        this.milkCollectedValueKsh = milkCollectedValueKsh;
-//    }
-//
-//    public String getMilkCollectedValueLtrs() {
-//        return milkCollectedValueLtrs;
-//    }
-//
-//    public void setMilkCollectedValueLtrs(String milkCollectedValueLtrs) {
-//        this.milkCollectedValueLtrs = milkCollectedValueLtrs;
-//    }
-//
-//    public String getMilkDetails() {
-//        return milkDetails;
-//    }
-//
-//    public void setMilkDetails(String milkDetails) {
-//        this.milkDetails = milkDetails;
-//    }
 
 
     public Long getDayDateLog() {

@@ -32,6 +32,7 @@ import com.dev.lishabora.Models.OrderModel;
 import com.dev.lishabora.Models.ProductOrderModel;
 import com.dev.lishabora.Models.ProductsModel;
 import com.dev.lishabora.Utils.DateTimeUtils;
+import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
@@ -177,41 +178,105 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
 
         return CommonFuncs.getCollectionsTotals(mds, collections);
     }
-
     public void initMonthlyList(List<FarmerHistoryByDateModel> models) {
 
         this.modelsDA = models;
+
+        double milkTotal = 0.0, loanTotal = 0, OrderTotal = 0;
+        for (FarmerHistoryByDateModel f : models) {
+            milkTotal = milkTotal + Double.valueOf(f.getMilktotal());
+
+            loanTotal = loanTotal + Double.valueOf(f.getLoanTotal());
+
+            OrderTotal = OrderTotal + Double.valueOf(f.getOrderTotal());
+        }
 
 
         if (models == null) {
             models = new LinkedList<>();
         }
-        String[] months = new String[models.size()];
-        for (int a = 0; a < models.size(); a++) {
-            months[a] = models.get(a).getMonthsDates().getMonthName() + " ";
+//        String[] months = new String[models.size()];
+//        for (int a = 0; a < models.size(); a++) {
+//            months[a] = models.get(a).getMonthsDates().getMonthName() + " ";
+//
+//        }
 
+//        String m = DateTimeUtils.Companion.getMonth(DateTimeUtils.Companion.getToday());
+//
+//        spinnerMonths.setItems(months);
+//        int curr = 0;
+//        for (int a = 0; a < months.length; a++) {
+//            if (months[a].contains(m)) {
+//                curr = a;
+//            }
+//        }
+//        try {
+//            spinnerMonths.setSelectedIndex(curr);
+//            setData(modelsDA.get(curr));
+//        }catch (Exception nm){
+//            nm.printStackTrace();
+//        }
+//        spinnerMonths.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+//                setData(modelsDA.get(position));
+//            }
+
+//        });
+        int x = 1;
+        if (models.size() > 0) {
+            x = models.size();
         }
 
-        String m = DateTimeUtils.Companion.getMonth(DateTimeUtils.Companion.getToday());
+        setData(String.valueOf(milkTotal / x), String.valueOf(loanTotal / x), String.valueOf(OrderTotal / x));
 
-        spinnerMonths.setItems(months);
-        int curr = 0;
-        for (int a = 0; a < months.length; a++) {
-            if (m != null && months[a].contains(m)) {
-                curr = a;
-            }
-        }
+    }
 
-        if (months != null && months.length >= curr && spinnerMonths.getItems() != null && spinnerMonths.getItems().size() > 0) {
-            spinnerMonths.setSelectedIndex(curr);
-        }
-        if (modelsDA != null && modelsDA.size() > 0) {
-            setData(modelsDA.get(curr));
-        }
-        spinnerMonths.setOnItemSelectedListener((view, position, id, item) -> setData(modelsDA.get(position)));
+    private void setData(String s, String s1, String s2) {
+        id.setText(famerModel.getCode());
+        name.setText(famerModel.getNames());
+        milk.setText(GeneralUtills.Companion.round(s, 0));
+        loan.setText(GeneralUtills.Companion.round(s1, 0));
+        order.setText(GeneralUtills.Companion.round(s2, 0));
 
 
     }
+
+
+//    public void initMonthlyList(List<FarmerHistoryByDateModel> models) {
+//
+//        this.modelsDA = models;
+//
+//
+//        if (models == null) {
+//            models = new LinkedList<>();
+//        }
+//        String[] months = new String[models.size()];
+//        for (int a = 0; a < models.size(); a++) {
+//            months[a] = models.get(a).getMonthsDates().getMonthName() + " ";
+//
+//        }
+//
+//        String m = DateTimeUtils.Companion.getMonth(DateTimeUtils.Companion.getToday());
+//
+//        spinnerMonths.setItems(months);
+//        int curr = 0;
+//        for (int a = 0; a < months.length; a++) {
+//            if (m != null && months[a].contains(m)) {
+//                curr = a;
+//            }
+//        }
+//
+//        if (months != null && months.length >= curr && spinnerMonths.getItems() != null && spinnerMonths.getItems().size() > 0) {
+//            spinnerMonths.setSelectedIndex(curr);
+//        }
+//        if (modelsDA != null && modelsDA.size() > 0) {
+//            setData(modelsDA.get(curr));
+//        }
+//        spinnerMonths.setOnItemSelectedListener((view, position, id, item) -> setData(modelsDA.get(position)));
+//
+//
+//    }
 
     private void setData(FarmerHistoryByDateModel farmerHistoryByDateModel) {
         id.setText(famerModel.getCode());

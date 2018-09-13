@@ -29,9 +29,9 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -43,12 +43,12 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
-public class FragmentChart extends Fragment implements DatePickerDialog.OnDateSetListener {
+public class FragmentBarChart extends Fragment implements DatePickerDialog.OnDateSetListener {
     List<ReportLineChartModel> models;
     List<MonthsDates> monthsDates;
     List<DaysDates> daysDates;
-    LineChart chart;
-    BarChart bchart;
+    BarChart chart;
+    LineChart lchart;
     private MaterialSpinner spinnerType, spinnerCat;
     private ImageView imageFrom, imgTo;
     private LinearLayout lspinnerType, lspinnerCat, lfrom, lto;
@@ -66,8 +66,8 @@ public class FragmentChart extends Fragment implements DatePickerDialog.OnDateSe
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        payoutsVewModel = ViewModelProviders.of(FragmentChart.this).get(PayoutsVewModel.class);
-        traderViewModel = ViewModelProviders.of(FragmentChart.this).get(TraderViewModel.class);
+        payoutsVewModel = ViewModelProviders.of(FragmentBarChart.this).get(PayoutsVewModel.class);
+        traderViewModel = ViewModelProviders.of(FragmentBarChart.this).get(TraderViewModel.class);
 
         if (getArguments() != null) {
             dataType = getArguments().getInt("type");
@@ -98,9 +98,9 @@ public class FragmentChart extends Fragment implements DatePickerDialog.OnDateSe
         lfrom = view.findViewById(R.id.lfrom);
         lto = view.findViewById(R.id.lto);
 
-        chart = view.findViewById(R.id.chartline);
-        bchart = view.findViewById(R.id.chartbar);
-        bchart.setVisibility(View.GONE);
+        chart = view.findViewById(R.id.chartbar);
+        lchart = view.findViewById(R.id.chartline);
+        lchart.setVisibility(View.GONE);
 
         rdateRange = view.findViewById(R.id.date_range);
 
@@ -157,7 +157,6 @@ public class FragmentChart extends Fragment implements DatePickerDialog.OnDateSe
 
 
 //        if (dataType != 1) {
-//
 //            txtValueLabel1.setVisibility(View.GONE);
 //            txtValueLabel2.setText("value");
 //        }
@@ -221,7 +220,7 @@ public class FragmentChart extends Fragment implements DatePickerDialog.OnDateSe
         if (type == 0) {
 
             if (date1 != null && date2 != null) {
-                payoutsVewModel.getCollectionsBetweenDates(DateTimeUtils.Companion.getLongDate(date1), DateTimeUtils.Companion.getLongDate(date2)).observe(FragmentChart.this, new Observer<List<Collection>>() {
+                payoutsVewModel.getCollectionsBetweenDates(DateTimeUtils.Companion.getLongDate(date1), DateTimeUtils.Companion.getLongDate(date2)).observe(FragmentBarChart.this, new Observer<List<Collection>>() {
                     @Override
                     public void onChanged(@Nullable List<Collection> collections) {
                         models = CommonFuncs.getCollectionsCustomReport(collections, DateTimeUtils.Companion.getDaysAndDatesBtnDates(date1, date2), dataType);
@@ -238,7 +237,7 @@ public class FragmentChart extends Fragment implements DatePickerDialog.OnDateSe
             String to = (monthsDates.get(category).getMonthEndDate());
 
 
-            payoutsVewModel.getCollectionsBetweenDates(DateTimeUtils.Companion.getLongDate(from), DateTimeUtils.Companion.getLongDate(to)).observe(FragmentChart.this, collections -> {
+            payoutsVewModel.getCollectionsBetweenDates(DateTimeUtils.Companion.getLongDate(from), DateTimeUtils.Companion.getLongDate(to)).observe(FragmentBarChart.this, collections -> {
                 models = CommonFuncs.getCollectionsCustomReport(collections, DateTimeUtils.Companion.getDaysAndDatesBtnDates(from, to), dataType);
                 calcTotal(models);
                 refreshChart(models);
@@ -251,7 +250,7 @@ public class FragmentChart extends Fragment implements DatePickerDialog.OnDateSe
             Long to = DateTimeUtils.Companion.getLongDate(DateTimeUtils.Companion.getToday());
 
 
-            payoutsVewModel.getCollectionsBetweenDates(from, to).observe(FragmentChart.this, collections -> {
+            payoutsVewModel.getCollectionsBetweenDates(from, to).observe(FragmentBarChart.this, collections -> {
                 models = CommonFuncs.getCollectionsMonthlyReport(collections, monthsDates, dataType);
                 calcTotal(models);
                 refreshChart(models);
@@ -264,21 +263,21 @@ public class FragmentChart extends Fragment implements DatePickerDialog.OnDateSe
 
 
     private void refreshChart(List<ReportLineChartModel> models) {
-        List<Entry> entries = new ArrayList<>();
+        List<BarEntry> entries = new ArrayList<>();
 
         float xvalue = 0;
         for (ReportLineChartModel data : models) {
 
             // turn your data into Entry objects
-            entries.add(new Entry(xvalue, Float.valueOf(data.getYvalue())));
+            entries.add(new BarEntry(xvalue, Float.valueOf(data.getYvalue())));
             xvalue++;
 
         }
 
-        LineDataSet dataSet = new LineDataSet(entries, "Collection Report"); // add entries to dataset
+        BarDataSet dataSet = new BarDataSet(entries, "Collection Report"); // add entries to dataset
         //dataSet.setColor();
         // dataSet.setValueTextColor(...); // styling, ...
-        LineData lineData = new LineData(dataSet);
+        BarData lineData = new BarData(dataSet);
         chart.setData(lineData);
 
         XAxis xAxis = chart.getXAxis();
@@ -320,7 +319,7 @@ public class FragmentChart extends Fragment implements DatePickerDialog.OnDateSe
 
     private void selectDate() {
         Calendar now = Calendar.getInstance();
-        DatePickerDialog dpd = DatePickerDialog.newInstance(FragmentChart.this,
+        DatePickerDialog dpd = DatePickerDialog.newInstance(FragmentBarChart.this,
                 now.get(Calendar.YEAR),
                 now.get(Calendar.MONTH),
                 now.get(Calendar.DAY_OF_MONTH));

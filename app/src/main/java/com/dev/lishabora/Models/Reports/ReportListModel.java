@@ -9,12 +9,41 @@ public class ReportListModel implements Serializable {
     private String value1;
     private String value2;
 
+    private String valueMilkAm;
+    private String valueMilkPm;
+
     public ReportListModel(int collectionId, String day, String date, String value1, String value2) {
         this.collectionId = collectionId;
         this.day = day;
         this.date = date;
         this.value1 = value1;
         this.value2 = value2;
+    }
+
+    public ReportListModel(int collectionId, String day, String date, String value1, String value2, String valueMilkAm, String valueMilkPm) {
+        this.collectionId = collectionId;
+        this.day = day;
+        this.date = date;
+        this.value1 = value1;
+        this.value2 = value2;
+        this.valueMilkAm = valueMilkAm;
+        this.valueMilkPm = valueMilkPm;
+    }
+
+    public String getValueMilkAm() {
+        return valueMilkAm;
+    }
+
+    public void setValueMilkAm(String valueMilkAm) {
+        this.valueMilkAm = valueMilkAm;
+    }
+
+    public String getValueMilkPm() {
+        return valueMilkPm;
+    }
+
+    public void setValueMilkPm(String valueMilkPm) {
+        this.valueMilkPm = valueMilkPm;
     }
 
     public int getCollectionId() {

@@ -265,6 +265,14 @@ public class PayoutsVewModel extends AndroidViewModel {
         return collectionsRepo.getCollectionsBetweenDates(date1, date2);
     }
 
+    public LiveData<List<Collection>> getCollections() {
+        return collectionsRepo.fetchAllData(false);
+    }
+
+    public LiveData<List<Collection>> getCollectionsBetweenDates(Long date1, Long date2, String code) {
+        return collectionsRepo.getCollectionsBetweenDates(date1, date2, code);
+    }
+
     public LiveData<Payouts> getPayoutsByPayoutNumber(String number) {
         return payoutsRepo.getPayoutsByPayout(number);
     }

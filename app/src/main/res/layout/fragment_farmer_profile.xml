@@ -211,7 +211,7 @@
                                     android:enabled="false"
                                     android:focusable="false"
 
-                                    android:hint="Unit Code "
+                                    android:hint="Unit  "
                                     android:inputType="text" />
 
                             </android.support.design.widget.TextInputLayout>

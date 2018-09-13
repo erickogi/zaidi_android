@@ -35,10 +35,22 @@ public class FragmentCompleteGiveOrder extends Fragment implements BlockingStep 
 
     public void calc(View imgAction, View txtQty) {
         String gty = ((TextView) txtQty).getText().toString();
+        double mazx = 0;
+
+//        try{
+//            mazx=Double.valueOf(gty);
+//        }catch (Exception nm){
+//            nm.printStackTrace();
+//        }
+//
+//        if(mazx>10) {
 
         if (imgAction.getId() == R.id.img_add) {
             int vq = Integer.valueOf(gty) + 1;
-            ((TextView) txtQty).setText(String.valueOf(vq));
+            if (vq <= 10) {
+                ((TextView) txtQty).setText(String.valueOf(vq));
+            }
+            // ((TextView) txtQty).setText(String.valueOf(vq));
 
         } else {
             int vq = Integer.valueOf(gty);
@@ -66,6 +78,9 @@ public class FragmentCompleteGiveOrder extends Fragment implements BlockingStep 
 
         txtPrice.setText(String.valueOf(GeneralUtills.Companion.round(installmentValue, 2)));
 
+//        }else {
+//            MyToast.toast("You reached maximum value",getContext(),R.drawable.ic_error_outline_black_24dp,Toast.LENGTH_LONG);
+//        }
 
     }
 

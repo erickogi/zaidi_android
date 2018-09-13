@@ -112,31 +112,53 @@ public class FragmentGiveLoan extends Fragment {
     public void calc(View imgAction, View txtQty) {
         String gty = ((TextView) txtQty).getText().toString();
 
-        if (imgAction.getId() == R.id.img_add) {
-            int vq = Integer.valueOf(gty) + 1;
-            ((TextView) txtQty).setText(String.valueOf(vq));
+        if (!TextUtils.isEmpty(((TextView) txtQty).getText().toString())) {
+
+//            double mazx=0;
+//
+//            try{
+//                mazx=Double.valueOf(gty);
+//            }catch (Exception nm){
+//                nm.printStackTrace();
+//            }
+//
+//            if(mazx > 10.0) {
+
+            if (imgAction.getId() == R.id.img_add) {
+                int vq = Integer.valueOf(gty) + 1;
+                if (vq <= 10) {
+                    ((TextView) txtQty).setText(String.valueOf(vq));
+                }
+
+
+            } else {
+                int vq = Integer.valueOf(gty);
+                if (vq != 1) {
+                    ((TextView) txtQty).setText(String.valueOf(vq - 1));
+                }
+            }
+
+
+            double installmentValue = 0.0;
+
+            if (edtAmount.getText() != null && !TextUtils.isEmpty(edtAmount.getText())) {
+
+                double value = Double.valueOf(edtAmount.getText().toString());
+                int insNo = Integer.valueOf(((TextView) txtQty).getText().toString());
+                if (value > 0.0) {
+                    installmentValue = (value / insNo);
+                }
+            }
+
+            txtPrice.setText(String.valueOf(GeneralUtills.Companion.round(installmentValue, 2)));
+
+//            } else {
+//                MyToast.toast("You reached maximum value",getContext(),R.drawable.ic_error_outline_black_24dp,Toast.LENGTH_LONG);
+//            }
 
         } else {
-            int vq = Integer.valueOf(gty);
-            if (vq != 1) {
-                ((TextView) txtQty).setText(String.valueOf(vq - 1));
-            }
+            ((TextView) txtQty).setText("1");
         }
-
-
-        double installmentValue = 0.0;
-
-        if (edtAmount.getText() != null && !TextUtils.isEmpty(edtAmount.getText())) {
-
-            double value = Double.valueOf(edtAmount.getText().toString());
-            int insNo = Integer.valueOf(((TextView) txtQty).getText().toString());
-            if (value > 0.0) {
-                installmentValue = (value / insNo);
-            }
-        }
-
-        txtPrice.setText(String.valueOf(GeneralUtills.Companion.round(installmentValue, 2)));
-
 
     }
 
@@ -303,6 +325,9 @@ public class FragmentGiveLoan extends Fragment {
 
                     if (edtAmount.getText().toString() != null && !TextUtils.isEmpty(edtAmount.getText().toString())) {
                         double value = Double.valueOf(edtAmount.getText().toString());
+                        if (TextUtils.isEmpty(txtQty.getText().toString())) {
+                            txtQty.setText("1");
+                        }
                         int insNo = Integer.valueOf(txtQty.getText().toString());
                         if (value > 0.0) {
                             installmentValue = (value / insNo);
@@ -355,33 +380,62 @@ public class FragmentGiveLoan extends Fragment {
 
         this.modelsDA = models;
 
+        double milkTotal = 0.0, loanTotal = 0, OrderTotal = 0;
+        for (FarmerHistoryByDateModel f : models) {
+            milkTotal = milkTotal + Double.valueOf(f.getMilktotal());
+
+            loanTotal = loanTotal + Double.valueOf(f.getLoanTotal());
+
+            OrderTotal = OrderTotal + Double.valueOf(f.getOrderTotal());
+        }
+
 
         if (models == null) {
             models = new LinkedList<>();
         }
-        String[] months = new String[models.size()];
-        for (int a = 0; a < models.size(); a++) {
-            months[a] = models.get(a).getMonthsDates().getMonthName() + " ";
+//        String[] months = new String[models.size()];
+//        for (int a = 0; a < models.size(); a++) {
+//            months[a] = models.get(a).getMonthsDates().getMonthName() + " ";
+//
+//        }
 
+//        String m = DateTimeUtils.Companion.getMonth(DateTimeUtils.Companion.getToday());
+//
+//        spinnerMonths.setItems(months);
+//        int curr = 0;
+//        for (int a = 0; a < months.length; a++) {
+//            if (months[a].contains(m)) {
+//                curr = a;
+//            }
+//        }
+//        try {
+//            spinnerMonths.setSelectedIndex(curr);
+//            setData(modelsDA.get(curr));
+//        }catch (Exception nm){
+//            nm.printStackTrace();
+//        }
+//        spinnerMonths.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+//                setData(modelsDA.get(position));
+//            }
+
+//        });
+        int x = 1;
+        if (models.size() > 0) {
+            x = models.size();
         }
 
-        String m = DateTimeUtils.Companion.getMonth(DateTimeUtils.Companion.getToday());
+        setData(String.valueOf(milkTotal / x), String.valueOf(loanTotal / x), String.valueOf(OrderTotal / x));
 
-        spinnerMonths.setItems(months);
-        int curr = 0;
-        for (int a = 0; a < months.length; a++) {
-            if (months[a].contains(m)) {
-                curr = a;
-            }
-        }
-        spinnerMonths.setSelectedIndex(curr);
-        setData(modelsDA.get(curr));
-        spinnerMonths.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
-                setData(modelsDA.get(position));
-            }
-        });
+    }
+
+    private void setData(String s, String s1, String s2) {
+        id.setText(famerModel.getCode());
+        name.setText(famerModel.getNames());
+        milk.setText(GeneralUtills.Companion.round(s, 0));
+        loan.setText(GeneralUtills.Companion.round(s1, 0));
+        order.setText(GeneralUtills.Companion.round(s2, 0));
 
 
     }

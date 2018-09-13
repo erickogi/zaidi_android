@@ -16,6 +16,7 @@ import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -73,6 +74,8 @@ public class ChartsAdapter extends RecyclerView.Adapter<ChartsAdapter.MyViewHold
             //colors[a]= Color.parseColor(lvModel.getColor());
             //count++;
         }
+        List<Entry> entries1 = new ArrayList<>();
+        entries1.add(new Entry());
 
 
         PieDataSet set = new PieDataSet(entries, "");

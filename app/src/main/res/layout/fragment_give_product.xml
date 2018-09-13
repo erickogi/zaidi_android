@@ -69,6 +69,7 @@
             </LinearLayout>
 
             <com.jaredrummler.materialspinner.MaterialSpinner
+                android:visibility="gone"
                 android:id="@+id/spinner_months"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -86,6 +87,15 @@
                 android:layout_height="2dp"
                 android:background="@color/divider" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="(Monthly) Averages"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+
             <LinearLayout
                 android:id="@+id/linear_totals"
                 android:layout_width="match_parent"
@@ -96,7 +106,7 @@
                 android:background="@color/white"
                 android:orientation="horizontal"
                 android:padding="3dp"
-                android:weightSum="4">
+                android:weightSum="3">
 
 
                 <TextView
@@ -205,7 +215,7 @@
 
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"

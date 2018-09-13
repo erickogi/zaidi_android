@@ -56,6 +56,7 @@ public class FragmentPayoutColloectionsList extends Fragment {
     TextView txtApprovalStatus;
     private MaterialButton btnApprove;
 
+
     public void initList() {
         recyclerView = view.findViewById(R.id.recyclerView);
         mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
