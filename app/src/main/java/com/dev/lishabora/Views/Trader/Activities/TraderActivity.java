@@ -286,12 +286,24 @@ public class TraderActivity extends AppCompatActivity {
         avi = mView.findViewById(R.id.avi);
 
 
-        TextInputEditText edtNames, edtMobile;
+        TextInputEditText edtNames, edtMobile, edtBussinesName;
+        TextView cyclename, txtStarts, txtEnds;
+
+
+        edtBussinesName = mView.findViewById(R.id.edt_traders_business_name);
         edtMobile = mView.findViewById(R.id.edt_traders_phone);
         edtNames = mView.findViewById(R.id.edt_traders_names);
+        txtStarts = mView.findViewById(R.id.starts);
+        txtEnds = mView.findViewById(R.id.ends);
+
+        edtBussinesName.setText(traderModel.getBusinessname());
+        txtStarts.setText(traderModel.getCycleStartDay());
+        txtEnds.setText(traderModel.getCycleEndDay());
+
 
         edtMobile.setText(traderModel.getMobile());
         edtNames.setText(traderModel.getNames());
+
 
         CheckBox chk = mView.findViewById(R.id.chk_dummy);
         chk.setVisibility(View.GONE);
@@ -299,23 +311,12 @@ public class TraderActivity extends AppCompatActivity {
 
         alertDialogBuilderUserInput
                 .setCancelable(false);
-//                .setPositiveButton("Update", (dialogBox, id) -> {
-//                    // ToDo get user input here
-//
-//
-//                })
-//
-//                .setNegativeButton("Dismiss",
-//                        (dialogBox, id) -> dialogBox.cancel());
-
         AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
         alertDialogAndroid.setCancelable(false);
         alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         alertDialogAndroid.show();
 
-//        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
-//        theButton.setOnClickListener(new EditCustomListener(alertDialogAndroid, traderModel));
 
         MaterialButton btnPositive, btnNegative, btnNeutral;
         TextView txtTitle;
@@ -329,7 +330,7 @@ public class TraderActivity extends AppCompatActivity {
         imgIcon = mView.findViewById(R.id.img_icon);
 
 
-        btnNeutral.setVisibility(View.GONE);
+        btnNeutral.setVisibility(View.VISIBLE);
         lTitle.setVisibility(View.GONE);
         txtTitle.setVisibility(View.VISIBLE);
         imgIcon.setVisibility(View.VISIBLE);
@@ -341,6 +342,18 @@ public class TraderActivity extends AppCompatActivity {
 
         });
         btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
+        btnNeutral.setOnClickListener(view ->
+
+                {
+
+                    alertDialogAndroid.dismiss();
+                    Intent i = new Intent(TraderActivity.this, FirstTimeLaunch.class);
+                    i.putExtra("trader", traderModel);
+                    startActivity(i);
+
+
+                }
+        );
 
 
 

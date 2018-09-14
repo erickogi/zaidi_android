@@ -25,6 +25,10 @@ import com.stepstone.stepper.VerificationError;
 
 import java.util.Objects;
 
+import static com.dev.lishabora.Views.Trader.TraderConst.INTENT_TYPE_EDIT;
+import static com.dev.lishabora.Views.Trader.TraderConst.getTraderModel;
+import static com.dev.lishabora.Views.Trader.TraderConst.getType_selected;
+
 public class TraderBasicInfoFragment extends Fragment implements BlockingStep {
     TextInputEditText name, phone, bussinessname;
     CheckBox chkDummy;
@@ -48,6 +52,9 @@ public class TraderBasicInfoFragment extends Fragment implements BlockingStep {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         prefrenceManager = new PrefrenceManager(getContext());
+        if (getType_selected() == INTENT_TYPE_EDIT) {
+            traderModel = getTraderModel();
+        }
     }
 
     @Nullable

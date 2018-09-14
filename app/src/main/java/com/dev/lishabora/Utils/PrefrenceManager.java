@@ -38,6 +38,7 @@ public class PrefrenceManager {
     private static final String entitycode = "entitycode";
     private static final String transactioncode = "transactioncode";
     private static final String names = "names";
+    private static final String bussinesname = "bussinesname";
     private static final String mobile = "mobile";
     private static final String password = "password";
     private static final String apikey = "apikey";
@@ -151,6 +152,7 @@ public class PrefrenceManager {
     public void setLoggedUser(TraderModel trader) {
         editor.putString(names, trader.getNames());
         editor.putString(mobile, trader.getMobile());
+        editor.putString(bussinesname, trader.getBusinessname());
         editor.putString(code, trader.getCode());
         editor.putString(entity, trader.getEntity());
         editor.putString(entitycode, trader.getEntitycode());
@@ -177,6 +179,7 @@ public class PrefrenceManager {
     public TraderModel getTraderModel() {
         TraderModel traderModel = new TraderModel();
         traderModel.setNames(pref.getString(names, null));
+        traderModel.setBusinessname(pref.getString(bussinesname, null));
         traderModel.setCode(pref.getString(code, null));
         traderModel.setEntity(pref.getString(entity, null));
         traderModel.setEntitycode(pref.getString(entitycode, null));

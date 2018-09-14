@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/Widget.MaterialComponents.CardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:drawable/picture_frame"
+    android:background="?android:selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
     app:strokeColor="@color/divider"
-    app:strokeWidth="2dp"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="@color/colorPrimary"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="2dp"
+    app:cardUseCompatPadding="true"
+    app:strokeWidth="2dp">
 
-    >
 
     <RelativeLayout
         android:id="@+id/background"
@@ -74,7 +79,7 @@
                             android:layout_width="0dp"
 
 
-                            android:layout_weight="2"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:text="Route Names"
                             android:textColor="@color/black"
@@ -97,7 +102,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_weight="1"
-                            android:gravity="end">
+                            android:gravity="center">
 
                             <View
 

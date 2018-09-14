@@ -29,10 +29,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
-                app:ms_arrow_tint="@color/green_color_picker"
                 app:ms_hint="Select cycle"
-                app:ms_hint_color="@color/green_color_picker"
-                app:ms_text_color="@color/black" />
+
+
+                android:textColorHint="@color/white"
+
+                app:ms_arrow_tint="@color/white"
+                app:ms_background_color="@color/colorAccent"
+                app:ms_hint_color="@color/white"
+
+                app:ms_text_color="@color/white"
+
+                />
 
         </LinearLayout>
 

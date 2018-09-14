@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.dev.lishabora.Adapters.ViewHolders.ReportListViewHolder;
 import com.dev.lishabora.Models.Reports.ReportListModel;
+import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
 
@@ -42,7 +43,7 @@ public class ReportListAdapter extends RecyclerView.Adapter<ReportListViewHolder
     public void onBindViewHolder(ReportListViewHolder holder, int position) {
         ReportListModel model = modelList.get(position);
         holder.day.setText(model.getDay());
-        holder.date.setText(model.getDate());
+        holder.date.setText(DateTimeUtils.Companion.getDisplayDate(model.getDate(), DateTimeUtils.Companion.getFormatSmall()));
         if (model.getValue1() == null) {
             holder.value1.setVisibility(View.GONE);
         } else {

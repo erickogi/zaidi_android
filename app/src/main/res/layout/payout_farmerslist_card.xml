@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/Widget.MaterialComponents.CardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:drawable/picture_frame"
-    app:cardUseCompatPadding="true"
+    android:background="?android:selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
     app:strokeColor="@color/divider"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="@color/colorPrimary"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="2dp"
+    app:cardUseCompatPadding="true"
     app:strokeWidth="2dp">
 
 
@@ -18,11 +23,11 @@
         android:background="@color/green_color_picker">
 
         <LinearLayout
+            android:background="@color/white"
             android:id="@+id/rl_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:background="@color/divider"
             android:gravity="start"
             android:orientation="horizontal"
             android:paddingStart="2dp"

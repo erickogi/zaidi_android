@@ -44,16 +44,22 @@
 
                         <com.jaredrummler.materialspinner.MaterialSpinner
                             android:id="@+id/spinnerRoute"
-                            android:hint="Route"
+
 
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="2dp"
                             android:focusable="true"
-                            app:ms_arrow_tint="@color/green_color_picker"
                             app:ms_hint="Select Route"
-                            app:ms_hint_color="@color/green_color_picker"
-                            app:ms_text_color="@color/black" />
+
+                            android:hint="Route"
+
+                            android:textColorHint="@color/white"
+                            app:ms_arrow_tint="@color/white"
+                            app:ms_background_color="@color/colorAccent"
+
+                            app:ms_hint_color="@color/white"
+                            app:ms_text_color="@color/white" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -146,9 +152,18 @@
                             android:hint="Unit"
                             android:layout_height="wrap_content"
                             android:layout_margin="2dp"
-                            app:ms_arrow_tint="@color/green_color_picker"
-                            app:ms_hint="Select Unit"
-                            app:ms_hint_color="@color/green_color_picker" />
+
+                            android:textColorHint="@color/white"
+
+                            app:ms_arrow_tint="@color/white"
+                            app:ms_background_color="@color/colorAccent"
+                            app:ms_hint_color="@color/white"
+
+                            app:ms_text_color="@color/white"
+
+
+                            app:ms_hint="Select Unit" />
+
 
                     </LinearLayout>
 
@@ -215,6 +230,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:enabled="true"
+                                android:focusedByDefault="true"
                                 android:focusable="true"
                                 android:focusableInTouchMode="true"
                                 android:hint="Price(Ksh)"

@@ -56,6 +56,38 @@ class GeneralUtills {
 
             return java.lang.String.valueOf(round(d, places))
         }
+
+
+        fun capitalize(txt: String): String {
+            var txt = txt
+            val finalTxt = ArrayList<String>()
+
+            if (txt.contains("_")) {
+                txt = txt.replace("_", " ")
+            }
+
+            if (txt.contains(" ") && txt.length > 1) {
+                val tSS = txt.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                for (tSSV in tSS) {
+                    finalTxt.add(capitalize(tSSV))
+                }
+            }
+
+            if (finalTxt.size > 0) {
+                txt = ""
+                for (s in finalTxt) {
+                    txt += s + " "
+                }
+            }
+
+            if (txt.endsWith(" ") && txt.length > 1) {
+                txt = txt.substring(0, txt.length - 1)
+                return txt
+            }
+
+            txt = txt.substring(0, 1).toUpperCase() + txt.substring(1).toLowerCase()
+            return txt
+        }
     }
 
 

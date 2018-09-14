@@ -141,8 +141,10 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
         } else {
 
+
             ampm = "PM";
         }
+
 
 
         AmStringValue = null;
@@ -322,17 +324,15 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
         if (DateTimeUtils.Companion.isAM(DateTimeUtils.Companion.getTodayDate())) {
             edtTodayAm.requestFocus();
+            edtTodayPm.setEnabled(false);
 
 
         } else {
             edtTodayPm.requestFocus();
+            edtTodayPm.setEnabled(true);
 
 
         }
-
-
-
-
 
 
         btnPositive = mView.findViewById(R.id.btn_positive);

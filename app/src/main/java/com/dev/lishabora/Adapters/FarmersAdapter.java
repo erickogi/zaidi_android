@@ -77,7 +77,7 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
         }
         holder.balance.setText(String.format("%s%s", v, context.getString(R.string.ksh)));
         holder.id.setText(farmer.getCode());
-        holder.name.setText(farmer.getNames());
+        holder.name.setText(GeneralUtills.Companion.capitalize(farmer.getNames()));
         holder.cycle.setText(farmer.getCyclename());
         holder.route.setText(farmer.getRoutename());
 

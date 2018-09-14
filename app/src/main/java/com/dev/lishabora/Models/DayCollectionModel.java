@@ -17,6 +17,12 @@ public class DayCollectionModel implements Serializable {
     private String milkPm;
 
 
+    private String milkAmLtrs;
+    private String milkAmKsh;
+    private String milkPmKsh;
+    private String milkPmLtrs;
+
+
     private MilkModel milkModelAm;
     private MilkModel milkModelPm;
 
@@ -55,6 +61,73 @@ public class DayCollectionModel implements Serializable {
         this.payoutStatus = payoutStatus;
 
 
+    }
+
+    public DayCollectionModel(int payoutNumber, String day, String date, String milkAm, String milkPm
+            , String collectionId,
+                              MilkModel milkModelAm,
+                              MilkModel milkModelPm, String loan, String order,
+                              String loanCollectionId, LoanModel loanModel, String orderCollectionId, OrderModel orderModel,
+                              int payoutStatus, String milkAmLtrs, String milkAmKsh, String milkPmLtrs, String milkPmKsh) {
+        this.payoutNumber = payoutNumber;
+        this.day = day;
+        this.date = date;
+        this.milkAm = milkAm;
+        this.milkPm = milkPm;
+
+        this.collectionId = collectionId;
+
+        this.milkModelAm = milkModelAm;
+
+        this.milkModelPm = milkModelPm;
+
+        this.loan = loan;
+        this.order = order;
+
+        this.loanModel = loanModel;
+        this.orderModel = orderModel;
+        this.payoutStatus = payoutStatus;
+
+
+        this.milkAmLtrs = milkAmLtrs;
+        this.milkAmKsh = milkAmKsh;
+
+        this.milkPmLtrs = milkPmLtrs;
+        this.milkPmKsh = milkPmKsh;
+
+
+    }
+
+    public String getMilkAmLtrs() {
+        return milkAmLtrs;
+    }
+
+    public void setMilkAmLtrs(String milkAmLtrs) {
+        this.milkAmLtrs = milkAmLtrs;
+    }
+
+    public String getMilkAmKsh() {
+        return milkAmKsh;
+    }
+
+    public void setMilkAmKsh(String milkAmKsh) {
+        this.milkAmKsh = milkAmKsh;
+    }
+
+    public String getMilkPmKsh() {
+        return milkPmKsh;
+    }
+
+    public void setMilkPmKsh(String milkPmKsh) {
+        this.milkPmKsh = milkPmKsh;
+    }
+
+    public String getMilkPmLtrs() {
+        return milkPmLtrs;
+    }
+
+    public void setMilkPmLtrs(String milkPmLtrs) {
+        this.milkPmLtrs = milkPmLtrs;
     }
 
     public int getPayoutStatus() {

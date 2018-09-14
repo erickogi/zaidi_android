@@ -143,15 +143,7 @@ public class TraderRoutesInfoFragment extends Fragment implements BlockingStep {
         avi = mView.findViewById(R.id.avi);
         alertDialogBuilderUserInput
                 .setCancelable(false);
-//                .setPositiveButton("Save", (dialogBox, id) -> {
-//                    // ToDo get user input here
 //
-//
-//                })
-//
-//                .setNegativeButton("Dismiss",
-//                        (dialogBox, id) -> dialogBox.cancel());
-
         AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
         alertDialogAndroid.setCancelable(false);
         alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
@@ -364,7 +356,6 @@ public class TraderRoutesInfoFragment extends Fragment implements BlockingStep {
             this.routesModels.clear();
             this.routesModels.addAll(routesModels);
             filterRoutes();
-            //listAdapter.notifyDataSetChanged();
 
 
         } else {
@@ -395,7 +386,7 @@ public class TraderRoutesInfoFragment extends Fragment implements BlockingStep {
     }
 
 
-    private void populateTraders() {
+    private void populate() {
         mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(mStaggeredLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -403,7 +394,6 @@ public class TraderRoutesInfoFragment extends Fragment implements BlockingStep {
 
         listAdapter.notifyDataSetChanged();
         recyclerView.setAdapter(listAdapter);
-        //emptyState(listAdapter.getItemCount() > 0, "We couldn't find any farmers records", empty_layout, null, emptyTxt);
 
     }
 
@@ -464,7 +454,7 @@ public class TraderRoutesInfoFragment extends Fragment implements BlockingStep {
         }
 
         initList();
-        populateTraders();
+        populate();
         getRoutes();
 
 

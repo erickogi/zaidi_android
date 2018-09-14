@@ -2,13 +2,13 @@ package com.dev.lishabora.Views.Trader.Fragments;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -37,6 +37,7 @@ import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.CommonFuncs;
 import com.dev.lishabora.Views.Trader.Activities.EditOrder;
+import com.dev.lishabora.Views.Trader.MilkCardToolBarUI;
 import com.dev.lishabora.Views.Trader.OrderConstants;
 import com.dev.lishaboramobile.R;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -53,7 +54,7 @@ import static com.dev.lishabora.Views.CommonFuncs.setCardActionStatus;
 
 public class FragmentCurrentFarmerPayout extends Fragment {
 
-    public TextView status, id, name, balance, milk, loan, order;
+    public TextView status;//, id, name, balance, milk, loan, order;
     public RelativeLayout background;
     public View statusview;
     Double milkKsh = 0.0;
@@ -76,6 +77,7 @@ public class FragmentCurrentFarmerPayout extends Fragment {
     private AVLoadingIndicatorView avi;
     private View view;
     UnitsModel u = new UnitsModel();
+    private MilkCardToolBarUI toolBar;
 
 
     @Override
@@ -97,6 +99,8 @@ public class FragmentCurrentFarmerPayout extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.view = view;
+        toolBar = view.findViewById(R.id.toolbar);
+
         famerModel = (FamerModel) getArguments().getSerializable("farmer");
         btnApprove = view.findViewById(R.id.btn_approve);
         btnApprove.setVisibility(View.GONE);
@@ -111,16 +115,29 @@ public class FragmentCurrentFarmerPayout extends Fragment {
 
 
         status = view.findViewById(R.id.txt_status);
-        id = view.findViewById(R.id.txt_id);
-        name = view.findViewById(R.id.txt_name);
-        balance = view.findViewById(R.id.txt_balance);
+//        id = view.findViewById(R.id.txt_id);
+//        name = view.findViewById(R.id.txt_name);
+//        balance = view.findViewById(R.id.txt_balance);
+//
+//
+//        milk = view.findViewById(R.id.txt_milk);
+//        loan = view.findViewById(R.id.txt_loans);
+//        order = view.findViewById(R.id.txt_orders);
 
 
-        milk = view.findViewById(R.id.txt_milk);
-        loan = view.findViewById(R.id.txt_loans);
-        order = view.findViewById(R.id.txt_orders);
+    }
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
     }
 
     @Override
@@ -224,91 +241,41 @@ public class FragmentCurrentFarmerPayout extends Fragment {
 
 
     private void setBalance(Double milkKsh) {
-        balance.setText(String.format("%s %s", getBalance(String.valueOf(milkKsh), String.valueOf(loanKsh), String.valueOf(orderKsh)), getActivity().getString(R.string.ksh)));
+        toolBar.show(getBalance(String.valueOf(milkKsh), toolBar.getLoanTotal(), toolBar.getOrderTotal()));
+
     }
     private void setData(PayoutFarmersCollectionModel model) {
-        //balance.setText(model.getBalance());
-        id.setText(model.getFarmercode());
-        name.setText(model.getFarmername());
-        status.setText(model.getStatusName());
 
-        Objects.requireNonNull(getActivity()).setTitle("" + model.getFarmername() + "        ID " + model.getFarmercode());
-
-
-        milk.setText(String.format("%s %s", model.getMilktotalLtrs(), getActivity().getString(R.string.ltrs)));
-        if (!model.getMilktotal().equals("0.0")) {
-            milk.setTextColor(this.getResources().getColor(R.color.colorPrimary));
-            milk.setTypeface(Typeface.DEFAULT_BOLD);
-
-        } else {
-            milk.setTypeface(Typeface.DEFAULT);
-
-            milk.setTextColor(this.getResources().getColor(R.color.black));
-
-        }
-
-
-        loan.setText(String.format("%s %s", model.getLoanTotal(), getActivity().getString(R.string.ksh)));
-        if (!model.getLoanTotal().equals("0.0")) {
-            loan.setTextColor(this.getResources().getColor(R.color.colorPrimary));
-            loan.setTypeface(Typeface.DEFAULT_BOLD);
-
-        } else {
-            loan.setTypeface(Typeface.DEFAULT);
-
-            loan.setTextColor(this.getResources().getColor(R.color.black));
-
-        }
-
-        order.setText(String.format("%s %s", model.getOrderTotal(), getActivity().getString(R.string.ksh)));
-        if (!model.getOrderTotal().equals("0.0")) {
-            order.setTextColor(this.getResources().getColor(R.color.colorPrimary));
-            order.setTypeface(Typeface.DEFAULT_BOLD);
-
-        } else {
-            order.setTypeface(Typeface.DEFAULT);
-
-            order.setTextColor(this.getResources().getColor(R.color.black));
-
-        }
-
+        boolean isApproved = false;
+        boolean isPast = false;
         if (model.getCardstatus() == 1) {
-            //  status.setText("Active");
-            status.setTextColor(this.getResources().getColor(R.color.green_color_picker));
-            background.setBackgroundColor(this.getResources().getColor(R.color.green_color_picker));
-            statusview.setBackgroundColor(this.getResources().getColor(R.color.green_color_picker));
+            isApproved = true;
 
 
         } else if (model.getCardstatus() == 0) {
 
-            //  status.setText("Deleted");
-            status.setTextColor(this.getResources().getColor(R.color.red));
-            background.setBackgroundColor(this.getResources().getColor(R.color.red));
-            statusview.setBackgroundColor(this.getResources().getColor(R.color.red));
-
-        } else {
-            // status.setText("In-Active");
-            status.setTextColor(this.getResources().getColor(R.color.blue_color_picker));
-            background.setBackgroundColor(this.getResources().getColor(R.color.blue_color_picker));
-            statusview.setBackgroundColor(this.getResources().getColor(R.color.blue_color_picker));
+            isApproved = false;
 
         }
 
+        toolBar.show(model.getMilktotal(), model.getLoanTotal(), model.getOrderTotal(), "", famerModel, payouts, isApproved, isPast);
+
+
 
         payoutsVewModel.getSumOfMilkForPayoutLtrs(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
-            milk.setText(String.format("%s %s", String.valueOf(integer), getActivity().getString(R.string.ltrs)));
-            //setBalance(milkKsh);
+            toolBar.updateMilk(String.valueOf(integer));
+            setBalance(milkKsh);
         });
 
         payoutsVewModel.getSumOfLoansForPayout(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
-            loan.setText(String.format("%s %s", String.valueOf(integer), getActivity().getString(R.string.ksh)));
-            //setBalance(milkKsh);
-            loanKsh = integer;
+            toolBar.updateLoan(String.valueOf(integer));
+
+            setBalance(milkKsh);
         });
         payoutsVewModel.getSumOfOrdersForPayout(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
-            order.setText(String.format("%s %s", String.valueOf(integer), getActivity().getString(R.string.ksh)));
-            // setBalance(milkKsh);
-            orderKsh = integer;
+            toolBar.updateOrder(String.valueOf(integer));
+
+            setBalance(milkKsh);
         });
 
         payoutsVewModel.getSumOfMilkForPayoutKsh(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
@@ -372,6 +339,8 @@ public class FragmentCurrentFarmerPayout extends Fragment {
                 if (a != null) {
                     a.dismiss();
                 }
+                MyToast.toast("Collection updated", getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+
             }
 
             @Override

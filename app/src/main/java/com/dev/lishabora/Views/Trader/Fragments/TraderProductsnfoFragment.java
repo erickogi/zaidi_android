@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -467,12 +466,9 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
 
                 tViewModel.createProducts(selectedProducts, false).observe(TraderProductsnfoFragment.this, responseModel -> {
                     avi.smoothToHide();
-                    Snackbar.make(view, "" + tViewModel.getProductsCount(), Snackbar.LENGTH_LONG).show();
 
                     dialog.dismiss();
-                    if (responseModel != null) {
-                        // Snackbar.make(view, responseModel.getResultDescription(), Snackbar.LENGTH_LONG).show();
-                    }
+
                 });
 
             } else {

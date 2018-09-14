@@ -67,7 +67,7 @@ public class CollectionsAdapter extends RecyclerView.Adapter<CollectionViewHolde
         }
 
 
-        holder.milkTotalAm.setText(GeneralUtills.Companion.round(model.getMilkAm(), 1));
+        holder.milkTotalAm.setText(GeneralUtills.Companion.round(model.getMilkAmLtrs(), 1));
         if (!model.getMilkAm().equals("0.0")) {
             holder.milkTotalAm.setTextColor(context.getResources().getColor(R.color.colorPrimary));
             holder.milkTotalAm.setTypeface(Typeface.DEFAULT_BOLD);
@@ -78,7 +78,7 @@ public class CollectionsAdapter extends RecyclerView.Adapter<CollectionViewHolde
             holder.milkTotalAm.setTextColor(context.getResources().getColor(R.color.black));
 
         }
-        holder.milkTotalPm.setText(GeneralUtills.Companion.round(model.getMilkPm(), 1));
+        holder.milkTotalPm.setText(GeneralUtills.Companion.round(model.getMilkPmLtrs(), 1));
         if (!model.getMilkPm().equals("0.0")) {
             holder.milkTotalPm.setTextColor(context.getResources().getColor(R.color.colorPrimary));
             holder.milkTotalPm.setTypeface(Typeface.DEFAULT_BOLD);

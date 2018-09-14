@@ -4,7 +4,6 @@ package com.dev.lishabora.Views.Trader.Activities;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -39,6 +38,7 @@ import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.Views.CommonFuncs;
+import com.dev.lishabora.Views.Trader.MilkCardToolBarUI;
 import com.dev.lishabora.Views.Trader.OrderConstants;
 import com.dev.lishaboramobile.R;
 import com.google.gson.Gson;
@@ -86,6 +86,7 @@ public class PayCard extends AppCompatActivity {
     private SearchView searchView;
     Double milkKsh = 0.0;
     private FamerModel famerModel;
+    private MilkCardToolBarUI toolBar;
 
 
 
@@ -133,6 +134,8 @@ public class PayCard extends AppCompatActivity {
 
 
         initList();
+        toolBar = findViewById(R.id.toolbar);
+
         btnApprove = findViewById(R.id.btn_approve);
         btnApprove.setVisibility(View.GONE);
         txtApprovalStatus = findViewById(R.id.txt_approval_status);
@@ -149,16 +152,16 @@ public class PayCard extends AppCompatActivity {
         // save.setOnClickListener(view -> update(liveModel));
 
 
-        status = findViewById(R.id.txt_status);
-        id = findViewById(R.id.txt_id);
-        name = findViewById(R.id.txt_name);
-        balance = findViewById(R.id.txt_balance);
-        searchView = findViewById(R.id.search);
-
-
-        milk = findViewById(R.id.txt_milk);
-        loan = findViewById(R.id.txt_loans);
-        order = findViewById(R.id.txt_orders);
+//        status = findViewById(R.id.txt_status);
+//        id = findViewById(R.id.txt_id);
+//        name = findViewById(R.id.txt_name);
+//        balance = findViewById(R.id.txt_balance);
+//        searchView = findViewById(R.id.search);
+//
+//
+//        milk = findViewById(R.id.txt_milk);
+//        loan = findViewById(R.id.txt_loans);
+//        order = findViewById(R.id.txt_orders);
         PayoutFarmersCollectionModel model = (PayoutFarmersCollectionModel) getIntent().getSerializableExtra("data");
         payouts = (Payouts) getIntent().getSerializableExtra("payout");
         setData(model);
@@ -286,23 +289,23 @@ public class PayCard extends AppCompatActivity {
 
         listAdapter.notifyDataSetChanged();
 
-        searchView.setVisibility(View.GONE);
+        //    searchView.setVisibility(View.GONE);
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-
-
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-
-                return true;
-            }
-        });
-
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String s) {
+//
+//
+//                return true;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String s) {
+//
+//                return true;
+//            }
+//        });
+//
 
     }
 
@@ -339,82 +342,37 @@ public class PayCard extends AppCompatActivity {
     }
 
     private void setBalance(Double milkKsh) {
-        balance.setText(getBalance(String.valueOf(milkKsh), loan.getText().toString(), order.getText().toString()));
+        toolBar.show(getBalance(String.valueOf(milkKsh), toolBar.getLoanTotal(), toolBar.getOrderTotal()));
     }
 
     private void setData(PayoutFarmersCollectionModel model) {
+
+
         this.payoutfarmermodel = model;
-        //  balance.setText("" + model.getBalance());
 
-        id.setText(model.getFarmercode());
-        name.setText(model.getFarmername());
-        status.setText(model.getStatusName());
-
-        setTitle("" + model.getFarmername() + "        ID " + model.getFarmercode());
-
-
-        milk.setText(String.format("%s %s", model.getMilktotal(), this.getString(R.string.ltrs)));
-        if (!model.getMilktotal().equals("0.0")) {
-            milk.setTextColor(this.getResources().getColor(R.color.colorPrimary));
-            milk.setTypeface(Typeface.DEFAULT_BOLD);
-
-        } else {
-            milk.setTypeface(Typeface.DEFAULT);
-
-            milk.setTextColor(this.getResources().getColor(R.color.black));
-
-        }
-
-
-        loan.setText(String.format("%s %s", model.getLoanTotal(), this.getString(R.string.ksh)));
-        if (!model.getLoanTotal().equals("0.0")) {
-            loan.setTextColor(this.getResources().getColor(R.color.colorPrimary));
-            loan.setTypeface(Typeface.DEFAULT_BOLD);
-
-        } else {
-            loan.setTypeface(Typeface.DEFAULT);
-
-            loan.setTextColor(this.getResources().getColor(R.color.black));
-
-        }
-
-        order.setText(String.format("%s %s", model.getOrderTotal(), this.getString(R.string.ksh)));
-        if (!model.getOrderTotal().equals("0.0")) {
-            order.setTextColor(this.getResources().getColor(R.color.colorPrimary));
-            order.setTypeface(Typeface.DEFAULT_BOLD);
-
-        } else {
-            order.setTypeface(Typeface.DEFAULT);
-
-            order.setTextColor(this.getResources().getColor(R.color.black));
-
-        }
-
+        boolean isApproved = false;
+        boolean isPast = false;
         if (model.getCardstatus() == 1) {
-            //  status.setText("Active");
-            status.setTextColor(this.getResources().getColor(R.color.green_color_picker));
-            background.setBackgroundColor(this.getResources().getColor(R.color.green_color_picker));
-            statusview.setBackgroundColor(this.getResources().getColor(R.color.green_color_picker));
-
-
+            isApproved = true;
         } else if (model.getCardstatus() == 0) {
 
-            //  status.setText("Deleted");
-            status.setTextColor(this.getResources().getColor(R.color.red));
-            background.setBackgroundColor(this.getResources().getColor(R.color.red));
-            statusview.setBackgroundColor(this.getResources().getColor(R.color.red));
-
-        } else {
-            // status.setText("In-Active");
-            status.setTextColor(this.getResources().getColor(R.color.blue_color_picker));
-            background.setBackgroundColor(this.getResources().getColor(R.color.blue_color_picker));
-            statusview.setBackgroundColor(this.getResources().getColor(R.color.blue_color_picker));
+            isApproved = false;
 
         }
+        toolBar.show(model.getMilktotal(), model.getLoanTotal(), model.getOrderTotal(), "", famerModel, payouts, isApproved, isPast);
+
+
+
+
+
+
+
+
 
         loadCollections("" + model.getPayoutNumber(), model.getFarmercode());
         payoutsVewModel.getSumOfMilkForPayoutLtrs(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
-            milk.setText(String.valueOf(integer));
+            //milk.setText(String.valueOf(integer));
+            toolBar.updateMilk(String.valueOf(integer));
             setBalance(milkKsh);
         });
         payoutsVewModel.getSumOfMilkForPayoutKsh(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
@@ -422,11 +380,15 @@ public class PayCard extends AppCompatActivity {
             setBalance(milkKsh);
         });
         payoutsVewModel.getSumOfLoansForPayout(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
-            loan.setText(String.valueOf(integer));
+            //loan.setText(String.valueOf(integer));
+            toolBar.updateLoan(String.valueOf(integer));
+
             setBalance(milkKsh);
         });
         payoutsVewModel.getSumOfOrdersForPayout(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
-            order.setText(String.valueOf(integer));
+            //order.setText(String.valueOf(integer));
+            toolBar.updateOrder(String.valueOf(integer));
+
             setBalance(milkKsh);
         });
 

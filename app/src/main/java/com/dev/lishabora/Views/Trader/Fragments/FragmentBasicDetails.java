@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.dev.lishabora.COntrollers.LoginController;
 import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Trader.FarmerConst;
 import com.dev.lishaboramobile.R;
@@ -43,7 +44,54 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // setHasOptionsMenu(true);
+
     }
+
+//    @Override
+//    public void onPrepareOptionsMenu(Menu menu) {
+//        super.onPrepareOptionsMenu(menu);
+//
+//
+//    }
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        // Do something that differs the Activity's menu here
+//        super.onCreateOptionsMenu(menu, inflater);
+//
+//        //inflater.inflate(R.menu.menu_main, menu);
+//        MenuItem mEdit = menu.findItem(R.id.action_edit);
+//
+//
+//
+//
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//
+//            case R.id.action_edit:
+//                // Do Fragment menu item stuff here
+//
+//                return true;
+//
+//
+//            default:
+//                break;
+//        }
+//
+//        return false;
+//    }
+//
+
+
+
+
+
+
+
+
 
     @Nullable
     @Override
@@ -70,7 +118,7 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
         }
 
 
-        FarmerConst.getFamerModel().setNames(edtNames.getText().toString());
+        FarmerConst.getFamerModel().setNames(GeneralUtills.Companion.capitalize(edtNames.getText().toString()));
         FarmerConst.getFamerModel().setMobile(edtMobile.getText().toString());
 
 

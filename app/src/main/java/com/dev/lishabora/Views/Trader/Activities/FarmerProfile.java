@@ -10,6 +10,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
@@ -28,6 +30,28 @@ public class FarmerProfile extends AppCompatActivity {
     private FamerModel famerModel;
     private TraderViewModel traderViewModel;
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.farmer_profile_menu, menu);
+        MenuItem mSearch = menu.findItem(R.id.action_edit);
+        // mSearch.setVisible(false);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onResume() {
@@ -47,10 +71,21 @@ public class FarmerProfile extends AppCompatActivity {
         setContentView(R.layout.activity_farmer_profile);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
 
         famerModel = (FamerModel) getIntent().getSerializableExtra("farmer");
         FarmerConst.setFamerModel(famerModel);
+
+        try {
+            this.setTitle(famerModel.getNames());
+
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
 
         Bundle bundle = new Bundle();
         bundle.putInt("type", 1);

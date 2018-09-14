@@ -185,7 +185,7 @@ public class FarmerToolBarUI extends LinearLayout {
             case TYPE_LOAN:
                 lmlo.setVisibility(GONE);
                 lddv.setVisibility(VISIBLE);
-                txtValueLabel1.setVisibility(GONE);
+                txtValueLabel1.setVisibility(INVISIBLE);
                 txtValueLabel2.setText("Value");
 
 
@@ -214,7 +214,7 @@ public class FarmerToolBarUI extends LinearLayout {
 
                 lmlo.setVisibility(GONE);
                 lddv.setVisibility(VISIBLE);
-                txtValueLabel1.setVisibility(GONE);
+                txtValueLabel1.setVisibility(INVISIBLE);
                 txtValueLabel2.setText("Value");
 
 

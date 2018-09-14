@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,7 +106,7 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
     @Nullable
     @Override
     public VerificationError verifyStep() {
-        if (verifySpinner(spinnerRoute) && verifySpinner(spinnerUnit)) {
+        if (!TextUtils.isEmpty(edtRouteName.getText()) && !TextUtils.isEmpty(edtUnitName.getText())) {
             return null;
         }
         return new VerificationError("Routes & Unit required");
@@ -126,7 +127,8 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
     }
 
     private boolean verifySpinner(MaterialSpinner spinner) {
-        return spinner.getSelectedIndex() != 0;
+        //return spinner.getSelectedIndex() != 0;
+        return spinner.isSelected();
     }
 
 
@@ -162,19 +164,19 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
 
     private void initActions() {
         spinnerUnit.setOnItemSelectedListener((view, position, id, item) -> {
-            if (position != 0) {
-                UnitsModel unitsModel = unitsModels.get(position - 1);
+            //   if (position != 0) {
+            UnitsModel unitsModel = unitsModels.get(position);
                 edtUnitName.setText("" + unitsModel.getUnit());
                 edtUnitMeasurement.setText(unitsModel.getUnitcapacity());
                 edtUnitPrice.setText(unitsModel.getUnitprice());
-            }
+            //  }
         });
         spinnerRoute.setOnItemSelectedListener((view, position, id, item) -> {
-            if (position != 0) {
-                RoutesModel routesModel = routesModels.get(position - 1);
+            //  if (position != 0) {
+            RoutesModel routesModel = routesModels.get(position);
                 edtRouteName.setText(routesModel.getRoute());
                 edtRouteCode.setText(routesModel.getCode());
-            }
+            //  }
         });
     }
 
@@ -205,10 +207,14 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
                 if (fm != null) {
                     if (spinnerRoute.getItems() != null) {
                         List<String> items = spinnerRoute.getItems();
-                        for (int a = 0; a < items.size(); a++) {
-                            if (items.get(a).contains(fm.getRoutename())) {
-                                spinnerRoute.setSelectedIndex(a);
+                        try {
+                            for (int a = 0; a < items.size(); a++) {
+                                if (items.get(a).contains(fm.getRoutename())) {
+                                    spinnerRoute.setSelectedIndex(a);
+                                }
                             }
+                        } catch (Exception nm) {
+                            nm.printStackTrace();
                         }
                     }
                 }
@@ -232,11 +238,15 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
                 if (fm != null) {
                     if (spinnerUnit.getItems() != null) {
 
-                        List<String> items2 = spinnerUnit.getItems();
-                        for (int a = 0; a < items2.size(); a++) {
-                            if (items2.get(a).contains(fm.getUnitname())) {
-                                spinnerUnit.setSelectedIndex(a);
+                        try {
+                            List<String> items2 = spinnerUnit.getItems();
+                            for (int a = 0; a < items2.size(); a++) {
+                                if (items2.get(a).contains(fm.getUnitname())) {
+                                    spinnerUnit.setSelectedIndex(a);
+                                }
                             }
+                        } catch (Exception nm) {
+                            nm.printStackTrace();
                         }
                     }
                 }

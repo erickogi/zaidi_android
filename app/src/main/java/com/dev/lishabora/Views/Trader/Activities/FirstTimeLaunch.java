@@ -9,8 +9,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.dev.lishabora.Adapters.TraderFirstTimeAdapter;
+import com.dev.lishabora.Models.Trader.TraderModel;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
+import com.dev.lishabora.Views.Trader.TraderConst;
 import com.dev.lishaboramobile.R;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
@@ -29,6 +31,10 @@ public class FirstTimeLaunch extends AppCompatActivity implements StepperLayout.
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        if (TraderConst.getType_selected() == TraderConst.INTENT_TYPE_EDIT) {
+            TraderModel t = TraderConst.getTraderModel();
+
+        }
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show());

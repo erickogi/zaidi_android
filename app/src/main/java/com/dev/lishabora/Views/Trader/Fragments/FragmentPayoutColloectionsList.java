@@ -24,6 +24,7 @@ import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.DayCollectionModel;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Utils.DateTimeUtils;
+import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.Views.CommonFuncs;
@@ -201,12 +202,10 @@ public class FragmentPayoutColloectionsList extends Fragment {
         startDate.setText(model.getStartDate());
         endDate.setText(model.getEndDate());
         cycleName.setText(model.getCyclename());
-        milkTotal.setText(String.format("%s %s", model.getMilkTotalLtrs(), getActivity().getString(R.string.ltrs)));
-        loanTotal.setText(String.format("%s %s", model.getLoanTotal(), getActivity().getString(R.string.ksh)));
-        orderTotal.setText(String.format("%s %s", model.getOrderTotal(), getActivity().getString(R.string.ksh)));
-
-
-        balance.setText(String.format("%s %s", model.getBalance(), getActivity().getString(R.string.ksh)));
+        milkTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getMilkTotalLtrs(), 1), getActivity().getString(R.string.ltrs)));
+        loanTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getLoanTotal(), 1), getActivity().getString(R.string.ksh)));
+        orderTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getOrderTotal(), 1), getActivity().getString(R.string.ksh)));
+        balance.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getBalance(), 1), getActivity().getString(R.string.ksh)));
 
         approvedCount.setText(model.getApprovedCards());
         unApprovedCount.setText(model.getPendingCards());

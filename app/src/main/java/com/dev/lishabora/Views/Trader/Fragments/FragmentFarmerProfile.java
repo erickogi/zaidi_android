@@ -7,6 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -47,6 +50,47 @@ public class FragmentFarmerProfile extends Fragment {
         super.onCreate(savedInstanceState);
 
 
+        setHasOptionsMenu(true);
+
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Do something that differs the Activity's menu here
+        super.onCreateOptionsMenu(menu, inflater);
+
+        //inflater.inflate(R.menu.menu_main, menu);
+        MenuItem mEdit = menu.findItem(R.id.action_edit);
+
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.action_edit:
+                // Do Fragment menu item stuff here
+                Intent intent = new Intent(getActivity(), CreateFarmerActivity.class);
+                intent.putExtra("type", 1);
+                intent.putExtra("farmer", famerModel);
+
+                startActivityForResult(intent, 1001);
+                return true;
+
+
+            default:
+                break;
+        }
+
+        return false;
     }
 
     @Nullable
@@ -83,17 +127,18 @@ public class FragmentFarmerProfile extends Fragment {
         edtRouteName = mView.findViewById(R.id.edt_route_names);
         edtRouteCode = mView.findViewById(R.id.edt_route_code);
         btnEdit = mView.findViewById(R.id.btn_edit);
+        btnEdit.setVisibility(View.GONE);
 
 
         setUpData();
-        btnEdit.setOnClickListener(view -> {
-
-            Intent intent = new Intent(getActivity(), CreateFarmerActivity.class);
-            intent.putExtra("type", 1);
-            intent.putExtra("farmer", famerModel);
-
-            startActivityForResult(intent, 1001);
-        });
+//        btnEdit.setOnClickListener(view -> {
+//
+//            Intent intent = new Intent(getActivity(), CreateFarmerActivity.class);
+//            intent.putExtra("type", 1);
+//            intent.putExtra("farmer", famerModel);
+//
+//            startActivityForResult(intent, 1001);
+//        });
     }
 
     void setUpData() {

@@ -117,7 +117,7 @@ public class FragmentCompleteGiveOrder extends Fragment implements BlockingStep 
 
         String delivery = "0";
 
-        if (!TextUtils.isEmpty(edtDeliveryFee.getText())) {
+        if (!TextUtils.isEmpty(edtDeliveryFee.getText()) && edtDeliveryFee.getText().toString() != null) {
             delivery = edtDeliveryFee.getText().toString();
         }
         orderModel.setOrderDeliveryFee(delivery);
@@ -196,7 +196,12 @@ public class FragmentCompleteGiveOrder extends Fragment implements BlockingStep 
         }
 
         edtAmount.setText(String.valueOf(dt));
-        edtDeliveryFee.setText(String.valueOf(delivery));
+
+        if (delivery != 0.0) {
+            edtDeliveryFee.setText(String.valueOf(delivery));
+        } else {
+            edtDeliveryFee.setText("");
+        }
 
 
         double installmentValue = 0.0;

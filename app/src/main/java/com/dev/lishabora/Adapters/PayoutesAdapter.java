@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.dev.lishabora.Adapters.ViewHolders.PayoutsViewHolder;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Utils.DateTimeUtils;
+import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
 
@@ -61,11 +62,11 @@ public class PayoutesAdapter extends RecyclerView.Adapter<PayoutsViewHolder> {
 
         holder.cycleName.setText(model.getCyclename());
         holder.status.setText(model.getStatusName());
-        holder.milkTotal.setText(String.format("%s%s", model.getMilkTotalLtrs(), context.getString(R.string.ltrs)));
-        holder.loanTotal.setText(String.format("%s%s", model.getLoanTotal(), context.getString(R.string.ksh)));
-        holder.orderTotal.setText(String.format("%s%s", model.getOrderTotal(), context.getString(R.string.ksh)));
+        holder.milkTotal.setText(String.format("%s%s", GeneralUtills.Companion.round(model.getMilkTotalLtrs(), 1), context.getString(R.string.ltrs)));
+        holder.loanTotal.setText(String.format("%s%s", GeneralUtills.Companion.round(model.getLoanTotal(), 1), context.getString(R.string.ksh)));
+        holder.orderTotal.setText(String.format("%s%s", GeneralUtills.Companion.round(model.getOrderTotal(), 1), context.getString(R.string.ksh)));
 
-        holder.balance.setText(String.format("%s%s", model.getBalance(), context.getString(R.string.ksh)));
+        holder.balance.setText(String.format("%s%s", GeneralUtills.Companion.round(model.getBalance(), 1), context.getString(R.string.ksh)));
 
 
         holder.approvedCount.setText(model.getApprovedCards());

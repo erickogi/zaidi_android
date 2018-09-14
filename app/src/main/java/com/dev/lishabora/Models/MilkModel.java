@@ -29,11 +29,23 @@ public class MilkModel implements Serializable {
         if (unitsModel != null && unitsModel.getUnitcapacity() != null && unitsModel.getUnitprice() != null) {
 
             double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity()) / 1000;
-            double unitQtyCollected = Double.valueOf(unitQty);
+            double unitQtyCollected = 0;
+            if (unitQty != null) {
+                try {
+                    unitQtyCollected = Double.valueOf(unitQty);
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
+            }
 
             return String.valueOf(unitCapacity * unitQtyCollected);
         } else {
-            return valueLtrs;
+            if (valueLtrs != null) {
+                return valueLtrs;
+            } else {
+                return "0";
+            }
+
         }
 
     }
@@ -47,7 +59,14 @@ public class MilkModel implements Serializable {
         if (unitsModel != null && unitsModel.getUnitcapacity() != null && unitsModel.getUnitprice() != null) {
             double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity()) / 1000;
             double unitPricePer = Double.valueOf(unitsModel.getUnitprice());
-            double unitQtyCollected = Double.valueOf(unitQty);
+            double unitQtyCollected = 0;
+            if (unitQty != null) {
+                try {
+                    unitQtyCollected = Double.valueOf(unitQty);
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
+            }
 
             return String.valueOf((unitCapacity * unitQtyCollected) * unitPricePer);
         } else {

@@ -99,7 +99,8 @@ public class FragmentGiveLoan extends Fragment {
 
             LoanModel l = CommonFuncs.getLoan(collections);
             if (l != null) {
-                txt.setText(l.getLoanAmount());
+                if (l.getLoanAmount() != null && !l.getLoanAmount().equals("0.0"))
+                    txt.setText(l.getLoanAmount());
                 txtPrice.setText(l.getInstallmentAmount());
                 txtQty.setText(l.getInstallmentsNo());
 
@@ -343,7 +344,7 @@ public class FragmentGiveLoan extends Fragment {
 
 
         btnGiveLoan.setOnClickListener(view -> {
-            if (!TextUtils.isEmpty(edtAmount.getText().toString())) {
+            if (!TextUtils.isEmpty(edtAmount.getText().toString()) && edtAmount.getText() != null && !edtAmount.getText().toString().equals("0.0")) {
 
 
                 LoanModel loanModel = new LoanModel();
