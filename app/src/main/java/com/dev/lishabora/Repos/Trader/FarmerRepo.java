@@ -176,7 +176,8 @@ public class FarmerRepo {
 
         }
     }
-    public void insertMultipleTraders(List<FamerModel> traderModels){
+
+    public void insertMultiple(List<FamerModel> traderModels) {
         farmersDao = db.farmersDao();
 
         new insertTradersAsyncTask(farmersDao).execute(traderModels);

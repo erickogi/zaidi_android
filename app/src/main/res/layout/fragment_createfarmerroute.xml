@@ -235,7 +235,7 @@
                                 android:focusableInTouchMode="true"
                                 android:hint="Price(Ksh)"
 
-                                android:inputType="text"
+                                android:inputType="numberDecimal"
                                 android:textColor="@color/black" />
 
                         </android.support.design.widget.TextInputLayout>

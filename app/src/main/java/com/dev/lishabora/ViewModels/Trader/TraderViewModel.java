@@ -6,6 +6,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
+import com.dev.lishabora.AppConstants;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
@@ -15,6 +16,7 @@ import com.dev.lishabora.Models.RPFSearchModel;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.ResponseObject;
 import com.dev.lishabora.Models.RoutesModel;
+import com.dev.lishabora.Models.SyncModel;
 import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.Repos.ProductsRepo;
 import com.dev.lishabora.Repos.RoutesRepo;
@@ -22,6 +24,7 @@ import com.dev.lishabora.Repos.Trader.CollectionsRepo;
 import com.dev.lishabora.Repos.Trader.CyclesRepo;
 import com.dev.lishabora.Repos.Trader.FarmerRepo;
 import com.dev.lishabora.Repos.Trader.PayoutsRepo;
+import com.dev.lishabora.Repos.Trader.SyncRepo;
 import com.dev.lishabora.Repos.Trader.UnitsRepo;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.Network.ApiConstants;
@@ -53,6 +56,8 @@ public class TraderViewModel extends AndroidViewModel
     ProductsRepo productsRepo;
     CollectionsRepo collectionsRepo;
     PayoutsRepo payoutsRepo;
+    SyncRepo syncRepo;
+
 
     Gson gson = new Gson();
     private MutableLiveData createRouteSuccess;
@@ -116,6 +121,7 @@ public class TraderViewModel extends AndroidViewModel
         collectionsRepo = new CollectionsRepo(application);
         payoutsRepo = new PayoutsRepo(application);
         prefrenceManager = new PrefrenceManager(application);
+        syncRepo = new SyncRepo(application);
 
 
 //
@@ -124,11 +130,80 @@ public class TraderViewModel extends AndroidViewModel
         payoutOne = new Payouts();
 
 //
-//        farmers.setValue(farmerRepo.fetchAllData(false));
-//        routes.setValue(routesRepo.fetchAllData(false));
-//        units.setValue(unitsRepo.fetchAllData(false));
-//        cycles.setValue(cyclesRepo.fetchAllData(false));
+//
     }
+
+    public LiveData<List<SyncModel>> fetchAll() {
+        return syncRepo.fetchAllData(false);
+    }
+
+    public LiveData<List<SyncModel>> fetchByStatus(int status) {
+        return syncRepo.getAllByStatus(status);
+    }
+
+    public LiveData<SyncModel> fetchById(int id) {
+        return syncRepo.getSynce(id);
+    }
+
+    public void createSync(SyncModel model) {
+        syncRepo.insert(model);
+
+    }
+
+    public void updateSync(SyncModel syncModel) {
+        syncRepo.upDateRecord(syncModel);
+
+    }
+
+    public void deleteSync(SyncModel syncModel) {
+        syncRepo.deleteRecord(syncModel);
+
+    }
+
+
+    private void synch(int action, int entity, Object o) {
+        SyncModel syncModel = new SyncModel();
+        syncModel.setActionType(action);
+        syncModel.setObjectData(o);
+        syncModel.setObject(new Gson().toJson(o));
+        syncModel.setEntityType(entity);
+        syncModel.setSyncStatus(0);
+        syncModel.setTimeStamp(DateTimeUtils.Companion.getNow());
+        syncModel.setSyncTime("");
+        switch (action) {
+            case AppConstants.INSERT:
+                syncModel.setActionTypeName("Insert");
+                break;
+            case AppConstants.UPDATE:
+                syncModel.setActionTypeName("Update");
+                break;
+            case AppConstants.DELETE:
+                syncModel.setActionTypeName("Delete");
+                break;
+
+        }
+        switch (entity) {
+            case AppConstants.ENTITY_FARMER:
+                syncModel.setEntityTypeName("Farmer");
+                break;
+            case AppConstants.ENTITY_PRODUCTS:
+                syncModel.setEntityTypeName("Products");
+                break;
+            case AppConstants.ENTITY_PAYOUTS:
+                syncModel.setEntityTypeName("Payout");
+                break;
+            case AppConstants.ENTITY_COLLECTION:
+                syncModel.setEntityTypeName("Collection");
+                break;
+            case AppConstants.ENTITY_ROUTES:
+                syncModel.setEntityTypeName("Route");
+                break;
+        }
+
+        createSync(syncModel);
+    }
+
+
 
     public Collection getLastCollection(String cyclecode) {
 
@@ -164,9 +239,6 @@ public class TraderViewModel extends AndroidViewModel
 
         return productss;
     }
-
-
-
     public LiveData<List<FamerModel>> getFarmers(JSONObject jsonObject, boolean isOnline) {
         if (farmers == null) {
             farmers = new MutableLiveData();
@@ -185,7 +257,7 @@ public class TraderViewModel extends AndroidViewModel
 
 
                             Timber.d("farmers update called");
-                            farmerRepo.insertMultipleTraders(gson.fromJson(jsonArray, listType));
+                            farmerRepo.insert(gson.fromJson(jsonArray, listType));
                         }
 
                         @Override
@@ -198,7 +270,7 @@ public class TraderViewModel extends AndroidViewModel
 
 
                             Timber.d("farmers update called");
-                            farmerRepo.insertMultipleTraders(gson.fromJson(jsonArray, listType));
+                            farmerRepo.insert(gson.fromJson(jsonArray, listType));
                         }
                     }
             );
@@ -208,7 +280,6 @@ public class TraderViewModel extends AndroidViewModel
         farmers = (farmerRepo.fetchAllData(false));
         return farmers;
     }
-
     public LiveData<List<FamerModel>> getFarmerByStatusRoute(int status, String route) {
 
         Timber.d("Status " + status + "\n Route " + route);
@@ -244,7 +315,6 @@ public class TraderViewModel extends AndroidViewModel
 
         return farmers;
     }
-
     public LiveData<List<FamerModel>> getFarmersByName(String names) {
         if (farmers == null) {
             farmers = new MutableLiveData();
@@ -253,7 +323,6 @@ public class TraderViewModel extends AndroidViewModel
 
         return farmers;
     }
-
     public LiveData<List<FamerModel>> getFarmersByCycle(String code) {
         if (farmers == null) {
             farmers = new MutableLiveData();
@@ -262,7 +331,6 @@ public class TraderViewModel extends AndroidViewModel
 
         return farmers;
     }
-
     public int getFarmersCountByCycle(String code) {
         return (farmerRepo.getFarmersCountByCycle(code));
 
@@ -284,25 +352,6 @@ public class TraderViewModel extends AndroidViewModel
         return farmer;
     }
 
-    public LiveData<List<FamerModel>> getFarmersByMobile(String mobile) {
-        if (farmers == null) {
-            farmers = new MutableLiveData();
-        }
-
-        farmers = (farmerRepo.searchByMobile(mobile));
-
-        return farmers;
-    }
-
-    public LiveData<List<FamerModel>> getFarmersByRoute(String route) {
-        if (farmers == null) {
-            farmers = new MutableLiveData();
-        }
-        farmers = (farmerRepo.getFramersByRoute(route));
-
-
-        return farmers;
-    }
 
     public LiveData<List<RoutesModel>> getRoutes(boolean isOnline) {
         if (routes == null) {
@@ -497,7 +546,7 @@ public class TraderViewModel extends AndroidViewModel
                     JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
                     Type listType = new TypeToken<LinkedList<FamerModel>>() {
                     }.getType();
-                    farmerRepo.insertMultipleTraders(gson.fromJson(jsonArray, listType));
+                    farmerRepo.insertMultiple(gson.fromJson(jsonArray, listType));
                     farmers = (farmerRepo.fetchAllData(fetchFromOnline));
                 }
 
@@ -715,6 +764,12 @@ public class TraderViewModel extends AndroidViewModel
     }
 
     public LiveData<ResponseModel> createCollections(Collection collection, boolean b) {
+
+
+        synch(AppConstants.INSERT, AppConstants.ENTITY_COLLECTION, collection);
+
+
+
         if (this.createCollectionSuccess == null) {
         }
         this.createCollectionSuccess = new MutableLiveData();
@@ -923,6 +978,7 @@ public class TraderViewModel extends AndroidViewModel
 
 
     public LiveData<ResponseModel> createFarmer(FamerModel famerModel, boolean b) {
+
         if (this.createFarmerSuccess == null) {
         }
         this.createFarmerSuccess = new MutableLiveData();
@@ -947,6 +1003,7 @@ public class TraderViewModel extends AndroidViewModel
 
         } else {
             farmerRepo.insert(famerModel);
+            synch(AppConstants.INSERT, AppConstants.ENTITY_FARMER, famerModel);
             ResponseModel responseModel = new ResponseModel();
             responseModel.setResultCode(1);
             responseModel.setResultDescription("Farmer added successfully");
@@ -956,6 +1013,44 @@ public class TraderViewModel extends AndroidViewModel
         }
         return createFarmerSuccess;
     }
+
+    public LiveData<ResponseModel> createFarmers(List<FamerModel> famerModel, boolean b) {
+
+        if (this.createFarmerSuccess == null) {
+        }
+        this.createFarmerSuccess = new MutableLiveData();
+
+        if (b) {
+            Request.Companion.getResponse(ApiConstants.Companion.getCreateFarmer(), getFarmerJson(), "", new ResponseCallback() {
+                @Override
+                public void response(ResponseModel responseModel) {
+                    createFarmerSuccess.setValue(responseModel);
+                    farmerRepo.insertMultiple(famerModel);
+
+                }
+
+                @Override
+                public void response(ResponseObject responseModel) {
+                    createFarmerSuccess.setValue(responseModel);
+
+                    farmerRepo.insertMultiple(famerModel);
+
+                }
+            });
+
+        } else {
+            farmerRepo.insertMultiple(famerModel);
+            ResponseModel responseModel = new ResponseModel();
+            responseModel.setResultCode(1);
+            responseModel.setResultDescription("Farmer added successfully");
+            responseModel.setData(null);
+            createFarmerSuccess.setValue(responseModel);
+
+        }
+        return createFarmerSuccess;
+    }
+
+
 
     public LiveData<ResponseModel> deleteFarmer(FamerModel famerModel, boolean b) {
         if (this.deleteFarmerSuccess == null) {
@@ -993,6 +1088,7 @@ public class TraderViewModel extends AndroidViewModel
     }
 
     public LiveData<ResponseModel> updateFarmer(FamerModel famerModel, boolean b) {
+        synch(AppConstants.UPDATE, AppConstants.FARMER, famerModel);
         if (this.updateFarmerSuccess == null) {
         }
         this.updateFarmerSuccess = new MutableLiveData();
@@ -1108,6 +1204,7 @@ public class TraderViewModel extends AndroidViewModel
 
     public void insertPayout(Payouts payouts) {
         payoutsRepo.insert(payouts);
+        synch(AppConstants.INSERT, AppConstants.ENTITY_PAYOUTS, payouts);
     }
 
     public void insertPayout(List<Payouts> payouts) {
@@ -1135,6 +1232,7 @@ public class TraderViewModel extends AndroidViewModel
 
 
     public LiveData<ResponseModel> updateCollection(Collection c) {
+        synch(AppConstants.UPDATE, AppConstants.ENTITY_COLLECTION, c);
         if (c != null) {
             collectionsRepo.upDateRecord(c);
         }

@@ -17,6 +17,7 @@
 
 
     <item
+
         android:id="@+id/action_automatically"
         android:orderInCategory="100"
         android:title="Automatically"

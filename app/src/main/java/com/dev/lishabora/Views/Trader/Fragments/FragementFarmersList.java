@@ -725,7 +725,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         MenuItem mAlphabetically = menu.findItem(R.id.action_alphabetically);
         MenuItem mRearrangeManually = menu.findItem(R.id.action_smanually);
 
-        mAutomatically.setVisible(true);
+        mAutomatically.setVisible(false);
         mChronologically.setVisible(true);
         mManually.setVisible(true);
         mAlphabetically.setVisible(true);

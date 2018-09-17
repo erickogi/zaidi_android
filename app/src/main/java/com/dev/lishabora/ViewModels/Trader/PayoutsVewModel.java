@@ -6,19 +6,24 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
+import com.dev.lishabora.AppConstants;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Models.ResponseModel;
+import com.dev.lishabora.Models.SyncModel;
 import com.dev.lishabora.Repos.ProductsRepo;
 import com.dev.lishabora.Repos.RoutesRepo;
 import com.dev.lishabora.Repos.Trader.CollectionsRepo;
 import com.dev.lishabora.Repos.Trader.CyclesRepo;
 import com.dev.lishabora.Repos.Trader.FarmerRepo;
 import com.dev.lishabora.Repos.Trader.PayoutsRepo;
+import com.dev.lishabora.Repos.Trader.SyncRepo;
 import com.dev.lishabora.Repos.Trader.UnitsRepo;
+import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Views.Trader.FarmerConst;
+import com.google.gson.Gson;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +38,7 @@ public class PayoutsVewModel extends AndroidViewModel {
     ProductsRepo productsRepo;
     CollectionsRepo collectionsRepo;
     PayoutsRepo payoutsRepo;
+    SyncRepo syncRepo;
 
     private MutableLiveData createPayoutSuccess;
     private MutableLiveData updatePayoutSuccess;
@@ -73,6 +79,7 @@ public class PayoutsVewModel extends AndroidViewModel {
         productsRepo = new ProductsRepo(application);
         collectionsRepo = new CollectionsRepo(application);
         payoutsRepo = new PayoutsRepo(application);
+        syncRepo = new SyncRepo(application);
 
 //
         payouts = new MutableLiveData<>();
@@ -94,6 +101,79 @@ public class PayoutsVewModel extends AndroidViewModel {
 
 
     }
+
+    public LiveData<List<SyncModel>> fetchAll() {
+        return syncRepo.fetchAllData(false);
+    }
+
+    public LiveData<List<SyncModel>> fetchByStatus(int status) {
+        return syncRepo.getAllByStatus(status);
+    }
+
+    public LiveData<SyncModel> fetchById(int id) {
+        return syncRepo.getSynce(id);
+    }
+
+    public void createSync(SyncModel model) {
+        syncRepo.insert(model);
+
+    }
+
+    public void updateSync(SyncModel syncModel) {
+        syncRepo.upDateRecord(syncModel);
+
+    }
+
+    public void deleteSync(SyncModel syncModel) {
+        syncRepo.deleteRecord(syncModel);
+
+    }
+
+    private void synch(int action, int entity, Object o) {
+        SyncModel syncModel = new SyncModel();
+        syncModel.setActionType(action);
+        syncModel.setObjectData(o);
+        syncModel.setObject(new Gson().toJson(o));
+        syncModel.setEntityType(entity);
+        syncModel.setSyncStatus(0);
+        syncModel.setTimeStamp(DateTimeUtils.Companion.getNow());
+        syncModel.setSyncTime("");
+        switch (action) {
+            case AppConstants.INSERT:
+                syncModel.setActionTypeName("Insert");
+                break;
+            case AppConstants.UPDATE:
+                syncModel.setActionTypeName("Update");
+                break;
+            case AppConstants.DELETE:
+                syncModel.setActionTypeName("Delete");
+                break;
+
+        }
+        switch (entity) {
+            case AppConstants.ENTITY_FARMER:
+                syncModel.setEntityTypeName("Farmer");
+                break;
+            case AppConstants.ENTITY_PRODUCTS:
+                syncModel.setEntityTypeName("Products");
+                break;
+            case AppConstants.ENTITY_PAYOUTS:
+                syncModel.setEntityTypeName("Payout");
+                break;
+            case AppConstants.ENTITY_COLLECTION:
+                syncModel.setEntityTypeName("Collection");
+                break;
+            case AppConstants.ENTITY_ROUTES:
+                syncModel.setEntityTypeName("Route");
+                break;
+        }
+
+        createSync(syncModel);
+    }
+
+
+
+
 
     public LiveData<List<Payouts>> fetchAll(boolean isOnline) {
         return payoutsRepo.fetchAllData(false);
@@ -129,7 +209,8 @@ public class PayoutsVewModel extends AndroidViewModel {
 
     public void updatePayout(Payouts payouts) {
         payoutsRepo.upDateRecord(payouts);
-        collectionsRepo.updateCollectionsByPayout(payouts.getPayoutnumber(), 1);
+        synch(AppConstants.UPDATE, AppConstants.ENTITY_PAYOUTS, payouts);
+        collectionsRepo.updateCollectionsByPayout(payouts.getPayoutnumber(), payouts.getStatus());
     }
 
     public void deletePayout(Payouts payouts) {
@@ -372,6 +453,7 @@ public class PayoutsVewModel extends AndroidViewModel {
 
 
     public void updateCollection(Collection c) {
+        synch(AppConstants.UPDATE, AppConstants.ENTITY_COLLECTION, c);
         if (c != null) {
             collectionsRepo.upDateRecord(c);
         }
@@ -383,6 +465,7 @@ public class PayoutsVewModel extends AndroidViewModel {
             this.createCollectionSuccess = new MutableLiveData();
         }
 
+        synch(AppConstants.INSERT, AppConstants.ENTITY_COLLECTION, collection);
 
         collectionsRepo.insert(collection);
         ResponseModel responseModel = new ResponseModel();

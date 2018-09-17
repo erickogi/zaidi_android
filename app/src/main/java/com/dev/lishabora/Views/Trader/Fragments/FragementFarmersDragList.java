@@ -336,17 +336,7 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
     }
 
     void setDraggale(boolean draggale) {
-//        if (listAdapter != null) {
-//            listAdapter.setDraggale(draggale);
-//        }
-//        if (draggale) {
-//            isDraggable = true;
-//            btnDrag.setVisibility(View.VISIBLE);
-//        } else {
-//            //listAdapter.setDraggale(false);
-//            isDraggable = false;
-//            btnDrag.setVisibility(View.GONE);
-//        }
+
     }
 
     @Override
