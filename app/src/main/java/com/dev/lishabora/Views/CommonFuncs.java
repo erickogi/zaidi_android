@@ -725,6 +725,7 @@ public class CommonFuncs {
 
     public static Payouts createPayoutsByCollection(List<Collection> collections, Payouts p, PayoutsVewModel payoutsVewModel) {
 
+
         double total = 0.0;
         double milk = 0.0;
         double loans = 0.0;
@@ -785,7 +786,7 @@ public class CommonFuncs {
             }
 
         }
-        if (status >= collectsNo) {
+        if (status >= collectsNo && status != 0) {
             return 1;
         } else {
             return 0;
@@ -828,7 +829,7 @@ public class CommonFuncs {
 
             }
 
-            if (status == collectionNo) {
+            if (status == collectionNo && status != 0) {
                 approved += 1;
             }
 
@@ -951,9 +952,15 @@ public class CommonFuncs {
     }
 
     public static PayoutFarmersCollectionModel getFarmersCollectionModel(FamerModel famerModel, List<Collection> collections, Payouts payouts) {
-        String milkTotal = CommonFuncs.getMilk(famerModel.getCode(), collections).getUnitQty();
-        String milkTotalKsh = CommonFuncs.getMilk(famerModel.getCode(), collections).getValueKsh();
-        String milkTotalLtrs = CommonFuncs.getMilk(famerModel.getCode(), collections).getValueLtrs();
+
+        MilkModel m = new MilkModel();
+        m = CommonFuncs.getMilk(famerModel.getCode(), collections);
+        String milkTotal = m.getUnitQty();
+        String milkTotalKsh = m.getValueKsh();
+        String milkTotalLtrs = m.getValueLtrs();
+
+
+
         String loanTotal = CommonFuncs.getLoan(famerModel.getCode(), collections);
         String orderTotal = CommonFuncs.getOrder(famerModel.getCode(), collections);
 

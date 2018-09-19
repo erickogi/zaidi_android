@@ -2,29 +2,29 @@ package com.dev.lishabora.Views.Trader;
 
 import com.dev.lishabora.Models.FamerModel;
 
-import java.util.LinkedList;
+import java.util.List;
 
 public class FarmerConst {
     private static FamerModel famerModel;
     private static int createFarmerIntentType = 0;
 
     public static final int ACTIVE = 0, ARCHIVED = 1, DELETED = 2, DUMMY = 3, ALL = 4;
-    private static LinkedList<FamerModel> famerModels;
-    private static LinkedList<FamerModel> filteredFamerModels;
-    private static LinkedList<FamerModel> sortedFamerModels;
-    private static LinkedList<FamerModel> searchFamerModels;
+    private static List<FamerModel> famerModels;
+    private static List<FamerModel> filteredFamerModels;
+    private static List<FamerModel> sortedFamerModels;
+    private static List<FamerModel> searchFamerModels;
 
-    public static void setListToShow(LinkedList<FamerModel> famerModels) {
+    public static void setListToShow(List<FamerModel> famerModels) {
         if (getSortedFamerModels() != null) {
             setSortedFamerModels(famerModels);
         }
     }
 
-    public static LinkedList<FamerModel> getSearchFamerModels() {
+    public static List<FamerModel> getSearchFamerModels() {
         return searchFamerModels;
     }
 
-    public static void setSearchFamerModels(LinkedList<FamerModel> searchFamerModels) {
+    public static void setSearchFamerModels(List<FamerModel> searchFamerModels) {
         FarmerConst.searchFamerModels = searchFamerModels;
     }
 
@@ -44,27 +44,27 @@ public class FarmerConst {
         FarmerConst.createFarmerIntentType = createFarmerIntentType;
     }
 
-    public static LinkedList<FamerModel> getFamerModels() {
+    public static List<FamerModel> getFamerModels() {
         return famerModels;
     }
 
-    public static void setFamerModels(LinkedList<FamerModel> famerModels) {
+    public static void setFamerModels(List<FamerModel> famerModels) {
         FarmerConst.famerModels = famerModels;
     }
 
-    public static LinkedList<FamerModel> getFilteredFamerModels() {
+    public static List<FamerModel> getFilteredFamerModels() {
         return filteredFamerModels;
     }
 
-    public static void setFilteredFamerModels(LinkedList<FamerModel> filteredFamerModels) {
+    public static void setFilteredFamerModels(List<FamerModel> filteredFamerModels) {
         FarmerConst.filteredFamerModels = filteredFamerModels;
     }
 
-    public static LinkedList<FamerModel> getSortedFamerModels() {
+    public static List<FamerModel> getSortedFamerModels() {
         return sortedFamerModels;
     }
 
-    public static void setSortedFamerModels(LinkedList<FamerModel> sortedFamerModels) {
+    public static void setSortedFamerModels(List<FamerModel> sortedFamerModels) {
         FarmerConst.sortedFamerModels = sortedFamerModels;
     }
 }

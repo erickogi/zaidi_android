@@ -129,9 +129,6 @@ public class CreateFarmerActivity extends AppCompatActivity implements StepperLa
         FarmerConst.getFamerModel().setCompositecode(prefrenceManager.getTraderModel().getCode() + "" + FarmerConst.getFamerModel().getCode());
         FarmerConst.getFamerModel().setFirebasetoken("");
         FarmerConst.getFamerModel().setLastCollectionTime(DateTimeUtils.Companion.getNow());
-
-
-
         mViewModel.createFarmer(FarmerConst.getFamerModel(), false).observe(this, responseModel -> {
             if (responseModel != null && responseModel.getResultCode() == 1) {
                 snack(responseModel.getResultDescription());

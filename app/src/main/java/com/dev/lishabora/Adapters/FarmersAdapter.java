@@ -18,17 +18,19 @@ import com.dev.lishaboramobile.R;
 import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 import github.nisrulz.recyclerviewhelper.RVHAdapter;
 
 public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> implements RVHAdapter {
 
     private Context context;
-    private LinkedList<FamerModel> modelList;
+    private List<FamerModel> modelList;
     private OnclickRecyclerListener listener;
     private OnStartDragListener mDragStartListener;
     private OnStartDragListener mmDragStartListener;
-    public FarmersAdapter(Context context, LinkedList<FamerModel> modelList, OnclickRecyclerListener listener, OnStartDragListener dragStartListener) {
+
+    public FarmersAdapter(Context context, List<FamerModel> modelList, OnclickRecyclerListener listener, OnStartDragListener dragStartListener) {
         this.context = context;
         mmDragStartListener = dragStartListener;
 

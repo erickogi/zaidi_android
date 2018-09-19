@@ -214,7 +214,7 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
             @Override
             public void onClickListener(int position) {
 
-                collectMilk(FarmerConst.getSearchFamerModels().get(position));
+                // collectMilk(FarmerConst.getSearchFamerModels().get(position));
 
 
             }

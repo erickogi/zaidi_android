@@ -129,4 +129,8 @@ public class PayoutFarmersAdapter extends RecyclerView.Adapter<PayoutFarmerListV
     }
 
 
+    public void refresh(List<PayoutFarmersCollectionModel> dayCollectionModels) {
+        modelList = dayCollectionModels;
+        notifyDataSetChanged();
+    }
 }

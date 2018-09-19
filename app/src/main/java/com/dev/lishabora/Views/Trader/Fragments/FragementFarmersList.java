@@ -81,6 +81,8 @@ import static com.dev.lishabora.Models.FamerModel.farmerPosComparator;
 
 public class FragementFarmersList extends Fragment implements OnStartDragListener {
     FarmersAdapter listAdapter;
+
+
     private final int CHRONOLOGICAL = 1, ALPHABETICAL = 2, AUTOMATICALLY = 0, MANUALLY = 3;
     public static Fragment fragment = null;
 
@@ -110,6 +112,13 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     private boolean isDraggable = true;
     private int SORTTYPE = 0;
 
+    //List<FamerModel> famerModelsLst;
+
+
+
+
+
+
 
     boolean isAm = false;
     String ampm = "";
@@ -132,85 +141,52 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     boolean hasAmChanged = false;
     boolean hasPmChanged = false;
 
-    public void collectMilk(FamerModel famerModel) {
+    LayoutInflater layoutInflaterAndroid;
+    View mView;
+    AlertDialog.Builder alertDialogBuilderUserInput;
+    AlertDialog alertDialogAndroid;
+    MaterialButton btnPositive, btnNegative, btnNeutral;
+    TextView txtTitle;
+    LinearLayout lTitle;
+    ImageView imgIcon;
+    TextView names, balance, day1, day2, day3, day1am, day1pm, day2am, day2pm, day3am, day3pm, today, unitName, unitPrice, unitTotal;
+    TextInputEditText edtTodayAm, edtTodayPm;
 
 
-        if (DateTimeUtils.Companion.isAM(DateTimeUtils.Companion.getTodayDate())) {
-
-            ampm = "AM";
-
-        } else {
-
-
-            ampm = "PM";
-        }
-
-
-
-        AmStringValue = null;
-        PmStringValue = null;
-        AmDoubleValue = 0.0;
-        PmDoubleValue = 0.0;
-
-
-        //AmCollModel = null;
-        // PmCollModel = null;
-        collModel = null;
-
-
-        //AmCollModel = mViewModel.getCollectionByDateByFarmerByTimeSngle(famerModel.getCode(), DateTimeUtils.Companion.getToday() );
-        collModel = mViewModel.getCollectionByDateByFarmerByTimeSngle(famerModel.getCode(), DateTimeUtils.Companion.getToday());
-
-
-//        if (AmCollModel != null) {
-//            AmDoubleValue = AmDoubleValue + Double.valueOf(AmCollModel.getMilkCollected());
-//            AmStringValue = String.valueOf(AmDoubleValue);
-//        }
+    private void clearDialog() {
+//        day1.setText("");
+//        day1am.setText("");
+//        day1pm .setText("");
 //
-//        if (PmCollModel != null) {
+//        day2 .setText("");
+//        day2am .setText("");
+//        day2pm .setText("");
 //
-//            PmDoubleValue = PmDoubleValue + Double.valueOf(PmCollModel.getMilkCollected());
-//            PmStringValue = String.valueOf(PmDoubleValue);
-//        }
-        if (collModel != null) {
-            if (collModel.getMilkCollectedAm() != null) {
-                AmDoubleValue = AmDoubleValue + Double.valueOf(collModel.getMilkCollectedAm());
-                AmStringValue = String.valueOf(AmDoubleValue);
-            }
-            if (collModel.getMilkCollectedPm() != null) {
-                PmDoubleValue = PmDoubleValue + Double.valueOf(collModel.getMilkCollectedIdPm());
-                PmStringValue = String.valueOf(PmDoubleValue);
-            }
-        }
+//        day3.setText("");
+//        day3am .setText("");
+//        day3pm.setText("");
+//
+//        today .setText("");
+//
+//        unitName.setText("");
+//        unitPrice.setText("");
+//        unitTotal.setText("");
+
+        edtTodayAm.setText("");
+        edtTodayPm.setText("");
 
 
-        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
-        View mView = layoutInflaterAndroid.inflate(R.layout.dialog_collect_milk, null);
-        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+    }
+
+    private void setUpCollDialog() {
+        layoutInflaterAndroid = LayoutInflater.from(getContext());
+        mView = layoutInflaterAndroid.inflate(R.layout.dialog_collect_milk, null);
+        alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         alertDialogBuilderUserInput.setView(mView);
-
-
-        alertDialogBuilderUserInput
-                .setCancelable(false);
-        AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
+        alertDialogBuilderUserInput.setCancelable(false);
+        alertDialogAndroid = alertDialogBuilderUserInput.create();
         alertDialogAndroid.setCancelable(false);
         alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        alertDialogAndroid.show();
-
-        MaterialButton btnPositive, btnNegative, btnNeutral;
-        TextView txtTitle;
-        LinearLayout lTitle;
-        ImageView imgIcon;
-
-        UnitsModel unitsModel = new UnitsModel();
-        unitsModel.setUnitcapacity(famerModel.getUnitcapacity());
-        unitsModel.setUnitprice(famerModel.getUnitprice());
-        unitsModel.setUnit(famerModel.getUnitname());
-
-
-        TextView names, balance, day1, day2, day3, day1am, day1pm, day2am, day2pm, day3am, day3pm, today, unitName, unitPrice, unitTotal;
-        TextInputEditText edtTodayAm, edtTodayPm;
-
 
         names = mView.findViewById(R.id.txt_name);
         balance = mView.findViewById(R.id.txt_balance);
@@ -237,8 +213,78 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         edtTodayPm = mView.findViewById(R.id.edt_pm);
 
 
+        btnPositive = mView.findViewById(R.id.btn_positive);
+        btnNegative = mView.findViewById(R.id.btn_negative);
+        btnNeutral = mView.findViewById(R.id.btn_neutral);
+        txtTitle = mView.findViewById(R.id.txt_title);
+        lTitle = mView.findViewById(R.id.linear_title);
+        imgIcon = mView.findViewById(R.id.img_icon);
+
+
+        btnNeutral.setVisibility(View.GONE);
+        lTitle.setVisibility(View.GONE);
+        txtTitle.setVisibility(View.VISIBLE);
+        imgIcon.setVisibility(View.GONE);
+        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
+        txtTitle.setText("Route");
+
+
+    }
+
+
+
+    public void collectMilk(FamerModel famerModel) {
+
+
+        clearDialog();
+        if (DateTimeUtils.Companion.isAM(DateTimeUtils.Companion.getTodayDate())) {
+
+            ampm = "AM";
+
+        } else {
+
+
+            ampm = "PM";
+        }
+
+
+
+        AmStringValue = null;
+        PmStringValue = null;
+        AmDoubleValue = 0.0;
+        PmDoubleValue = 0.0;
+        collModel = null;
+        collModel = mViewModel.getCollectionByDateByFarmerByTimeSngle(famerModel.getCode(), DateTimeUtils.Companion.getToday());
+
+        if (collModel != null) {
+            if (collModel.getMilkCollectedAm() != null) {
+                AmDoubleValue = AmDoubleValue + Double.valueOf(collModel.getMilkCollectedAm());
+                AmStringValue = String.valueOf(AmDoubleValue);
+            }
+            if (collModel.getMilkCollectedPm() != null) {
+                PmDoubleValue = PmDoubleValue + Double.valueOf(collModel.getMilkCollectedIdPm());
+                PmStringValue = String.valueOf(PmDoubleValue);
+            }
+        }
+
+
+        alertDialogAndroid.show();
+
+
+
+        UnitsModel unitsModel = new UnitsModel();
+        unitsModel.setUnitcapacity(famerModel.getUnitcapacity());
+        unitsModel.setUnitprice(famerModel.getUnitprice());
+        unitsModel.setUnit(famerModel.getUnitname());
+
+
+
+
+
+
+
         names.setText(famerModel.getNames());
-        balance.setText(famerModel.getTotalbalance());
+        balance.setText(GeneralUtills.Companion.round(famerModel.getTotalbalance(), 1));
 
         today.setText(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "E"));
         day3.setText(DateTimeUtils.Companion.getDayPrevious(1, "E"));
@@ -252,9 +298,14 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         getCollection(famerModel.getCode(), DateTimeUtils.Companion.getDatePrevious(3), day1am, day1pm);
         getCollection(famerModel.getCode(), DateTimeUtils.Companion.getDatePrevious(2), day2am, day2pm);
         getCollection(famerModel.getCode(), DateTimeUtils.Companion.getDatePrevious(1), day3am, day3pm);
-
-
         getCollection(famerModel.getCode(), DateTimeUtils.Companion.getToday(), edtTodayAm, edtTodayPm);
+
+        if (!TextUtils.isEmpty(edtTodayAm.getText())) {
+            edtTodayAm.setSelection(edtTodayAm.getText().length());
+        }
+        if (!TextUtils.isEmpty(edtTodayPm.getText())) {
+            edtTodayPm.setSelection(edtTodayPm.getText().length());
+        }
 
 
 
@@ -335,20 +386,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         }
 
 
-        btnPositive = mView.findViewById(R.id.btn_positive);
-        btnNegative = mView.findViewById(R.id.btn_negative);
-        btnNeutral = mView.findViewById(R.id.btn_neutral);
-        txtTitle = mView.findViewById(R.id.txt_title);
-        lTitle = mView.findViewById(R.id.linear_title);
-        imgIcon = mView.findViewById(R.id.img_icon);
 
-
-        btnNeutral.setVisibility(View.GONE);
-        lTitle.setVisibility(View.GONE);
-        txtTitle.setVisibility(View.VISIBLE);
-        imgIcon.setVisibility(View.GONE);
-        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
-        txtTitle.setText("Route");
 
         btnPositive.setOnClickListener(view -> {
             String milkAm = "0";
@@ -563,11 +601,13 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
         if (txtAm != null && txtPm != null) {
             if (c != null) {
-                if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0")) {
+                if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
                     txtAm.setText(c.getMilkCollectedAm());
+
                 }
-                if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0")) {
+                if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
                     txtPm.setText(c.getMilkCollectedPm());
+
                 }
 
 
@@ -606,6 +646,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
     public void initList() {
         recyclerView = view.findViewById(R.id.recyclerView);
+        //famerModelsLst=FarmerConst.getFamerModels();
         listAdapter = new FarmersAdapter(getActivity(), FarmerConst.getSearchFamerModels(), new OnclickRecyclerListener() {
             @Override
             public void onSwipe(int adapterPosition, int direction) {
@@ -620,8 +661,12 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             @Override
             public void onClickListener(int position) {
 
-                if (FarmerConst.getSearchFamerModels().get(position).getDeleted() == 0 && FarmerConst.getSearchFamerModels().get(position).getArchived() == 0) {
-                    collectMilk(FarmerConst.getSearchFamerModels().get(position));
+                try {
+                    if (FarmerConst.getSearchFamerModels().get(position).getDeleted() == 0 && FarmerConst.getSearchFamerModels().get(position).getArchived() == 0) {
+                        collectMilk(FarmerConst.getSearchFamerModels().get(position));
+                    }
+                } catch (Exception nm) {
+                    nm.printStackTrace();
                 }
 
 
@@ -645,14 +690,18 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
             @Override
             public void onClickListener(int adapterPosition, @NotNull View view) {
-                if (FarmerConst.getSearchFamerModels().get(adapterPosition).getDeleted() == 1) {
+                try {
+                    if (FarmerConst.getSearchFamerModels().get(adapterPosition).getDeleted() == 1) {
 
-                } else {
-                    try {
-                        popupMenu(adapterPosition, view, FarmerConst.getSearchFamerModels().get(adapterPosition));
-                    } catch (Exception nm) {
-                        nm.printStackTrace();
+                    } else {
+                        try {
+                            popupMenu(adapterPosition, view, FarmerConst.getSearchFamerModels().get(adapterPosition));
+                        } catch (Exception nm) {
+                            nm.printStackTrace();
+                        }
                     }
+                } catch (Exception nm) {
+                    nm.printStackTrace();
                 }
 
             }
@@ -667,13 +716,18 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         helper.attachToRecyclerView(recyclerView);
 
         // Set the divider in the recyclerview
-        recyclerView.addItemDecoration(new RVHItemDividerDecoration(getContext(), LinearLayoutManager.VERTICAL));
+        recyclerView.addItemDecoration(new RVHItemDividerDecoration(Objects.requireNonNull(getContext()), LinearLayoutManager.VERTICAL));
 
 
         recyclerView.addOnItemTouchListener(new RVHItemClickListener(context, (view, position) -> {
-            if (FarmerConst.getSearchFamerModels().get(position).getDeleted() == 0 && FarmerConst.getSearchFamerModels().get(position).getArchived() == 0) {
 
-                collectMilk(FarmerConst.getSearchFamerModels().get(position));
+            try {
+                if (FarmerConst.getSearchFamerModels().get(position).getDeleted() == 0 && FarmerConst.getSearchFamerModels().get(position).getArchived() == 0) {
+
+                    collectMilk(FarmerConst.getSearchFamerModels().get(position));
+                }
+            } catch (Exception nm) {
+                nm.printStackTrace();
             }
 
         }));
@@ -832,7 +886,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         super.onViewCreated(view, savedInstanceState);
         this.view = view;
         mViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
-
+        setUpCollDialog();
         prefrenceManager = new PrefrenceManager(getContext());
 
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -902,6 +956,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             nm.printStackTrace();
         }
     }
+
 
     private void alertDialogFirstTime() {
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());

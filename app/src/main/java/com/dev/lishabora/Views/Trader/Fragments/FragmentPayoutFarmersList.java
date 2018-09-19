@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,8 +39,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
+import org.joda.time.Period;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -165,26 +170,7 @@ public class FragmentPayoutFarmersList extends Fragment {
 
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
-
-        if (getArguments() != null) {
-            payouts = (Payouts) getArguments().getSerializable("data");
-        } else {
-            payouts = PayoutConstants.getPayouts();
-        }
-        if (payouts != null) {
-            payoutsVewModel.getPayoutsByPayoutNumber("" + payouts.getPayoutnumber()).observe(this, payouts -> {
-                this.payouts = CommonFuncs.createPayout(payouts, payoutsVewModel);
-
-                starterPack();
-
-            });
-        }
-
-    }
+    private PeriodFormatter mPeriodFormat;
 
     @Nullable
     @Override
@@ -192,19 +178,7 @@ public class FragmentPayoutFarmersList extends Fragment {
         return inflater.inflate(R.layout.fragment_payout_collections, container, false);
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        this.view = view;
-        btnApprove = view.findViewById(R.id.btn_approve);
-        txtApprovalStatus = view.findViewById(R.id.txt_approval_status);
-        btnApprove.setVisibility(View.GONE);
-
-        LinearLayout linearLayoutAmPm = view.findViewById(R.id.linear_collection_titles);
-        linearLayoutAmPm.setVisibility(View.GONE);
-
-
-    }
+    private Date previousdate;
 
     private void setSpinner() {
         try {
@@ -271,18 +245,53 @@ public class FragmentPayoutFarmersList extends Fragment {
 
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
+
+
+        if (getArguments() != null) {
+            payouts = (Payouts) getArguments().getSerializable("data");
+        } else {
+            payouts = PayoutConstants.getPayouts();
+        }
+
+
+        if (payouts != null) {
+            payoutsVewModel.getPayoutsByPayoutNumber("" + payouts.getPayoutnumber()).observe(this, payouts -> {
+                this.payouts = CommonFuncs.createPayout(payouts, payoutsVewModel);
+
+                log("GET PAYOUTS BY PAYOUT NUMBER AS PAYOUT FROM CONSTANT OR ");
+                // starterPack();
+
+            });
+        }
+
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        this.view = view;
+        btnApprove = view.findViewById(R.id.btn_approve);
+        txtApprovalStatus = view.findViewById(R.id.txt_approval_status);
+        btnApprove.setVisibility(View.GONE);
+        initList();
+
+
+        LinearLayout linearLayoutAmPm = view.findViewById(R.id.linear_collection_titles);
+        linearLayoutAmPm.setVisibility(View.GONE);
+
+
+    }
+
     public void setCardHeaderData(Payouts model) {
         startDate.setText(model.getStartDate());
         endDate.setText(model.getEndDate());
         cycleName.setText(model.getCyclename());
 
-//        milkTotal.setText(String.format("%s %s", model.getMilkTotalLtrs(), getActivity().getString(R.string.ltrs)));
-//        loanTotal.setText(String.format("%s %s", model.getLoanTotal(), getActivity().getString(R.string.ksh)));
-//        orderTotal.setText(String.format("%s %s", model.getOrderTotal(), getActivity().getString(R.string.ksh)));
-//
-//
-//        balance.setText(String.format("%s %s", model.getBalance(), getActivity().getString(R.string.ksh)));
-//
+
 
         milkTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getMilkTotalLtrs(), 1), getActivity().getString(R.string.ltrs)));
         loanTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getLoanTotal(), 1), getActivity().getString(R.string.ksh)));
@@ -313,8 +322,14 @@ public class FragmentPayoutFarmersList extends Fragment {
     }
 
     private void loadFarmers() {
+
+
+        log("LOAD FARMERS STARTED ");
+
         payoutsVewModel.getFarmersByCycle("" + payouts.getCycleCode()).observe(this, famerModels -> {
             if (famerModels != null) {
+                log("LOAD FARMERS RESULT  " + famerModels.size());
+
                 FragmentPayoutFarmersList.this.famerModels = famerModels;
                 Timber.tag("farmersPayouts").d("Farmers found " + famerModels.size());
 
@@ -328,9 +343,13 @@ public class FragmentPayoutFarmersList extends Fragment {
     }
 
     private void loadCollectionPayouts() {
+        log("LOAD COLLECTIONS STARTED  ");
 
         payoutsVewModel.getCollectionByDateByPayout("" + payouts.getPayoutnumber()).observe(this, collections -> {
             if (collections != null) {
+
+                log("LOAD COLLECTIONS RESULT  " + collections.size());
+
                 Timber.tag("farmersPayouts").d("Collections found " + collections.size());
 
                 FragmentPayoutFarmersList.this.collections = collections;
@@ -342,12 +361,16 @@ public class FragmentPayoutFarmersList extends Fragment {
     }
 
     private void setUpFarmerCollectionList() {
+        log("SETUP FARMER  COLLECTIONS STARTED  ");
+
         List<PayoutFarmersCollectionModel> collectionModels = new LinkedList<>();
 
         for (FamerModel famerModel : famerModels) {
 
 
+
             collectionModels.add(CommonFuncs.getFarmersCollectionModel(famerModel, collections, payouts));
+            log("LOAD COLLECTIONS DONE FOR   " + famerModel.getNames());
 
 
         }
@@ -357,10 +380,36 @@ public class FragmentPayoutFarmersList extends Fragment {
 
     }
 
-
     private void setUpList(List<PayoutFarmersCollectionModel> dayCollectionModels) {
         this.dayCollectionModels = dayCollectionModels;
-        initList();
+
+        listAdapter.refresh(dayCollectionModels);
+        //initList();
+    }
+
+    private void log(String msg) {
+        Log.d("debugfarmersclist", DateTimeUtils.Companion.getNow() + "----" + msg + " ");
+
+
+        mPeriodFormat = new PeriodFormatterBuilder().appendYears()
+                //.appendSuffix(" year(s) ")
+                //.appendMonths().appendSuffix(" month(s) ")
+                //.appendDays().appendSuffix(" day(s) ")
+                .appendMinutes().appendSuffix(" Mins")
+                .appendSeconds().appendSuffix(" Secs")
+                //.printZeroNever()
+                .toFormatter();
+        if (previousdate == null) {
+            previousdate = DateTimeUtils.Companion.getDateNow();
+        }
+
+        Period length = DateTimeUtils.Companion.calcDiff(previousdate, new Date());
+        //txtAge.setText(PeriodFormat.wordBased().print(age));
+        //txtAge.setText(mPeriodFormat.print(age));
+
+        previousdate = new Date();
+        Log.d("debugfarmersclist", "  Length " + mPeriodFormat.print(length) + "" + msg);
+
     }
 
     @Override

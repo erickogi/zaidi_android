@@ -26,7 +26,11 @@ class DateTimeUtils {
         var DisplayDatePattern1 = "dd-MMM"
         var DisplayDatePattern2 = "dd-MMM-yyyy HH:mm:ss"
 
+        fun getDateNow(): Date {
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
+            return Date()
+        }
 
         fun getNowslong(): String {
             SimpleDateFormat("yyyy-MM-dd HH:mm:ss")

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -279,7 +280,9 @@ public class FragmentPayoutColloectionsList extends Fragment {
                     } else {
 
                         Fragment fragment = new FragmentPayoutFarmersList();
-                        ((com.dev.lishabora.Views.Trader.Activities.Payouts) getActivity()).popOutFragments();
+                        popOutFragments();
+                        setUpView(fragment);
+                        // ((com.dev.lishabora.Views.Trader.Activities.Payouts) getActivity()).popOutFragments();
                         ((com.dev.lishabora.Views.Trader.Activities.Payouts) getActivity()).setUpView(fragment);
 
                     }
@@ -292,6 +295,23 @@ public class FragmentPayoutColloectionsList extends Fragment {
             });
         } catch (Exception nm) {
             nm.printStackTrace();
+        }
+    }
+
+
+    void setUpView(Fragment fragment) {
+        if (fragment != null) {
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.frame_layout, fragment)
+                    .addToBackStack(null).commit();
+        }
+
+    }
+
+    void popOutFragments() {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        for (int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
+            fragmentManager.popBackStack();
         }
     }
 }

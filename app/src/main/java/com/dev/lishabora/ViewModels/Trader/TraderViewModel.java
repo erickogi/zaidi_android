@@ -674,6 +674,8 @@ public class TraderViewModel extends AndroidViewModel
             });
 
         } else {
+            synch(AppConstants.UPDATE, AppConstants.ENTITY_ROUTES, routesModel);
+
             routesRepo.upDateRecord(routesModel);
             ResponseModel responseModel = new ResponseModel();
             responseModel.setResultCode(1);
@@ -688,6 +690,8 @@ public class TraderViewModel extends AndroidViewModel
     public LiveData<ResponseModel> deleteRoute(RoutesModel routesModel, JSONObject jsonObject, boolean b) {
         if (this.deleteRouteSuccess == null) {
         }
+        synch(AppConstants.DELETE, AppConstants.ENTITY_ROUTES, routesModel);
+
         this.deleteRouteSuccess = new MutableLiveData();
 
         if (b) {
@@ -743,6 +747,8 @@ public class TraderViewModel extends AndroidViewModel
     public LiveData<ResponseModel> createProducts(List<ProductsModel> productsModels, boolean b) {
         if (this.createProductSuccess == null) {
         }
+        // synch(AppConstants.INSERT,AppConstants.ENTITY_PRODUCTS,productsModels);
+
         this.createProductSuccess = new MutableLiveData();
 
         if (b) {
@@ -940,6 +946,8 @@ public class TraderViewModel extends AndroidViewModel
     public LiveData<ResponseModel> updateProduct(ProductsModel productsModel, boolean b) {
         if (this.updateProductSuccess == null) {
         }
+        synch(AppConstants.UPDATE, AppConstants.ENTITY_PRODUCTS, productsModel);
+
         this.updateProductSuccess = new MutableLiveData();
 
         if (b) {
@@ -960,6 +968,7 @@ public class TraderViewModel extends AndroidViewModel
         if (this.deleteProductSuccess == null) {
         }
         this.deleteProductSuccess = new MutableLiveData();
+        synch(AppConstants.DELETE, AppConstants.ENTITY_PRODUCTS, productsModel);
 
         if (b) {
 
