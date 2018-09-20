@@ -42,6 +42,11 @@ import com.dev.lishaboramobile.R;
 import com.google.gson.Gson;
 import com.wang.avi.AVLoadingIndicatorView;
 
+import org.joda.time.Period;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
+
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -326,43 +331,7 @@ public class CommonFuncs {
 
     }
 
-    @NonNull
-    public static MilkModel getMilk(String farmercode, List<Collection> collections) {
-        double milkTotalQty = 0.0;
-        double milkTotalLtrs = 0.0;
-        double milkTotalKsh = 0.0;
-        MilkModel milkModel = new MilkModel();
-
-        Log.d("milkkker", " Q " + collections.size() + "  " + new Gson().toJson(collections));
-
-        for (Collection c : collections) {
-            Log.d("milkkkerww", " Q " + collections.size() + "  " + new Gson().toJson(collections));
-
-            if (c.getFarmerCode().equals(farmercode)) {
-                try {
-                    milkTotalQty += Double.valueOf(c.getMilkCollectedAm()) + Double.valueOf(c.getMilkCollectedPm());
-                    milkTotalLtrs += Double.valueOf(c.getMilkCollectedValueLtrsAm()) + Double.valueOf(c.getMilkCollectedValueLtrsPm());
-                    milkTotalKsh += Double.valueOf(c.getMilkCollectedValueKshAm()) + Double.valueOf(c.getMilkCollectedValueKshPm());
-
-                    //    Log.d("milkkker"," Q "+milkTotalQty+" L "+milkTotalLtrs+" K "+milkTotalKsh);
-
-                } catch (Exception nm) {
-                    nm.printStackTrace();
-                    Log.d("milkkker", nm.toString());
-                }
-            }
-
-
-        }
-        milkModel.setUnitQty(String.valueOf(milkTotalQty));
-        milkModel.setValueKsh(String.valueOf(milkTotalKsh));
-        milkModel.setValueLtrs(String.valueOf(milkTotalLtrs));
-
-
-        return milkModel;
-
-
-    }
+    private static PeriodFormatter mPeriodFormat;
 
     public static String getCollectionIdPm(String date, List<Collection> collections) {
         if (collections != null) {
@@ -951,25 +920,90 @@ public class CommonFuncs {
 
     }
 
+    private static Date previousdate;
+
+    @NonNull
+    public static MilkModel getMilk(String farmercode, List<Collection> collections) {
+        double milkTotalQty = 0.0;
+        double milkTotalLtrs = 0.0;
+        double milkTotalKsh = 0.0;
+        MilkModel milkModel = new MilkModel();
+
+
+        for (Collection c : collections) {
+
+            if (c.getFarmerCode().equals(farmercode)) {
+                try {
+                    milkTotalQty += Double.valueOf(c.getMilkCollectedAm()) + Double.valueOf(c.getMilkCollectedPm());
+                    milkTotalLtrs += Double.valueOf(c.getMilkCollectedValueLtrsAm()) + Double.valueOf(c.getMilkCollectedValueLtrsPm());
+                    milkTotalKsh += Double.valueOf(c.getMilkCollectedValueKshAm()) + Double.valueOf(c.getMilkCollectedValueKshPm());
+
+
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
+            }
+
+
+        }
+        milkModel.setUnitQty(String.valueOf(milkTotalQty));
+        milkModel.setValueKsh(String.valueOf(milkTotalKsh));
+        milkModel.setValueLtrs(String.valueOf(milkTotalLtrs));
+
+
+        return milkModel;
+
+
+    }
+
+    private static void log(String msg) {
+
+        mPeriodFormat = new PeriodFormatterBuilder().appendYears()
+                .appendMinutes().appendSuffix(" Mins  ")
+                .appendSeconds().appendSuffix(" Secs  ")
+                .appendMillis().appendSuffix("Mil   ")
+                .toFormatter();
+        if (previousdate == null) {
+            previousdate = DateTimeUtils.Companion.getDateNow();
+        }
+
+        Period length = DateTimeUtils.Companion.calcDiff(previousdate, new Date());
+
+        previousdate = new Date();
+        Timber.tag("debugComonfun").d("  Length " + mPeriodFormat.print(length) + "" + msg);
+
+    }
+
     public static PayoutFarmersCollectionModel getFarmersCollectionModel(FamerModel famerModel, List<Collection> collections, Payouts payouts) {
 
-        MilkModel m = new MilkModel();
+        MilkModel m;
+        //log("GET MILK STARTED ");
         m = CommonFuncs.getMilk(famerModel.getCode(), collections);
         String milkTotal = m.getUnitQty();
         String milkTotalKsh = m.getValueKsh();
         String milkTotalLtrs = m.getValueLtrs();
 
 
+        //log("GET LOAN STARTED ");
 
         String loanTotal = CommonFuncs.getLoan(famerModel.getCode(), collections);
+
+        //log("GET ORDER STARTED ");
+
         String orderTotal = CommonFuncs.getOrder(famerModel.getCode(), collections);
 
+
+        //log("GET STATUS STARTED ");
 
         int cardstatus = getFarmerStatus(famerModel.getCode(), collections);
         String statusText;
 
 
         statusText = cardstatus == 0 ? "Pending" : "Approved";
+
+        //log("GET BALANCE STARTED \n\n\n\n");
+
+
         String balance = getBalance(milkTotalKsh, loanTotal, orderTotal);
         return new PayoutFarmersCollectionModel(
                 famerModel.getCode(),

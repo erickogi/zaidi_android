@@ -4,7 +4,6 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission
@@ -113,17 +112,17 @@
         <activity
             android:name="com.dev.lishabora.Views.Trader.Activities.Payouts"
             android:label="@string/title_activity_payouts"
+            android:parentActivityName="com.dev.lishabora.Views.Trader.Activities.TraderActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.dev.lishabora.Views.Trader.Activities.PayCard"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.dev.lishabora.Views.Trader.Activities.FarmerProfile"
             android:label="@string/title_activity_farmer_profile"
             android:parentActivityName="com.dev.lishabora.Views.Trader.Activities.TraderActivity"
-
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -137,7 +136,8 @@
         <activity
             android:name="com.dev.lishabora.Views.Reports.Reports"
             android:label="@string/title_activity_milk_reports"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name="com.dev.lishabora.Views.Trader.Activities.SyncWorks"></activity>
     </application>
 
 </manifest>

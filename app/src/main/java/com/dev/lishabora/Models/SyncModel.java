@@ -5,6 +5,11 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
+import com.dev.lishabora.Utils.DateTimeUtils;
+
+import java.util.Comparator;
+import java.util.Date;
+
 @Entity(tableName = "sync", indices = {@Index(value = {"id"}, unique = true)})
 
 public class SyncModel {
@@ -37,6 +42,20 @@ public class SyncModel {
         this.syncTime = syncTime;
         this.syncStatus = syncStatus;
     }
+
+    public static Comparator<SyncModel> farmerDateComparatorDesc = (s1, s2) -> {
+        String FamerModelStringDate1 = s1.getTimeStamp();
+        String FamerModelStringDate2 = s2.getTimeStamp();
+        Date FamerModelDate1 = DateTimeUtils.Companion.conver2Date(FamerModelStringDate1, DateTimeUtils.Companion.getFormat());
+        Date FamerModelDate2 = DateTimeUtils.Companion.conver2Date(FamerModelStringDate2, DateTimeUtils.Companion.getFormat());
+
+
+        if (FamerModelDate1 != null) {
+            return FamerModelDate2.compareTo(FamerModelDate1);
+        } else {
+            return 0;
+        }
+    };
 
     public String getActionTypeName() {
         return actionTypeName;

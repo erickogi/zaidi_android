@@ -58,7 +58,6 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
     ProductOrderAdapter listAdapter;
     private ProductsAdapter listAdapterAll;
     private RecyclerView recyclerView;
-    private List<ProductOrderModel> productOrderModels;
 
     private AVLoadingIndicatorView avi;
     private AVLoadingIndicatorView davi;

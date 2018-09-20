@@ -34,6 +34,10 @@ public interface SyncDao {
     @Query("SELECT * FROM SYNC WHERE syncStatus =:status")
     LiveData<List<SyncModel>> getAllByStatus(int status);
 
+    @Query("SELECT * FROM SYNC WHERE syncStatus =:status")
+    List<SyncModel> getAllByStatusRaw(int status);
+
+
 
     @Query("SELECT * FROM SYNC WHERE id =:id")
     LiveData<SyncModel> getSyncById(int id);

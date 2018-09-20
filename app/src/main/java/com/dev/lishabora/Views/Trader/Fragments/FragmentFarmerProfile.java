@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Views.Trader.Activities.CreateFarmerActivity;
 import com.dev.lishabora.Views.Trader.FarmerConst;
 import com.dev.lishaboramobile.R;
@@ -23,17 +24,7 @@ import static android.app.Activity.RESULT_OK;
 public class FragmentFarmerProfile extends Fragment {
     FamerModel famerModel;
     TextView txtName, txtCode, txtPhone, txtRoute, txtCycle, txtUnit, txtMilk, txtLoan, txtOrder, txtBalance, txtTime;
-    //    List<UnitsModel> unitsModels;
-//    List<Cycles> cycles;
-//    List<RoutesModel> routesModels;
-//    TextInputEditText edtNames, edtMobile;
-//    MaterialSpinner defaultPayment;
-//    TraderViewModel mViewModel;
-//    MaterialSpinner spinner;
-//    TextInputEditText edtRouteName, edtRouteCode, edtUnitName, edtUnitPrice, edtUnitMeasurement;
-//    LinearLayout lcycle;
-//    TextView txtStartDay, txtEndDay, txtCycle;
-//    Button btnEdit;
+
     private View mView;
 
     @Override
@@ -125,14 +116,7 @@ public class FragmentFarmerProfile extends Fragment {
 
 
         setUpData();
-//        btnEdit.setOnClickListener(view -> {
-//
-//            Intent intent = new Intent(getActivity(), CreateFarmerActivity.class);
-//            intent.putExtra("type", 1);
-//            intent.putExtra("farmer", famerModel);
-//
-//            startActivityForResult(intent, 1001);
-//        });
+
     }
 
     void setUpData() {
@@ -150,7 +134,7 @@ public class FragmentFarmerProfile extends Fragment {
             txtMilk.setText("");
             txtLoan.setText("");
             txtOrder.setText("");
-            txtBalance.setText(famerModel.getTotalbalance());
+            txtBalance.setText(GeneralUtills.Companion.round(famerModel.getTotalbalance(), 1));
 
             txtTime.setText(famerModel.getLastCollectionTime());
 

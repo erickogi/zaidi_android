@@ -16,6 +16,7 @@
         app:ms_backButtonColor="@color/colorPrimaryDark"
         app:ms_completeButtonColor="@color/colorPrimary"
         app:ms_nextButtonColor="@color/colorPrimaryDark"
+        app:ms_activeStepColor="@color/colorAccent"
 
 
         app:ms_showErrorMessageEnabled="true"

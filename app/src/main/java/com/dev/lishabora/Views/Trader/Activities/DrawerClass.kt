@@ -41,7 +41,7 @@ class DrawerClass {
 
 
             val home = PrimaryDrawerItem().withIdentifier(1)
-                    .withName("Home").withTextColorRes(R.color.white)
+                    .withName("Farmers").withTextColorRes(R.color.white)
                     .withIcon(R.drawable.ic_home)
 
 
@@ -80,6 +80,10 @@ class DrawerClass {
 
             val help = PrimaryDrawerItem().withIdentifier(10).withIcon(R.drawable.ic_help)
                     .withName("Help").withTextColorRes(R.color.white)
+
+            val sync = PrimaryDrawerItem().withIdentifier(11).withIcon(R.drawable.ic_sync_black_24dp)
+                    .withName("Sync Works").withTextColorRes(R.color.white)
+
 
 
             val headerResult = AccountHeaderBuilder()
@@ -137,6 +141,7 @@ class DrawerClass {
                             DividerDrawerItem(),
                             //logout,
                             //share
+                            sync,
                             help,
                             logout
                             // about
@@ -183,6 +188,10 @@ class DrawerClass {
 
                             10 -> {
                                 itemListener.helpClicked()
+                                result.closeDrawer()
+                            }
+                            11 -> {
+                                itemListener.syncWorksClicked()
                                 result.closeDrawer()
                             }
                             9 -> {

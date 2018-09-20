@@ -2,6 +2,7 @@ package com.dev.lishabora.Views.Trader.Fragments;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -64,14 +65,14 @@ public class FragmentPayouts extends Fragment {
             @Override
             public void onClickListener(int position) {
 
-
-                fragment = new FragmentPayoutColloectionsList();
-                Bundle args = new Bundle();
-                args.putSerializable("data", payouts.get(position));
+                Intent intent = new Intent(getActivity(), com.dev.lishabora.Views.Trader.Activities.Payouts.class);
+                intent.putExtra("data", payouts.get(position));
                 PayoutConstants.setPayouts(payouts.get(position));
-                fragment.setArguments(args);
-                // popOutFragments();
-                setUpView();
+
+                startActivity(intent);
+
+
+
 
 
 

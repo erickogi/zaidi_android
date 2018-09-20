@@ -26,7 +26,9 @@ public interface RoutesDao {
     @Insert(onConflict = REPLACE)
     void insertSingleRoute(RoutesModel routesModel);
 
-  
+
+    @Query("SELECT COUNT(code) FROM routes")
+    LiveData<Integer> getNumberOfRows();
 
 
     @Query("SELECT * FROM ROUTES")

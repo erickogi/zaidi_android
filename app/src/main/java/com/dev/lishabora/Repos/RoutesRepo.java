@@ -154,6 +154,10 @@ public class RoutesRepo {
 
     }
 
+    public LiveData<Integer> getCount() {
+        return db.routesDao().getNumberOfRows();
+    }
+
     public LiveData<RoutesModel> getRouteByKeyID(int key) {
         return db.routesDao().getRouteByKeyID(key);
     }

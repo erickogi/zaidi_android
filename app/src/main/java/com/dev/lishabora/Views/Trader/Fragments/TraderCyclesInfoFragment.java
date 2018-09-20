@@ -1,6 +1,7 @@
 package com.dev.lishabora.Views.Trader.Fragments;
 
 import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,9 +15,11 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import com.dev.lishabora.AppConstants;
 import com.dev.lishabora.Models.Trader.TraderModel;
 import com.dev.lishabora.Utils.PayoutsCyclesDatesUtills;
 import com.dev.lishabora.Utils.PrefrenceManager;
+import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishaboramobile.R;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
@@ -31,6 +34,8 @@ public class TraderCyclesInfoFragment extends Fragment implements BlockingStep, 
     private View view;
     private PrefrenceManager prefrenceManager;
     private int startDayNumber, endDayNumber;
+
+    TraderViewModel traderViewModel;
 
     public void hideKeyboardFrom(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -48,6 +53,7 @@ public class TraderCyclesInfoFragment extends Fragment implements BlockingStep, 
         super.onCreate(savedInstanceState);
         prefrenceManager = new PrefrenceManager(getContext());
 
+        traderViewModel = ViewModelProviders.of(TraderCyclesInfoFragment.this).get(TraderViewModel.class);
 
     }
 
@@ -192,9 +198,12 @@ public class TraderCyclesInfoFragment extends Fragment implements BlockingStep, 
 
         traderModel.setCycleStartDayNumber(startDayNumber);
         traderModel.setCycleEndDayNumber(endDayNumber);
-
-
         prefrenceManager.setLoggedUser(traderModel);
+
+
+        traderViewModel.synch(AppConstants.UPDATE, AppConstants.ENTITY_TRADER, traderModel);
+
+
         callback.goToNextStep();
     }
 

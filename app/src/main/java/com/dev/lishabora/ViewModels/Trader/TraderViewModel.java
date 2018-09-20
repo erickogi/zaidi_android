@@ -161,7 +161,7 @@ public class TraderViewModel extends AndroidViewModel
     }
 
 
-    private void synch(int action, int entity, Object o) {
+    public void synch(int action, int entity, Object o) {
         SyncModel syncModel = new SyncModel();
         syncModel.setActionType(action);
         syncModel.setObjectData(o);
@@ -197,6 +197,9 @@ public class TraderViewModel extends AndroidViewModel
                 break;
             case AppConstants.ENTITY_ROUTES:
                 syncModel.setEntityTypeName("Route");
+                break;
+            case AppConstants.ENTITY_TRADER:
+                syncModel.setEntityTypeName("Trader");
                 break;
         }
 
@@ -342,6 +345,23 @@ public class TraderViewModel extends AndroidViewModel
 
 
     }
+
+    public LiveData<Integer> getProductsCountLive() {
+        return (productsRepo.getCountLive());
+
+
+    }
+
+    public LiveData<Integer> getRoutesCountLive() {
+        return (routesRepo.getCount());
+
+
+    }
+
+
+
+
+
 
     public LiveData<FamerModel> getLastFarmer() {
         if (farmer == null) {
@@ -639,6 +659,7 @@ public class TraderViewModel extends AndroidViewModel
             });
 
         } else {
+            synch(AppConstants.INSERT, AppConstants.ENTITY_ROUTES, routesModel);
             routesRepo.insert(routesModel);
             ResponseModel responseModel = new ResponseModel();
             responseModel.setResultCode(1);
@@ -714,6 +735,7 @@ public class TraderViewModel extends AndroidViewModel
 
         } else {
             routesRepo.deleteRecord(routesModel);
+            synch(AppConstants.DELETE, AppConstants.ENTITY_ROUTES, routesModel);
             ResponseModel responseModel = new ResponseModel();
             responseModel.setResultCode(1);
             responseModel.setResultDescription("Deleted");
@@ -755,6 +777,7 @@ public class TraderViewModel extends AndroidViewModel
 
         } else {
 
+            synch(AppConstants.INSERT, AppConstants.ENTITY_PRODUCTS, productsModels);
             if (productsRepo.insert(productsModels)) {
                 ResponseModel responseModel = new ResponseModel();
                 responseModel.setResultCode(1);
@@ -1023,68 +1046,13 @@ public class TraderViewModel extends AndroidViewModel
         return createFarmerSuccess;
     }
 
-    public LiveData<ResponseModel> createFarmers(List<FamerModel> famerModel, boolean b) {
 
-        if (this.createFarmerSuccess == null) {
-        }
-        this.createFarmerSuccess = new MutableLiveData();
-
-        if (b) {
-            Request.Companion.getResponse(ApiConstants.Companion.getCreateFarmer(), getFarmerJson(), "", new ResponseCallback() {
-                @Override
-                public void response(ResponseModel responseModel) {
-                    createFarmerSuccess.setValue(responseModel);
-                    farmerRepo.insertMultiple(famerModel);
-
-                }
-
-                @Override
-                public void response(ResponseObject responseModel) {
-                    createFarmerSuccess.setValue(responseModel);
-
-                    farmerRepo.insertMultiple(famerModel);
-
-                }
-            });
-
-        } else {
-            farmerRepo.insertMultiple(famerModel);
-            ResponseModel responseModel = new ResponseModel();
-            responseModel.setResultCode(1);
-            responseModel.setResultDescription("Farmer added successfully");
-            responseModel.setData(null);
-            createFarmerSuccess.setValue(responseModel);
-
-        }
-        return createFarmerSuccess;
-    }
-
-
-
-    public LiveData<ResponseModel> deleteFarmer(FamerModel famerModel, boolean b) {
+    public LiveData<ResponseModel> deleteFarmer(FamerModel famerModel) {
         if (this.deleteFarmerSuccess == null) {
         }
         this.deleteFarmerSuccess = new MutableLiveData();
 
-        if (b) {
-            Request.Companion.getResponse(ApiConstants.Companion.getCreateFarmer(), getFarmerJson(), "", new ResponseCallback() {
-                @Override
-                public void response(ResponseModel responseModel) {
-                    deleteFarmerSuccess.setValue(responseModel);
-                    farmerRepo.insert(famerModel);
 
-                }
-
-                @Override
-                public void response(ResponseObject responseModel) {
-                    deleteFarmerSuccess.setValue(responseModel);
-
-                    farmerRepo.insert(famerModel);
-
-                }
-            });
-
-        } else {
             farmerRepo.deleteRecord(famerModel);
             ResponseModel responseModel = new ResponseModel();
             responseModel.setResultCode(1);
@@ -1092,12 +1060,12 @@ public class TraderViewModel extends AndroidViewModel
             responseModel.setData(null);
             deleteFarmerSuccess.setValue(responseModel);
 
-        }
+
         return deleteFarmerSuccess;
     }
 
     public LiveData<ResponseModel> updateFarmer(FamerModel famerModel, boolean b) {
-        synch(AppConstants.UPDATE, AppConstants.FARMER, famerModel);
+        synch(AppConstants.UPDATE, AppConstants.ENTITY_FARMER, famerModel);
         if (this.updateFarmerSuccess == null) {
         }
         this.updateFarmerSuccess = new MutableLiveData();

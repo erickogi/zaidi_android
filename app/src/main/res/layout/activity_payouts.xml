@@ -27,18 +27,16 @@
                 android:background="@color/white">
 
 
-                <Spinner
+                <com.jaredrummler.materialspinner.MaterialSpinner
 
 
+                    android:layout_height="wrap_content"
                     android:id="@+id/spinner"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:entries="@array/payoutsview"
-                    android:spinnerMode="dropdown"
-                    android:theme="@style/AppSTheme"
-                    android:visibility="visible">
+                    android:visibility="visible"
+                    app:ms_text_color="@color/black">
 
-                </Spinner>
+                </com.jaredrummler.materialspinner.MaterialSpinner>
 
 
             </RelativeLayout>

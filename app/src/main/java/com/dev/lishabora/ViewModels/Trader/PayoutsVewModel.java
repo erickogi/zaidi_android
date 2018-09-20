@@ -166,6 +166,9 @@ public class PayoutsVewModel extends AndroidViewModel {
             case AppConstants.ENTITY_ROUTES:
                 syncModel.setEntityTypeName("Route");
                 break;
+            case AppConstants.ENTITY_TRADER:
+                syncModel.setEntityTypeName("Trader");
+                break;
         }
 
         createSync(syncModel);
@@ -479,6 +482,7 @@ public class PayoutsVewModel extends AndroidViewModel {
     }
 
     public void approveFarmersPayoutCard(String farmercode, int payoutNumber) {
+
         collectionsRepo.approveFarmersPayoutCard(farmercode, payoutNumber);
     }
 

@@ -41,7 +41,7 @@ class AdminDrawerClass {
 
 
             val home = PrimaryDrawerItem().withIdentifier(1)
-                    .withName("Farmers").withTextColorRes(R.color.white)
+                    .withName("Traders").withTextColorRes(R.color.white)
                     .withIcon(R.drawable.ic_home)
 
 

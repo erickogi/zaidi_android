@@ -12,7 +12,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -170,7 +169,6 @@ public class FragmentPayoutFarmersList extends Fragment {
 
     }
 
-    private PeriodFormatter mPeriodFormat;
 
     @Nullable
     @Override
@@ -178,7 +176,6 @@ public class FragmentPayoutFarmersList extends Fragment {
         return inflater.inflate(R.layout.fragment_payout_collections, container, false);
     }
 
-    private Date previousdate;
 
     private void setSpinner() {
         try {
@@ -387,28 +384,24 @@ public class FragmentPayoutFarmersList extends Fragment {
         //initList();
     }
 
-    private void log(String msg) {
-        Log.d("debugfarmersclist", DateTimeUtils.Companion.getNow() + "----" + msg + " ");
+    private PeriodFormatter mPeriodFormat;
+    private Date previousdate;
 
+    private void log(String msg) {
 
         mPeriodFormat = new PeriodFormatterBuilder().appendYears()
-                //.appendSuffix(" year(s) ")
-                //.appendMonths().appendSuffix(" month(s) ")
-                //.appendDays().appendSuffix(" day(s) ")
                 .appendMinutes().appendSuffix(" Mins")
                 .appendSeconds().appendSuffix(" Secs")
-                //.printZeroNever()
+                .appendMillis().appendSuffix("Mil")
                 .toFormatter();
         if (previousdate == null) {
             previousdate = DateTimeUtils.Companion.getDateNow();
         }
 
         Period length = DateTimeUtils.Companion.calcDiff(previousdate, new Date());
-        //txtAge.setText(PeriodFormat.wordBased().print(age));
-        //txtAge.setText(mPeriodFormat.print(age));
 
         previousdate = new Date();
-        Log.d("debugfarmersclist", "  Length " + mPeriodFormat.print(length) + "" + msg);
+        Timber.tag("debugfarmersclist").d("  Length " + mPeriodFormat.print(length) + "" + msg);
 
     }
 

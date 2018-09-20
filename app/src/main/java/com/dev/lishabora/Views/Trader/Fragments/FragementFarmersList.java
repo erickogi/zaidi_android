@@ -112,9 +112,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     private boolean isDraggable = true;
     private int SORTTYPE = 0;
 
-    //List<FamerModel> famerModelsLst;
-
-
 
 
 
@@ -154,23 +151,23 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
 
     private void clearDialog() {
-//        day1.setText("");
-//        day1am.setText("");
-//        day1pm .setText("");
-//
-//        day2 .setText("");
-//        day2am .setText("");
-//        day2pm .setText("");
-//
-//        day3.setText("");
-//        day3am .setText("");
-//        day3pm.setText("");
-//
-//        today .setText("");
-//
-//        unitName.setText("");
-//        unitPrice.setText("");
-//        unitTotal.setText("");
+        day1.setText("");
+        day1am.setText("");
+        day1pm.setText("");
+
+        day2.setText("");
+        day2am.setText("");
+        day2pm.setText("");
+
+        day3.setText("");
+        day3am.setText("");
+        day3pm.setText("");
+
+        today.setText("");
+
+        unitName.setText("");
+        unitPrice.setText("");
+        unitTotal.setText("");
 
         edtTodayAm.setText("");
         edtTodayPm.setText("");
@@ -621,28 +618,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
 
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                filterText = s;
-                filterFarmers();
-
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                filterText = s;
-                filterFarmers();
-
-                return true;
-            }
-        });
-
-    }
 
     public void initList() {
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -790,21 +765,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         searchView.setVisibility(View.GONE);
 
     }
-
-    void setDraggale(boolean draggale) {
-        if (listAdapter != null) {
-            listAdapter.setDraggale(draggale);
-        }
-        if (draggale) {
-            isDraggable = true;
-            btnDrag.setVisibility(View.VISIBLE);
-        } else {
-            //listAdapter.setDraggale(false);
-            isDraggable = false;
-            btnDrag.setVisibility(View.GONE);
-        }
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -855,6 +815,45 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
         return false;
     }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                filterText = s;
+                filterFarmers();
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                filterText = s;
+                filterFarmers();
+
+                return true;
+            }
+        });
+
+    }
+
+
+    void setDraggale(boolean draggale) {
+        if (listAdapter != null) {
+            listAdapter.setDraggale(draggale);
+        }
+        if (draggale) {
+            isDraggable = true;
+            btnDrag.setVisibility(View.VISIBLE);
+        } else {
+            //listAdapter.setDraggale(false);
+            isDraggable = false;
+            btnDrag.setVisibility(View.GONE);
+        }
+    }
+
 
     void setUpView() {
         if (fragment != null) {
@@ -926,25 +925,15 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         lspinner2 = view.findViewById(R.id.lspinner2);
         spinner2.setVisibility(View.VISIBLE);
         lspinner2.setVisibility(View.VISIBLE);
-        //spinner1.setItems("Active","Archived","Deleted","Dummy","All");
 
 
         spinner1.setItems("Active", "Archived", "Deleted", "Dummy", "All");
         getRoutes();
 
-        spinner1.setOnItemSelectedListener((MaterialSpinner.OnItemSelectedListener<String>) (view1, position, id, item) -> {
-
-            fetchFarmers(getSelectedAccountStatus(), getSelectedRoute());
-
-        });
-
-        spinner2.setOnItemSelectedListener((view12, position, id, item) -> {
-
-            fetchFarmers(getSelectedAccountStatus(), getSelectedRoute());
+        spinner1.setOnItemSelectedListener((MaterialSpinner.OnItemSelectedListener<String>) (view1, position, id, item) -> fetchFarmers(getSelectedAccountStatus(), getSelectedRoute()));
+        spinner2.setOnItemSelectedListener((view12, position, id, item) -> fetchFarmers(getSelectedAccountStatus(), getSelectedRoute()));
 
 
-
-        });
         if (prefrenceManager.isRoutesListFirstTime() || prefrenceManager.isCycleListFirstTime() || prefrenceManager.isUnitListFirstTime()) {
             initDataOffline(false, false, false);
         }
@@ -1026,6 +1015,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             if (famerModels != null) {
                 for (int a = 0; a < famerModels.size(); a++) {
                     famerModels.get(a).setTotalbalance(String.valueOf(mViewModel.getBalance(famerModels.get(a).getCode())));
+
                 }
             }
             update(famerModels);

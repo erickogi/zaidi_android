@@ -99,6 +99,10 @@ public class ProductsRepo {
         return db.productsDao().getCount();
     }
 
+    public LiveData<Integer> getCountLive() {
+        return db.productsDao().getNumberOfRows();
+    }
+
     private static class insertUnitAsyncTask extends AsyncTask<ProductsModel, Void, Boolean> {
 
         private ProductsDao mAsyncTaskDao;

@@ -311,7 +311,8 @@ public class PayCard extends AppCompatActivity {
 
     private void setBottom() {
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
-
+        sheetBehavior.setFitToContents(true);
+        // sheetBehavior.setPeekHeight(300);
         sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {

@@ -1,14 +1,9 @@
 package com.dev.lishabora.Views.Trader.Activities;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.annotation.Nullable;
-import android.support.design.button.MaterialButton;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -20,21 +15,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.ViewPagerAdapter;
-import com.dev.lishabora.COntrollers.LoginController;
-import com.dev.lishabora.Models.ResponseModel;
-import com.dev.lishabora.Models.Trader.TraderModel;
-import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.PrefrenceManager;
-import com.dev.lishabora.Utils.RequestDataCallback;
 import com.dev.lishabora.ViewModels.Admin.AdminsViewModel;
 import com.dev.lishabora.Views.Login.Activities.LoginActivity;
 import com.dev.lishabora.Views.Login.ResetPassword;
@@ -42,20 +27,13 @@ import com.dev.lishabora.Views.Reports.FragmentReports;
 import com.dev.lishabora.Views.Reports.HistoryToolBarUI;
 import com.dev.lishabora.Views.Reports.Reports;
 import com.dev.lishabora.Views.Trader.Fragments.FragementFarmersList;
+import com.dev.lishabora.Views.Trader.Fragments.FragmentPayouts;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentProductList;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentRoutes;
+import com.dev.lishabora.Views.Trader.Fragments.FragmentTraderProfile;
 import com.dev.lishaboramobile.R;
-import com.google.gson.Gson;
 import com.wang.avi.AVLoadingIndicatorView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.util.Objects;
 
 public class TraderActivity extends AppCompatActivity {
@@ -77,10 +55,16 @@ public class TraderActivity extends AppCompatActivity {
     void setUpDrawer(Toolbar toolbar, String name, String email) {
         DrawerClass.Companion.getDrawer(email, name, this, toolbar, new DrawerItemListener() {
             @Override
+            public void syncWorksClicked() {
+                startActivity(new Intent(TraderActivity.this, SyncWorks.class));
+
+            }
+
+            @Override
             public void productsClicked() {
                 fragment = new FragmentProductList();
                 popOutFragments();
-                setUpView();
+                setUpView("Products");
             }
 
             @Override
@@ -106,15 +90,17 @@ public class TraderActivity extends AppCompatActivity {
 
             @Override
             public void helpClicked() {
-                fragment = new FragmentSyncs();
-                popOutFragments();
-                setUpView();
+                //fragment = new FragmentSyncs();
+
+                MyToast.toast("We are working on implementing this  \n sit tight", TraderActivity.this, R.drawable.ic_launcher, Toast.LENGTH_LONG);
+
             }
 
             @Override
             public void profileSettingsClicked() {
-                editTrader(new PrefrenceManager(TraderActivity.this).getTraderModel());
-
+                fragment = new FragmentTraderProfile();
+                popOutFragments();
+                setUpView("My Profile");
             }
 
             @Override
@@ -122,47 +108,50 @@ public class TraderActivity extends AppCompatActivity {
 
                 fragment = new FragmentRoutes();
                 popOutFragments();
-                setUpView();
+                setUpView("Routes");
 
 
             }
 
             @Override
             public void notificationsClicked() {
+                MyToast.toast("We are working on implementing this  \n sit tight", TraderActivity.this, R.drawable.ic_launcher, Toast.LENGTH_LONG);
 
-//                private void exportDB(){
-                File sd = Environment.getExternalStorageDirectory();
-                File data = Environment.getDataDirectory();
-                FileChannel source = null;
-                FileChannel destination = null;
-                String currentDBPath = "/data/" + "com.dev.lishaboramobile" + "/databases/" + SAMPLE_DB_NAME;
-                String backupDBPath = SAMPLE_DB_NAME + ".db";
-                File currentDB = new File(data, currentDBPath);
-                File backupDB = new File(sd, backupDBPath);
-                try {
-                    source = new FileInputStream(currentDB).getChannel();
-                    destination = new FileOutputStream(backupDB).getChannel();
-                    destination.transferFrom(source, 0, source.size());
-                    source.close();
-                    destination.close();
-                    Toast.makeText(TraderActivity.this, "DB Exported!", Toast.LENGTH_LONG).show();
-                } catch (IOException e) {
-                    Toast.makeText(TraderActivity.this, "DB  not Exported!" + e.toString(), Toast.LENGTH_LONG).show();
-
-                    e.printStackTrace();
-                }
-                // }
+////                private void exportDB(){
+//                File sd = Environment.getExternalStorageDirectory();
+//                File data = Environment.getDataDirectory();
+//                FileChannel source = null;
+//                FileChannel destination = null;
+//                String currentDBPath = "/data/" + "com.dev.lishaboramobile" + "/databases/" + SAMPLE_DB_NAME;
+//                String backupDBPath = SAMPLE_DB_NAME + ".db";
+//                File currentDB = new File(data, currentDBPath);
+//                File backupDB = new File(sd, backupDBPath);
+//                try {
+//                    source = new FileInputStream(currentDB).getChannel();
+//                    destination = new FileOutputStream(backupDB).getChannel();
+//                    destination.transferFrom(source, 0, source.size());
+//                    source.close();
+//                    destination.close();
+//                    Toast.makeText(TraderActivity.this, "DB Exported!", Toast.LENGTH_LONG).show();
+//                } catch (IOException e) {
+//                    Toast.makeText(TraderActivity.this, "DB  not Exported!" + e.toString(), Toast.LENGTH_LONG).show();
+//
+//                    e.printStackTrace();
+//                }
+//                // }
 
             }
 
             @Override
             public void appSettingsClicked() {
+                MyToast.toast("We are working on implementing this  \n sit tight", TraderActivity.this, R.drawable.ic_launcher, Toast.LENGTH_LONG);
 
             }
 
             @Override
             public void homeClicked() {
 
+                TraderActivity.this.setTitle("Farmers");
                 popOutFragments();
             }
 
@@ -170,12 +159,15 @@ public class TraderActivity extends AppCompatActivity {
             public void analyticsReportsTransactionsClicked() {
                 fragment = new FragmentReports();
                 popOutFragments();
-                setUpView();
+                setUpView("Reports");
             }
 
             @Override
             public void payoutsClicked() {
-                startActivity(new Intent(TraderActivity.this, Payouts.class));
+                fragment = new FragmentPayouts();
+                popOutFragments();
+                setUpView("Payouts");
+
 
 
             }
@@ -183,13 +175,18 @@ public class TraderActivity extends AppCompatActivity {
 
     }
 
-    void setUpView() {
+    void setUpView(String name) {
+
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().setCustomAnimations(R.anim.left_out, R.anim.right_enter)
-                    .
-                            replace(R.id.frame_layout, fragment)
-                    .addToBackStack(null).commit();
+            fragmentManager.beginTransaction().setCustomAnimations(R.anim.left_out, R.anim.right_enter).
+                    replace(R.id.frame_layout, fragment).addToBackStack(null).commit();
+        }
+
+        try {
+            this.setTitle(name);
+        } catch (Exception nm) {
+            nm.printStackTrace();
         }
 
     }
@@ -199,9 +196,11 @@ public class TraderActivity extends AppCompatActivity {
         for (int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
             fragmentManager.popBackStack();
         }
+        this.setTitle("Farmers");
     }
 
     private void setUpMainFragment() {
+
         fragment = new FragementFarmersList();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.frame_layout, fragment, "fragmentMain").commit();
@@ -307,91 +306,6 @@ public class TraderActivity extends AppCompatActivity {
     }
 
 
-    public void editTrader(TraderModel traderModel) {
-        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(TraderActivity.this);
-        View mView = layoutInflaterAndroid.inflate(R.layout.dialog_add_trader, null);
-        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(TraderActivity.this));
-        alertDialogBuilderUserInput.setView(mView);
-//        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
-//        alertDialogBuilderUserInput.setTitle("Trader");
-
-
-        avi = mView.findViewById(R.id.avi);
-
-
-        TextInputEditText edtNames, edtMobile, edtBussinesName;
-        TextView cyclename, txtStarts, txtEnds;
-
-
-        edtBussinesName = mView.findViewById(R.id.edt_traders_business_name);
-        edtMobile = mView.findViewById(R.id.edt_traders_phone);
-        edtNames = mView.findViewById(R.id.edt_traders_names);
-        txtStarts = mView.findViewById(R.id.starts);
-        txtEnds = mView.findViewById(R.id.ends);
-
-        edtBussinesName.setText(traderModel.getBusinessname());
-        txtStarts.setText(traderModel.getCycleStartDay());
-        txtEnds.setText(traderModel.getCycleEndDay());
-
-
-        edtMobile.setText(traderModel.getMobile());
-        edtNames.setText(traderModel.getNames());
-
-
-        CheckBox chk = mView.findViewById(R.id.chk_dummy);
-        chk.setVisibility(View.GONE);
-
-
-        alertDialogBuilderUserInput
-                .setCancelable(false);
-        AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
-        alertDialogAndroid.setCancelable(false);
-        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
-        alertDialogAndroid.show();
-
-
-        MaterialButton btnPositive, btnNegative, btnNeutral;
-        TextView txtTitle;
-        LinearLayout lTitle;
-        ImageView imgIcon;
-        btnPositive = mView.findViewById(R.id.btn_positive);
-        btnNegative = mView.findViewById(R.id.btn_negative);
-        btnNeutral = mView.findViewById(R.id.btn_neutral);
-        txtTitle = mView.findViewById(R.id.txt_title);
-        lTitle = mView.findViewById(R.id.linear_title);
-        imgIcon = mView.findViewById(R.id.img_icon);
-
-
-        btnNeutral.setVisibility(View.VISIBLE);
-        lTitle.setVisibility(View.GONE);
-        txtTitle.setVisibility(View.VISIBLE);
-        imgIcon.setVisibility(View.VISIBLE);
-        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
-        txtTitle.setText("Trader");
-
-        btnPositive.setOnClickListener(new EditCustomListener(alertDialogAndroid, traderModel));
-        btnNeutral.setOnClickListener(view -> {
-
-        });
-        btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
-        btnNeutral.setOnClickListener(view ->
-
-                {
-
-                    alertDialogAndroid.dismiss();
-                    Intent i = new Intent(TraderActivity.this, FirstTimeLaunch.class);
-                    i.putExtra("trader", traderModel);
-                    startActivity(i);
-
-
-                }
-        );
-
-
-
-
-    }
 
     public void milkFragment(View view) {
         Intent intent = new Intent(this, Reports.class);
@@ -417,115 +331,5 @@ public class TraderActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private class EditCustomListener implements View.OnClickListener {
-        AlertDialog dialog;
-        boolean isDummy = false;
-        TraderModel traderModel;
-        //int type;
-        RequestDataCallback requestDataCallback;
-
-        public EditCustomListener(AlertDialog alertDialogAndroid, TraderModel traderModel) {
-            dialog = alertDialogAndroid;
-            this.traderModel = traderModel;
-
-        }
-
-        @Override
-        public void onClick(View v) {
-            TextInputEditText name, phone, bussinessname;
-            Spinner spinnerPayment;
-            CheckBox chkDummy;
-            Gson gson = new Gson();
-
-            spinnerPayment = dialog.findViewById(R.id.spinner);
-            bussinessname = dialog.findViewById(R.id.edt_traders_business_name);
-
-            name = dialog.findViewById(R.id.edt_traders_names);
-            phone = dialog.findViewById(R.id.edt_traders_phone);
-            chkDummy = dialog.findViewById(R.id.chk_dummy);
-
-            if (name.getText().toString().isEmpty()) {
-                name.setError("Required");
-                name.requestFocus();
-                avi.smoothToHide();
-                return;
-            }
-
-
-            if (phone.getText().toString().isEmpty()) {
-                phone.setError("Required");
-                phone.requestFocus();
-                avi.smoothToHide();
-
-                return;
-            }
-            String bussines = "";
-
-
-            if (!bussinessname.getText().toString().isEmpty()) {
-                bussines = bussinessname.getText().toString();
-            }
-
-            if (!LoginController.isValidPhoneNumber(phone.getText().toString())) {
-                phone.requestFocus();
-                avi.smoothToHide();
-
-                phone.setError("Invalid Phone number");
-            }
-
-            String defaultPayment = "";
-
-            if (spinnerPayment != null && spinnerPayment.getSelectedItemPosition() == 0) {
-
-                spinnerPayment.requestFocus();
-
-                avi.smoothToHide();
-
-                //phone.setError("Invalid Phone number");
-            }
-
-
-            if (chkDummy.isChecked()) {
-                isDummy = true;
-            }
-
-
-            traderModel.setDefaultpaymenttype(spinnerPayment.getSelectedItem().toString());
-            traderModel.setNames(name.getText().toString());
-            traderModel.setMobile(phone.getText().toString());
-            traderModel.setTransactiontime(DateTimeUtils.Companion.getNowslong());
-            traderModel.setBusinessname(bussines);
-
-
-            avi.smoothToShow();
-            JSONObject jsonObject = null;
-            try {
-                jsonObject = new JSONObject(gson.toJson(traderModel));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            adminsViewModel.updateTrader(jsonObject, true).observe(TraderActivity.this, new Observer<ResponseModel>() {
-                @Override
-                public void onChanged(@Nullable ResponseModel responseModel) {
-                    avi.smoothToHide();
-                    //snack(responseModel.getResultDescription());
-                    if (responseModel.getResultCode() == 1) {
-                        dialog.dismiss();
-                        new PrefrenceManager(TraderActivity.this).setLoggedUser(traderModel);
-                        MyToast.toast(responseModel.getResultDescription(), TraderActivity.this, R.drawable.ic_launcher, Toast.LENGTH_LONG);
-                        //mViewModel.refresh(getSearchObject(), true);
-                    } else {
-                        MyToast.toast(responseModel.getResultDescription(), TraderActivity.this, R.drawable.ic_launcher, Toast.LENGTH_LONG);
-
-                    }
-                }
-            });
-
-
-        }
-
-
-    }
 
 }

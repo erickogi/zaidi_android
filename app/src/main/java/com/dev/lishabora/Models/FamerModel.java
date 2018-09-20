@@ -17,9 +17,7 @@ public class FamerModel implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String route;
-
     private String compositecode;
-
     private String code;
     private String entitycode;
     private String entity;
@@ -50,6 +48,8 @@ public class FamerModel implements Serializable {
     private int archived;
     private String status;
     private int dummy;
+
+
     public static Comparator<FamerModel> farmerDateComparator = (s1, s2) -> {
         String FamerModelStringDate1 = s1.getLastCollectionTime();
         String FamerModelStringDate2 = s2.getLastCollectionTime();

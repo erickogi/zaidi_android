@@ -23,6 +23,9 @@ public interface ProductsDao {
     @Insert(onConflict = REPLACE)
     void insertSingleProduct(ProductsModel productsModel);
 
+    @Query("SELECT COUNT(code) FROM PRODUCTS")
+    LiveData<Integer> getNumberOfRows();
+
 
     @Query("SELECT * FROM PRODUCTS")
     LiveData<List<ProductsModel>> fetchAllData();

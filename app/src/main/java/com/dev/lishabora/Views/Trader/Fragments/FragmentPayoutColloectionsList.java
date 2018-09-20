@@ -7,17 +7,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.dev.lishabora.Adapters.CollectionsAdapter;
@@ -36,7 +33,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 import static com.dev.lishabora.Views.CommonFuncs.setPayoutActionStatus;
 
@@ -105,7 +101,6 @@ public class FragmentPayoutColloectionsList extends Fragment {
             }
         });
         recyclerView.setAdapter(listAdapter);
-
         listAdapter.notifyDataSetChanged();
 
 
@@ -252,7 +247,7 @@ public class FragmentPayoutColloectionsList extends Fragment {
         super.onStart();
 
         starterPack();
-        setSpinner();
+        //setSpinner();
     }
 
     private void starterPack() {
@@ -261,57 +256,6 @@ public class FragmentPayoutColloectionsList extends Fragment {
         loadCollections();
     }
 
-    private void setSpinner() {
-        try {
-            RelativeLayout rspinner = Objects.requireNonNull(getActivity()).findViewById(R.id.linear_spinner);
-            rspinner.setVisibility(View.VISIBLE);
-            Spinner spinner = Objects.requireNonNull(getActivity()).findViewById(R.id.spinner);
-            spinner.setVisibility(View.VISIBLE);
-            spinner.setSelection(0);
 
 
-            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-                    if (i == 0) {
-
-
-                    } else {
-
-                        Fragment fragment = new FragmentPayoutFarmersList();
-                        popOutFragments();
-                        setUpView(fragment);
-                        // ((com.dev.lishabora.Views.Trader.Activities.Payouts) getActivity()).popOutFragments();
-                        ((com.dev.lishabora.Views.Trader.Activities.Payouts) getActivity()).setUpView(fragment);
-
-                    }
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {
-
-                }
-            });
-        } catch (Exception nm) {
-            nm.printStackTrace();
-        }
-    }
-
-
-    void setUpView(Fragment fragment) {
-        if (fragment != null) {
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.frame_layout, fragment)
-                    .addToBackStack(null).commit();
-        }
-
-    }
-
-    void popOutFragments() {
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        for (int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
-            fragmentManager.popBackStack();
-        }
-    }
 }

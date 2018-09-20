@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.dev.lishabora.Views.Trader.Activities.SyncWorks">
+
+    <android.support.v7.widget.RecyclerView
+
+
+        android:id="@+id/recyclerView"
+
+        android:layout_width="match_parent"
+
+
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_header"
+
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"
+        android:nestedScrollingEnabled="false"
+        android:scrollIndicators="start|end"
+        android:scrollbarSize="6dp"
+        android:scrollbars="vertical"
+
+        android:visibility="visible">
+
+
+    </android.support.v7.widget.RecyclerView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:onClick="syncNow"
+            android:text="Start sync" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:onClick="deleteNow"
+            android:text="Delete All" />
+    </LinearLayout>
+
+</RelativeLayout>
