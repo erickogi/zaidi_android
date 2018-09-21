@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -30,8 +29,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.ProductsAdapter;
+import com.dev.lishabora.Models.ProductSubscriptionModel;
 import com.dev.lishabora.Models.ProductsModel;
 import com.dev.lishabora.Models.RPFSearchModel;
+import com.dev.lishabora.Models.Trader.TraderModel;
+import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.Utils.PrefrenceManager;
@@ -43,10 +45,12 @@ import com.google.gson.reflect.TypeToken;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -612,52 +616,54 @@ public class FragmentProductList extends Fragment {
             if (selectedProducts != null && selectedProducts.size() > 0) {
                 Log.d("createproducts", " products" + selectedProducts.size() + selectedProducts.get(0).getNames());
 
-                mViewModel.createProducts(selectedProducts, false).observe(FragmentProductList.this, responseModel -> {
-                    avi.smoothToHide();
-                    Snackbar.make(view, "" + mViewModel.getProductsCount(), Snackbar.LENGTH_LONG).show();
-
-                    dialog.dismiss();
-                    if (responseModel != null) {
-                        // Snackbar.make(view, responseModel.getResultDescription(), Snackbar.LENGTH_LONG).show();
-                    }
-                });
+//                mViewModel.createProducts(selectedProducts, false).observe(FragmentProductList.this, responseModel -> {
+//                    avi.smoothToHide();
+//                    Snackbar.make(view, "" + mViewModel.getProductsCount(), Snackbar.LENGTH_LONG).show();
+//
+//                    dialog.dismiss();
+//                    if (responseModel != null) {
+//                        // Snackbar.make(view, responseModel.getResultDescription(), Snackbar.LENGTH_LONG).show();
+//                    }
+//                });
 
             } else {
 
                 // dialog.dismiss();
             }
 
-//            if (selectedProducts != null && selectedProducts.size() > 0) {
-//
-//                LinkedList<ProductSubscriptionModel> productSubscriptionModels = new LinkedList<>();
-//                PrefrenceManager prefrenceManager = new PrefrenceManager(getActivity());
-//                TraderModel traderModel = prefrenceManager.getTraderModel();
-//                for (ProductsModel s : selectedProducts) {
-//                    ProductSubscriptionModel productSubscriptionModel = new ProductSubscriptionModel();
-//                    productSubscriptionModel.setEntitycode(traderModel.getCode());
-//                    productSubscriptionModel.setProductcode(s.getId() + "");
-//                    productSubscriptionModel.setStatus("1");
-//                    productSubscriptionModel.setSubscribed(1);
-//                    productSubscriptionModel.setSynctime("");
-//                    productSubscriptionModel.setTransactontime(DateTimeUtils.Companion.getNow());
-//                    productSubscriptionModel.setTransactedby("" + traderModel.getApikey());
-//
-//                    productSubscriptionModels.add(productSubscriptionModel);
-//
-//                }
-//                davi.smoothToShow();
-//                JSONArray jsonObject = null;
-//                try {
-//                    String element = gson.toJson(
-//                            productSubscriptionModels,
-//                            new TypeToken<ArrayList<ProductSubscriptionModel>>() {
-//                            }.getType());
-//
-//                    jsonObject = new JSONArray(element);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//
+            if (selectedProducts != null && selectedProducts.size() > 0) {
+
+                LinkedList<ProductSubscriptionModel> productSubscriptionModels = new LinkedList<>();
+                PrefrenceManager prefrenceManager = new PrefrenceManager(getActivity());
+                TraderModel traderModel = prefrenceManager.getTraderModel();
+                for (ProductsModel s : selectedProducts) {
+                    ProductSubscriptionModel productSubscriptionModel = new ProductSubscriptionModel();
+                    productSubscriptionModel.setEntitycode(traderModel.getCode());
+                    productSubscriptionModel.setProductcode(s.getId() + "");
+                    productSubscriptionModel.setStatus("1");
+                    productSubscriptionModel.setSubscribed(1);
+                    productSubscriptionModel.setSynctime("");
+                    productSubscriptionModel.setTransactontime(DateTimeUtils.Companion.getNow());
+                    productSubscriptionModel.setTransactedby("" + traderModel.getApikey());
+
+                    productSubscriptionModels.add(productSubscriptionModel);
+
+                }
+                davi.smoothToShow();
+                JSONArray jsonObject = null;
+                try {
+                    String element = gson.toJson(
+                            productSubscriptionModels,
+                            new TypeToken<ArrayList<ProductSubscriptionModel>>() {
+                            }.getType());
+
+                    jsonObject = new JSONArray(element);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.d("uploaddata", jsonObject.toString());
+
 //                mViewModel.subscribeProducts(jsonObject, true).observe(FragmentProductList.this, responseModel -> {
 //                    davi.smoothToHide();
 //                    //  snack(responseModel.getResultDescription());
@@ -668,13 +674,12 @@ public class FragmentProductList extends Fragment {
 //                        MyToast.toast(responseModel.getResultDescription(), getActivity(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
 //                    }
 //                });
-//
-//
-//            } else {
-//                Log.d("ReTrReq", " Dialog is has closed nu");
-//
-//                // dialog.dismiss();
-//            }
+
+
+            } else {
+
+                // dialog.dismiss();
+            }
 
 
         }

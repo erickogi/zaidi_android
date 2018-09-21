@@ -11,8 +11,11 @@ import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.Payouts;
+import com.dev.lishabora.Models.ProductsModel;
 import com.dev.lishabora.Models.ResponseModel;
+import com.dev.lishabora.Models.RoutesModel;
 import com.dev.lishabora.Models.SyncModel;
+import com.dev.lishabora.Models.Trader.TraderModel;
 import com.dev.lishabora.Repos.ProductsRepo;
 import com.dev.lishabora.Repos.RoutesRepo;
 import com.dev.lishabora.Repos.Trader.CollectionsRepo;
@@ -136,7 +139,7 @@ public class PayoutsVewModel extends AndroidViewModel {
         SyncModel syncModel = new SyncModel();
         syncModel.setActionType(action);
         syncModel.setObjectData(o);
-        syncModel.setObject(new Gson().toJson(o));
+        //syncModel.setObject(new Gson().toJson(o));
         syncModel.setEntityType(entity);
         syncModel.setSyncStatus(0);
         syncModel.setTimeStamp(DateTimeUtils.Companion.getNow());
@@ -145,6 +148,7 @@ public class PayoutsVewModel extends AndroidViewModel {
         switch (action) {
             case AppConstants.INSERT:
                 syncModel.setActionTypeName("Insert");
+
                 break;
             case AppConstants.UPDATE:
                 syncModel.setActionTypeName("Update");
@@ -157,21 +161,34 @@ public class PayoutsVewModel extends AndroidViewModel {
         switch (entity) {
             case AppConstants.ENTITY_FARMER:
                 syncModel.setEntityTypeName("Farmer");
+                syncModel.setObject(new Gson().toJson(o, FamerModel.class));
+
                 break;
             case AppConstants.ENTITY_PRODUCTS:
                 syncModel.setEntityTypeName("Products");
+                syncModel.setObject(new Gson().toJson(o, ProductsModel.class));
+
                 break;
             case AppConstants.ENTITY_PAYOUTS:
                 syncModel.setEntityTypeName("Payout");
+                syncModel.setObject(new Gson().toJson(o, Payouts.class));
+
                 break;
             case AppConstants.ENTITY_COLLECTION:
                 syncModel.setEntityTypeName("Collection");
+                syncModel.setObject(new Gson().toJson(o, Collection.class));
+
                 break;
             case AppConstants.ENTITY_ROUTES:
                 syncModel.setEntityTypeName("Route");
+                syncModel.setObject(new Gson().toJson(o, RoutesModel.class));
+
                 break;
             case AppConstants.ENTITY_TRADER:
+
                 syncModel.setEntityTypeName("Trader");
+                syncModel.setObject(new Gson().toJson(o, TraderModel.class));
+
                 break;
         }
 

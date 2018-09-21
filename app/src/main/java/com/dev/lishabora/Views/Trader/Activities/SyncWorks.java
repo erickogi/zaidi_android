@@ -11,12 +11,19 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
 import com.dev.lishabora.Adapters.SyncSAdapter;
+import com.dev.lishabora.AppConstants;
+import com.dev.lishabora.Models.SyncHolderModel;
 import com.dev.lishabora.Models.SyncModel;
+import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
+import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishaboramobile.R;
+import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Collections;
 import java.util.List;
@@ -106,6 +113,25 @@ public class SyncWorks extends AppCompatActivity {
     }
 
     public void syncNow(View view) {
+
+        PrefrenceManager p = new PrefrenceManager(this);
+        SyncHolderModel s = new SyncHolderModel();
+        s.setEntityCode(p.getTraderModel().getCode());
+        s.setEntityType(AppConstants.ENTITY_TRADER);
+        s.setSyncModels(syncWorks);
+        s.setTime(DateTimeUtils.Companion.getNow());
+
+
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(new Gson().toJson(s));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //Log.d("datasend",new Gson().fromJson(new Gson().toJson(s)y,T);
+
+
         Snackbar.make(view, "We are working on implementing sync sit tight", Snackbar.LENGTH_LONG).show();
 
 
