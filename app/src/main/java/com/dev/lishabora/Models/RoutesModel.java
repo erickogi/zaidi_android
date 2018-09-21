@@ -1,6 +1,7 @@
 package com.dev.lishabora.Models;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
@@ -22,6 +23,18 @@ public class RoutesModel implements Serializable {
     private String transactioncode;
     private int farmers;
     private int status;
+
+    @Ignore
+    private String traderCode;
+
+    public String getTraderCode() {
+        return traderCode;
+    }
+
+    public void setTraderCode(String traderCode) {
+        this.traderCode = traderCode;
+    }
+
 
 
     public String getEntityname() {

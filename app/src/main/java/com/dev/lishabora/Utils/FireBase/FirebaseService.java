@@ -79,6 +79,7 @@ public class FirebaseService extends FirebaseMessagingService {
             String title = data.getString("title");
             String message = data.getString("message");
 
+
             int code = data.getInt("code");// MPESA 1, NOTIFICATION
             int status = data.getInt("status");
 

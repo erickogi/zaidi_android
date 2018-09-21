@@ -450,7 +450,7 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
             FamerModel f = FarmerConst.getSearchFamerModels().get(a - 1);
             f.setPosition(a);
 
-            mViewModel.updateFarmer(f, false);
+            mViewModel.updateFarmer(f, false, false);
         }
         popOutFragments();
 
@@ -776,7 +776,7 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
                     famerModel.setStatus("Deleted");
                     famerModel.setDeleted(1);
                     avi.smoothToShow();
-                    mViewModel.updateFarmer(famerModel, false).observe(FragementFarmersDragList.this, responseModel -> avi.smoothToHide());
+                    mViewModel.updateFarmer(famerModel, false, true).observe(FragementFarmersDragList.this, responseModel -> avi.smoothToHide());
                     FragementFarmersDragList.this.fetchFarmers(FragementFarmersDragList.this.getSelectedAccountStatus(), FragementFarmersDragList.this.getSelectedRoute());//update(famerModel);
 
 
@@ -792,7 +792,7 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
                         famerModel.setArchived(1);
                     }
                     avi.smoothToShow();
-                    mViewModel.updateFarmer(famerModel, false).observe(FragementFarmersDragList.this, responseModel -> avi.smoothToHide());
+                    mViewModel.updateFarmer(famerModel, false, true).observe(FragementFarmersDragList.this, responseModel -> avi.smoothToHide());
                     FragementFarmersDragList.this.fetchFarmers(FragementFarmersDragList.this.getSelectedAccountStatus(), FragementFarmersDragList.this.getSelectedRoute());
 
 
@@ -808,7 +808,7 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
                         famerModel.setDummy(1);
                     }
                     avi.smoothToShow();
-                    mViewModel.updateFarmer(famerModel, false).observe(FragementFarmersDragList.this, new Observer<ResponseModel>() {
+                    mViewModel.updateFarmer(famerModel, false, true).observe(FragementFarmersDragList.this, new Observer<ResponseModel>() {
                         @Override
                         public void onChanged(@Nullable ResponseModel responseModel) {
                             avi.smoothToHide();

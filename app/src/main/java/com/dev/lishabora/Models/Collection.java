@@ -1,6 +1,7 @@
 package com.dev.lishabora.Models;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 @Entity(tableName = "collectiontransactions")
@@ -9,6 +10,8 @@ public class Collection {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
+    @Ignore
+    private String traderCode;
 
     private String farmerCode;
     private String farmerName;
@@ -86,7 +89,13 @@ public class Collection {
 
     private int approved;
 
+    public String getTraderCode() {
+        return traderCode;
+    }
 
+    public void setTraderCode(String traderCode) {
+        this.traderCode = traderCode;
+    }
 
     public Long getDayDateLog() {
 

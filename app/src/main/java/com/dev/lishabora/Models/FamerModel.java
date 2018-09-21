@@ -48,7 +48,16 @@ public class FamerModel implements Serializable {
     private int archived;
     private String status;
     private int dummy;
+    @Ignore
+    private String traderCode;
 
+    public String getTraderCode() {
+        return traderCode;
+    }
+
+    public void setTraderCode(String traderCode) {
+        this.traderCode = traderCode;
+    }
 
     public static Comparator<FamerModel> farmerDateComparator = (s1, s2) -> {
         String FamerModelStringDate1 = s1.getLastCollectionTime();

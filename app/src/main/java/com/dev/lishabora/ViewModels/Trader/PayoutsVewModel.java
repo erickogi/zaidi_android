@@ -22,6 +22,7 @@ import com.dev.lishabora.Repos.Trader.PayoutsRepo;
 import com.dev.lishabora.Repos.Trader.SyncRepo;
 import com.dev.lishabora.Repos.Trader.UnitsRepo;
 import com.dev.lishabora.Utils.DateTimeUtils;
+import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.Views.Trader.FarmerConst;
 import com.google.gson.Gson;
 
@@ -66,6 +67,7 @@ public class PayoutsVewModel extends AndroidViewModel {
     private FamerModel farmerOne;
 
     private Application application;
+    private PrefrenceManager prefrenceManager;
 
 
     public PayoutsVewModel(@NonNull Application application) {
@@ -80,6 +82,7 @@ public class PayoutsVewModel extends AndroidViewModel {
         collectionsRepo = new CollectionsRepo(application);
         payoutsRepo = new PayoutsRepo(application);
         syncRepo = new SyncRepo(application);
+        prefrenceManager = new PrefrenceManager(application);
 
 //
         payouts = new MutableLiveData<>();
@@ -138,6 +141,7 @@ public class PayoutsVewModel extends AndroidViewModel {
         syncModel.setSyncStatus(0);
         syncModel.setTimeStamp(DateTimeUtils.Companion.getNow());
         syncModel.setSyncTime("");
+        syncModel.setTraderCode(prefrenceManager.getTraderModel().getCode());
         switch (action) {
             case AppConstants.INSERT:
                 syncModel.setActionTypeName("Insert");
@@ -211,7 +215,9 @@ public class PayoutsVewModel extends AndroidViewModel {
     }
 
     public void updatePayout(Payouts payouts) {
+        payouts.setTraderCode(prefrenceManager.getTraderModel().getCode());
         payoutsRepo.upDateRecord(payouts);
+
         synch(AppConstants.UPDATE, AppConstants.ENTITY_PAYOUTS, payouts);
         collectionsRepo.updateCollectionsByPayout(payouts.getPayoutnumber(), payouts.getStatus());
     }
@@ -456,9 +462,12 @@ public class PayoutsVewModel extends AndroidViewModel {
 
 
     public void updateCollection(Collection c) {
-        synch(AppConstants.UPDATE, AppConstants.ENTITY_COLLECTION, c);
+        c.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
         if (c != null) {
             collectionsRepo.upDateRecord(c);
+            synch(AppConstants.UPDATE, AppConstants.ENTITY_COLLECTION, c);
+
         }
     }
 
@@ -467,6 +476,8 @@ public class PayoutsVewModel extends AndroidViewModel {
 
             this.createCollectionSuccess = new MutableLiveData();
         }
+
+        collection.setTraderCode(prefrenceManager.getTraderModel().getCode());
 
         synch(AppConstants.INSERT, AppConstants.ENTITY_COLLECTION, collection);
 

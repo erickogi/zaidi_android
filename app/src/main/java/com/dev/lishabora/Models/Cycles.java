@@ -1,6 +1,7 @@
 package com.dev.lishabora.Models;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
@@ -14,6 +15,17 @@ public class Cycles {
     private String transactedby;
     private String transactiontime;
     private String status;
+
+    @Ignore
+    private String traderCode;
+
+    public String getTraderCode() {
+        return traderCode;
+    }
+
+    public void setTraderCode(String traderCode) {
+        this.traderCode = traderCode;
+    }
 
     public int getCode() {
         return code;

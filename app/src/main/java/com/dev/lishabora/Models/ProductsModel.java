@@ -23,6 +23,19 @@ public class ProductsModel implements Serializable {
     private int status;
 
     @Ignore
+    private String traderCode;
+
+
+    public String getTraderCode() {
+        return traderCode;
+    }
+
+    public void setTraderCode(String traderCode) {
+        this.traderCode = traderCode;
+    }
+
+
+    @Ignore
     private boolean isSelected = false;
 
     public String getAllowablediscount() {

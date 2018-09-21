@@ -43,6 +43,18 @@ public class Payouts implements Serializable {
     @Ignore
     private String balance;
 
+    @Ignore
+    private String traderCode;
+
+    public String getTraderCode() {
+        return traderCode;
+    }
+
+    public void setTraderCode(String traderCode) {
+        this.traderCode = traderCode;
+    }
+
+
     public String getMilkTotalLtrs() {
         return milkTotalLtrs;
     }

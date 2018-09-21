@@ -16,7 +16,6 @@ import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
 
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class UpSyncJob extends Job {
@@ -71,13 +70,14 @@ public class UpSyncJob extends Job {
                     .setContentTitle("Sync Worker class Notification")
                     .setContentIntent(pi)
 
-                    .setContentText("You have content to be waiting for sync .... \nWe are working on implementing sync sit tight");
+                    .setContentText("You have content  waiting for sync .... \nWe are working on implementing sync sit tight");
 
             android.app.NotificationManager notificationManager =
                     (android.app.NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
             if (notificationManager != null) {
-                notificationManager.notify(new Random().nextInt(), notificationBuilder.build());
+                // notificationManager.notify(new Random().nextInt(), notificationBuilder.build());
+                notificationManager.notify(0, notificationBuilder.build());
             }
 
         }

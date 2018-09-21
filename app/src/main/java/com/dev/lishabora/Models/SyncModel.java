@@ -16,6 +16,7 @@ public class SyncModel {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
+
     private int actionType;
     private String actionTypeName;
     private int entityType;
@@ -28,6 +29,18 @@ public class SyncModel {
     private String timeStamp;
     private String syncTime;
     private int syncStatus;
+
+    @Ignore
+    private String traderCode;
+
+    public String getTraderCode() {
+        return traderCode;
+    }
+
+    public void setTraderCode(String traderCode) {
+        this.traderCode = traderCode;
+    }
+
 
     public SyncModel() {
     }

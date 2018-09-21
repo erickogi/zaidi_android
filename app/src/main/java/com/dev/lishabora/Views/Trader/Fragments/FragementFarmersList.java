@@ -324,14 +324,18 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                 hasAmChanged = true;
                 if (editable != null && editable.length() > 0) {
                     if (unitsModel.getUnitprice() != null) {
+                        try {
 
-                        Double price = Double.valueOf(unitsModel.getUnitprice());
-                        Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity()) / 1000;
-                        Double total = (Double.valueOf(edtTodayAm.getText().toString()) * unitCapacity) * price;
+                            Double price = Double.valueOf(unitsModel.getUnitprice());
+                            Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity()) / 1000;
+                            Double total = (Double.valueOf(edtTodayAm.getText().toString()) * unitCapacity) * price;
 
 
-                        unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
+                            unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
 
+                        } catch (Exception nm) {
+                            nm.printStackTrace();
+                        }
                     }
                 } else {
                     unitTotal.setText("");
@@ -455,7 +459,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
                     });
                     famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                    mViewModel.updateFarmer(famerModel, false);
+                    mViewModel.updateFarmer(famerModel, false, false);
                 } else {
 
                     Timber.tag("milkCollDebug").d("AM STRING -! NULL, AM DOUBLE - !NULL AM COLL MODEL - !NULL DOING AN UPDATE AM COLLECTION MILK " + milkAm);
@@ -476,7 +480,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                         }
                     });
                     famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                    mViewModel.updateFarmer(famerModel, false);
+                    mViewModel.updateFarmer(famerModel, false, false);
 
                 }
 
@@ -537,7 +541,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
                     });
                     famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                    mViewModel.updateFarmer(famerModel, false);
+                    mViewModel.updateFarmer(famerModel, false, false);
 
                 } else {
                     //UPDATE COLLECTION AS THERE WAS A PREVIOUS PM COLLECTION FOR THIS FARMER ON THIS DAY AND TIME
@@ -557,7 +561,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                         }
                     });
                     famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                    mViewModel.updateFarmer(famerModel, false);
+                    mViewModel.updateFarmer(famerModel, false, false);
 
 
                 }
@@ -628,7 +632,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
                 FamerModel fm = FarmerConst.getSearchFamerModels().get(adapterPosition);
                 fm.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                mViewModel.updateFarmer(fm, false);
+                mViewModel.updateFarmer(fm, false, false);
 
 
             }
@@ -980,7 +984,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             FamerModel f = FarmerConst.getSearchFamerModels().get(a - 1);
             f.setPosition(a);
 
-            mViewModel.updateFarmer(f, false);
+            mViewModel.updateFarmer(f, false, false);
         }
     }
 
@@ -1282,7 +1286,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                     famerModel.setStatus("Deleted");
                     famerModel.setDeleted(1);
                     avi.smoothToShow();
-                    mViewModel.updateFarmer(famerModel, false).observe(FragementFarmersList.this, responseModel -> avi.smoothToHide());
+                    mViewModel.updateFarmer(famerModel, false, true).observe(FragementFarmersList.this, responseModel -> avi.smoothToHide());
                     FragementFarmersList.this.fetchFarmers(FragementFarmersList.this.getSelectedAccountStatus(), FragementFarmersList.this.getSelectedRoute());//update(famerModel);
 
 
@@ -1298,7 +1302,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                         famerModel.setArchived(1);
                     }
                     avi.smoothToShow();
-                    mViewModel.updateFarmer(famerModel, false).observe(FragementFarmersList.this, responseModel -> avi.smoothToHide());
+                    mViewModel.updateFarmer(famerModel, false, true).observe(FragementFarmersList.this, responseModel -> avi.smoothToHide());
                     FragementFarmersList.this.fetchFarmers(FragementFarmersList.this.getSelectedAccountStatus(), FragementFarmersList.this.getSelectedRoute());
 
 
@@ -1314,7 +1318,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                         famerModel.setDummy(1);
                     }
                     avi.smoothToShow();
-                    mViewModel.updateFarmer(famerModel, false).observe(FragementFarmersList.this, new Observer<ResponseModel>() {
+                    mViewModel.updateFarmer(famerModel, false, true).observe(FragementFarmersList.this, new Observer<ResponseModel>() {
                         @Override
                         public void onChanged(@Nullable ResponseModel responseModel) {
                             avi.smoothToHide();

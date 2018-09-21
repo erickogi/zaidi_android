@@ -54,7 +54,7 @@
 
                         android:orientation="horizontal">
 
-                        <com.dev.customfonts.MyTextView_Roboto_Bold
+                        <TextView
 
                             android:id="@+id/txt_name_lbl"
                             android:layout_width="0dp"
@@ -68,7 +68,7 @@
                             android:textSize="13.5sp"
                             android:textStyle="bold" />
 
-                        <com.dev.customfonts.MyTextView_Roboto_Bold
+                        <TextView
                             android:id="@+id/txt_name"
                             android:layout_width="0dp"
 
@@ -78,8 +78,8 @@
                             android:layout_weight="2"
                             android:text="@string/farmer_s_names"
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                            android:textSize="14.5sp"
-                            android:textStyle="bold" />
+                            android:textSize="12.5sp"
+                            android:textStyle="normal" />
 
                         <TextView
                             android:layout_marginEnd="3dp"
@@ -89,7 +89,7 @@
                             android:layout_gravity="end"
                             android:text="@string/_12_12_2018"
                             android:textAlignment="viewEnd"
-                            android:textSize="11dp"
+                            android:textSize="12dp"
                             android:textStyle="italic" />
                     </LinearLayout>
 
@@ -106,39 +106,38 @@
 
                             android:orientation="horizontal">
 
-                            <com.dev.customfonts.MyTextView_Roboto_Bold
+                            <TextView
 
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Bal"
 
-                                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                                 android:textColor="#000000"
-                                android:textSize="12.5sp"
+                                android:textSize="11.5sp"
                                 android:textStyle="bold" />
-                            <com.dev.customfonts.MyTextView_Roboto_Bold
+
+                            <TextView
 
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/cycle"
-                                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
 
                                 android:textColor="#000000"
-                                android:textSize="12.5sp"
+                                android:textSize="11.5sp"
                                 android:textStyle="bold" />
-                            <com.dev.customfonts.MyTextView_Roboto_Bold
+
+                            <TextView
 
                                 android:singleLine="true"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Route"
-                                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
 
                                 android:textColor="#000000"
-                                android:textSize="12.5sp"
+                                android:textSize="11.5sp"
                                 android:textStyle="bold" />
 
 
@@ -150,7 +149,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <com.dev.customfonts.MyTextView_Roboto_Bold
+                            <TextView
                                 android:id="@+id/txt_balance"
                                 android:layout_width="0dp"
 
@@ -158,10 +157,10 @@
                                 android:layout_weight="1"
                                 android:text=""
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                                android:textSize="12.5sp"
+                                android:textSize="11.5sp"
                                 android:textStyle="bold" />
 
-                            <com.dev.customfonts.MyTextView_Roboto_Bold
+                            <TextView
                                 android:id="@+id/txt_cycle"
                                 android:layout_width="0dp"
 
@@ -171,10 +170,10 @@
                                 android:text=""
                                 android:textAlignment="viewStart"
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                                android:textSize="12.5sp"
+                                android:textSize="11.5sp"
                                 android:textStyle="bold" />
 
-                            <com.dev.customfonts.MyTextView_Roboto_Bold
+                            <TextView
                                 android:id="@+id/txt_route"
                                 android:layout_width="0dp"
 
@@ -184,7 +183,7 @@
                                 android:text=""
                                 android:textAlignment="viewStart"
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                                android:textSize="12.5sp"
+                                android:textSize="11.5sp"
                                 android:textStyle="bold" />
 
                         </LinearLayout>
@@ -209,7 +208,7 @@
                     android:layout_gravity="center"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_weight="2">
 
                     <View
 
@@ -221,6 +220,7 @@
                         android:background="@color/green_color_picker" />
 
                     <TextView
+                        android:textSize="11.5sp"
                         android:id="@+id/txt_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -237,27 +237,25 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1">
 
-                    <com.dev.customfonts.MyTextView_Roboto_Bold
+                    <TextView
 
                         android:id="@+id/txt_code_lbl"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
                         android:text="ID  "
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textColor="#000000"
-                        android:textSize="12.5sp"
+                        android:textSize="11.5sp"
                         android:textStyle="bold" />
 
-                    <com.dev.customfonts.MyTextView_Roboto_Bold
+                    <TextView
                         android:id="@+id/txt_id"
                         android:layout_width="wrap_content"
 
                         android:layout_height="wrap_content"
                         android:layout_marginStart="2dp"
                         android:text="55293788239"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                        android:textSize="12.5sp"
+                        android:textSize="11.5sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>

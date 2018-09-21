@@ -170,6 +170,7 @@ public class TraderViewModel extends AndroidViewModel
         syncModel.setSyncStatus(0);
         syncModel.setTimeStamp(DateTimeUtils.Companion.getNow());
         syncModel.setSyncTime("");
+        syncModel.setTraderCode(prefrenceManager.getTraderModel().getCode());
         switch (action) {
             case AppConstants.INSERT:
                 syncModel.setActionTypeName("Insert");
@@ -659,6 +660,8 @@ public class TraderViewModel extends AndroidViewModel
             });
 
         } else {
+            routesModel.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
             synch(AppConstants.INSERT, AppConstants.ENTITY_ROUTES, routesModel);
             routesRepo.insert(routesModel);
             ResponseModel responseModel = new ResponseModel();
@@ -695,6 +698,7 @@ public class TraderViewModel extends AndroidViewModel
             });
 
         } else {
+            routesModel.setTraderCode(prefrenceManager.getTraderModel().getCode());
             synch(AppConstants.UPDATE, AppConstants.ENTITY_ROUTES, routesModel);
 
             routesRepo.upDateRecord(routesModel);
@@ -711,7 +715,6 @@ public class TraderViewModel extends AndroidViewModel
     public LiveData<ResponseModel> deleteRoute(RoutesModel routesModel, JSONObject jsonObject, boolean b) {
         if (this.deleteRouteSuccess == null) {
         }
-        synch(AppConstants.DELETE, AppConstants.ENTITY_ROUTES, routesModel);
 
         this.deleteRouteSuccess = new MutableLiveData();
 
@@ -734,7 +737,10 @@ public class TraderViewModel extends AndroidViewModel
             });
 
         } else {
+            routesModel.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
             routesRepo.deleteRecord(routesModel);
+
             synch(AppConstants.DELETE, AppConstants.ENTITY_ROUTES, routesModel);
             ResponseModel responseModel = new ResponseModel();
             responseModel.setResultCode(1);
@@ -747,24 +753,6 @@ public class TraderViewModel extends AndroidViewModel
     }
 
 
-    public LiveData<ResponseModel> createProduct(ProductsModel productsModel, boolean b) {
-        if (this.createProductSuccess == null) {
-        }
-        this.createProductSuccess = new MutableLiveData();
-
-        if (b) {
-
-        } else {
-            productsRepo.insert(productsModel);
-            ResponseModel responseModel = new ResponseModel();
-            responseModel.setResultCode(1);
-            responseModel.setResultDescription("Added");
-            responseModel.setData(null);
-            createProductSuccess.setValue(responseModel);
-
-        }
-        return createProductSuccess;
-    }
 
     public LiveData<ResponseModel> createProducts(List<ProductsModel> productsModels, boolean b) {
         if (this.createProductSuccess == null) {
@@ -776,6 +764,9 @@ public class TraderViewModel extends AndroidViewModel
         if (b) {
 
         } else {
+            for (int i = 0; i < productsModels.size(); i++) {
+                productsModels.get(i).setTraderCode(prefrenceManager.getTraderModel().getCode());
+            }
 
             synch(AppConstants.INSERT, AppConstants.ENTITY_PRODUCTS, productsModels);
             if (productsRepo.insert(productsModels)) {
@@ -795,6 +786,7 @@ public class TraderViewModel extends AndroidViewModel
     public LiveData<ResponseModel> createCollections(Collection collection, boolean b) {
 
 
+        collection.setTraderCode(prefrenceManager.getTraderModel().getCode());
         synch(AppConstants.INSERT, AppConstants.ENTITY_COLLECTION, collection);
 
 
@@ -850,6 +842,7 @@ public class TraderViewModel extends AndroidViewModel
             insertPayout(payouts);
             collection.setCycleStartedOn(payouts.getStartDate());
             collection.setPayoutnumber(payouts.getPayoutnumber());
+
 
 
             collectionsRepo.insert(collection);
@@ -969,13 +962,15 @@ public class TraderViewModel extends AndroidViewModel
     public LiveData<ResponseModel> updateProduct(ProductsModel productsModel, boolean b) {
         if (this.updateProductSuccess == null) {
         }
-        synch(AppConstants.UPDATE, AppConstants.ENTITY_PRODUCTS, productsModel);
 
         this.updateProductSuccess = new MutableLiveData();
 
         if (b) {
 
         } else {
+            productsModel.setTraderCode(prefrenceManager.getTraderModel().getCode());
+            synch(AppConstants.UPDATE, AppConstants.ENTITY_PRODUCTS, productsModel);
+
             productsRepo.upDateRecord(productsModel);
             ResponseModel responseModel = new ResponseModel();
             responseModel.setResultCode(1);
@@ -991,11 +986,14 @@ public class TraderViewModel extends AndroidViewModel
         if (this.deleteProductSuccess == null) {
         }
         this.deleteProductSuccess = new MutableLiveData();
-        synch(AppConstants.DELETE, AppConstants.ENTITY_PRODUCTS, productsModel);
 
         if (b) {
 
         } else {
+            productsModel.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
+            synch(AppConstants.DELETE, AppConstants.ENTITY_PRODUCTS, productsModel);
+
             productsRepo.deleteRecord(productsModel);
             ResponseModel responseModel = new ResponseModel();
             responseModel.setResultCode(1);
@@ -1035,6 +1033,8 @@ public class TraderViewModel extends AndroidViewModel
 
         } else {
             farmerRepo.insert(famerModel);
+            famerModel.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
             synch(AppConstants.INSERT, AppConstants.ENTITY_FARMER, famerModel);
             ResponseModel responseModel = new ResponseModel();
             responseModel.setResultCode(1);
@@ -1064,8 +1064,7 @@ public class TraderViewModel extends AndroidViewModel
         return deleteFarmerSuccess;
     }
 
-    public LiveData<ResponseModel> updateFarmer(FamerModel famerModel, boolean b) {
-        synch(AppConstants.UPDATE, AppConstants.ENTITY_FARMER, famerModel);
+    public LiveData<ResponseModel> updateFarmer(FamerModel famerModel, boolean b, boolean isFarmerProfileUpdate) {
         if (this.updateFarmerSuccess == null) {
         }
         this.updateFarmerSuccess = new MutableLiveData();
@@ -1089,7 +1088,12 @@ public class TraderViewModel extends AndroidViewModel
             });
 
         } else {
+            famerModel.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
             farmerRepo.upDateRecord(famerModel);
+            if (isFarmerProfileUpdate) {
+                synch(AppConstants.UPDATE, AppConstants.ENTITY_FARMER, famerModel);
+            }
             ResponseModel responseModel = new ResponseModel();
             responseModel.setResultCode(1);
             responseModel.setResultDescription("Farmer updated successfully");
@@ -1180,7 +1184,9 @@ public class TraderViewModel extends AndroidViewModel
     }
 
     public void insertPayout(Payouts payouts) {
+        payouts.setTraderCode(prefrenceManager.getTraderModel().getCode());
         payoutsRepo.insert(payouts);
+
         synch(AppConstants.INSERT, AppConstants.ENTITY_PAYOUTS, payouts);
     }
 
@@ -1209,11 +1215,14 @@ public class TraderViewModel extends AndroidViewModel
 
 
     public LiveData<ResponseModel> updateCollection(Collection c) {
-        synch(AppConstants.UPDATE, AppConstants.ENTITY_COLLECTION, c);
         if (c != null) {
+
+            c.setTraderCode(prefrenceManager.getTraderModel().getCode());
             collectionsRepo.upDateRecord(c);
-        }
-        if (this.updateCollectionSuccess == null) {
+            synch(AppConstants.UPDATE, AppConstants.ENTITY_COLLECTION, c);
+
+            if (this.updateCollectionSuccess == null) {
+            }
         }
         this.updateCollectionSuccess = new MutableLiveData();
 

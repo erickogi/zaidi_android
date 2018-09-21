@@ -231,7 +231,7 @@ public class FragmentGiveLoan extends Fragment {
 
                 });
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                traderViewModel.updateFarmer(famerModel, false);
+            traderViewModel.updateFarmer(famerModel, false, false);
                 popOutFragments();
 
             } else {
@@ -249,7 +249,7 @@ public class FragmentGiveLoan extends Fragment {
                     }
                 });
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                traderViewModel.updateFarmer(famerModel, false);
+            traderViewModel.updateFarmer(famerModel, false, false);
                 popOutFragments();
 
             }

@@ -165,7 +165,7 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
 
                 });
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                traderViewModel.updateFarmer(famerModel, false);
+            traderViewModel.updateFarmer(famerModel, false, false);
                 finish();
 
             } else {
@@ -183,7 +183,7 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
                     }
                 });
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                traderViewModel.updateFarmer(famerModel, false);
+            traderViewModel.updateFarmer(famerModel, false, false);
                 finish();
 
             }
