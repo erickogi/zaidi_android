@@ -11,8 +11,12 @@ import android.support.design.button.MaterialButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -66,10 +70,16 @@ public class FragmentPayoutFarmersList extends Fragment {
     private Payouts payouts;
     private PayoutsVewModel payoutsVewModel;
     private List<PayoutFarmersCollectionModel> dayCollectionModels;
+    private List<PayoutFarmersCollectionModel> dayCollectionModels1;
     private List<FamerModel> famerModels;
     private List<Collection> collections;
     TextView txtApprovalStatus;
     private MaterialButton btnApprove;
+
+    private SearchView searchView;
+    private String filterText = "";
+
+
 
     public void initList() {
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -170,6 +180,7 @@ public class FragmentPayoutFarmersList extends Fragment {
     }
 
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -245,6 +256,8 @@ public class FragmentPayoutFarmersList extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
 
 
@@ -379,6 +392,7 @@ public class FragmentPayoutFarmersList extends Fragment {
 
     private void setUpList(List<PayoutFarmersCollectionModel> dayCollectionModels) {
         this.dayCollectionModels = dayCollectionModels;
+        this.dayCollectionModels1 = dayCollectionModels;
 
         listAdapter.refresh(dayCollectionModels);
         //initList();
@@ -416,4 +430,71 @@ public class FragmentPayoutFarmersList extends Fragment {
         initList();
         loadFarmers();
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Do something that differs the Activity's menu here
+        super.onCreateOptionsMenu(menu, inflater);
+
+        //inflater.inflate(R.menu.menu_main, menu);
+        MenuItem mSearch = menu.findItem(R.id.action_search);
+
+
+        searchView = (SearchView) mSearch.getActionView();
+        searchView.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+
+        return false;
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                filterText = s;
+                filterFarmers();
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                filterText = s;
+                filterFarmers();
+
+                return true;
+            }
+        });
+
+    }
+
+    private void filterFarmers() {
+        if (dayCollectionModels1 == null) {
+
+            dayCollectionModels1 = new LinkedList<>();
+            //  FarmerConst.setSearchFamerModels(new LinkedList<>());
+        }
+
+
+        dayCollectionModels.clear();
+        if (dayCollectionModels1 != null && dayCollectionModels1.size() > 0) {
+            for (PayoutFarmersCollectionModel famerModel : dayCollectionModels1) {
+
+
+                if (famerModel.getFarmername().toLowerCase().contains(filterText.toLowerCase()) || famerModel.getFarmercode().toLowerCase().contains(filterText.toLowerCase())) {
+                    dayCollectionModels.add(famerModel);
+                }
+
+            }
+        }
+        listAdapter.refresh(dayCollectionModels);
+    }
+
 }

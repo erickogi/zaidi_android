@@ -1,372 +1,559 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:keyboard="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-    <com.wang.avi.AVLoadingIndicatorView
-        android:id="@+id/avi"
-        style="@style/AVLoadingIndicatorView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        app:indicatorColor="@color/colorPrimaryDark"
-        app:indicatorName="BallSpinFadeLoaderIndicator" />
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="4dp"
 
-    <include layout="@layout/layout_custom_alert_button" />
 
-    <LinearLayout
+    app:cardUseCompatPadding="true">
 
-        android:background="@color/divider"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:orientation="horizontal">
 
-        <com.dev.customfonts.MyTextView_Roboto_Bold
-            android:id="@+id/txt_name"
-            android:layout_marginStart="2dp"
-            android:layout_width="0dp"
+        android:layout_height="match_parent">
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/avi"
+            style="@style/AVLoadingIndicatorView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:gravity="center"
-            android:text=""
-            android:lines="1"
-            android:singleLine="true"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            app:indicatorColor="@color/colorPrimaryDark"
+            app:indicatorName="BallSpinFadeLoaderIndicator" />
 
-            android:textColor="@color/black"
-            android:textSize="17sp"
-            android:textStyle="bold" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/black" />
-
-        <com.dev.customfonts.MyTextView_Roboto_Bold
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text=""
-            android:textSize="17sp"
-            android:textStyle="bold" />
-
-        <com.dev.customfonts.MyTextView_Roboto_Bold
-            android:id="@+id/txt_balance"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="2"
-            android:text="3000"
-            android:textColor="@color/black"
-            android:textSize="17sp"
-            android:textStyle="bold" />
-
-
-    </LinearLayout>
-
-    <ScrollView
-
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="50dp">
+        <include layout="@layout/layout_custom_alert_button" />
 
         <LinearLayout
-            android:layout_margin="1dp"
-
-            android:background="@drawable/rounded_border_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="4dp">
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="2dp">
 
-
-            <View
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/black" />
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <com.dev.customfonts.MyTextView_Roboto_Bold
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.6"
-                    android:gravity="center"
-                    android:text="Day"
-                    android:textColor="@color/black"
-                    android:textSize="17sp"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorAccent" />
-
-                <com.dev.customfonts.MyTextView_Roboto_Bold
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.2"
-                    android:gravity="center"
-                    android:text="AM"
-                    android:textSize="17sp"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorAccent" />
-
-                <com.dev.customfonts.MyTextView_Roboto_Bold
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.2"
-                    android:gravity="center"
-                    android:text="PM"
-                    android:textSize="17sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <View
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/accent" />
+                android:gravity="center"
+                android:src="@drawable/ic_person_black_24dp" />
 
             <TextView
-                android:visibility="gone"
+                android:id="@+id/txt_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="History" />
+                android:layout_marginStart="2dp"
+                android:lines="1"
+                android:singleLine="true"
+                android:text="Names"
+
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorAccent" />
-
-            <LinearLayout
-
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <com.dev.customfonts.MyTextView_Roboto_Bold
-                    android:layout_width="0dp"
-
-                    android:id="@+id/txt_day_1"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.6"
-                    android:gravity="center"
-                    android:text=""
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorAccent" />
-
-                <com.dev.customfonts.MyTextView_Roboto_Bold
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.2"
-                    android:gravity="center"
-                    android:id="@+id/txt_day_1_am"
-                    android:text=""
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorAccent" />
-
-                <com.dev.customfonts.MyTextView_Roboto_Bold
-                    android:layout_width="0dp"
-                    android:id="@+id/txt_day_1_pm"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.2"
-                    android:gravity="center"
-                    android:text=""
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:background="@color/divider"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <com.dev.customfonts.MyTextView_Roboto_Bold
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.6"
-                    android:gravity="center"
-                    android:id="@+id/txt_day_2"
-                    android:text=""
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorAccent" />
-
-                <com.dev.customfonts.MyTextView_Roboto_Bold
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.2"
-                    android:gravity="center"
-                    android:id="@+id/txt_day_2_am"
-                    android:text=""
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorAccent" />
-
-                <com.dev.customfonts.MyTextView_Roboto_Bold
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.2"
-                    android:gravity="center"
-                    android:id="@+id/txt_day_2_pm"
-                    android:text=""
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:background="@color/divider"
-
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <com.dev.customfonts.MyTextView_Roboto_Bold
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.6"
-                    android:gravity="center"
-                    android:id="@+id/txt_day_3"
-                    android:text=""
-
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorAccent" />
-
-                <com.dev.customfonts.MyTextView_Roboto_Bold
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.2"
-                    android:gravity="center"
-                    android:id="@+id/txt_day_3_am"
-                    android:text=""
-
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorAccent" />
-
-                <com.dev.customfonts.MyTextView_Roboto_Bold
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.2"
-                    android:gravity="center"
-                    android:id="@+id/txt_day_3_pm"
-                    android:text=""
-
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorAccent" />
-
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/black"
+                android:visibility="gone" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text=""
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/txt_balance"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
-                android:text="Todays Collection" />
+                android:layout_weight="2"
+                android:text="3000"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorAccent" />
+
+        </LinearLayout>
+
+        <ScrollView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="50dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
+
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_margin="1dp"
+                android:orientation="vertical"
+                android:padding="4dp">
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/black"
+                    android:visibility="visible" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.6"
+                        android:gravity="center"
+                        android:text="Day"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorAccent" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.2"
+                        android:gravity="center"
+                        android:text="AM"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorAccent" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.2"
+                        android:gravity="center"
+                        android:text="PM"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/accent"
+                    android:visibility="gone" />
 
                 <TextView
-
-                    android:id="@+id/txt_today"
-
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1.6"
                     android:gravity="center"
-                    android:text="Thursday "
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
+                    android:text="History"
+                    android:visibility="gone" />
 
                 <View
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorAccent"
+                    android:visibility="gone" />
+
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/txt_day_1"
+
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.6"
+                        android:gravity="center"
+                        android:text=""
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textColor="@color/textblack"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorAccent" />
+
+                    <TextView
+                        android:id="@+id/txt_day_1_am"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.2"
+                        android:gravity="center"
+                        android:text=""
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorAccent" />
+
+                    <TextView
+                        android:id="@+id/txt_day_1_pm"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.2"
+                        android:gravity="center"
+                        android:text=""
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txt_day_2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.6"
+                        android:gravity="center"
+                        android:text=""
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorAccent" />
+
+                    <TextView
+                        android:id="@+id/txt_day_2_am"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.2"
+                        android:gravity="center"
+                        android:text=""
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorAccent" />
+
+                    <TextView
+                        android:id="@+id/txt_day_2_pm"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.2"
+                        android:gravity="center"
+                        android:text=""
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txt_day_3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.6"
+                        android:gravity="center"
+                        android:text=""
+
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textColor="@color/textblack"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorAccent" />
+
+                    <TextView
+                        android:id="@+id/txt_day_3_am"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.2"
+                        android:gravity="center"
+                        android:text=""
+
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorAccent" />
+
+                    <TextView
+                        android:id="@+id/txt_day_3_pm"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.2"
+                        android:gravity="center"
+                        android:text=""
+
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
                     android:background="@color/colorAccent" />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Today's Collection"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textStyle="normal" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorAccent" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+
+                        android:id="@+id/txt_today"
+
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1.6"
+                        android:gravity="center"
+                        android:text=""
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorAccent" />
+
+
+                    <android.support.design.widget.TextInputLayout
+
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.2"
+
+                        android:textColorHint="@color/textblack">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/edt_am"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:gravity="center"
+                            android:hint=""
+                            android:inputType="numberDecimal"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                            android:textStyle="bold"
+
+
+                            />
+
+                    </android.support.design.widget.TextInputLayout>
+
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorAccent" />
+
+                    <android.support.design.widget.TextInputLayout
+
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.2"
+                        android:textColorHint="@color/textblack">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/edt_pm"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:gravity="center"
+                            android:hint=""
+                            android:inputType="numberDecimal"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+
+
+                            android:textStyle="bold" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+
+                </LinearLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorAccent" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal"
+                    android:padding="4dp">
+
+                    <TextView
+                        android:id="@+id/txtUnitName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:gravity="center"
+                        android:text="Ltrs"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textStyle="bold" />
+
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:gravity="center"
+                        android:text=" at"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtUnitPrice"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="50"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
+
+                        android:gravity="center"
+                        android:text="@string/ksh"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtCost"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textStyle="bold" />
+
+
+                </LinearLayout>
+
+                <com.dev.lishabora.NumKey.NumberKeyboard
+                    android:id="@+id/numberKeyboard"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    keyboard:keyboardType="decimal" />
+
+
+                <!--<com.fxn769.Numpad-->
+                <!--android:background="@color/colorAccent"-->
+                <!--android:id="@+id/num"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center"-->
+                <!--numpad:numpad_background_resource="@drawable/numpad_background"-->
+                <!--numpad:numpad_fontpath="fonts/custom_font.ttf"-->
+                <!--numpad:numpad_grid_background_color="@color/colorAccent"-->
+                <!--numpad:numpad_grid_line_thickness="2dp"-->
+                <!--numpad:numpad_grid_visible="true"-->
+
+                <!--numpad:numpad_image_resource="@drawable/ic_backspace"-->
+                <!--numpad:numpad_text_color="#000000"-->
+                <!--numpad:numpad_text_limit="10"-->
+                <!--numpad:numpad_text_size="18sp" />-->
 
                 <android.support.design.widget.TextInputLayout
 
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
 
-                    android:layout_weight="1.2"
-                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1.2"
+                    android:textColorHint="@color/black"
 
-                    android:textColorHint="@color/black">
+                    android:visibility="gone">
 
                     <android.support.design.widget.TextInputEditText
-                        android:id="@+id/edt_am"
+                        android:id="@+id/edt_loan"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
+                        android:enabled="false"
                         android:gravity="center"
-                        android:hint=""
-                        android:inputType="numberDecimal"
+                        android:hint="Loan given"
+                        android:inputType="number"
 
 
                         android:maxLength="4" />
@@ -374,143 +561,14 @@
                 </android.support.design.widget.TextInputLayout>
 
 
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorAccent" />
-
-                <android.support.design.widget.TextInputLayout
-
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
-
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.2"
-                    android:textColorHint="@color/black">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/edt_pm"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:hint=""
-
-
-                        android:inputType="numberDecimal"
-                        android:maxLength="4" />
-
-                </android.support.design.widget.TextInputLayout>
-
-
-            </LinearLayout>
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorAccent" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="4dp"
-                android:orientation="horizontal"
-                android:padding="4dp">
-
-                <com.dev.customfonts.MyTextView_Roboto_Bold
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:text="Ltrs"
-                    android:id="@+id/txtUnitName"
-                    android:textSize="15sp" />
-
-
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/black" />
-
-                <com.dev.customfonts.MyTextView_Roboto_Bold
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:gravity="center"
-                    android:text="`@"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/txtUnitPrice"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="50"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/black" />
-
-                <com.dev.customfonts.MyTextView_Roboto_Bold
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:gravity="center"
-                    android:text="/="
-                    android:textSize="15sp" />
-
-                <com.dev.customfonts.MyTextView_Roboto_Bold
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:id="@+id/txtCost"
-                    android:text="0"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-
-            </LinearLayout>
-
-            <android.support.design.widget.TextInputLayout
-
-                android:visibility="gone"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.2"
-
-                android:textColorHint="@color/black">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/edt_loan"
+                <com.jaredrummler.materialspinner.MaterialSpinner
+                    android:id="@+id/products"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:enabled="false"
-                    android:gravity="center"
-                    android:hint="Loan given"
-                    android:inputType="number"
+                    android:layout_height="wrap_content"
 
+                    android:visibility="gone" />
 
-                    android:maxLength="4" />
-
-            </android.support.design.widget.TextInputLayout>
-
-
-            <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/products"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
-    </ScrollView>
-</RelativeLayout>
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
+</android.support.design.card.MaterialCardView>

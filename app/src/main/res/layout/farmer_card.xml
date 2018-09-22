@@ -5,14 +5,14 @@
     android:layout_height="wrap_content"
     android:background="?android:selectableItemBackground"
     app:cardBackgroundColor="@color/colorPrimary"
-    app:cardCornerRadius="4dp"
+    app:cardCornerRadius="2dp"
     app:strokeColor="@color/divider"
     android:clickable="true"
     android:focusable="true"
     app:cardElevation="2dp"
     app:cardUseCompatPadding="true"
     android:foreground="?attr/selectableItemBackground"
-    app:strokeWidth="2dp">
+    app:strokeWidth="1dp">
 
     <RelativeLayout
         android:clickable="true"
@@ -79,7 +79,7 @@
                             android:text="@string/farmer_s_names"
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                             android:textSize="12.5sp"
-                            android:textStyle="normal" />
+                            android:textStyle="bold" />
 
                         <TextView
                             android:layout_marginEnd="3dp"
@@ -111,7 +111,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Bal"
+                                android:text="Balance"
 
                                 android:textColor="#000000"
                                 android:textSize="11.5sp"

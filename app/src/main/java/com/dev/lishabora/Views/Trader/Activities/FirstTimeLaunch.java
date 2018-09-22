@@ -17,6 +17,8 @@ import com.dev.lishaboramobile.R;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 
+import java.util.Objects;
+
 public class FirstTimeLaunch extends AppCompatActivity implements StepperLayout.StepperListener {
     private StepperLayout mStepperLayout;
     private TraderFirstTimeAdapter mStepperAdapter;
@@ -69,5 +71,17 @@ public class FirstTimeLaunch extends AppCompatActivity implements StepperLayout.
     @Override
     public void onReturn() {
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Objects.requireNonNull(this.getSupportActionBar()).hide();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Objects.requireNonNull(this.getSupportActionBar()).show();
     }
 }

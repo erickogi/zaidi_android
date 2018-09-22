@@ -192,7 +192,7 @@ public class TraderViewModel extends AndroidViewModel
                 break;
             case AppConstants.ENTITY_PRODUCTS:
                 syncModel.setEntityTypeName("Products");
-                syncModel.setObject(new Gson().toJson(o, ProductsModel.class));
+                // syncModel.setObject(new Gson().toJson(o, ProductsModel.class));
 
                 break;
             case AppConstants.ENTITY_PAYOUTS:

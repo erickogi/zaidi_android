@@ -7,10 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.button.MaterialButton;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -21,9 +19,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,13 +36,12 @@ import com.dev.lishabora.Adapters.FarmersAdapter;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
-import com.dev.lishabora.Models.MilkModel;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.RoutesModel;
 import com.dev.lishabora.Models.UnitsModel;
+import com.dev.lishabora.Utils.CollectListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.Draggable.helper.OnStartDragListener;
-import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.Utils.PrefrenceManager;
@@ -79,7 +73,7 @@ import static com.dev.lishabora.Models.FamerModel.farmerDateComparator;
 import static com.dev.lishabora.Models.FamerModel.farmerNameComparator;
 import static com.dev.lishabora.Models.FamerModel.farmerPosComparator;
 
-public class FragementFarmersList extends Fragment implements OnStartDragListener {
+public class FragementFarmersList extends Fragment implements OnStartDragListener, CollectListener {
     FarmersAdapter listAdapter;
 
 
@@ -111,514 +105,11 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     private Button btnDrag;
     private boolean isDraggable = true;
     private int SORTTYPE = 0;
+    private CollectMilk collectMilk;
 
 
 
 
-
-
-    boolean isAm = false;
-    String ampm = "";
-    Cycles c;
-
-
-    String AmStringValue = null;
-    String PmStringValue = null;
-
-
-    Double AmDoubleValue = 0.0;
-    Double PmDoubleValue = 0.0;
-
-
-    // Collection AmCollModel = null;
-    //Collection PmCollModel = null;
-
-    Collection collModel = null;
-
-    boolean hasAmChanged = false;
-    boolean hasPmChanged = false;
-
-    LayoutInflater layoutInflaterAndroid;
-    View mView;
-    AlertDialog.Builder alertDialogBuilderUserInput;
-    AlertDialog alertDialogAndroid;
-    MaterialButton btnPositive, btnNegative, btnNeutral;
-    TextView txtTitle;
-    LinearLayout lTitle;
-    ImageView imgIcon;
-    TextView names, balance, day1, day2, day3, day1am, day1pm, day2am, day2pm, day3am, day3pm, today, unitName, unitPrice, unitTotal;
-    TextInputEditText edtTodayAm, edtTodayPm;
-
-
-    private void clearDialog() {
-        day1.setText("");
-        day1am.setText("");
-        day1pm.setText("");
-
-        day2.setText("");
-        day2am.setText("");
-        day2pm.setText("");
-
-        day3.setText("");
-        day3am.setText("");
-        day3pm.setText("");
-
-        today.setText("");
-
-        unitName.setText("");
-        unitPrice.setText("");
-        unitTotal.setText("");
-
-        edtTodayAm.setText("");
-        edtTodayPm.setText("");
-
-
-    }
-
-    private void setUpCollDialog() {
-        layoutInflaterAndroid = LayoutInflater.from(getContext());
-        mView = layoutInflaterAndroid.inflate(R.layout.dialog_collect_milk, null);
-        alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
-        alertDialogBuilderUserInput.setView(mView);
-        alertDialogBuilderUserInput.setCancelable(false);
-        alertDialogAndroid = alertDialogBuilderUserInput.create();
-        alertDialogAndroid.setCancelable(false);
-        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
-        names = mView.findViewById(R.id.txt_name);
-        balance = mView.findViewById(R.id.txt_balance);
-
-        day1 = mView.findViewById(R.id.txt_day_1);
-        day1am = mView.findViewById(R.id.txt_day_1_am);
-        day1pm = mView.findViewById(R.id.txt_day_1_pm);
-
-        day2 = mView.findViewById(R.id.txt_day_2);
-        day2am = mView.findViewById(R.id.txt_day_2_am);
-        day2pm = mView.findViewById(R.id.txt_day_2_pm);
-
-        day3 = mView.findViewById(R.id.txt_day_3);
-        day3am = mView.findViewById(R.id.txt_day_3_am);
-        day3pm = mView.findViewById(R.id.txt_day_3_pm);
-
-        today = mView.findViewById(R.id.txt_today);
-
-        unitName = mView.findViewById(R.id.txtUnitName);
-        unitPrice = mView.findViewById(R.id.txtUnitPrice);
-        unitTotal = mView.findViewById(R.id.txtCost);
-
-        edtTodayAm = mView.findViewById(R.id.edt_am);
-        edtTodayPm = mView.findViewById(R.id.edt_pm);
-
-
-        btnPositive = mView.findViewById(R.id.btn_positive);
-        btnNegative = mView.findViewById(R.id.btn_negative);
-        btnNeutral = mView.findViewById(R.id.btn_neutral);
-        txtTitle = mView.findViewById(R.id.txt_title);
-        lTitle = mView.findViewById(R.id.linear_title);
-        imgIcon = mView.findViewById(R.id.img_icon);
-
-
-        btnNeutral.setVisibility(View.GONE);
-        lTitle.setVisibility(View.GONE);
-        txtTitle.setVisibility(View.VISIBLE);
-        imgIcon.setVisibility(View.GONE);
-        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
-        txtTitle.setText("Route");
-
-
-    }
-
-
-
-    public void collectMilk(FamerModel famerModel) {
-
-
-        clearDialog();
-        if (DateTimeUtils.Companion.isAM(DateTimeUtils.Companion.getTodayDate())) {
-
-            ampm = "AM";
-
-        } else {
-
-
-            ampm = "PM";
-        }
-
-
-
-        AmStringValue = null;
-        PmStringValue = null;
-        AmDoubleValue = 0.0;
-        PmDoubleValue = 0.0;
-        collModel = null;
-        collModel = mViewModel.getCollectionByDateByFarmerByTimeSngle(famerModel.getCode(), DateTimeUtils.Companion.getToday());
-
-        if (collModel != null) {
-            if (collModel.getMilkCollectedAm() != null) {
-                AmDoubleValue = AmDoubleValue + Double.valueOf(collModel.getMilkCollectedAm());
-                AmStringValue = String.valueOf(AmDoubleValue);
-            }
-            if (collModel.getMilkCollectedPm() != null) {
-                PmDoubleValue = PmDoubleValue + Double.valueOf(collModel.getMilkCollectedIdPm());
-                PmStringValue = String.valueOf(PmDoubleValue);
-            }
-        }
-
-
-        alertDialogAndroid.show();
-
-
-
-        UnitsModel unitsModel = new UnitsModel();
-        unitsModel.setUnitcapacity(famerModel.getUnitcapacity());
-        unitsModel.setUnitprice(famerModel.getUnitprice());
-        unitsModel.setUnit(famerModel.getUnitname());
-
-
-
-
-
-
-
-        names.setText(famerModel.getNames());
-        balance.setText(GeneralUtills.Companion.round(famerModel.getTotalbalance(), 1));
-
-        today.setText(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "E"));
-        day3.setText(DateTimeUtils.Companion.getDayPrevious(1, "E"));
-        day2.setText(DateTimeUtils.Companion.getDayPrevious(2, "E"));
-        day1.setText(DateTimeUtils.Companion.getDayPrevious(3, "E"));
-
-        unitName.setText(unitsModel.getUnit());
-        unitPrice.setText(unitsModel.getUnitprice());
-
-
-        getCollection(famerModel.getCode(), DateTimeUtils.Companion.getDatePrevious(3), day1am, day1pm);
-        getCollection(famerModel.getCode(), DateTimeUtils.Companion.getDatePrevious(2), day2am, day2pm);
-        getCollection(famerModel.getCode(), DateTimeUtils.Companion.getDatePrevious(1), day3am, day3pm);
-        getCollection(famerModel.getCode(), DateTimeUtils.Companion.getToday(), edtTodayAm, edtTodayPm);
-
-        if (!TextUtils.isEmpty(edtTodayAm.getText())) {
-            edtTodayAm.setSelection(edtTodayAm.getText().length());
-        }
-        if (!TextUtils.isEmpty(edtTodayPm.getText())) {
-            edtTodayPm.setSelection(edtTodayPm.getText().length());
-        }
-
-
-
-
-        edtTodayAm.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-                hasAmChanged = true;
-                if (editable != null && editable.length() > 0) {
-                    if (unitsModel.getUnitprice() != null) {
-                        try {
-
-                            Double price = Double.valueOf(unitsModel.getUnitprice());
-                            Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity()) / 1000;
-                            Double total = (Double.valueOf(edtTodayAm.getText().toString()) * unitCapacity) * price;
-
-
-                            unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
-
-                        } catch (Exception nm) {
-                            nm.printStackTrace();
-                        }
-                    }
-                } else {
-                    unitTotal.setText("");
-                }
-            }
-        });
-        edtTodayPm.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-                hasPmChanged = true;
-                if (editable != null && editable.length() > 0) {
-                    if (unitsModel.getUnitprice() != null) {
-
-                        Double price = Double.valueOf(unitsModel.getUnitprice());
-                        Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity()) / 1000;
-                        Double total = (Double.valueOf(edtTodayPm.getText().toString()) * unitCapacity) * price;
-
-
-                        unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
-
-                    }
-                } else {
-                    unitTotal.setText("");
-                }
-            }
-        });
-
-        if (DateTimeUtils.Companion.isAM(DateTimeUtils.Companion.getTodayDate())) {
-            edtTodayAm.requestFocus();
-            edtTodayPm.setEnabled(false);
-
-
-        } else {
-            edtTodayPm.requestFocus();
-            edtTodayPm.setEnabled(true);
-
-
-        }
-
-
-
-
-        btnPositive.setOnClickListener(view -> {
-            String milkAm = "0";
-            String milkPm = "0";
-            if (!TextUtils.isEmpty(edtTodayAm.getText().toString())) {
-                milkAm = edtTodayAm.getText().toString();
-                Timber.tag("milkCollDebug").d("Milk Am As On Button Click " + milkAm);
-
-            }
-            if (!TextUtils.isEmpty(edtTodayPm.getText().toString())) {
-                milkPm = edtTodayPm.getText().toString();
-                Timber.tag("milkCollDebug").d("Milk Am As On Button Click " + milkPm);
-
-
-            }
-
-
-            if (hasAmChanged && !TextUtils.isEmpty(edtTodayAm.getText())) {
-                Timber.tag("milkCollDebug").d("HAS AM CHANGED TRUE ");
-                MilkModel milkModel = new MilkModel();
-                milkModel.setUnitQty(milkAm);
-                milkModel.setUnitsModel(unitsModel);
-
-
-                if (collModel == null) {
-
-                    Timber.tag("milkCollDebug").d("AM STRING - NULL, AM DOUBLE - NULL AM COLL MODEL - NULL DOING A NEW AM COLLECTION MILK " + milkAm);
-
-
-                    Collection c = new Collection();
-                    c.setCycleCode(famerModel.getCyclecode());
-                    c.setFarmerCode(famerModel.getCode());
-                    c.setFarmerName(famerModel.getNames());
-                    c.setCycleId(famerModel.getCode());
-                    c.setDayName(today.getText().toString());
-                    c.setLoanAmountGivenOutPrice("0");
-                    c.setDayDate(DateTimeUtils.Companion.getToday());
-                    c.setDayDateLog(DateTimeUtils.Companion.getLongDate(c.getDayDate()));
-                    c.setTimeOfDay("AM");
-
-
-                    c.setMilkCollectedAm(milkAm);
-                    c.setMilkCollectedValueKshAm(milkModel.getValueKsh());
-                    c.setMilkCollectedValueLtrsAm(milkModel.getValueLtrs());
-                    c.setMilkDetailsAm(new Gson().toJson(milkModel));
-
-
-
-
-
-
-                    c.setLoanAmountGivenOutPrice("0");
-                    c.setOrderGivenOutPrice("0");
-
-                    c.setLoanId("");
-                    c.setOrderId("");
-                    c.setSynced(0);
-                    c.setSynced(false);
-                    c.setApproved(0);
-
-
-                    mViewModel.createCollections(c, false).observe(FragementFarmersList.this, responseModel -> {
-                        if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-                        } else {
-                            snack(responseModel.getResultDescription());
-
-                        }
-
-
-                    });
-                    famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                    mViewModel.updateFarmer(famerModel, false, false);
-                } else {
-
-                    Timber.tag("milkCollDebug").d("AM STRING -! NULL, AM DOUBLE - !NULL AM COLL MODEL - !NULL DOING AN UPDATE AM COLLECTION MILK " + milkAm);
-
-                    //UPDATE COLLECTION AS THERE WAS A PREVIOUS AM COLLECTION FOR THIS FARMER ON THIS DAY AND TIME
-
-                    collModel.setMilkCollectedAm(milkAm);
-                    collModel.setMilkCollectedValueKshAm(milkModel.getValueKsh());
-                    collModel.setMilkCollectedValueLtrsAm(milkModel.getValueLtrs());
-                    collModel.setMilkDetailsAm(new Gson().toJson(milkModel));
-
-
-                    mViewModel.updateCollection(collModel).observe(FragementFarmersList.this, responseModel -> {
-                        if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-                        } else {
-                            snack(responseModel.getResultDescription());
-
-                        }
-                    });
-                    famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                    mViewModel.updateFarmer(famerModel, false, false);
-
-                }
-
-
-            }
-
-            if (hasPmChanged && !TextUtils.isEmpty(edtTodayPm.getText())) {
-                Timber.tag("milkCollDebug").d("HAS PM CHANGED -TRUE ");
-                MilkModel milkModel = new MilkModel();
-                milkModel.setUnitQty(milkPm);
-                milkModel.setUnitsModel(unitsModel);
-
-
-                if (collModel == null) {
-
-                    Timber.tag("milkCollDebug").d("PM STRING - NULL, PM DOUBLE - NULL PM COLL MODEL - NULL DOING A NEW PM COLLECTION MILK " + milkPm);
-
-                    Collection c = new Collection();
-                    c.setCycleCode(famerModel.getCyclecode());
-                    c.setFarmerCode(famerModel.getCode());
-                    c.setFarmerName(famerModel.getNames());
-                    c.setCycleId(famerModel.getCode());
-                    c.setDayName(today.getText().toString());
-                    c.setLoanAmountGivenOutPrice("0");
-                    c.setDayDate(DateTimeUtils.Companion.getToday());
-                    c.setDayDateLog(DateTimeUtils.Companion.getLongDate(c.getDayDate()));
-
-                    c.setTimeOfDay("PM");
-
-
-                    c.setMilkCollectedPm(milkPm);
-                    c.setMilkCollectedValueKshPm(milkModel.getValueKsh());
-                    c.setMilkCollectedValueLtrsPm(milkModel.getValueLtrs());
-                    c.setMilkDetailsAm(new Gson().toJson(milkModel));
-
-
-
-
-
-                    c.setLoanAmountGivenOutPrice("0");
-                    c.setOrderGivenOutPrice("0");
-
-                    c.setLoanId("");
-                    c.setOrderId("");
-                    c.setSynced(0);
-                    c.setSynced(false);
-                    c.setApproved(0);
-
-
-                    mViewModel.createCollections(c, false).observe(FragementFarmersList.this, responseModel -> {
-                        if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-
-                        } else {
-                            snack(responseModel.getResultDescription());
-
-                        }
-
-
-                    });
-                    famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                    mViewModel.updateFarmer(famerModel, false, false);
-
-                } else {
-                    //UPDATE COLLECTION AS THERE WAS A PREVIOUS PM COLLECTION FOR THIS FARMER ON THIS DAY AND TIME
-                    Timber.tag("milkCollDebug").d("PM STRING -! NULL, PM DOUBLE - !NULL AM COLL MODEL - !NULL DOING AN UPDATE PM COLLECTION  MILK " + milkPm);
-
-
-                    collModel.setMilkCollectedPm(milkPm);
-                    collModel.setMilkCollectedValueKshPm(milkModel.getValueKsh());
-                    collModel.setMilkCollectedValueLtrsPm(milkModel.getValueLtrs());
-                    collModel.setMilkDetailsPm(new Gson().toJson(milkModel));
-
-                    mViewModel.updateCollection(collModel).observe(FragementFarmersList.this, responseModel -> {
-                        if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-                        } else {
-                            snack(responseModel.getResultDescription());
-
-                        }
-                    });
-                    famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                    mViewModel.updateFarmer(famerModel, false, false);
-
-
-                }
-
-
-            }
-
-
-            alertDialogAndroid.dismiss();
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-
-
-
-        });
-        btnNeutral.setOnClickListener(view -> {
-
-        });
-        btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
-
-    }
-
-    private String getCollection(String code, String date, TextView txtAm, TextView txtPm) {
-
-        Timber.tag("tagssearch").d(code + "  Date " + date);
-        Collection c = mViewModel.getCollectionByDateByFarmerByTimeSngle(code, date);//.observe(FragementFarmersList.this, collections -> {
-
-        if (txtAm != null && txtPm != null) {
-            if (c != null) {
-                if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
-                    txtAm.setText(c.getMilkCollectedAm());
-
-                }
-                if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
-                    txtPm.setText(c.getMilkCollectedPm());
-
-                }
-
-
-            }
-        }
-
-
-        return "";
-
-    }
 
 
 
@@ -642,7 +133,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
                 try {
                     if (FarmerConst.getSearchFamerModels().get(position).getDeleted() == 0 && FarmerConst.getSearchFamerModels().get(position).getArchived() == 0) {
-                        collectMilk(FarmerConst.getSearchFamerModels().get(position));
+                        collectMilk.collectMilk(FarmerConst.getSearchFamerModels().get(position));
                     }
                 } catch (Exception nm) {
                     nm.printStackTrace();
@@ -703,7 +194,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             try {
                 if (FarmerConst.getSearchFamerModels().get(position).getDeleted() == 0 && FarmerConst.getSearchFamerModels().get(position).getArchived() == 0) {
 
-                    collectMilk(FarmerConst.getSearchFamerModels().get(position));
+                    collectMilk.collectMilk(FarmerConst.getSearchFamerModels().get(position));
                 }
             } catch (Exception nm) {
                 nm.printStackTrace();
@@ -889,9 +380,8 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         super.onViewCreated(view, savedInstanceState);
         this.view = view;
         mViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
-        setUpCollDialog();
-        prefrenceManager = new PrefrenceManager(getContext());
 
+        prefrenceManager = new PrefrenceManager(getContext());
         recyclerView = view.findViewById(R.id.recyclerView);
         empty_layout = view.findViewById(R.id.empty_layout);
         emptyTxt = view.findViewById(R.id.empty_text);
@@ -948,6 +438,10 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         } catch (Exception nm) {
             nm.printStackTrace();
         }
+
+
+        collectMilk = new CollectMilk(getContext(), mViewModel, this);
+
     }
 
 
@@ -1411,6 +905,34 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     }
 
 
+    @Override
+    public void createCollection(Collection c) {
+        mViewModel.createCollections(c, false).observe(FragementFarmersList.this, responseModel -> {
+            if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+
+            } else {
+                snack(responseModel.getResultDescription());
+
+            }
 
 
+        });
+    }
+
+    @Override
+    public void updateCollection(Collection c) {
+        mViewModel.updateCollection(c).observe(FragementFarmersList.this, responseModel -> {
+            if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+            } else {
+                snack(responseModel.getResultDescription());
+
+            }
+        });
+    }
+
+    @Override
+    public void error(String error) {
+        snack(error);
+
+    }
 }

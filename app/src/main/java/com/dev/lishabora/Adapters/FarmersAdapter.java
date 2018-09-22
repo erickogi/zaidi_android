@@ -61,7 +61,7 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
     public FarmerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = null;
 
-        itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.farmer_card, parent, false);
+        itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.farmer_card_v2, parent, false);
         //itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.farmer_card_v1, parent, false);
 
         return new FarmerViewHolder(itemView, listener);
@@ -85,32 +85,32 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
 
 
         holder.txtDate.setText(DateTimeUtils.Companion.getDisplayDate(farmer.getLastCollectionTime()));
-        String status = "";
-        if (farmer.getArchived() == 0 && farmer.getDeleted() == 0 && farmer.getDummy() == 0) {
-            status = "Active";
-            holder.status.setText(status);
-            holder.status.setTextColor(context.getResources().getColor(R.color.green_color_picker));
-            holder.background.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
-            holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
-        } else {
-            StringBuilder stringBuilder = new StringBuilder(status);
-            if (farmer.getDeleted() == 1) {
-                //stringBuilder.setLength(0);
-                stringBuilder.append("|Deleted");
-            }
-            if (farmer.getArchived() == 1) {
-                stringBuilder.append("|Archived");
-            }
-            if (farmer.getDummy() == 1) {
-                stringBuilder.append("|Dummy");
-
-            }
-            holder.status.setText(stringBuilder.toString());
-            holder.status.setTextColor(context.getResources().getColor(R.color.red));
-            holder.background.setBackgroundColor(context.getResources().getColor(R.color.red));
-            holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.red));
-
-        }
+//        String status = "";
+//        if (farmer.getArchived() == 0 && farmer.getDeleted() == 0 && farmer.getDummy() == 0) {
+//            status = "Active";
+//            holder.status.setText(status);
+//            holder.status.setTextColor(context.getResources().getColor(R.color.green_color_picker));
+//            holder.background.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
+//            holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
+//        } else {
+//            StringBuilder stringBuilder = new StringBuilder(status);
+//            if (farmer.getDeleted() == 1) {
+//                //stringBuilder.setLength(0);
+//                stringBuilder.append("|Deleted");
+//            }
+//            if (farmer.getArchived() == 1) {
+//                stringBuilder.append("|Archived");
+//            }
+//            if (farmer.getDummy() == 1) {
+//                stringBuilder.append("|Dummy");
+//
+//            }
+//            holder.status.setText(stringBuilder.toString());
+//            holder.status.setTextColor(context.getResources().getColor(R.color.red));
+//            holder.background.setBackgroundColor(context.getResources().getColor(R.color.red));
+//            holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.red));
+//
+//        }
 
 
     }

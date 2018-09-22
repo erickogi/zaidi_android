@@ -9,10 +9,10 @@
     app:strokeColor="@color/divider"
     android:foreground="?attr/selectableItemBackground"
     app:cardBackgroundColor="@color/colorPrimary"
-    app:cardCornerRadius="4dp"
-    app:cardElevation="2dp"
+    app:cardCornerRadius="1dp"
+    app:cardElevation="1dp"
     app:cardUseCompatPadding="true"
-    app:strokeWidth="2dp">
+    app:strokeWidth="1dp">
 
     <RelativeLayout
         android:id="@+id/background"
@@ -65,7 +65,7 @@
                             android:textSize="12sp"
                             android:textStyle="italic|bold" />
 
-                        <com.dev.customfonts.MyTextView_Roboto_Bold
+                        <TextView
                             android:id="@+id/txt_cycle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
                             android:gravity="center"
                             android:text="Weekly"
                             android:textColor="@color/black"
-                            android:textSize="13sp"
+                            android:textSize="12sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -127,7 +127,7 @@
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                                     android:textColor="#000000"
                                     android:textSize="12.5sp"
-                                    android:textStyle="bold" />
+                                    android:textStyle="normal" />
 
                                 <com.dev.customfonts.MyTextView_Roboto_Bold
                                     android:id="@+id/txt_Bal_out"
@@ -137,7 +137,7 @@
                                     android:layout_weight="1"
                                     android:text="0.0 /="
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                                    android:textSize="13.5sp"
+                                    android:textSize="12.5sp"
                                     android:textStyle="bold" />
 
                             </LinearLayout>
@@ -159,7 +159,7 @@
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                                     android:textColor="#000000"
                                     android:textSize="12.5sp"
-                                    android:textStyle="bold" />
+                                    android:textStyle="normal" />
 
                                 <com.dev.customfonts.MyTextView_Roboto_Bold
                                     android:id="@+id/txt_milk_totals"
@@ -169,7 +169,7 @@
                                     android:layout_weight="1"
                                     android:text="0.0 Ltrs"
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                                    android:textSize="13.5sp"
+                                    android:textSize="12.5sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
 
@@ -198,7 +198,7 @@
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                                     android:textColor="#000000"
                                     android:textSize="12.5sp"
-                                    android:textStyle="bold" />
+                                    android:textStyle="normal" />
 
                                 <com.dev.customfonts.MyTextView_Roboto_Bold
                                     android:id="@+id/txt_loans_total"
@@ -208,7 +208,7 @@
                                     android:layout_weight="1"
                                     android:text="0.0 /="
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                                    android:textSize="13.5sp"
+                                    android:textSize="12.5sp"
                                     android:textStyle="bold" />
 
                             </LinearLayout>
@@ -230,7 +230,7 @@
 
                                     android:textColor="#000000"
                                     android:textSize="12.5sp"
-                                    android:textStyle="bold" />
+                                    android:textStyle="normal" />
 
                                 <com.dev.customfonts.MyTextView_Roboto_Bold
                                     android:id="@+id/txt_orders_total"
@@ -242,7 +242,7 @@
                                     android:text="0.0 /="
                                     android:textAlignment="viewStart"
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                                    android:textSize="13.5sp"
+                                    android:textSize="12.5sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
 
@@ -291,7 +291,7 @@
                         android:layout_marginStart="2dp"
                         android:text="Approved "
                         android:textColor="@color/green_color_picker"
-                        android:textStyle="italic|bold" />
+                        android:textStyle="italic|normal" />
 
                 </LinearLayout>
 

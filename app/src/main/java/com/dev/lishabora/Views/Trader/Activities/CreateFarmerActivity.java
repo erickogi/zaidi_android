@@ -21,6 +21,8 @@ import com.dev.lishaboramobile.R;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 
+import java.util.Objects;
+
 
 /**
  * @author kogi
@@ -149,5 +151,17 @@ public class CreateFarmerActivity extends AppCompatActivity implements StepperLa
     @Override
     public void onReturn() {
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Objects.requireNonNull(this.getSupportActionBar()).hide();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Objects.requireNonNull(this.getSupportActionBar()).show();
     }
 }

@@ -115,6 +115,8 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
     implementation 'com.wajahatkarim3.EasyFlipView:EasyFlipView:2.1.0'
     //compile 'com.applandeo:material-calendar-view:1.4.0'
+    //implementation 'com.fxn769:numpad:1.0'
+    //implementation 'com.github.davidmigloz:number-keyboard:2.0.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

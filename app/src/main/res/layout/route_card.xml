@@ -8,20 +8,20 @@
     android:focusable="true"
     app:strokeColor="@color/divider"
     android:foreground="?attr/selectableItemBackground"
-    app:cardBackgroundColor="@color/colorPrimary"
-    app:cardCornerRadius="4dp"
-    app:cardElevation="2dp"
-    app:cardUseCompatPadding="true"
-    app:strokeWidth="2dp">
+    app:cardCornerRadius="1dp"
+    app:cardElevation="1dp"
+    app:strokeWidth="1dp">
 
 
     <RelativeLayout
+
+        android:padding="3dp"
         android:id="@+id/background"
-        android:background="@color/green_color_picker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout
+
             android:layout_marginStart="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -74,28 +74,27 @@
                         android:layout_weight="1"
                         android:orientation="horizontal">
 
-                        <com.dev.customfonts.MyTextView_Roboto_Bold
+                        <TextView
                             android:id="@+id/txt_name"
                             android:layout_width="0dp"
 
 
+                            android:textColor="@color/textblack"
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:text="Route Names"
-                            android:textColor="@color/black"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                            android:textSize="14.5sp" />
+                            android:textStyle="bold"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
                         <com.dev.customfonts.MyTextView_Roboto_Bold
                             android:id="@+id/txt_route_farmers"
                             android:gravity="center"
                             android:layout_width="0dp"
 
-                            android:textColor="@color/black"
+                            android:textColor="@color/textblack"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="0"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                            android:textSize="13.5sp" />
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
                         <LinearLayout
                             android:layout_width="0dp"

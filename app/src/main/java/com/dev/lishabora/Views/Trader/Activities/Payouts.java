@@ -6,7 +6,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.dev.lishabora.Views.Trader.Fragments.FragmentPayoutColloectionsList;
@@ -20,8 +24,10 @@ public class Payouts extends AppCompatActivity {
     private RelativeLayout lspinner;
     private static Fragment fragment = null;
     private com.dev.lishabora.Models.Payouts payouts;
+    SearchView mSearchView;
 
-//    public static void setSpinner(int v) {
+
+    //    public static void setSpinner(int v) {
 //        try {
 //            spinner.setVisibility(v);
 //
@@ -29,6 +35,30 @@ public class Payouts extends AppCompatActivity {
 //            nm.printStackTrace();
 //        }
 //    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_payout, menu);
+        MenuItem mSearch = menu.findItem(R.id.action_search);
+        mSearchView = (SearchView) mSearch.getActionView();
+
+        mSearchView.setVisibility(View.GONE);
+
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +114,9 @@ public class Payouts extends AppCompatActivity {
                     popOutFragments();
                     setUpView(fragment);
 
+                    //mSearchView.setVisibility(View.GONE);
+
+
 
                 } else {
 
@@ -91,6 +124,9 @@ public class Payouts extends AppCompatActivity {
                     Bundle args = new Bundle();
                     args.putSerializable("data", payouts);
                     fragment.setArguments(args);
+
+                    //mSearchView.setVisibility(View.VISIBLE);
+
 
                     popOutFragments();
                     setUpView(fragment);
@@ -132,6 +168,11 @@ public class Payouts extends AppCompatActivity {
 
         popOutFragments();
         //setUpView(fragment);
+        try {
+            // mSearchView.setVisibility(View.GONE);
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
 
 
         FragmentManager fragmentManager = getSupportFragmentManager();

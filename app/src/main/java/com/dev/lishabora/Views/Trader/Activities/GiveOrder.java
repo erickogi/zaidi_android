@@ -206,4 +206,16 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
     public void onReturn() {
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Objects.requireNonNull(this.getSupportActionBar()).hide();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Objects.requireNonNull(this.getSupportActionBar()).show();
+    }
 }

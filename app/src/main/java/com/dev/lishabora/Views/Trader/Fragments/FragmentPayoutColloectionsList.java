@@ -9,8 +9,12 @@ import android.support.design.button.MaterialButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -41,6 +45,8 @@ public class FragmentPayoutColloectionsList extends Fragment {
     public RelativeLayout background;
     public View statusview;
     private View view;
+    private SearchView searchView;
+    private String filterText = "";
 
     private CollectionsAdapter listAdapter;
     private Context context;
@@ -53,6 +59,33 @@ public class FragmentPayoutColloectionsList extends Fragment {
     private List<Collection> collections;
     TextView txtApprovalStatus;
     private MaterialButton btnApprove;
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Do something that differs the Activity's menu here
+        super.onCreateOptionsMenu(menu, inflater);
+
+        //inflater.inflate(R.menu.menu_main, menu);
+        MenuItem mSearch = menu.findItem(R.id.action_search);
+
+
+        searchView = (SearchView) mSearch.getActionView();
+        searchView.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+
+        return false;
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        searchView.setVisibility(View.GONE);
+    }
 
 
     public void initList() {
