@@ -38,24 +38,55 @@
             android:orientation="horizontal"
             android:padding="2dp">
 
-            <ImageView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:src="@drawable/ic_person_black_24dp" />
+                android:layout_weight="1.6">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:src="@drawable/ic_person_black_24dp" />
+
+                <TextView
+                    android:id="@+id/txt_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:lines="1"
+                    android:singleLine="true"
+                    android:text="Names"
+
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
 
             <TextView
-                android:id="@+id/txt_name"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:lines="1"
-                android:singleLine="true"
-                android:text="Names"
-
-                android:textColor="@color/black"
-                android:textSize="15sp"
+                android:layout_weight="1.2"
+                android:gravity="center"
+                android:text="AM"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/colorAccent" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.2"
+                android:gravity="center"
+                android:text="PM"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                android:textStyle="bold" />
+
 
             <View
                 android:layout_width="1dp"
@@ -112,6 +143,7 @@
 
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -333,6 +365,7 @@
 
 
                 <TextView
+                    android:visibility="visible"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -371,20 +404,21 @@
                         android:background="@color/colorAccent" />
 
 
-                    <android.support.design.widget.TextInputLayout
+                    <!--<android.support.design.widget.TextInputLayout-->
 
-                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                    <!--style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"-->
 
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight="1.2"-->
+
+                    <!--android:textColorHint="@color/textblack">-->
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/edt_am"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1.2"
-
-                        android:textColorHint="@color/textblack">
-
-                        <android.support.design.widget.TextInputEditText
-                            android:id="@+id/edt_am"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
                             android:layout_gravity="center"
                             android:focusable="false"
                             android:focusableInTouchMode="false"
@@ -397,7 +431,7 @@
 
                             />
 
-                    </android.support.design.widget.TextInputLayout>
+                    <!--</android.support.design.widget.TextInputLayout>-->
 
 
                     <View
@@ -405,19 +439,20 @@
                         android:layout_height="match_parent"
                         android:background="@color/colorAccent" />
 
-                    <android.support.design.widget.TextInputLayout
+                    <!--<android.support.design.widget.TextInputLayout-->
 
-                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                    <!--style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"-->
 
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight="1.2"-->
+                    <!--android:textColorHint="@color/textblack">-->
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/edt_pm"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1.2"
-                        android:textColorHint="@color/textblack">
-
-                        <android.support.design.widget.TextInputEditText
-                            android:id="@+id/edt_pm"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
                             android:focusable="false"
                             android:focusableInTouchMode="false"
                             android:gravity="center"
@@ -428,7 +463,7 @@
 
                             android:textStyle="bold" />
 
-                    </android.support.design.widget.TextInputLayout>
+                    <!--</android.support.design.widget.TextInputLayout>-->
 
 
                 </LinearLayout>
@@ -513,7 +548,7 @@
                 <com.dev.lishabora.NumKey.NumberKeyboard
                     android:id="@+id/numberKeyboard"
                     android:layout_width="match_parent"
-                    android:layout_height="250dp"
+                    android:layout_height="240dp"
                     keyboard:keyboardType="decimal" />
 
 

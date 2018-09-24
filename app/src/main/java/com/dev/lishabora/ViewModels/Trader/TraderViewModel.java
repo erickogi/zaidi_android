@@ -162,11 +162,73 @@ public class TraderViewModel extends AndroidViewModel
     }
 
 
-    public void synch(int action, int entity, Object o) {
+//    public void synch(int action, int entity, Object o) {
+//        SyncModel syncModel = new SyncModel();
+//        syncModel.setActionType(action);
+//        syncModel.setObjectData(o);
+//        //syncModel.setObject(new Gson().toJson(o));
+//        syncModel.setEntityType(entity);
+//        syncModel.setSyncStatus(0);
+//        syncModel.setTimeStamp(DateTimeUtils.Companion.getNow());
+//        syncModel.setSyncTime("");
+//        syncModel.setTraderCode(prefrenceManager.getTraderModel().getCode());
+//        switch (action) {
+//            case AppConstants.INSERT:
+//                syncModel.setActionTypeName("Insert");
+//                break;
+//            case AppConstants.UPDATE:
+//                syncModel.setActionTypeName("Update");
+//                break;
+//            case AppConstants.DELETE:
+//                syncModel.setActionTypeName("Delete");
+//                break;
+//
+//        }
+//        switch (entity) {
+//            case AppConstants.ENTITY_FARMER:
+//                syncModel.setEntityTypeName("Farmer");
+//                syncModel.setObject(new Gson().toJson(o, FamerModel.class));
+//
+//                break;
+//            case AppConstants.ENTITY_PRODUCTS:
+//                syncModel.setEntityTypeName("Products");
+//                // syncModel.setObject(new Gson().toJson(o, ProductsModel.class));
+//
+//                break;
+//            case AppConstants.ENTITY_PAYOUTS:
+//                syncModel.setEntityTypeName("Payout");
+//                syncModel.setObject(new Gson().toJson(o, Payouts.class));
+//
+//                break;
+//            case AppConstants.ENTITY_COLLECTION:
+//                syncModel.setEntityTypeName("Collection");
+//                syncModel.setObject(new Gson().toJson(o, Collection.class));
+//
+//                break;
+//            case AppConstants.ENTITY_ROUTES:
+//                syncModel.setEntityTypeName("Route");
+//                syncModel.setObject(new Gson().toJson(o, RoutesModel.class));
+//
+//                break;
+//            case AppConstants.ENTITY_TRADER:
+//
+//                syncModel.setEntityTypeName("Trader");
+//                syncModel.setObject(new Gson().toJson(o, TraderModel.class));
+//
+//                break;
+//        }
+//
+//        createSync(syncModel);
+//    }
+
+
+    public void synch(int action, int entity, Object o, List<ProductsModel> objects, int type) {
+        Gson gson = new Gson();
         SyncModel syncModel = new SyncModel();
         syncModel.setActionType(action);
         syncModel.setObjectData(o);
         //syncModel.setObject(new Gson().toJson(o));
+        syncModel.setDataType(type);
         syncModel.setEntityType(entity);
         syncModel.setSyncStatus(0);
         syncModel.setTimeStamp(DateTimeUtils.Companion.getNow());
@@ -175,6 +237,7 @@ public class TraderViewModel extends AndroidViewModel
         switch (action) {
             case AppConstants.INSERT:
                 syncModel.setActionTypeName("Insert");
+
                 break;
             case AppConstants.UPDATE:
                 syncModel.setActionTypeName("Update");
@@ -187,12 +250,28 @@ public class TraderViewModel extends AndroidViewModel
         switch (entity) {
             case AppConstants.ENTITY_FARMER:
                 syncModel.setEntityTypeName("Farmer");
+
                 syncModel.setObject(new Gson().toJson(o, FamerModel.class));
+                //syncModel.setObjectData(o);
 
                 break;
             case AppConstants.ENTITY_PRODUCTS:
                 syncModel.setEntityTypeName("Products");
-                // syncModel.setObject(new Gson().toJson(o, ProductsModel.class));
+
+                if (type == 1) {
+                    syncModel.setObject(new Gson().toJson(o, ProductsModel.class));
+                    // syncModel.setObjectData(o);
+
+                } else {
+                    JsonArray jsonArray = gson.toJsonTree(objects).getAsJsonArray();
+                    Type listType = new TypeToken<LinkedList<ProductsModel>>() {
+                    }.getType();
+
+
+                    syncModel.setObjects(gson.toJson(jsonArray));
+
+
+                }
 
                 break;
             case AppConstants.ENTITY_PAYOUTS:
@@ -676,7 +755,7 @@ public class TraderViewModel extends AndroidViewModel
         } else {
             routesModel.setTraderCode(prefrenceManager.getTraderModel().getCode());
 
-            synch(AppConstants.INSERT, AppConstants.ENTITY_ROUTES, routesModel);
+            synch(AppConstants.INSERT, AppConstants.ENTITY_ROUTES, routesModel, null, 1);
             routesRepo.insert(routesModel);
             ResponseModel responseModel = new ResponseModel();
             responseModel.setResultCode(1);
@@ -713,7 +792,7 @@ public class TraderViewModel extends AndroidViewModel
 
         } else {
             routesModel.setTraderCode(prefrenceManager.getTraderModel().getCode());
-            synch(AppConstants.UPDATE, AppConstants.ENTITY_ROUTES, routesModel);
+            synch(AppConstants.UPDATE, AppConstants.ENTITY_ROUTES, routesModel, null, 1);
 
             routesRepo.upDateRecord(routesModel);
             ResponseModel responseModel = new ResponseModel();
@@ -755,7 +834,7 @@ public class TraderViewModel extends AndroidViewModel
 
             routesRepo.deleteRecord(routesModel);
 
-            synch(AppConstants.DELETE, AppConstants.ENTITY_ROUTES, routesModel);
+            synch(AppConstants.DELETE, AppConstants.ENTITY_ROUTES, routesModel, null, 1);
             ResponseModel responseModel = new ResponseModel();
             responseModel.setResultCode(1);
             responseModel.setResultDescription("Deleted");
@@ -782,7 +861,8 @@ public class TraderViewModel extends AndroidViewModel
                 productsModels.get(i).setTraderCode(prefrenceManager.getTraderModel().getCode());
             }
 
-            synch(AppConstants.INSERT, AppConstants.ENTITY_PRODUCTS, productsModels);
+            synch(AppConstants.INSERT, AppConstants.ENTITY_PRODUCTS, null, productsModels, 2);
+
             if (productsRepo.insert(productsModels)) {
                 ResponseModel responseModel = new ResponseModel();
                 responseModel.setResultCode(1);
@@ -801,7 +881,7 @@ public class TraderViewModel extends AndroidViewModel
 
 
         collection.setTraderCode(prefrenceManager.getTraderModel().getCode());
-        synch(AppConstants.INSERT, AppConstants.ENTITY_COLLECTION, collection);
+        synch(AppConstants.INSERT, AppConstants.ENTITY_COLLECTION, collection, null, 1);
 
 
 
@@ -983,7 +1063,7 @@ public class TraderViewModel extends AndroidViewModel
 
         } else {
             productsModel.setTraderCode(prefrenceManager.getTraderModel().getCode());
-            synch(AppConstants.UPDATE, AppConstants.ENTITY_PRODUCTS, productsModel);
+            synch(AppConstants.UPDATE, AppConstants.ENTITY_PRODUCTS, productsModel, null, 1);
 
             productsRepo.upDateRecord(productsModel);
             ResponseModel responseModel = new ResponseModel();
@@ -1006,7 +1086,7 @@ public class TraderViewModel extends AndroidViewModel
         } else {
             productsModel.setTraderCode(prefrenceManager.getTraderModel().getCode());
 
-            synch(AppConstants.DELETE, AppConstants.ENTITY_PRODUCTS, productsModel);
+            synch(AppConstants.DELETE, AppConstants.ENTITY_PRODUCTS, productsModel, null, 1);
 
             productsRepo.deleteRecord(productsModel);
             ResponseModel responseModel = new ResponseModel();
@@ -1049,7 +1129,7 @@ public class TraderViewModel extends AndroidViewModel
             farmerRepo.insert(famerModel);
             famerModel.setTraderCode(prefrenceManager.getTraderModel().getCode());
 
-            synch(AppConstants.INSERT, AppConstants.ENTITY_FARMER, famerModel);
+            synch(AppConstants.INSERT, AppConstants.ENTITY_FARMER, famerModel, null, 1);
             ResponseModel responseModel = new ResponseModel();
             responseModel.setResultCode(1);
             responseModel.setResultDescription("Farmer added successfully");
@@ -1106,7 +1186,7 @@ public class TraderViewModel extends AndroidViewModel
 
             farmerRepo.upDateRecord(famerModel);
             if (isFarmerProfileUpdate) {
-                synch(AppConstants.UPDATE, AppConstants.ENTITY_FARMER, famerModel);
+                synch(AppConstants.UPDATE, AppConstants.ENTITY_FARMER, famerModel, null, 1);
             }
             ResponseModel responseModel = new ResponseModel();
             responseModel.setResultCode(1);
@@ -1201,7 +1281,7 @@ public class TraderViewModel extends AndroidViewModel
         payouts.setTraderCode(prefrenceManager.getTraderModel().getCode());
         payoutsRepo.insert(payouts);
 
-        synch(AppConstants.INSERT, AppConstants.ENTITY_PAYOUTS, payouts);
+        synch(AppConstants.INSERT, AppConstants.ENTITY_PAYOUTS, payouts, null, 1);
     }
 
     public void insertPayout(List<Payouts> payouts) {
@@ -1233,7 +1313,7 @@ public class TraderViewModel extends AndroidViewModel
 
             c.setTraderCode(prefrenceManager.getTraderModel().getCode());
             collectionsRepo.upDateRecord(c);
-            synch(AppConstants.UPDATE, AppConstants.ENTITY_COLLECTION, c);
+            synch(AppConstants.UPDATE, AppConstants.ENTITY_COLLECTION, c, null, 1);
 
             if (this.updateCollectionSuccess == null) {
             }

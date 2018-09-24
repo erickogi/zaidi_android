@@ -421,7 +421,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         lspinner2.setVisibility(View.VISIBLE);
 
 
-        spinner1.setItems("Active", "Archived", "Deleted", "Dummy", "All");
+        spinner1.setItems("Active", "Archived", "Deleted", "Dummy", "All(Status)");
         getRoutes();
 
         spinner1.setOnItemSelectedListener((MaterialSpinner.OnItemSelectedListener<String>) (view1, position, id, item) -> fetchFarmers(getSelectedAccountStatus(), getSelectedRoute()));
@@ -440,7 +440,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         }
 
 
-        collectMilk = new CollectMilk(getContext(), mViewModel, this);
+        collectMilk = new CollectMilk(getContext(), mViewModel, this, true);
 
     }
 
@@ -538,7 +538,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                 if (routesModels != null && routesModels.size() > 0) {
                     FragementFarmersList.this.routesModels = routesModels;
                     String routes[] = new String[routesModels.size() + 1];
-                    routes[0] = "All";
+                    routes[0] = "All (Routes)";
 
                     for (int a = 1; a < routesModels.size() + 1; a++) {
                         routes[a] = routesModels.get(a - 1).getRoute();
@@ -920,6 +920,30 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     }
 
     @Override
+    public void createCollection(Collection cAm, Collection cPm) {
+        mViewModel.createCollections(cAm, false).observe(FragementFarmersList.this, responseModel -> {
+            if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+
+            } else {
+                snack(responseModel.getResultDescription());
+
+            }
+
+
+        });
+        mViewModel.createCollections(cPm, false).observe(FragementFarmersList.this, responseModel -> {
+            if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+
+            } else {
+                snack(responseModel.getResultDescription());
+
+            }
+
+
+        });
+    }
+
+    @Override
     public void updateCollection(Collection c) {
         mViewModel.updateCollection(c).observe(FragementFarmersList.this, responseModel -> {
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
@@ -928,6 +952,26 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
             }
         });
+    }
+
+    @Override
+    public void updateCollection(Collection cAm, Collection cPm) {
+        mViewModel.updateCollection(cAm).observe(FragementFarmersList.this, responseModel -> {
+            if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+            } else {
+                snack(responseModel.getResultDescription());
+
+            }
+        });
+        mViewModel.updateCollection(cPm).observe(FragementFarmersList.this, responseModel -> {
+            if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+            } else {
+                snack(responseModel.getResultDescription());
+
+            }
+        });
+
+
     }
 
     @Override

@@ -412,13 +412,13 @@ public class CommonFuncs {
 
             c.setMilkCollectedValueLtrsAm(dayCollectionModel.getMilkModelAm().getValueLtrs());
             c.setMilkCollectedValueKshAm(dayCollectionModel.getMilkModelAm().getValueKsh());
-            c.setMilkCollectedPriceAm(dayCollectionModel.getMilkModelAm().getValueKsh());
+            //c.setMilkCollectedPriceAm(dayCollectionModel.getMilkModelAm().getValueKsh());
             c.setMilkDetailsAm(new Gson().toJson(dayCollectionModel.getMilkModelAm()));
 
 
             c.setMilkCollectedValueLtrsPm(dayCollectionModel.getMilkModelPm().getValueLtrs());
             c.setMilkCollectedValueKshPm(dayCollectionModel.getMilkModelPm().getValueKsh());
-            c.setMilkCollectedPricepm(dayCollectionModel.getMilkModelPm().getValueKsh());
+            //c.setMilkCollectedPricepm(dayCollectionModel.getMilkModelPm().getValueKsh());
             c.setMilkDetailsPm(new Gson().toJson(dayCollectionModel.getMilkModelPm()));
 
 

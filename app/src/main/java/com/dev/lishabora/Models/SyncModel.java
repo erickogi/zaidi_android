@@ -9,6 +9,7 @@ import com.dev.lishabora.Utils.DateTimeUtils;
 
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 @Entity(tableName = "sync", indices = {@Index(value = {"id"}, unique = true)})
 
@@ -21,17 +22,53 @@ public class SyncModel {
     private String actionTypeName;
     private int entityType;
     private String entityTypeName;
+
     @Ignore
     private Object objectData;
 
 
     private String object;
+
+    private int dataType;
+
+    @Ignore
+    private List<Object> objectsData;
+
+
+    private String objects;
+
+
+
     private String timeStamp;
     private String syncTime;
     private int syncStatus;
 
     @Ignore
     private String traderCode;
+
+    public int getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(int dataType) {
+        this.dataType = dataType;
+    }
+
+    public List<Object> getObjectsData() {
+        return objectsData;
+    }
+
+    public void setObjectsData(List<Object> objectsData) {
+        this.objectsData = objectsData;
+    }
+
+    public String getObjects() {
+        return objects;
+    }
+
+    public void setObjects(String objects) {
+        this.objects = objects;
+    }
 
     public String getTraderCode() {
         return traderCode;

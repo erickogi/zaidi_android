@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.View;
 
 import com.dev.lishabora.Adapters.SyncSAdapter;
@@ -26,6 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import static com.dev.lishabora.Models.SyncModel.farmerDateComparatorDesc;
@@ -114,11 +116,13 @@ public class SyncWorks extends AppCompatActivity {
 
     public void syncNow(View view) {
 
+        List<SyncModel> syncWorks1 = new LinkedList<>();
+        syncWorks1.addAll(syncWorks);
         PrefrenceManager p = new PrefrenceManager(this);
         SyncHolderModel s = new SyncHolderModel();
         s.setEntityCode(p.getTraderModel().getCode());
         s.setEntityType(AppConstants.ENTITY_TRADER);
-        s.setSyncModels(syncWorks);
+        s.setSyncModels(syncWorks1);
         s.setTime(DateTimeUtils.Companion.getNow());
 
 
@@ -129,7 +133,7 @@ public class SyncWorks extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        //Log.d("datasend",new Gson().fromJson(new Gson().toJson(s)y,T);
+        Log.d("datasend", new Gson().toJson(s, SyncHolderModel.class));
 
 
         Snackbar.make(view, "We are working on implementing sync sit tight", Snackbar.LENGTH_LONG).show();

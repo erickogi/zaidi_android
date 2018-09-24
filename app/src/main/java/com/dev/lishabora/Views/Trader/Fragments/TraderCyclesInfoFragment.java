@@ -201,7 +201,7 @@ public class TraderCyclesInfoFragment extends Fragment implements BlockingStep, 
         prefrenceManager.setLoggedUser(traderModel);
 
 
-        traderViewModel.synch(AppConstants.UPDATE, AppConstants.ENTITY_TRADER, traderModel);
+        traderViewModel.synch(AppConstants.UPDATE, AppConstants.ENTITY_TRADER, traderModel, null, 1);
 
 
         callback.goToNextStep();

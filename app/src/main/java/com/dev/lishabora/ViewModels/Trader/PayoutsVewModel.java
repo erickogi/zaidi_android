@@ -28,7 +28,10 @@ import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.Views.Trader.FarmerConst;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -135,7 +138,8 @@ public class PayoutsVewModel extends AndroidViewModel {
 
     }
 
-    private void synch(int action, int entity, Object o) {
+    private void synch(int action, int entity, Object o, List<ProductsModel> objects, int type) {
+        Gson gson = new Gson();
         SyncModel syncModel = new SyncModel();
         syncModel.setActionType(action);
         syncModel.setObjectData(o);
@@ -161,12 +165,26 @@ public class PayoutsVewModel extends AndroidViewModel {
         switch (entity) {
             case AppConstants.ENTITY_FARMER:
                 syncModel.setEntityTypeName("Farmer");
+
                 syncModel.setObject(new Gson().toJson(o, FamerModel.class));
+                //syncModel.setObjectData(o);
 
                 break;
             case AppConstants.ENTITY_PRODUCTS:
                 syncModel.setEntityTypeName("Products");
-                syncModel.setObject(new Gson().toJson(o, ProductsModel.class));
+
+                if (type == 1) {
+                    syncModel.setObject(new Gson().toJson(o, ProductsModel.class));
+                    // syncModel.setObjectData(o);
+
+                } else {
+                    JsonArray jsonArray = gson.toJsonTree(objects).getAsJsonArray();
+                    Type listType = new TypeToken<LinkedList<ProductsModel>>() {
+                    }.getType();
+                    syncModel.setObjects(gson.toJson(jsonArray, listType));
+
+
+                }
 
                 break;
             case AppConstants.ENTITY_PAYOUTS:
@@ -235,7 +253,7 @@ public class PayoutsVewModel extends AndroidViewModel {
         payouts.setTraderCode(prefrenceManager.getTraderModel().getCode());
         payoutsRepo.upDateRecord(payouts);
 
-        synch(AppConstants.UPDATE, AppConstants.ENTITY_PAYOUTS, payouts);
+        synch(AppConstants.UPDATE, AppConstants.ENTITY_PAYOUTS, payouts, null, 1);
         collectionsRepo.updateCollectionsByPayout(payouts.getPayoutnumber(), payouts.getStatus());
     }
 
@@ -483,7 +501,7 @@ public class PayoutsVewModel extends AndroidViewModel {
 
         if (c != null) {
             collectionsRepo.upDateRecord(c);
-            synch(AppConstants.UPDATE, AppConstants.ENTITY_COLLECTION, c);
+            synch(AppConstants.UPDATE, AppConstants.ENTITY_COLLECTION, c, null, 1);
 
         }
     }
@@ -496,7 +514,7 @@ public class PayoutsVewModel extends AndroidViewModel {
 
         collection.setTraderCode(prefrenceManager.getTraderModel().getCode());
 
-        synch(AppConstants.INSERT, AppConstants.ENTITY_COLLECTION, collection);
+        synch(AppConstants.INSERT, AppConstants.ENTITY_COLLECTION, collection, null, 1);
 
         collectionsRepo.insert(collection);
         ResponseModel responseModel = new ResponseModel();

@@ -14,10 +14,15 @@ import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Models.ProductsModel;
 import com.dev.lishabora.Models.RoutesModel;
 import com.dev.lishabora.Models.SyncModel;
+import com.dev.lishabora.Models.Trader.FarmerBalance;
+import com.dev.lishabora.Models.Trader.FarmerLoansTable;
+import com.dev.lishabora.Models.Trader.FarmerOrdersTable;
+import com.dev.lishabora.Models.Trader.LoanPayments;
+import com.dev.lishabora.Models.Trader.OrderPayments;
 import com.dev.lishabora.Models.Trader.TraderModel;
 import com.dev.lishabora.Models.UnitsModel;
 
-@Database(entities = {TraderModel.class, FamerModel.class, RoutesModel.class, UnitsModel.class, Cycles.class, ProductsModel.class, Collection.class, Payouts.class, SyncModel.class}, version = 28)
+@Database(entities = {TraderModel.class, FamerModel.class, RoutesModel.class, UnitsModel.class, Cycles.class, ProductsModel.class, Collection.class, Payouts.class, SyncModel.class, FarmerLoansTable.class, FarmerOrdersTable.class, LoanPayments.class, OrderPayments.class, FarmerBalance.class}, version = 29)
 @TypeConverters(DateConverter.class)
 
 public abstract class LMDatabase extends RoomDatabase {

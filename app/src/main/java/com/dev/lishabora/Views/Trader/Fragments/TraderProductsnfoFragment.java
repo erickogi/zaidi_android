@@ -472,6 +472,8 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
                 });
 
             } else {
+                Log.d("createproducts", "error  products" + selectedProducts.size() + selectedProducts.get(0).getNames());
+
 
                 // dialog.dismiss();
             }

@@ -16,8 +16,6 @@ public class AppConstants {
 
     public static final int ENTITY_FARMER = 1;
     public static final int ENTITY_COLLECTION = 2;
-
-
     public static final int ENTITY_TRADER = 3;
     public static final int ENTITY_ROUTES = 4;
     public static final int ENTITY_PRODUCTS = 5;

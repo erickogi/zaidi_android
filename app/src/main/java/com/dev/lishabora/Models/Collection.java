@@ -34,7 +34,7 @@ public class Collection {
 
 
     private String milkCollectedAm;// THis is per unit (ie 3 (300 ml)
-    private String milkCollectedPriceAm; //THIS IS KINDA NOT USED NOW
+    //private String milkCollectedPriceAm; //THIS IS KINDA NOT USED NOW
 
     private String milkCollectedValueKshAm;  // THIS IS VALUE OF MILK COLLECTED IN KSH ( UNITCAPACITY*MILKCOLLECTED)*UNITPRICE
     private String milkCollectedValueLtrsAm = "0.0"; // THIS IS VALUE OF MILK COLLECTED IN LTRS ( UNITCAPACITY*MILKCOLLECTED)
@@ -45,7 +45,7 @@ public class Collection {
 
 
     private String milkCollectedPm;// THis is per unit (ie 3 (300 ml)
-    private String milkCollectedPricepm; //THIS IS KINDA NOT USED NOW
+    //private String milkCollectedPricepm; //THIS IS KINDA NOT USED NOW
 
     private String milkCollectedValueKshPm;  // THIS IS VALUE OF MILK COLLECTED IN KSH ( UNITCAPACITY*MILKCOLLECTED)*UNITPRICE
     private String milkCollectedValueLtrsPm; // THIS IS VALUE OF MILK COLLECTED IN LTRS ( UNITCAPACITY*MILKCOLLECTED)
@@ -366,16 +366,16 @@ public class Collection {
     public void setMilkCollectedAm(String milkCollectedAm) {
         this.milkCollectedAm = milkCollectedAm;
     }
+//
+//    public String getMilkCollectedPriceAm() {
+//        if (milkCollectedPriceAm != null) return milkCollectedPriceAm;
+//        else return "0";
+//    }
 
-    public String getMilkCollectedPriceAm() {
-        if (milkCollectedPriceAm != null) return milkCollectedPriceAm;
-        else return "0";
-    }
-
-    public void setMilkCollectedPriceAm(String milkCollectedPriceAm) {
-
-        this.milkCollectedPriceAm = milkCollectedPriceAm;
-    }
+//    public void setMilkCollectedPriceAm(String milkCollectedPriceAm) {
+//
+//        this.milkCollectedPriceAm = milkCollectedPriceAm;
+//    }
 
     public String getMilkCollectedValueKshAm() {
         return milkCollectedValueKshAm != null ? milkCollectedValueKshAm : "0";
@@ -426,15 +426,6 @@ public class Collection {
         this.milkCollectedPm = milkCollectedPm;
     }
 
-    public String getMilkCollectedPricepm() {
-
-        return milkCollectedPricepm != null ? milkCollectedPricepm : "0";
-
-    }
-
-    public void setMilkCollectedPricepm(String milkCollectedPricepm) {
-        this.milkCollectedPricepm = milkCollectedPricepm;
-    }
 
     public String getMilkCollectedValueKshPm() {
 
