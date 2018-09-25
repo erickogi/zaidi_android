@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.dev.lishabora.AppConstants;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
@@ -26,6 +27,7 @@ import com.dev.lishabora.Models.LoanModel;
 import com.dev.lishabora.Models.MonthsDates;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
+import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.CommonFuncs;
@@ -62,6 +64,7 @@ public class FragmentGiveLoan extends Fragment {
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
     private PayoutsVewModel payoutsVewModel;
     private TraderViewModel traderViewModel;
+    private BalncesViewModel balncesViewModel;
     private View view;
     private List<FarmerHistoryByDateModel> modelsDA = new LinkedList<>();
 
@@ -72,6 +75,7 @@ public class FragmentGiveLoan extends Fragment {
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
         traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
 
+        balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
 
     }
 
@@ -224,7 +228,10 @@ public class FragmentGiveLoan extends Fragment {
 
                 traderViewModel.createCollections(c, false).observe(FragmentGiveLoan.this, responseModel -> {
                     if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+                        CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), AppConstants.LOAN);
+
                     } else {
+
 
                     }
 
@@ -241,8 +248,12 @@ public class FragmentGiveLoan extends Fragment {
                 collModel.setLoanAmountGivenOutPrice(l);
                 collModel.setLoanDetails(loanDetails);
                 }
+
+
             traderViewModel.updateCollection(collModel).observe(FragmentGiveLoan.this, responseModel -> {
                     if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+                        CommonFuncs.updateBalance(traderViewModel, balncesViewModel, collModel, responseModel.getPayoutkey(), AppConstants.LOAN);
+
                     } else {
 
 

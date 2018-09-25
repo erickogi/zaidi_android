@@ -20,6 +20,15 @@ public class ResponseModel extends LiveData<ResponseModel> implements Serializab
     private TraderModel traderModel;
     private List<TraderModel> traderModels;
 
+    private int payoutkey;
+
+    public int getPayoutkey() {
+        return payoutkey;
+    }
+
+    public void setPayoutkey(int payoutkey) {
+        this.payoutkey = payoutkey;
+    }
 
     public LinkedList<Object> getData() {
         return Data;

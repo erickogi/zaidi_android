@@ -51,6 +51,9 @@ public class PayoutsVewModel extends AndroidViewModel {
     private MutableLiveData updatePayoutSuccess;
     private MutableLiveData deletePayoutSuccess;
     private MutableLiveData createCollectionSuccess;
+    private MutableLiveData updateCollectionSuccess;
+    private MutableLiveData deleteCollectionSuccess;
+
 
 
     private LiveData<List<Payouts>> payouts;
@@ -255,6 +258,8 @@ public class PayoutsVewModel extends AndroidViewModel {
 
         synch(AppConstants.UPDATE, AppConstants.ENTITY_PAYOUTS, payouts, null, 1);
         collectionsRepo.updateCollectionsByPayout(payouts.getPayoutnumber(), payouts.getStatus());
+
+
     }
 
     public void deletePayout(Payouts payouts) {
@@ -496,14 +501,31 @@ public class PayoutsVewModel extends AndroidViewModel {
     }
 
 
-    public void updateCollection(Collection c) {
+    public LiveData<ResponseModel> updateCollection(Collection c) {
         c.setTraderCode(prefrenceManager.getTraderModel().getCode());
 
         if (c != null) {
             collectionsRepo.upDateRecord(c);
             synch(AppConstants.UPDATE, AppConstants.ENTITY_COLLECTION, c, null, 1);
 
+
         }
+        if (this.updateCollectionSuccess == null) {
+        }
+
+        this.updateCollectionSuccess = new MutableLiveData();
+
+        ResponseModel responseModel = new ResponseModel();
+        responseModel.setResultCode(1);
+        responseModel.setResultDescription("Farmer updated successfully");
+        responseModel.setData(null);
+        if (c != null) {
+            responseModel.setPayoutkey(c.getPayoutnumber());
+        }
+
+        updateCollectionSuccess.setValue(responseModel);
+
+        return updateCollectionSuccess;
     }
 
     public LiveData<ResponseModel> createCollections(Collection collection) {
@@ -521,6 +543,7 @@ public class PayoutsVewModel extends AndroidViewModel {
         responseModel.setResultCode(1);
         responseModel.setResultDescription("Collection Inserted \nExisting payout");
         responseModel.setData(null);
+        responseModel.setPayoutkey(collection.getPayoutnumber());
         createCollectionSuccess.setValue(responseModel);
 
 

@@ -85,12 +85,19 @@ public interface CollectionsDao {
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE cycleCode = :cycleCode ORDER BY id DESC LIMIT 1")
     Collection getLast(String cycleCode);
 
+    @Query("SELECT SUM(milkCollectedValueKshAm+milkCollectedValueKshPm) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutnumber = :payoutNumber")
+    Double getSumOfLastMilkFarmerPayoutKshD(String farmercode, int payoutNumber);
+
+
 
     @Query("SELECT SUM(milkCollectedValueLtrsAm+milkCollectedValueLtrsPm) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutnumber = :payoutNumber")
     LiveData<Double> getSumOfMilkFarmerPayoutLtrs(String farmercode, int payoutNumber);
 
     @Query("SELECT SUM(milkCollectedValueKshAm+milkCollectedValueKshPm) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutnumber = :payoutNumber")
     LiveData<Double> getSumOfMilkFarmerPayoutKsh(String farmercode, int payoutNumber);
+
+    @Query("SELECT SUM(milkCollectedValueKshAm+milkCollectedValueKshPm) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutnumber = :payoutNumber")
+    Double getSumOfMilkFarmerPayoutKshD(String farmercode, int payoutNumber);
 
     @Query("SELECT SUM(milkCollectedAm+milkCollectedPm) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutnumber = :payoutNumber")
     LiveData<Double> getSumOfMilkFarmerPayout(String farmercode, int payoutNumber);

@@ -33,11 +33,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.FarmersAdapter;
+import com.dev.lishabora.AppConstants;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.RoutesModel;
+import com.dev.lishabora.Models.Trader.FarmerBalance;
 import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.Utils.CollectListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
@@ -45,7 +47,9 @@ import com.dev.lishabora.Utils.Draggable.helper.OnStartDragListener;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.Utils.PrefrenceManager;
+import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
+import com.dev.lishabora.Views.CommonFuncs;
 import com.dev.lishabora.Views.Trader.Activities.CreateFarmerActivity;
 import com.dev.lishabora.Views.Trader.Activities.FarmerProfile;
 import com.dev.lishabora.Views.Trader.Activities.FirstTimeLaunch;
@@ -99,6 +103,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     List<RoutesModel> getRoutess = new LinkedList<>();
     List<Cycles> getCycles = new LinkedList<>();
     private TraderViewModel mViewModel;
+    private BalncesViewModel balncesViewModel;
     private PrefrenceManager prefrenceManager;
     private List<RoutesModel> routesModels;
     private ItemTouchHelper mItemTouchHelper;
@@ -380,6 +385,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         super.onViewCreated(view, savedInstanceState);
         this.view = view;
         mViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
+        balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
 
         prefrenceManager = new PrefrenceManager(getContext());
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -440,7 +446,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         }
 
 
-        collectMilk = new CollectMilk(getContext(), mViewModel, this, true);
+        collectMilk = new CollectMilk(getContext(), mViewModel, balncesViewModel, this, true);
 
     }
 
@@ -512,7 +518,11 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
             if (famerModels != null) {
                 for (int a = 0; a < famerModels.size(); a++) {
-                    famerModels.get(a).setTotalbalance(String.valueOf(mViewModel.getBalance(famerModels.get(a).getCode())));
+                    FarmerBalance farmerBalance = balncesViewModel.getByFarmerCodeOne(famerModels.get(a).getCode());
+                    if (farmerBalance == null) {
+                        farmerBalance = new FarmerBalance();
+                    }
+                    famerModels.get(a).setTotalbalance(farmerBalance.getBalanceToPay());
 
                 }
             }
@@ -909,6 +919,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     public void createCollection(Collection c) {
         mViewModel.createCollections(c, false).observe(FragementFarmersList.this, responseModel -> {
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+                CommonFuncs.addBalance(mViewModel, balncesViewModel, c, responseModel.getPayoutkey(), AppConstants.MILK);
 
             } else {
                 snack(responseModel.getResultDescription());
@@ -945,8 +956,11 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
     @Override
     public void updateCollection(Collection c) {
+
         mViewModel.updateCollection(c).observe(FragementFarmersList.this, responseModel -> {
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+                CommonFuncs.updateBalance(mViewModel, balncesViewModel, c, responseModel.getPayoutkey(), AppConstants.MILK);
+
             } else {
                 snack(responseModel.getResultDescription());
 
@@ -956,20 +970,20 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
     @Override
     public void updateCollection(Collection cAm, Collection cPm) {
-        mViewModel.updateCollection(cAm).observe(FragementFarmersList.this, responseModel -> {
-            if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-            } else {
-                snack(responseModel.getResultDescription());
-
-            }
-        });
-        mViewModel.updateCollection(cPm).observe(FragementFarmersList.this, responseModel -> {
-            if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-            } else {
-                snack(responseModel.getResultDescription());
-
-            }
-        });
+//        mViewModel.updateCollection(cAm).observe(FragementFarmersList.this, responseModel -> {
+//            if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+//            } else {
+//                snack(responseModel.getResultDescription());
+//
+//            }
+//        });
+//        mViewModel.updateCollection(cPm).observe(FragementFarmersList.this, responseModel -> {
+//            if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+//            } else {
+//                snack(responseModel.getResultDescription());
+//
+//            }
+//        });
 
 
     }

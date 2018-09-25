@@ -1,5 +1,6 @@
 package com.dev.lishabora.Views.Trader.Fragments;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,11 +29,13 @@ import com.dev.lishabora.Models.LoanModel;
 import com.dev.lishabora.Models.OrderModel;
 import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
 import com.dev.lishabora.Models.Payouts;
+import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.Utils.AdvancedOnclickRecyclerListener;
 import com.dev.lishabora.Utils.CollectionCreateUpdateListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.MyToast;
+import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.CommonFuncs;
@@ -66,6 +69,7 @@ public class FragmentCurrentFarmerPayout extends Fragment {
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
     private PayoutsVewModel payoutsVewModel;
     private TraderViewModel traderViewModel;
+    private BalncesViewModel balncesViewModel;
     private Payouts payouts;
     private FarmerCollectionsAdapter listAdapter;
     private RecyclerView recyclerView;
@@ -85,6 +89,7 @@ public class FragmentCurrentFarmerPayout extends Fragment {
         super.onCreate(savedInstanceState);
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
         traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
+        balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
 
 
     }
@@ -320,11 +325,16 @@ public class FragmentCurrentFarmerPayout extends Fragment {
         CommonFuncs.updateCollectionValue(s, time, type, dayCollectionModel, payoutsVewModel, payouts, famerModel, loanModel, orderModel, new CollectionCreateUpdateListener() {
             @Override
             public void createCollection(Collection c) {
+
+
                 payoutsVewModel.createCollections(c).observe(FragmentCurrentFarmerPayout.this, responseModel -> {
+
+
                     if (responseModel != null) {
                         if (a != null) {
                             a.dismiss();
                         }
+                        CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type);
                         MyToast.toast(responseModel.getResultDescription(), getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
                     }
                 });
@@ -335,11 +345,19 @@ public class FragmentCurrentFarmerPayout extends Fragment {
 
             @Override
             public void updateCollection(Collection c) {
-                payoutsVewModel.updateCollection(c);
-                if (a != null) {
-                    a.dismiss();
-                }
-                MyToast.toast("Collection updated", getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                payoutsVewModel.updateCollection(c).observe(FragmentCurrentFarmerPayout.this, new Observer<ResponseModel>() {
+                    @Override
+                    public void onChanged(@Nullable ResponseModel responseModel) {
+                        if (responseModel.getResultCode() == 1) {
+                            if (a != null) {
+                                a.dismiss();
+                            }
+                            CommonFuncs.updateBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type);
+                            MyToast.toast("Collection updated", getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+
+                        }
+                    }
+                });
 
             }
 

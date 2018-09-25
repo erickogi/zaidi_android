@@ -1,6 +1,7 @@
 package com.dev.lishabora.Views.Trader.Activities;
 
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -31,12 +32,15 @@ import com.dev.lishabora.Models.LoanModel;
 import com.dev.lishabora.Models.OrderModel;
 import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
 import com.dev.lishabora.Models.Payouts;
+import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Utils.AdvancedOnclickRecyclerListener;
 import com.dev.lishabora.Utils.CollectionCreateUpdateListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
+import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
+import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.CommonFuncs;
 import com.dev.lishabora.Views.Trader.MilkCardToolBarUI;
 import com.dev.lishabora.Views.Trader.OrderConstants;
@@ -77,6 +81,8 @@ public class PayCard extends AppCompatActivity {
     private LinearLayout empty_layout;
     private Payouts payouts;
     private PayoutsVewModel payoutsVewModel;
+    private TraderViewModel traderViewModel;
+    private BalncesViewModel balncesViewModel;
 
     private List<Collection> collections;
     private boolean firstDone = false;
@@ -130,6 +136,8 @@ public class PayCard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pay_card);
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
+        traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
+        balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
         famerModel = (FamerModel) getIntent().getSerializableExtra("farmer");
 
 
@@ -438,6 +446,8 @@ public class PayCard extends AppCompatActivity {
 
 
                         }
+                        CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type);
+
                         MyToast.toast(responseModel.getResultDescription(), PayCard.this, R.drawable.ic_launcher, Toast.LENGTH_LONG);
                     }
                 });
@@ -448,10 +458,19 @@ public class PayCard extends AppCompatActivity {
 
             @Override
             public void updateCollection(Collection c) {
-                payoutsVewModel.updateCollection(c);
-                if (a != null) {
-                    a.dismiss();
-                }
+                payoutsVewModel.updateCollection(c).observe(PayCard.this, new Observer<ResponseModel>() {
+                    @Override
+                    public void onChanged(@Nullable ResponseModel responseModel) {
+                        if (responseModel.getResultCode() == 1) {
+                            if (a != null) {
+                                a.dismiss();
+                            }
+                            CommonFuncs.updateBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type);
+
+                        }
+                    }
+                });
+
             }
 
             @Override

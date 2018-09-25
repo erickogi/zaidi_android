@@ -325,7 +325,13 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
     }
 
     private void initData() {
-        getCollection(famerModel.getCode(), DateTimeUtils.Companion.getToday());
+        if (OrderConstants.getProductOrderModels() != null && OrderConstants.getProductOrderModels().size() > 0) {
+            listAdapter.refresh(OrderConstants.getProductOrderModels());
+
+        } else {
+            getCollection(famerModel.getCode(), DateTimeUtils.Companion.getToday());
+
+        }
     }
 
     private void getCollection(String code, String date) {
@@ -337,12 +343,17 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
 
             OrderModel l = CommonFuncs.getOrder(collections);
 
+
             if (l != null) {
 
                 OrderConstants.setOrderModel(l);
                 OrderConstants.setProductOrderModels(l.getProductOrderModels());
                 OrderConstants.setOrderData(new Gson().toJson(l));
                 listAdapter.refresh(OrderConstants.getProductOrderModels());
+            } else if (OrderConstants.getProductOrderModels() != null) {
+
+                listAdapter.refresh(OrderConstants.getProductOrderModels());
+
             }
         }
 
@@ -468,6 +479,7 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
             public void onLongClickListener(int position) {
 
 
+
             }
 
             @Override
@@ -501,8 +513,6 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_give_product, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         alertDialogBuilderUserInput.setView(mView);
-//        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
-//        alertDialogBuilderUserInput.setTitle("Route");
 
 
         avi = mView.findViewById(R.id.avi);
@@ -553,7 +563,7 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
         imgIcon = mView.findViewById(R.id.img_icon);
 
 
-        btnNeutral.setVisibility(View.GONE);
+        btnNeutral.setVisibility(View.VISIBLE);
         btnNeutral.setText("Delete");
 
         btnNeutral.setBackgroundColor(getContext().getResources().getColor(R.color.red));
@@ -566,6 +576,14 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
         btnPositive.setOnClickListener(new EditCustomListener(alertDialogAndroid, model, pos));
 
         btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
+        btnNeutral.setOnClickListener((View view) ->
+        {
+            OrderConstants.getProductOrderModels().remove((pos));
+            refreshList();
+            alertDialogAndroid.dismiss();
+        });
+
+
 
 
     }

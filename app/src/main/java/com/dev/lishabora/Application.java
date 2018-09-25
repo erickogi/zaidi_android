@@ -1,5 +1,7 @@
 package com.dev.lishabora;
 
+import android.content.Context;
+import android.os.Handler;
 import android.support.multidex.MultiDexApplication;
 
 import com.androidnetworking.AndroidNetworking;
@@ -15,10 +17,17 @@ public class Application extends MultiDexApplication {
     public static final String TAG = Application.class
             .getSimpleName();
     private static Application mInstance;
+    public static volatile Context context;
+    public static volatile Handler applicationHandler;
+    private static volatile boolean applicationInited = false;
+
 
     @Override
     public void onCreate() {
         super.onCreate();
+        context = getApplicationContext();
+        applicationHandler = new Handler(context.getMainLooper());
+
         if (BuildConfig.DEBUG)
             Timber.plant(new Timber.DebugTree());
         else

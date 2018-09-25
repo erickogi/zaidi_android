@@ -25,6 +25,7 @@ import com.dev.lishabora.NumKey.NumberKeyboardListener;
 import com.dev.lishabora.Utils.CollectListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
+import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishaboramobile.R;
 import com.google.gson.Gson;
@@ -58,10 +59,12 @@ class CollectMilk implements NumberKeyboardListener {
     private String amountText;
     private double amount;
     private boolean withCustomKeyboard;
+    private BalncesViewModel balncesViewModel;
 
 
-    CollectMilk(Context context, TraderViewModel traderViewModel, CollectListener listener, boolean withCustomKeyboard) {
+    CollectMilk(Context context, TraderViewModel traderViewModel, BalncesViewModel balncesViewModel, CollectListener listener, boolean withCustomKeyboard) {
         this.mViewModel = traderViewModel;
+        this.balncesViewModel = balncesViewModel;
         this.context = context;
         this.listener = listener;
         this.amountText = "";
@@ -322,25 +325,13 @@ class CollectMilk implements NumberKeyboardListener {
 
 
         if (withCustomKeyboard) {
-            edtTodayAm.setOnClickListener(view -> {
-                edtSet(EDTAM);
-            });
-            edtTodayPm.setOnClickListener(view -> {
-                edtSet(EDTPM);
-            });
-
-
+            edtTodayAm.setOnClickListener(view -> edtSet(EDTAM, unitsModel));
+            edtTodayPm.setOnClickListener(view -> edtSet(EDTPM, unitsModel));
             numberKeyboard.setListener(this);
-
-
             if (DateTimeUtils.Companion.isAM(DateTimeUtils.Companion.getTodayDate())) {
-                edtSet(EDTAM);
-
-
+                edtSet(EDTAM, unitsModel);
             } else {
-                edtSet(EDTPM);
-
-
+                edtSet(EDTPM, unitsModel);
             }
 
         }
@@ -503,64 +494,66 @@ class CollectMilk implements NumberKeyboardListener {
 
 
             if (collModel == null) {
-                Collection coAm = new Collection();
-                coAm.setCycleCode(famerModel.getCyclecode());
-                coAm.setFarmerCode(famerModel.getCode());
-                coAm.setFarmerName(famerModel.getNames());
-                coAm.setCycleId(famerModel.getCode());
-                coAm.setDayName(today.getText().toString());
-                coAm.setLoanAmountGivenOutPrice("0");
-                coAm.setDayDate(DateTimeUtils.Companion.getToday());
-                coAm.setDayDateLog(DateTimeUtils.Companion.getLongDate(coAm.getDayDate()));
-                coAm.setTimeOfDay("AM");
+
+                Collection co = new Collection();
+                co.setCycleCode(famerModel.getCyclecode());
+                co.setFarmerCode(famerModel.getCode());
+                co.setFarmerName(famerModel.getNames());
+                co.setCycleId(famerModel.getCode());
+                co.setDayName(today.getText().toString());
+                co.setLoanAmountGivenOutPrice("0");
+                co.setDayDate(DateTimeUtils.Companion.getToday());
+                co.setDayDateLog(DateTimeUtils.Companion.getLongDate(co.getDayDate()));
+                co.setTimeOfDay("AM");
 
 
-                coAm.setMilkCollectedAm(milkAm);
-                coAm.setMilkCollectedValueKshAm(milkModelAm.getValueKsh());
-                coAm.setMilkCollectedValueLtrsAm(milkModelAm.getValueLtrs());
-                coAm.setMilkDetailsAm(new Gson().toJson(milkAm));
+                co.setMilkCollectedAm(milkAm);
+                co.setMilkCollectedValueKshAm(milkModelAm.getValueKsh());
+                co.setMilkCollectedValueLtrsAm(milkModelAm.getValueLtrs());
+                co.setMilkDetailsAm(new Gson().toJson(milkAm));
 
 
-                coAm.setLoanAmountGivenOutPrice("0");
-                coAm.setOrderGivenOutPrice("0");
+                co.setLoanAmountGivenOutPrice("0");
+                co.setOrderGivenOutPrice("0");
 
-                coAm.setLoanId("");
-                coAm.setOrderId("");
-                coAm.setSynced(0);
-                coAm.setSynced(false);
-                coAm.setApproved(0);
-
-
-                Collection coPm = new Collection();
-                coPm.setCycleCode(famerModel.getCyclecode());
-                coPm.setFarmerCode(famerModel.getCode());
-                coPm.setFarmerName(famerModel.getNames());
-                coPm.setCycleId(famerModel.getCode());
-                coPm.setDayName(today.getText().toString());
-                coPm.setLoanAmountGivenOutPrice("0");
-                coPm.setDayDate(DateTimeUtils.Companion.getToday());
-                coPm.setDayDateLog(DateTimeUtils.Companion.getLongDate(coAm.getDayDate()));
-                coPm.setTimeOfDay("Pm");
+                co.setLoanId("");
+                co.setOrderId("");
+                co.setSynced(0);
+                co.setSynced(false);
+                co.setApproved(0);
 
 
-                coPm.setMilkCollectedPm(milkPm);
-                coPm.setMilkCollectedValueKshPm(milkModelPm.getValueKsh());
-                coPm.setMilkCollectedValueLtrsPm(milkModelPm.getValueLtrs());
-                coPm.setMilkDetailsPm(new Gson().toJson(milkPm));
+//                Collection co = new Collection();
+//                co.setCycleCode(famerModel.getCyclecode());
+//                co.setFarmerCode(famerModel.getCode());
+//                co.setFarmerName(famerModel.getNames());
+//                co.setCycleId(famerModel.getCode());
+//                co.setDayName(today.getText().toString());
+//                co.setLoanAmountGivenOutPrice("0");
+//                co.setDayDate(DateTimeUtils.Companion.getToday());
+//                co.setDayDateLog(DateTimeUtils.Companion.getLongDate(co.getDayDate()));
 
 
-                coPm.setLoanAmountGivenOutPrice("0");
-                coPm.setOrderGivenOutPrice("0");
-
-                coPm.setLoanId("");
-                coPm.setOrderId("");
-                coPm.setSynced(0);
-                coPm.setSynced(false);
-                coPm.setApproved(0);
+                //co.setTimeOfDay("Pm");
 
 
-                listener.createCollection(coAm, coPm);
+                co.setMilkCollectedPm(milkPm);
+                co.setMilkCollectedValueKshPm(milkModelPm.getValueKsh());
+                co.setMilkCollectedValueLtrsPm(milkModelPm.getValueLtrs());
+                co.setMilkDetailsPm(new Gson().toJson(milkPm));
 
+
+                co.setLoanAmountGivenOutPrice("0");
+                co.setOrderGivenOutPrice("0");
+
+                co.setLoanId("");
+                co.setOrderId("");
+                co.setSynced(0);
+                co.setSynced(false);
+                co.setApproved(0);
+
+
+                listener.createCollection(co);
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
                 mViewModel.updateFarmer(famerModel, false, false);
 
@@ -687,7 +680,7 @@ class CollectMilk implements NumberKeyboardListener {
         // amountEditText.setText("€" + (amount.isEmpty() ? "0" : addThousandSeparator(amount)));
     }
 
-    void edtSet(int edtClicked) {
+    void edtSet(int edtClicked, UnitsModel unitsModel) {
         switch (edtClicked) {
             case 1:
                 hasAmChanged = true;
@@ -709,6 +702,13 @@ class CollectMilk implements NumberKeyboardListener {
                 edtTodayAm.setTextColor(context.getResources().getColor(R.color.white));
                 edtTodayPm.setTextColor(context.getResources().getColor(R.color.black));
                 EDIT_CLICKED = EDTAM;
+
+
+                updateDisplayValues(1, unitsModel);
+
+
+
+
                 break;
             case 2:
                 hasPmChanged = true;
@@ -730,7 +730,43 @@ class CollectMilk implements NumberKeyboardListener {
                 edtTodayPm.setTextColor(context.getResources().getColor(R.color.white));
                 edtTodayAm.setTextColor(context.getResources().getColor(R.color.black));
 
+                updateDisplayValues(2, unitsModel);
+
                 break;
+        }
+    }
+
+    private void updateDisplayValues(int i, UnitsModel unitsModel) {
+        if (i == 1) {
+            if (edtTodayAm.getText().toString() != null && !TextUtils.isEmpty(edtTodayAm.getText().toString())) {
+                if (unitsModel.getUnitprice() != null) {
+
+                    Double price = Double.valueOf(unitsModel.getUnitprice());
+                    Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity()) / 1000;
+                    Double total = (Double.valueOf(edtTodayAm.getText().toString()) * unitCapacity) * price;
+
+
+                    unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
+
+                }
+            } else {
+                unitTotal.setText("");
+            }
+        } else {
+            if (edtTodayPm.getText().toString() != null && !TextUtils.isEmpty(edtTodayPm.getText().toString())) {
+                if (unitsModel.getUnitprice() != null) {
+
+                    Double price = Double.valueOf(unitsModel.getUnitprice());
+                    Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity()) / 1000;
+                    Double total = (Double.valueOf(edtTodayPm.getText().toString()) * unitCapacity) * price;
+
+
+                    unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
+
+                }
+            } else {
+                unitTotal.setText("");
+            }
         }
     }
 

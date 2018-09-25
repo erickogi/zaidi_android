@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.dev.lishabora.AppConstants;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.DayCollectionModel;
 import com.dev.lishabora.Models.DaysDates;
@@ -31,13 +32,18 @@ import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Models.Reports.ReportLineChartModel;
 import com.dev.lishabora.Models.Reports.ReportListModel;
+import com.dev.lishabora.Models.Trader.FarmerBalance;
+import com.dev.lishabora.Models.Trader.FarmerLoansTable;
+import com.dev.lishabora.Models.Trader.FarmerOrdersTable;
 import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.Utils.CollectionCreateUpdateListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.LoanEditValueListener;
 import com.dev.lishabora.Utils.MilkEditValueListener;
+import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
+import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishaboramobile.R;
 import com.google.gson.Gson;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -1289,6 +1295,8 @@ public class CommonFuncs {
             loanModel.setLoanAmount(value);
             loanModel.setInstallmentAmount(txtPrice.getText().toString());
             loanModel.setInstallmentsNo(txtQty.getText().toString());//giveLoan(edtAmount.getText().toString(), new Gson().toJson(loanModel));
+
+
             listener.updateCollection(edtAmount.getText().toString(), loanModel, 0, dayCollectionModel, alertDialogAndroid);
 
         });
@@ -1656,19 +1664,297 @@ public class CommonFuncs {
         return String.valueOf(a + b + c + d);
     }
 
-    private static String getTotal(String milkCollectedValueLtrsAm, String milkCollectedValueLtrsPm) {
+    private static String getTotal(String aa, String ab) {
         double a = 0.0;
         double b = 0.0;
 
-        if (milkCollectedValueLtrsAm != null) {
-            a = Double.valueOf(milkCollectedValueLtrsAm);
+        if (aa != null) {
+            a = Double.valueOf(aa);
         }
-        if (milkCollectedValueLtrsPm != null) {
-            b = Double.valueOf(milkCollectedValueLtrsPm);
+        if (ab != null) {
+            b = Double.valueOf(ab);
         }
 
         return String.valueOf(a + b);
     }
+
+    public static void addBalance(TraderViewModel traderViewModel, BalncesViewModel balncesViewModel, Collection c, int payoutkey, int type) {
+
+
+        updateBalance(traderViewModel, balncesViewModel, c, payoutkey, type);
+//        FarmerLoansTable farmerLoan=balncesViewModel.getFarmerLoanByCollection(c.getId());
+//        FarmerOrdersTable farmerOrder=balncesViewModel.getFarmerOrderByCollection(c.getId());
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//        if(type==AppConstants.MILK){
+//
+//            refreshTotalBalances(balncesViewModel,traderViewModel,c);
+//
+//
+//
+//        }else if(type==AppConstants.LOAN){
+//            LoanModel loanModelm = new Gson().fromJson(c.getLoanDetails(), LoanModel.class);
+//
+//            if(farmerLoan==null){
+//                farmerLoan=new FarmerLoansTable(c.getId(),payoutkey,c.getFarmerCode(),c.getLoanAmountGivenOutPrice(),loanModelm.getInstallmentAmount(),loanModelm.getInstallmentsNo(),0,DateTimeUtils.Companion.getNow());
+//                balncesViewModel.insertLoan(farmerLoan);
+//
+//                refreshLoanStatus(balncesViewModel,balncesViewModel.getFarmerLoanByCollection(c.getId()));
+//                refreshTotalBalances(balncesViewModel,traderViewModel,c);
+//
+//
+//
+//            }else {
+//                farmerLoan.setInstallmentAmount(loanModelm.getInstallmentAmount());
+//                farmerLoan.setLoanAmount(c.getLoanAmountGivenOutPrice());
+//                farmerLoan.setInstallmentNo(loanModelm.getInstallmentsNo());
+//                farmerLoan.setTimestamp(DateTimeUtils.Companion.getNow());
+//                balncesViewModel.updateRecordLoan(farmerLoan);
+//
+//                refreshLoanStatus(balncesViewModel,farmerLoan);
+//                refreshTotalBalances(balncesViewModel,traderViewModel,c);
+//
+//
+//            }
+//
+//
+//
+//
+//
+//
+//
+//        }else if(type==AppConstants.ORDER){
+//            OrderModel orderModel = new Gson().fromJson(c.getOrderDetails(), OrderModel.class);
+//
+//            if(farmerOrder==null){
+//                farmerOrder=new FarmerOrdersTable(c.getId(),payoutkey,c.getFarmerCode(),c.getOrderGivenOutPrice(),orderModel.getInstallmentAmount(),orderModel.getInstallmentNo(),0,DateTimeUtils.Companion.getNow());
+//                balncesViewModel.insertOrder(farmerOrder);
+//                refreshOrderStatus(balncesViewModel,balncesViewModel.getFarmerOrderByCollection(c.getId()));
+//                refreshTotalBalances(balncesViewModel,traderViewModel,c);
+//
+//
+//            }else {
+//                farmerOrder.setInstallmentAmount(orderModel.getInstallmentAmount());
+//                farmerOrder.setOrderAmount(c.getOrderGivenOutPrice());
+//                farmerOrder.setInstallmentNo(orderModel.getInstallmentNo());
+//                farmerOrder.setTimestamp(DateTimeUtils.Companion.getNow());
+//                balncesViewModel.updateRecord(farmerOrder);
+//
+//                refreshOrderStatus(balncesViewModel,farmerOrder);
+//                refreshTotalBalances(balncesViewModel,traderViewModel,c);
+//
+//
+//            }
+//
+//
+//
+//
+//
+//
+//
+//        }
+//
+//
+//
+
+
+    }
+
+    public static void updateBalance(TraderViewModel traderViewModel, BalncesViewModel balncesViewModel, Collection c, int payoutkey, int type) {
+
+
+        FarmerLoansTable farmerLoan = balncesViewModel.getFarmerLoanByCollectionOne(c.getId());
+        FarmerOrdersTable farmerOrder = balncesViewModel.getFarmerOrderByCollection(c.getId());
+
+
+        if (type == AppConstants.MILK) {
+
+
+            refreshTotalBalances(balncesViewModel, traderViewModel, c);
+
+
+        } else if (type == AppConstants.LOAN) {
+            LoanModel loanModelm = new Gson().fromJson(c.getLoanDetails(), LoanModel.class);
+
+            if (farmerLoan == null) {
+                farmerLoan = new FarmerLoansTable(c.getId(), payoutkey, c.getFarmerCode(), c.getLoanAmountGivenOutPrice(), loanModelm.getInstallmentAmount(), loanModelm.getInstallmentsNo(), 0, DateTimeUtils.Companion.getNow());
+                Log.d("RecordAsd", "Insert Loan" + farmerLoan.getLoanAmount() + "\n" + new Gson().toJson(loanModelm, LoanModel.class));
+
+
+                balncesViewModel.insertLoan(farmerLoan);
+
+                refreshLoanStatus(balncesViewModel, c.getId());
+
+
+            } else {
+                farmerLoan.setInstallmentAmount(loanModelm.getInstallmentAmount());
+                farmerLoan.setLoanAmount(c.getLoanAmountGivenOutPrice());
+                farmerLoan.setInstallmentNo(loanModelm.getInstallmentsNo());
+                farmerLoan.setTimestamp(DateTimeUtils.Companion.getNow());
+
+
+                Log.d("RecordAsd", "Update Loan" + farmerLoan.getLoanAmount() + "\n" + new Gson().toJson(loanModelm, LoanModel.class));
+                balncesViewModel.updateRecordLoan(farmerLoan);
+
+                refreshLoanStatus(balncesViewModel, c.getId());
+
+
+            }
+
+
+        } else if (type == AppConstants.ORDER) {
+            OrderModel orderModel = new Gson().fromJson(c.getOrderDetails(), OrderModel.class);
+
+            if (farmerOrder == null) {
+                farmerOrder = new FarmerOrdersTable(c.getId(), payoutkey, c.getFarmerCode(), c.getOrderGivenOutPrice(), orderModel.getInstallmentAmount(), orderModel.getInstallmentNo(), 0, DateTimeUtils.Companion.getNow());
+                balncesViewModel.insertOrder(farmerOrder);
+                Log.d("RecordAsd", "Insert Order frt " + farmerOrder.getOrderAmount() + "\n" + new Gson().toJson(balncesViewModel.getFarmerOrderByCollection(c.getId()), FarmerOrdersTable.class));
+
+                refreshOrderStatus(balncesViewModel, balncesViewModel.getFarmerOrderByCollection(c.getId()));
+
+
+            } else {
+                Log.d("RecordAsd", "Update Order " + farmerOrder.getOrderAmount() + "\n" + new Gson().toJson(orderModel, OrderModel.class));
+
+
+                farmerOrder.setInstallmentAmount(orderModel.getInstallmentAmount());
+                farmerOrder.setOrderAmount(c.getOrderGivenOutPrice());
+                farmerOrder.setInstallmentNo(orderModel.getInstallmentNo());
+                farmerOrder.setTimestamp(DateTimeUtils.Companion.getNow());
+                balncesViewModel.updateRecord(farmerOrder);
+
+
+                Log.d("RecordAsd", "Update Order " + farmerOrder.getOrderAmount() + "\n" + new Gson().toJson(orderModel, OrderModel.class));
+
+                refreshOrderStatus(balncesViewModel, farmerOrder);
+
+
+            }
+
+
+        }
+
+
+        refreshTotalBalances(balncesViewModel, traderViewModel, c);
+
+
+    }
+
+    private static void refreshTotalBalances(BalncesViewModel balncesViewModel, TraderViewModel traderViewModel, Collection c) {
+
+
+        FarmerBalance farmerBalance = balncesViewModel.getByFarmerCodeOne(c.getFarmerCode());
+
+        if (farmerBalance == null) {
+
+
+            farmerBalance = new FarmerBalance(c.getFarmerCode(), null, null, null);
+            balncesViewModel.insert(farmerBalance);
+
+
+        }
+
+
+        double loanTotalAmount = 0.0;
+        double loanInstalmentAmount = 0.0;
+        double loanPaid = 0.0;
+
+        double orderTotalAmount = 0.0;
+        double orderInstalmentAmount = 0.0;
+        double orderPaid = 0.0;
+
+
+        List<FarmerLoansTable> loansTables = balncesViewModel.getFarmerLoanByPayoutNumberByFarmerByStatus(c.getFarmerCode(), 0);
+        List<FarmerOrdersTable> ordersTables = balncesViewModel.getFarmerOrderByPayoutNumberByFarmerByStatus(c.getFarmerCode(), 0);
+
+        for (FarmerLoansTable fl : loansTables) {
+            loanTotalAmount = +(Double.valueOf(fl.getLoanAmount()));
+            loanInstalmentAmount = +(Double.valueOf(fl.getInstallmentAmount()));
+            loanPaid = +balncesViewModel.getSumPaidLoanPayment(fl.getId());
+        }
+
+        for (FarmerOrdersTable fo : ordersTables) {
+            orderTotalAmount = +(Double.valueOf(fo.getOrderAmount()));
+            orderInstalmentAmount = +(Double.valueOf(fo.getInstallmentAmount()));
+            orderPaid = +balncesViewModel.getSumPaidOrderPayment(fo.getId());
+        }
+        Log.d("RecordAsd", "Alll Order " + orderTotalAmount + "\n" + ordersTables.size());
+
+
+        double totalMilkForCurrentPayout = 0.0;
+        if (traderViewModel.getSumOfMilkForPayoutKshD(c.getFarmerCode(), c.getPayoutnumber()) != null) {
+            totalMilkForCurrentPayout += traderViewModel.getSumOfMilkForPayoutKshD(c.getFarmerCode(), c.getPayoutnumber());
+        }
+
+        farmerBalance = balncesViewModel.getByFarmerCodeOne(c.getFarmerCode());
+
+
+        farmerBalance.setBalanceOwed(String.valueOf((totalMilkForCurrentPayout - ((loanTotalAmount - loanPaid) + (orderTotalAmount - orderPaid)))));
+        farmerBalance.setBalanceToPay(String.valueOf((totalMilkForCurrentPayout - ((loanInstalmentAmount) + (orderInstalmentAmount)))));
+
+        Log.d("RecordAsd", "Balnce to pay " + farmerBalance.getBalanceToPay() + "\n" + farmerBalance.getBalanceOwed());
+
+
+        balncesViewModel.updateRecord(farmerBalance);
+
+
+    }
+
+    private static void refreshLoanStatus(BalncesViewModel balncesViewModel, int id) {
+
+        FarmerLoansTable farmerLoansTable = balncesViewModel.getFarmerLoanByCollectionOne(id);
+        double paid = 0.0;
+        try {
+            paid = balncesViewModel.getSumPaidLoanPayment(farmerLoansTable.getId());
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+        try {
+            if (paid == Double.valueOf(farmerLoansTable.getLoanAmount()) || paid > Double.valueOf(farmerLoansTable.getLoanAmount())) {
+                farmerLoansTable.setStatus(1);
+                balncesViewModel.updateRecordLoan(farmerLoansTable);
+            } else {
+                farmerLoansTable.setStatus(0);
+                balncesViewModel.updateRecordLoan(farmerLoansTable);
+            }
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+
+
+    }
+
+    private static void refreshOrderStatus(BalncesViewModel balncesViewModel, FarmerOrdersTable farmerOrdersTable) {
+        double paid = 0.0;
+        try {
+            paid = balncesViewModel.getSumPaidOrderPayment(farmerOrdersTable.getId());
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+
+
+        try {
+            if (paid == Double.valueOf(farmerOrdersTable.getOrderAmount()) || paid > Double.valueOf(farmerOrdersTable.getOrderAmount())) {
+                farmerOrdersTable.setStatus(1);
+                balncesViewModel.updateRecord(farmerOrdersTable);
+            } else {
+                farmerOrdersTable.setStatus(0);
+                balncesViewModel.updateRecord(farmerOrdersTable);
+            }
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+
+    }
+
+
     public static class ValueObject {
         private String value;
         private Object o;

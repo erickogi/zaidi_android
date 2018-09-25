@@ -21,6 +21,17 @@ public class FarmerOrdersTable {
     private int status;
     private String timestamp;
 
+    public FarmerOrdersTable(int collectionId, int payoutId, String farmerCode, String orderAmount, String installmentAmount, String installmentNo, int status, String timestamp) {
+        this.collectionId = collectionId;
+        this.payoutId = payoutId;
+        this.farmerCode = farmerCode;
+        this.orderAmount = orderAmount;
+        this.installmentAmount = installmentAmount;
+        this.installmentNo = installmentNo;
+        this.status = status;
+        this.timestamp = timestamp;
+    }
+
     public int getId() {
         return id;
     }

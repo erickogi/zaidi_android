@@ -25,6 +25,11 @@ public class AppConstants {
     public static final int ENTITY_PRODUCTS_SUBSCRIPTION = 9;
 
 
+    public static final int MILK = 1;
+    public static final int LOAN = 2;
+    public static final int ORDER = 3;
+
+
 
 
 

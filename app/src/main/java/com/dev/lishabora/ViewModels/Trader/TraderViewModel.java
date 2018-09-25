@@ -102,6 +102,11 @@ public class TraderViewModel extends AndroidViewModel
     private LiveData<Payouts> payout;
     private Payouts payoutOne;
 
+    LiveData<Double> milkTotal;
+    LiveData<Double> milkTotalLtrs;
+    LiveData<Double> milkTotalKsh;
+
+
 
     private Application application;
     private PrefrenceManager prefrenceManager;
@@ -300,7 +305,21 @@ public class TraderViewModel extends AndroidViewModel
         createSync(syncModel);
     }
 
+    public LiveData<Double> getSumOfMilkForPayoutKsh(String farmercode, int payoutNumber) {
+        if (milkTotalKsh == null) {
+            milkTotalKsh = new MutableLiveData<>();
+        }
+        milkTotalKsh = collectionsRepo.getSumOfMilkFarmerPayoutKsh(farmercode, payoutNumber);
 
+        return milkTotalKsh;
+    }
+
+    public Double getSumOfMilkForPayoutKshD(String farmercode, int payoutNumber) {
+
+        return collectionsRepo.getSumOfMilkFarmerPayoutKshD(farmercode, payoutNumber);
+
+        //return milkTotalKsh;
+    }
 
     public Collection getLastCollection(String cyclecode) {
 
@@ -944,6 +963,9 @@ public class TraderViewModel extends AndroidViewModel
             responseModel.setResultCode(1);
             responseModel.setResultDescription("Collection Inserted \nNew  payout \n(No other  payouts available)");
             responseModel.setData(null);
+            responseModel.setPayoutkey(payouts.getPayoutnumber());
+
+
             createCollectionSuccess.setValue(responseModel);
 
 
@@ -988,6 +1010,8 @@ public class TraderViewModel extends AndroidViewModel
                 responseModel.setResultCode(1);
                 responseModel.setResultDescription("Collection Inserted \nNew  payout \nOther cycles payouts available");
                 responseModel.setData(null);
+                responseModel.setPayoutkey(payouts.getPayoutnumber());
+
                 createCollectionSuccess.setValue(responseModel);
 
 
@@ -1000,6 +1024,8 @@ public class TraderViewModel extends AndroidViewModel
                 responseModel.setResultCode(1);
                 responseModel.setResultDescription("Collection Inserted \nExisting payout");
                 responseModel.setData(null);
+                responseModel.setPayoutkey(p.getPayoutnumber());
+
                 createCollectionSuccess.setValue(responseModel);
 
             }
@@ -1324,6 +1350,10 @@ public class TraderViewModel extends AndroidViewModel
         responseModel.setResultCode(1);
         responseModel.setResultDescription("Farmer updated successfully");
         responseModel.setData(null);
+        if (c != null) {
+            responseModel.setPayoutkey(c.getPayoutnumber());
+        }
+
         updateCollectionSuccess.setValue(responseModel);
 
         return updateCollectionSuccess;

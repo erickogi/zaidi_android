@@ -14,13 +14,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.GiveOrderAdapter;
+import com.dev.lishabora.AppConstants;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.OrderModel;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.PrefrenceManager;
+import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
+import com.dev.lishabora.Views.CommonFuncs;
 import com.dev.lishabora.Views.Trader.OrderConstants;
 import com.dev.lishaboramobile.R;
 import com.stepstone.stepper.StepperLayout;
@@ -51,6 +54,7 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
     boolean hasPmChanged = false;
     private FamerModel famerModel;
     private TraderViewModel traderViewModel;
+    private BalncesViewModel balncesViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +76,7 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
                 .setAction("Action", null).show());
         prefrenceManager = new PrefrenceManager(GiveOrder.this);
         mViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
+        balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
 
 
         mStepperLayout = findViewById(R.id.stepperLayout);
@@ -158,6 +163,8 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
 
                 traderViewModel.createCollections(c, false).observe(this, responseModel -> {
                     if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+                        CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), AppConstants.ORDER);
+
                     } else {
 
                     }
@@ -177,6 +184,8 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
             }
             traderViewModel.updateCollection(CollModel).observe(this, responseModel -> {
                     if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+                        CommonFuncs.updateBalance(traderViewModel, balncesViewModel, CollModel, responseModel.getPayoutkey(), AppConstants.ORDER);
+
                     } else {
 
 

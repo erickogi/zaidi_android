@@ -1,12 +1,18 @@
 package com.dev.lishabora.Utils
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.graphics.*
 import android.support.design.widget.TextInputEditText
 import android.text.TextUtils
 import android.util.Base64
+import android.util.DisplayMetrics
+import android.view.View
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.OvershootInterpolator
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import com.dev.lishabora.Application
 import com.dev.lishaboramobile.R
 import timber.log.Timber
 import java.io.ByteArrayOutputStream
@@ -18,6 +24,7 @@ import java.math.RoundingMode
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 
+
 class GeneralUtills {
 
     private val sNextGeneratedId = AtomicInteger(1)
@@ -28,12 +35,36 @@ class GeneralUtills {
     internal lateinit var context: Context
     private val bitmapString = ""
 
+
     constructor(context: Context) {
         this.context = context
     }
 
 
     companion object {
+
+        // var isTablet: Boolean? = null
+        var statusBarHeight = 0
+        var density = 1f
+        var displaySize = Point()
+        var roundMessageSize: Int = 0
+        var incorrectDisplaySizeFix: Boolean = false
+        var photoSize: Int? = null
+        var displayMetrics = DisplayMetrics()
+        var leftBaseline: Int = 0
+        var usingHardwareInput: Boolean = false
+        var isInMultiwindow: Boolean = false
+
+        var decelerateInterpolator = DecelerateInterpolator()
+        var accelerateInterpolator = AccelerateInterpolator()
+        var overshootInterpolator = OvershootInterpolator()
+
+        private var isTablet: Boolean? = null
+        private val adjustOwnerClassGuid = 0
+
+        private val roundPaint: Paint? = null
+        private val bitmapRect: RectF? = null
+
 
         fun round(value: Double, places: Int): Double {
             if (places < 0) throw IllegalArgumentException()
@@ -89,6 +120,115 @@ class GeneralUtills {
             txt = txt.substring(0, 1).toUpperCase() + txt.substring(1).toLowerCase()
             return txt
         }
+
+        fun showKeyboard(view: View?) {
+            if (view == null) {
+                return
+            }
+            try {
+                val inputManager = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+            } catch (e: Exception) {
+                FileLog.e(e)
+            }
+
+        }
+
+        fun isKeyboardShowed(view: View?): Boolean {
+            if (view == null) {
+                return false
+            }
+            try {
+                val inputManager = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                return inputManager.isActive(view)
+            } catch (e: Exception) {
+                FileLog.e(e)
+            }
+
+            return false
+        }
+
+        fun hideKeyboard(view: View?) {
+            if (view == null) {
+                return
+            }
+            try {
+                val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                if (!imm.isActive) {
+                    return
+                }
+                imm.hideSoftInputFromWindow(view.windowToken, 0)
+            } catch (e: Exception) {
+                FileLog.e(e)
+            }
+
+        }
+
+        fun runOnUIThread(runnable: Runnable) {
+            runOnUIThread(runnable, 0)
+        }
+
+        fun runOnUIThread(runnable: Runnable, delay: Long) {
+            if (delay == 0L) {
+                Application.applicationHandler.post(runnable)
+            } else {
+                Application.applicationHandler.postDelayed(runnable, delay)
+            }
+        }
+
+        fun cancelRunOnUIThread(runnable: Runnable) {
+            Application.applicationHandler.removeCallbacks(runnable)
+        }
+
+        fun isTablet(): Boolean {
+            if (isTablet == null) {
+                isTablet = Application.context.resources.getBoolean(R.bool.isTablet)
+            }
+            return isTablet as Boolean
+        }
+
+        fun isSmallTablet(): Boolean {
+            val minSide = Math.min(displaySize.x, displaySize.y) / density
+            return minSide <= 700
+        }
+
+        fun getMinTabletSide(): Int {
+            if (!isSmallTablet()) {
+                val smallSide = Math.min(displaySize.x, displaySize.y)
+                var leftSide = smallSide * 35 / 100
+                if (leftSide < dp(320F)) {
+                    leftSide = dp(320F)
+                }
+                return smallSide - leftSide
+            } else {
+                val smallSide = Math.min(displaySize.x, displaySize.y)
+                val maxSide = Math.max(displaySize.x, displaySize.y)
+                var leftSide = maxSide * 35 / 100
+                if (leftSide < dp(320F)) {
+                    leftSide = dp(320F)
+                }
+                return Math.min(smallSide, maxSide - leftSide)
+            }
+        }
+
+        fun dp(value: Float): Int {
+            return if (value == 0f) {
+                0
+            } else Math.ceil((density * value).toDouble()).toInt()
+        }
+
+        fun addToClipboard(str: CharSequence) {
+            try {
+                val clipboard = Application.context.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                val clip = android.content.ClipData.newPlainText("label", str)
+                clipboard.primaryClip = clip
+            } catch (e: Exception) {
+                FileLog.e(e)
+            }
+
+        }
+
+
     }
 
 
