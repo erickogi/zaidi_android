@@ -1,7 +1,6 @@
 package com.dev.lishabora.Views.Trader.Activities;
 
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +24,7 @@ import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.FarmerCollectionsAdapter;
 import com.dev.lishabora.Adapters.PayoutFarmersAdapter;
+import com.dev.lishabora.AppConstants;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.DayCollectionModel;
 import com.dev.lishabora.Models.FamerModel;
@@ -32,7 +32,8 @@ import com.dev.lishabora.Models.LoanModel;
 import com.dev.lishabora.Models.OrderModel;
 import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
 import com.dev.lishabora.Models.Payouts;
-import com.dev.lishabora.Models.ResponseModel;
+import com.dev.lishabora.Models.Trader.FarmerLoansTable;
+import com.dev.lishabora.Models.Trader.FarmerOrdersTable;
 import com.dev.lishabora.Utils.AdvancedOnclickRecyclerListener;
 import com.dev.lishabora.Utils.CollectionCreateUpdateListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
@@ -297,24 +298,6 @@ public class PayCard extends AppCompatActivity {
 
         listAdapter.notifyDataSetChanged();
 
-        //    searchView.setVisibility(View.GONE);
-
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String s) {
-//
-//
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String s) {
-//
-//                return true;
-//            }
-//        });
-//
-
     }
 
     private void setBottom() {
@@ -368,6 +351,7 @@ public class PayCard extends AppCompatActivity {
             isApproved = false;
 
         }
+
         toolBar.show(model.getMilktotal(), model.getLoanTotal(), model.getOrderTotal(), "", famerModel, payouts, isApproved, isPast);
 
 
@@ -379,6 +363,9 @@ public class PayCard extends AppCompatActivity {
 
 
         loadCollections("" + model.getPayoutNumber(), model.getFarmercode());
+
+
+//
         payoutsVewModel.getSumOfMilkForPayoutLtrs(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
             //milk.setText(String.valueOf(integer));
             toolBar.updateMilk(String.valueOf(integer));
@@ -388,17 +375,34 @@ public class PayCard extends AppCompatActivity {
             milkKsh = integer;
             setBalance(milkKsh);
         });
-        payoutsVewModel.getSumOfLoansForPayout(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
-            //loan.setText(String.valueOf(integer));
-            toolBar.updateLoan(String.valueOf(integer));
+//        payoutsVewModel.getSumOfLoansForPayout(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
+//            //loan.setText(String.valueOf(integer));
+//            toolBar.updateLoan(String.valueOf(integer));
+//
+//            setBalance(milkKsh);
+//        });
+//        payoutsVewModel.getSumOfOrdersForPayout(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
+//            //order.setText(String.valueOf(integer));
+//            toolBar.updateOrder(String.valueOf(integer));
+//
+//            setBalance(milkKsh);
+//        });
 
-            setBalance(milkKsh);
+
+        balncesViewModel.getFarmerLoanByFarmer(model.getFarmercode()).observe(this, farmerLoansTables -> {
+            if (farmerLoansTables != null) {
+
+                toolBar.updateLoan(CommonFuncs.getCardLoan(farmerLoansTables));
+                setBalance(milkKsh);
+            }
         });
-        payoutsVewModel.getSumOfOrdersForPayout(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
-            //order.setText(String.valueOf(integer));
-            toolBar.updateOrder(String.valueOf(integer));
 
-            setBalance(milkKsh);
+        balncesViewModel.getFarmerOrderByFarmer(model.getFarmercode()).observe(this, farmerOrderTables -> {
+            if (farmerOrderTables != null) {
+
+                toolBar.updateOrder(CommonFuncs.getCardOrder(farmerOrderTables));
+                setBalance(milkKsh);
+            }
         });
 
 
@@ -446,8 +450,21 @@ public class PayCard extends AppCompatActivity {
 
 
                         }
-                        CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type);
+                        if (type == AppConstants.MILK) {
+                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type, null, null);
+                        } else if (type == AppConstants.LOAN) {
+                            FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getId());
 
+                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type, f, null);
+
+                        } else if (type == AppConstants.ORDER) {
+
+                            FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getId());
+
+                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type, null, f);
+
+
+                        }
                         MyToast.toast(responseModel.getResultDescription(), PayCard.this, R.drawable.ic_launcher, Toast.LENGTH_LONG);
                     }
                 });
@@ -458,14 +475,26 @@ public class PayCard extends AppCompatActivity {
 
             @Override
             public void updateCollection(Collection c) {
-                payoutsVewModel.updateCollection(c).observe(PayCard.this, new Observer<ResponseModel>() {
-                    @Override
-                    public void onChanged(@Nullable ResponseModel responseModel) {
-                        if (responseModel.getResultCode() == 1) {
-                            if (a != null) {
-                                a.dismiss();
-                            }
-                            CommonFuncs.updateBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type);
+                payoutsVewModel.updateCollection(c).observe(PayCard.this, responseModel -> {
+                    if (responseModel.getResultCode() == 1) {
+                        if (a != null) {
+                            a.dismiss();
+                        }
+                        if (type == AppConstants.MILK) {
+                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type, null, null);
+                        } else if (type == AppConstants.LOAN) {
+                            FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getId());
+
+                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type, f, null);
+
+
+                        } else if (type == AppConstants.ORDER) {
+
+                            FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getId());
+
+                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type, null, f);
+
+
 
                         }
                     }

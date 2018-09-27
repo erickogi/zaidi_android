@@ -22,6 +22,7 @@ import com.dev.lishabora.Adapters.PayoutesAdapter;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
+import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.Views.CommonFuncs;
 import com.dev.lishabora.Views.Trader.PayoutConstants;
@@ -43,6 +44,7 @@ public class FragmentPayouts extends Fragment {
     private LinearLayout empty_layout;
     private List<com.dev.lishabora.Models.Payouts> payouts;
     private PayoutsVewModel payoutsVewModel;
+    private BalncesViewModel balncesViewModel;
     private Fragment fragment;
 
     public void initList() {
@@ -145,6 +147,7 @@ public class FragmentPayouts extends Fragment {
 
         this.view = view;
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
+        balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
 
         try {
             Objects.requireNonNull(getActivity()).setTitle("Payouts List");
@@ -194,7 +197,7 @@ public class FragmentPayouts extends Fragment {
             LinkedList<Payouts> payouts1 = new LinkedList<>();
             for (int a = 0; a < payouts.size(); a++) {
                 List<Collection> c = payoutsVewModel.getCollectionByDateByPayoutListOne("" + payouts.get(a).getPayoutnumber());
-                payouts1.add(CommonFuncs.createPayoutsByCollection(c, payouts.get(a), payoutsVewModel));
+                payouts1.add(CommonFuncs.createPayoutsByCollection(c, payouts.get(a), payoutsVewModel, balncesViewModel, null, false, payoutsVewModel.getFarmersByCycleONe(payouts.get(a).getCycleCode())));
 
 
             }

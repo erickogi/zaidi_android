@@ -19,6 +19,7 @@ import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.OrderModel;
+import com.dev.lishabora.Models.Trader.FarmerOrdersTable;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
@@ -163,7 +164,8 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
 
                 traderViewModel.createCollections(c, false).observe(this, responseModel -> {
                     if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-                        CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), AppConstants.ORDER);
+                        FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getId());
+                        CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), AppConstants.ORDER, null, f);
 
                     } else {
 
@@ -184,7 +186,8 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
             }
             traderViewModel.updateCollection(CollModel).observe(this, responseModel -> {
                     if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-                        CommonFuncs.updateBalance(traderViewModel, balncesViewModel, CollModel, responseModel.getPayoutkey(), AppConstants.ORDER);
+                        FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(CollModel.getId());
+                        CommonFuncs.updateBalance(traderViewModel, balncesViewModel, CollModel, responseModel.getPayoutkey(), AppConstants.ORDER, null, f);
 
                     } else {
 

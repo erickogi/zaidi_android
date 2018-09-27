@@ -34,12 +34,12 @@
             android:orientation="horizontal"
             android:padding="4dp">
 
-            <ImageView
-                android:id="@+id/img_flag"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/ke_24" />
+            <!--<ImageView-->
+            <!--android:id="@+id/img_flag"-->
+            <!--android:layout_width="35dp"-->
+            <!--android:layout_height="35dp"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:background="@drawable/ke_24" />-->
 
             <com.dev.customfonts.MyTextView_Roboto_Bold
                 android:id="@+id/txt_ke"

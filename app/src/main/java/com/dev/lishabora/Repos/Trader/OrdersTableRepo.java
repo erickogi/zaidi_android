@@ -55,6 +55,10 @@ public class OrdersTableRepo {
         return dao.getFarmerOrderByCollection(collId);
     }
 
+    public LiveData<FarmerOrdersTable> getFarmerOrderByCollectionLive(int collId) {
+        return dao.getFarmerOrderByCollectionLive(collId);
+    }
+
     public LiveData<List<FarmerOrdersTable>> getFarmerOrderByPayoutNumberByFarmer(String payoutnumber, String farmer) {
         return dao.getFarmerOrderByPayoutNumberByFarmer(payoutnumber, farmer);
     }

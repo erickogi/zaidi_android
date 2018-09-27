@@ -54,6 +54,9 @@ public class PayoutFarmersAdapter extends RecyclerView.Adapter<PayoutFarmerListV
         PayoutFarmersCollectionModel model = modelList.get(position);
 
         holder.balance.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getBalance(), 1), context.getString(R.string.ksh)));
+        GeneralUtills.Companion.changeCOlor(model.getBalance(), holder.balance, 1);
+
+
         holder.id.setText(model.getFarmercode());
         holder.name.setText(model.getFarmername());
 

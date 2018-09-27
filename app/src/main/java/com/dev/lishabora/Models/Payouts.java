@@ -42,9 +42,20 @@ public class Payouts implements Serializable {
     private String statusName;
     @Ignore
     private String balance;
+    @Ignore
+    private String balanceTotal;
+
 
     @Ignore
     private String traderCode;
+
+    public String getBalanceTotal() {
+        return balanceTotal;
+    }
+
+    public void setBalanceTotal(String balanceTotal) {
+        this.balanceTotal = balanceTotal;
+    }
 
     public String getTraderCode() {
         return traderCode;

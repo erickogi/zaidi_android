@@ -152,8 +152,8 @@ class CollectMilk implements NumberKeyboardListener {
         txtTitle.setText("Milk Collection");
 
         numberKeyboard = mView.findViewById(R.id.numberKeyboard);
-        numberKeyboard.setKeyHeight(195);
-        numberKeyboard.setKeyWidth(195);
+        numberKeyboard.setKeyHeight(90);
+        numberKeyboard.setKeyWidth(90);
         numberKeyboard.setKeyPadding(0);
         numberKeyboard.setKeyPadding(4);
         numberKeyboard.setNumberKeyTypeface(Typeface.DEFAULT);
@@ -328,10 +328,14 @@ class CollectMilk implements NumberKeyboardListener {
             edtTodayAm.setOnClickListener(view -> edtSet(EDTAM, unitsModel));
             edtTodayPm.setOnClickListener(view -> edtSet(EDTPM, unitsModel));
             numberKeyboard.setListener(this);
+
+
             if (DateTimeUtils.Companion.isAM(DateTimeUtils.Companion.getTodayDate())) {
                 edtSet(EDTAM, unitsModel);
+                edtTodayPm.setEnabled(false);
             } else {
                 edtSet(EDTPM, unitsModel);
+                edtTodayPm.setEnabled(true);
             }
 
         }
@@ -355,8 +359,6 @@ class CollectMilk implements NumberKeyboardListener {
             }
 
             doCollect(famerModel, unitsModel, milkAm, milkPm);
-
-
             alertDialogAndroid.dismiss();
 
 

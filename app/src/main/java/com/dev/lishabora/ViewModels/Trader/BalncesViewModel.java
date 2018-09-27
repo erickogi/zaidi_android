@@ -5,18 +5,33 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
+import com.dev.lishabora.AppConstants;
+import com.dev.lishabora.Models.Collection;
+import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.Payouts;
+import com.dev.lishabora.Models.ProductsModel;
+import com.dev.lishabora.Models.RoutesModel;
+import com.dev.lishabora.Models.SyncModel;
 import com.dev.lishabora.Models.Trader.FarmerBalance;
 import com.dev.lishabora.Models.Trader.FarmerLoansTable;
 import com.dev.lishabora.Models.Trader.FarmerOrdersTable;
 import com.dev.lishabora.Models.Trader.LoanPayments;
 import com.dev.lishabora.Models.Trader.OrderPayments;
+import com.dev.lishabora.Models.Trader.TraderModel;
 import com.dev.lishabora.Repos.Trader.BalanceRepo;
 import com.dev.lishabora.Repos.Trader.LoanPaymentsRepo;
 import com.dev.lishabora.Repos.Trader.LoansTableRepo;
 import com.dev.lishabora.Repos.Trader.OrderPaymentsRepo;
 import com.dev.lishabora.Repos.Trader.OrdersTableRepo;
+import com.dev.lishabora.Repos.Trader.SyncRepo;
+import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.PrefrenceManager;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
+import java.util.LinkedList;
 import java.util.List;
 
 public class BalncesViewModel extends AndroidViewModel
@@ -28,6 +43,7 @@ public class BalncesViewModel extends AndroidViewModel
     LoanPaymentsRepo loanPaymentsRepo;
     OrderPaymentsRepo orderPaymentsRepo;
     OrdersTableRepo ordersTableRepo;
+    SyncRepo syncRepo;
 
 
     private Application application;
@@ -45,8 +61,198 @@ public class BalncesViewModel extends AndroidViewModel
 
         loanPaymentsRepo = new LoanPaymentsRepo(application);
         orderPaymentsRepo = new OrderPaymentsRepo(application);
+        syncRepo = new SyncRepo(application);
+        prefrenceManager = new PrefrenceManager(application);
 
 
+    }
+
+    public LiveData<List<SyncModel>> fetchAllSync() {
+        return syncRepo.fetchAllData(false);
+    }
+
+    public LiveData<List<SyncModel>> fetchByStatus(int status) {
+        return syncRepo.getAllByStatus(status);
+    }
+
+    public LiveData<SyncModel> fetchById(int id) {
+        return syncRepo.getSynce(id);
+    }
+
+    public void createSync(SyncModel model) {
+        syncRepo.insert(model);
+
+    }
+
+    public void updateSync(SyncModel syncModel) {
+        syncRepo.upDateRecord(syncModel);
+
+    }
+
+    public void deleteSync(SyncModel syncModel) {
+        syncRepo.deleteRecord(syncModel);
+
+    }
+
+
+//    public void synch(int action, int entity, Object o) {
+//        SyncModel syncModel = new SyncModel();
+//        syncModel.setActionType(action);
+//        syncModel.setObjectData(o);
+//        //syncModel.setObject(new Gson().toJson(o));
+//        syncModel.setEntityType(entity);
+//        syncModel.setSyncStatus(0);
+//        syncModel.setTimeStamp(DateTimeUtils.Companion.getNow());
+//        syncModel.setSyncTime("");
+//        syncModel.setTraderCode(prefrenceManager.getTraderModel().getCode());
+//        switch (action) {
+//            case AppConstants.INSERT:
+//                syncModel.setActionTypeName("Insert");
+//                break;
+//            case AppConstants.UPDATE:
+//                syncModel.setActionTypeName("Update");
+//                break;
+//            case AppConstants.DELETE:
+//                syncModel.setActionTypeName("Delete");
+//                break;
+//
+//        }
+//        switch (entity) {
+//            case AppConstants.ENTITY_FARMER:
+//                syncModel.setEntityTypeName("Farmer");
+//                syncModel.setObject(new Gson().toJson(o, FamerModel.class));
+//
+//                break;
+//            case AppConstants.ENTITY_PRODUCTS:
+//                syncModel.setEntityTypeName("Products");
+//                // syncModel.setObject(new Gson().toJson(o, ProductsModel.class));
+//
+//                break;
+//            case AppConstants.ENTITY_PAYOUTS:
+//                syncModel.setEntityTypeName("Payout");
+//                syncModel.setObject(new Gson().toJson(o, Payouts.class));
+//
+//                break;
+//            case AppConstants.ENTITY_COLLECTION:
+//                syncModel.setEntityTypeName("Collection");
+//                syncModel.setObject(new Gson().toJson(o, Collection.class));
+//
+//                break;
+//            case AppConstants.ENTITY_ROUTES:
+//                syncModel.setEntityTypeName("Route");
+//                syncModel.setObject(new Gson().toJson(o, RoutesModel.class));
+//
+//                break;
+//            case AppConstants.ENTITY_TRADER:
+//
+//                syncModel.setEntityTypeName("Trader");
+//                syncModel.setObject(new Gson().toJson(o, TraderModel.class));
+//
+//                break;
+//        }
+//
+//        createSync(syncModel);
+//    }
+
+
+    public void synch(int action, int entity, Object o, List<ProductsModel> objects, int type) {
+        Gson gson = new Gson();
+        SyncModel syncModel = new SyncModel();
+        syncModel.setActionType(action);
+        syncModel.setObjectData(o);
+        //syncModel.setObject(new Gson().toJson(o));
+        syncModel.setDataType(type);
+        syncModel.setEntityType(entity);
+        syncModel.setSyncStatus(0);
+        syncModel.setTimeStamp(DateTimeUtils.Companion.getNow());
+        syncModel.setSyncTime("");
+        syncModel.setTraderCode(prefrenceManager.getTraderModel().getCode());
+        switch (action) {
+            case AppConstants.INSERT:
+                syncModel.setActionTypeName("Insert");
+
+                break;
+            case AppConstants.UPDATE:
+                syncModel.setActionTypeName("Update");
+                break;
+            case AppConstants.DELETE:
+                syncModel.setActionTypeName("Delete");
+                break;
+
+        }
+        switch (entity) {
+            case AppConstants.ENTITY_FARMER:
+                syncModel.setEntityTypeName("Farmer");
+
+                syncModel.setObject(new Gson().toJson(o, FamerModel.class));
+                //syncModel.setObjectData(o);
+
+                break;
+            case AppConstants.ENTITY_PRODUCTS:
+                syncModel.setEntityTypeName("Products");
+
+                if (type == 1) {
+                    syncModel.setObject(new Gson().toJson(o, ProductsModel.class));
+                    // syncModel.setObjectData(o);
+
+                } else {
+                    JsonArray jsonArray = gson.toJsonTree(objects).getAsJsonArray();
+                    Type listType = new TypeToken<LinkedList<ProductsModel>>() {
+                    }.getType();
+
+
+                    syncModel.setObjects(gson.toJson(jsonArray));
+
+
+                }
+
+                break;
+            case AppConstants.ENTITY_PAYOUTS:
+                syncModel.setEntityTypeName("Payout");
+                syncModel.setObject(new Gson().toJson(o, Payouts.class));
+
+                break;
+            case AppConstants.ENTITY_COLLECTION:
+                syncModel.setEntityTypeName("Collection");
+                syncModel.setObject(new Gson().toJson(o, Collection.class));
+
+                break;
+            case AppConstants.ENTITY_ROUTES:
+                syncModel.setEntityTypeName("Route");
+                syncModel.setObject(new Gson().toJson(o, RoutesModel.class));
+
+                break;
+            case AppConstants.ENTITY_TRADER:
+
+                syncModel.setEntityTypeName("Trader");
+                syncModel.setObject(new Gson().toJson(o, TraderModel.class));
+
+                break;
+
+            case AppConstants.ENTITY_LOANS:
+
+                syncModel.setEntityTypeName("Loans");
+                syncModel.setObject(new Gson().toJson(o, FarmerLoansTable.class));
+
+                break;
+
+
+            case AppConstants.ENTITY_ORDERS:
+
+                syncModel.setEntityTypeName("Order");
+                syncModel.setObject(new Gson().toJson(o, FarmerOrdersTable.class));
+
+                break;
+
+            case AppConstants.ENTITY_BALANCES:
+
+                syncModel.setEntityTypeName("Balance");
+                syncModel.setObject(new Gson().toJson(o, FarmerBalance.class));
+
+                break;
+        }
+
+        createSync(syncModel);
     }
 
 
@@ -62,6 +268,8 @@ public class BalncesViewModel extends AndroidViewModel
 
     public void insertLoan(FarmerLoansTable farmerLoansTable) {
         loansTableRepo.insert(farmerLoansTable);
+        farmerLoansTable.setTraderCode(prefrenceManager.getTraderModel().getCode());
+        synch(AppConstants.INSERT, AppConstants.ENTITY_LOANS, farmerLoansTable, null, 1);
     }
 
     public LiveData<FarmerLoansTable> getFarmerLoanById(int keyid) {
@@ -115,10 +323,16 @@ public class BalncesViewModel extends AndroidViewModel
 
     public void updateRecordLoan(FarmerLoansTable farmerLoansTable) {
         loansTableRepo.updateRecord(farmerLoansTable);
+        farmerLoansTable.setTraderCode(prefrenceManager.getTraderModel().getCode());
+        synch(AppConstants.UPDATE, AppConstants.ENTITY_LOANS, farmerLoansTable, null, 1);
+
     }
 
     public void deleteRecordLoan(FarmerLoansTable farmerLoansTable) {
         loansTableRepo.deleteRecord(farmerLoansTable);
+        farmerLoansTable.setTraderCode(prefrenceManager.getTraderModel().getCode());
+        synch(AppConstants.DELETE, AppConstants.ENTITY_LOANS, farmerLoansTable, null, 1);
+
     }
 
     public double getBalanceLoanByFarmerCode(String farmercode) {
@@ -173,6 +387,10 @@ public class BalncesViewModel extends AndroidViewModel
 
     public void insertOrder(FarmerOrdersTable farmerOrdersTable) {
         ordersTableRepo.insert(farmerOrdersTable);
+        farmerOrdersTable.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
+        synch(AppConstants.INSERT, AppConstants.ENTITY_ORDERS, farmerOrdersTable, null, 1);
+
     }
 
     public LiveData<List<FarmerOrdersTable>> fetchAllOrders() {
@@ -195,8 +413,12 @@ public class BalncesViewModel extends AndroidViewModel
         return ordersTableRepo.getFarmerOrderByPayoutNumber(payoutNo);
     }
 
-    public FarmerOrdersTable getFarmerOrderByCollection(int collId) {
+    public FarmerOrdersTable getFarmerOrderByCollectionOne(int collId) {
         return ordersTableRepo.getFarmerOrderByCollection(collId);
+    }
+
+    public LiveData<FarmerOrdersTable> getFarmerOrderByCollection(int collId) {
+        return ordersTableRepo.getFarmerOrderByCollectionLive(collId);
     }
 
     public LiveData<List<FarmerOrdersTable>> getFarmerOrderByPayoutNumberByFarmer(String payoutnumber, String farmer) {
@@ -226,10 +448,18 @@ public class BalncesViewModel extends AndroidViewModel
 
     public void updateRecord(FarmerOrdersTable farmerOrdersTable) {
         ordersTableRepo.updateRecord(farmerOrdersTable);
+        farmerOrdersTable.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
+        synch(AppConstants.UPDATE, AppConstants.ENTITY_ORDERS, farmerOrdersTable, null, 1);
+
     }
 
     public void deleteRecord(FarmerOrdersTable farmerOrdersTable) {
         ordersTableRepo.deleteRecord(farmerOrdersTable);
+        farmerOrdersTable.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
+        synch(AppConstants.DELETE, AppConstants.ENTITY_ORDERS, farmerOrdersTable, null, 1);
+
     }
 
     public double getBalanceOrderByFarmerCode(String farmercode) {
@@ -279,10 +509,15 @@ public class BalncesViewModel extends AndroidViewModel
 
     public void insertMultipleLoanPayments(List<LoanPayments> loanPayments) {
         loanPaymentsRepo.insertMultiple(loanPayments);
+
     }
 
     public void insertSingleLoanPayment(LoanPayments loanPayments) {
         loanPaymentsRepo.insertSingle(loanPayments);
+        loanPayments.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
+        synch(AppConstants.INSERT, AppConstants.ENTITY_LOAN_PAYMNENTS, loanPayments, null, 1);
+
     }
 
 
@@ -329,10 +564,18 @@ public class BalncesViewModel extends AndroidViewModel
 
     public void updateRecordLoanPayment(LoanPayments loanPayment) {
         loanPaymentsRepo.updateRecord(loanPayment);
+        loanPayment.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
+        synch(AppConstants.UPDATE, AppConstants.ENTITY_LOAN_PAYMNENTS, loanPayment, null, 1);
+
     }
 
     public void deleteRecordLoanPayment(LoanPayments loanPayment) {
         loanPaymentsRepo.deleteRecord(loanPayment);
+        loanPayment.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
+        synch(AppConstants.DELETE, AppConstants.ENTITY_LOAN_PAYMNENTS, loanPayment, null, 1);
+
     }
 
     public double getSumPaidLoanPayment(int loanId) {
@@ -373,6 +616,10 @@ public class BalncesViewModel extends AndroidViewModel
 
     public void insertSingleOrderPayment(OrderPayments orderPayments) {
         orderPaymentsRepo.insertSingle(orderPayments);
+        orderPayments.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
+        synch(AppConstants.INSERT, AppConstants.ENTITY_ORDER_PAYMENTS, orderPayments, null, 1);
+
     }
 
 
@@ -417,12 +664,20 @@ public class BalncesViewModel extends AndroidViewModel
     }
 
 
-    public void updateRecordOrderPayment(OrderPayments loanPayment) {
-        orderPaymentsRepo.updateRecord(loanPayment);
+    public void updateRecordOrderPayment(OrderPayments orderPayments) {
+        orderPaymentsRepo.updateRecord(orderPayments);
+        orderPayments.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
+        synch(AppConstants.UPDATE, AppConstants.ENTITY_ORDER_PAYMENTS, orderPayments, null, 1);
+
     }
 
-    public void deleteRecordOrderPayment(OrderPayments loanPayment) {
-        orderPaymentsRepo.deleteRecord(loanPayment);
+    public void deleteRecordOrderPayment(OrderPayments orderPayments) {
+        orderPaymentsRepo.deleteRecord(orderPayments);
+        orderPayments.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
+        synch(AppConstants.DELETE, AppConstants.ENTITY_ORDER_PAYMENTS, orderPayments, null, 1);
+
     }
 
     public double getSumPaidOrderPayment(int loanId) {
@@ -463,6 +718,10 @@ public class BalncesViewModel extends AndroidViewModel
 
     public void insert(FarmerBalance farmerBalance) {
         balanceRepo.insert(farmerBalance);
+        farmerBalance.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
+        synch(AppConstants.INSERT, AppConstants.ENTITY_BALANCES, farmerBalance, null, 1);
+
     }
 
 
@@ -486,11 +745,19 @@ public class BalncesViewModel extends AndroidViewModel
 
     public void updateRecord(FarmerBalance farmerBalance) {
         balanceRepo.updateRecord(farmerBalance);
+        farmerBalance.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
+        synch(AppConstants.UPDATE, AppConstants.ENTITY_BALANCES, farmerBalance, null, 1);
+
     }
 
 
     public void deleteRecord(FarmerBalance farmerBalance) {
         balanceRepo.deleteRecord(farmerBalance);
+        farmerBalance.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
+        synch(AppConstants.DELETE, AppConstants.ENTITY_BALANCES, farmerBalance, null, 1);
+
     }
 
 

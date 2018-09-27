@@ -25,6 +25,7 @@ import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
+import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.Views.CommonFuncs;
 import com.dev.lishabora.Views.Trader.Activities.PayCard;
@@ -52,6 +53,7 @@ public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.
     private FamerModel famerModel;
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
     private PayoutsVewModel payoutsVewModel;
+    private BalncesViewModel balncesViewModel;
 
     private boolean isTO;
     private View.OnClickListener fromClicked = view -> {
@@ -86,6 +88,7 @@ public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
+        balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
 
 
 
@@ -162,7 +165,7 @@ public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.
                 public void onChanged(@Nullable List<Collection> collections) {
 
                     if (collections != null) {
-                        payoutsList.add(createPayoutsByCollection(collections, p, payoutsVewModel));
+                        payoutsList.add(createPayoutsByCollection(collections, p, payoutsVewModel, balncesViewModel, famerModel.getCode(), true, null));
                         listpayouts = payoutsList;
                         payoutesAdapter.refresh(payoutsList);
 

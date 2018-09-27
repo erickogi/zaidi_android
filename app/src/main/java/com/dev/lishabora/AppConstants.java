@@ -22,7 +22,13 @@ public class AppConstants {
     public static final int ENTITY_UNITS = 6;
     public static final int ENTITY_PAYOUTS = 7;
     public static final int ENTITY_CYCLES = 8;
+
     public static final int ENTITY_PRODUCTS_SUBSCRIPTION = 9;
+    public static final int ENTITY_LOANS = 10;
+    public static final int ENTITY_ORDERS = 11;
+    public static final int ENTITY_LOAN_PAYMNENTS = 12;
+    public static final int ENTITY_ORDER_PAYMENTS = 13;
+    public static final int ENTITY_BALANCES = 14;
 
 
     public static final int MILK = 1;

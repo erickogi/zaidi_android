@@ -207,6 +207,17 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
         }));
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0 && fab.getVisibility() == View.VISIBLE) {
+                    fab.hide();
+                } else if (dy < 0 && fab.getVisibility() != View.VISIBLE) {
+                    fab.show();
+                }
+            }
+        });
 
 
     }
@@ -919,7 +930,8 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     public void createCollection(Collection c) {
         mViewModel.createCollections(c, false).observe(FragementFarmersList.this, responseModel -> {
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-                CommonFuncs.addBalance(mViewModel, balncesViewModel, c, responseModel.getPayoutkey(), AppConstants.MILK);
+
+                CommonFuncs.addBalance(mViewModel, balncesViewModel, c, responseModel.getPayoutkey(), AppConstants.MILK, null, null);
 
             } else {
                 snack(responseModel.getResultDescription());
@@ -959,7 +971,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
         mViewModel.updateCollection(c).observe(FragementFarmersList.this, responseModel -> {
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-                CommonFuncs.updateBalance(mViewModel, balncesViewModel, c, responseModel.getPayoutkey(), AppConstants.MILK);
+                CommonFuncs.updateBalance(mViewModel, balncesViewModel, c, responseModel.getPayoutkey(), AppConstants.MILK, null, null);
 
             } else {
                 snack(responseModel.getResultDescription());
@@ -970,20 +982,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
     @Override
     public void updateCollection(Collection cAm, Collection cPm) {
-//        mViewModel.updateCollection(cAm).observe(FragementFarmersList.this, responseModel -> {
-//            if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-//            } else {
-//                snack(responseModel.getResultDescription());
-//
-//            }
-//        });
-//        mViewModel.updateCollection(cPm).observe(FragementFarmersList.this, responseModel -> {
-//            if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-//            } else {
-//                snack(responseModel.getResultDescription());
-//
-//            }
-//        });
 
 
     }

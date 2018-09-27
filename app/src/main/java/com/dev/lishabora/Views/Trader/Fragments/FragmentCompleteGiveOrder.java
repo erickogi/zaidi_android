@@ -202,6 +202,13 @@ public class FragmentCompleteGiveOrder extends Fragment implements BlockingStep 
         } else {
             edtDeliveryFee.setText("");
         }
+        try {
+            if (Double.valueOf(edtAmount.getText().toString()) < 1) {
+                edtDeliveryFee.setText("0.0");
+            }
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
 
 
         double installmentValue = 0.0;

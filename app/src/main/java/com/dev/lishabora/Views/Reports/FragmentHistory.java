@@ -21,6 +21,7 @@ import com.dev.lishabora.Models.MonthsDates;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
+import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.Views.CommonFuncs;
 import com.dev.lishabora.Views.Trader.FarmerToolBarUI;
@@ -43,6 +44,7 @@ public class FragmentHistory extends Fragment implements DatePickerDialog.OnDate
     private View view;
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
     private PayoutsVewModel payoutsVewModel;
+    private BalncesViewModel balncesViewModel;
 
     private boolean isTO;
     private int type;
@@ -79,6 +81,7 @@ public class FragmentHistory extends Fragment implements DatePickerDialog.OnDate
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
+        balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
 
 
     }
@@ -137,13 +140,15 @@ public class FragmentHistory extends Fragment implements DatePickerDialog.OnDate
         List<Payouts> payoutsList = new LinkedList<>();
         //PayoutesAdapter payoutesAdapter = initPayoutList();
 
+
         for (Payouts p : payouts) {
             payoutsVewModel.getCollectionByDateByPayout("" + p.getPayoutnumber()).observe(this, new Observer<List<Collection>>() {
                 @Override
                 public void onChanged(@Nullable List<Collection> collections) {
 
+
                     if (collections != null) {
-                        payoutsList.add(createPayoutsByCollection(collections, p, payoutsVewModel));
+                        payoutsList.add(createPayoutsByCollection(collections, p, payoutsVewModel, balncesViewModel, null, false, payoutsVewModel.getFarmersByCycleONe(p.getCycleCode())));
                         listpayouts = payoutsList;
                         //   payoutesAdapter.refresh(payoutsList);
 

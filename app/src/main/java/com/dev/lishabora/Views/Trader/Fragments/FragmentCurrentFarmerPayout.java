@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.FarmerCollectionsAdapter;
+import com.dev.lishabora.AppConstants;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.DayCollectionModel;
@@ -30,6 +31,8 @@ import com.dev.lishabora.Models.OrderModel;
 import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Models.ResponseModel;
+import com.dev.lishabora.Models.Trader.FarmerLoansTable;
+import com.dev.lishabora.Models.Trader.FarmerOrdersTable;
 import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.Utils.AdvancedOnclickRecyclerListener;
 import com.dev.lishabora.Utils.CollectionCreateUpdateListener;
@@ -100,11 +103,18 @@ public class FragmentCurrentFarmerPayout extends Fragment {
         return inflater.inflate(R.layout.fragment_farmer_card, container, false);
     }
 
+    private View.OnClickListener payNoClicked = view -> {
+
+        CommonFuncs.doAprove(getContext(), balncesViewModel, traderViewModel, famerModel, payouts);
+
+    };
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.view = view;
         toolBar = view.findViewById(R.id.toolbar);
+        toolBar.setOnPayNoClickListener(payNoClicked);
+
 
         famerModel = (FamerModel) getArguments().getSerializable("farmer");
         btnApprove = view.findViewById(R.id.btn_approve);
@@ -222,25 +232,27 @@ public class FragmentCurrentFarmerPayout extends Fragment {
         alertDialogAndroid.show();
     }
     private void approve(Payouts payouts, PayoutFarmersCollectionModel model) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
-        alertDialog.setMessage("Confirm that you wish to approve " + model.getFarmername() + "'s " + payouts.getCyclename() + " Collection card").setCancelable(false).setTitle("Approve " + model.getFarmername() + " Card");
+//        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
+//        alertDialog.setMessage("Confirm that you wish to approve " + model.getFarmername() + "'s " + payouts.getCyclename() + " Collection card").setCancelable(false).setTitle("Approve " + model.getFarmername() + " Card");
+//
+//
+//        alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
+//
+//            payoutsVewModel.approveFarmersPayoutCard(model.getFarmercode(), model.getPayoutNumber());
+//            model.setCardstatus(1);
+//            model.setStatusName("Approved");
+//            setData(model);
+//
+//
+//            dialogInterface.dismiss();
+//
+//        }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
+//
+//        AlertDialog alertDialogAndroid = alertDialog.create();
+//        alertDialogAndroid.setCancelable(false);
+//        alertDialogAndroid.show();
 
-
-        alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
-
-            payoutsVewModel.approveFarmersPayoutCard(model.getFarmercode(), model.getPayoutNumber());
-            model.setCardstatus(1);
-            model.setStatusName("Approved");
-            setData(model);
-
-
-            dialogInterface.dismiss();
-
-        }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
-
-        AlertDialog alertDialogAndroid = alertDialog.create();
-        alertDialogAndroid.setCancelable(false);
-        alertDialogAndroid.show();
+        CommonFuncs.doAprove(getContext(), balncesViewModel, traderViewModel, famerModel, payouts);
 
     }
 
@@ -272,21 +284,38 @@ public class FragmentCurrentFarmerPayout extends Fragment {
             setBalance(milkKsh);
         });
 
-        payoutsVewModel.getSumOfLoansForPayout(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
-            toolBar.updateLoan(String.valueOf(integer));
-
-            setBalance(milkKsh);
-        });
-        payoutsVewModel.getSumOfOrdersForPayout(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
-            toolBar.updateOrder(String.valueOf(integer));
-
-            setBalance(milkKsh);
-        });
-
         payoutsVewModel.getSumOfMilkForPayoutKsh(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
             milkKsh = integer;
             setBalance(milkKsh);
         });
+//        payoutsVewModel.getSumOfLoansForPayout(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
+//            toolBar.updateLoan(String.valueOf(integer));
+//
+//            setBalance(milkKsh);
+//        });
+//        payoutsVewModel.getSumOfOrdersForPayout(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
+//            toolBar.updateOrder(String.valueOf(integer));
+//
+//            setBalance(milkKsh);
+//        });
+//
+
+        balncesViewModel.getFarmerLoanByFarmer(model.getFarmercode()).observe(this, farmerLoansTables -> {
+            if (farmerLoansTables != null) {
+
+                toolBar.updateLoan(CommonFuncs.getCardLoan(farmerLoansTables));
+                setBalance(milkKsh);
+            }
+        });
+
+        balncesViewModel.getFarmerOrderByFarmer(model.getFarmercode()).observe(this, farmerOrderTables -> {
+            if (farmerOrderTables != null) {
+
+                toolBar.updateOrder(CommonFuncs.getCardOrder(farmerOrderTables));
+                setBalance(milkKsh);
+            }
+        });
+
 
         btnApprove.setOnClickListener(view -> approve(payouts, model));
         btnBack.setOnClickListener(view1 -> cancelApprove(payouts, model));
@@ -334,7 +363,21 @@ public class FragmentCurrentFarmerPayout extends Fragment {
                         if (a != null) {
                             a.dismiss();
                         }
-                        CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type);
+                        if (type == AppConstants.MILK) {
+                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type, null, null);
+                        } else if (type == AppConstants.LOAN) {
+                            FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getId());
+
+                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type, f, null);
+
+
+                        } else if (type == AppConstants.ORDER) {
+                            FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getId());
+
+                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type, null, f);
+
+
+                        }
                         MyToast.toast(responseModel.getResultDescription(), getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
                     }
                 });
@@ -352,7 +395,23 @@ public class FragmentCurrentFarmerPayout extends Fragment {
                             if (a != null) {
                                 a.dismiss();
                             }
-                            CommonFuncs.updateBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type);
+                            if (type == AppConstants.MILK) {
+                                CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type, null, null);
+                            } else if (type == AppConstants.LOAN) {
+                                FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getId());
+
+                                CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type, f, null);
+
+
+                            } else if (type == AppConstants.ORDER) {
+
+
+                                FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getId());
+
+                                CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type, null, f);
+
+
+                            }
                             MyToast.toast("Collection updated", getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
 
                         }
@@ -452,7 +511,6 @@ public class FragmentCurrentFarmerPayout extends Fragment {
 
         });
         recyclerView.setAdapter(listAdapter);
-
         listAdapter.notifyDataSetChanged();
 
 

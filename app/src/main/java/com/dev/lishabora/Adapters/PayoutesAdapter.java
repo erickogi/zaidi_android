@@ -65,9 +65,9 @@ public class PayoutesAdapter extends RecyclerView.Adapter<PayoutsViewHolder> {
         holder.milkTotal.setText(String.format("%s%s", GeneralUtills.Companion.round(model.getMilkTotalLtrs(), 1), context.getString(R.string.ltrs)));
         holder.loanTotal.setText(String.format("%s%s", GeneralUtills.Companion.round(model.getLoanTotal(), 1), context.getString(R.string.ksh)));
         holder.orderTotal.setText(String.format("%s%s", GeneralUtills.Companion.round(model.getOrderTotal(), 1), context.getString(R.string.ksh)));
-
         holder.balance.setText(String.format("%s%s", GeneralUtills.Companion.round(model.getBalance(), 1), context.getString(R.string.ksh)));
 
+        GeneralUtills.Companion.changeCOlor(model.getBalance(), holder.balance, 1);
 
         holder.approvedCount.setText(model.getApprovedCards());
         holder.unApprovedCount.setText(model.getPendingCards());

@@ -25,6 +25,7 @@ import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.FarmerHistoryByDateModel;
 import com.dev.lishabora.Models.LoanModel;
 import com.dev.lishabora.Models.MonthsDates;
+import com.dev.lishabora.Models.Trader.FarmerLoansTable;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
@@ -228,7 +229,10 @@ public class FragmentGiveLoan extends Fragment {
 
                 traderViewModel.createCollections(c, false).observe(FragmentGiveLoan.this, responseModel -> {
                     if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-                        CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), AppConstants.LOAN);
+                        // balncesViewModel.getFarmerLoanByCollection(c.getId()).observe(FragmentGiveLoan.this, farmerLoansTable -> {
+                        FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getId());
+                        CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), AppConstants.LOAN, f, null);
+                        // });
 
                     } else {
 
@@ -252,14 +256,17 @@ public class FragmentGiveLoan extends Fragment {
 
             traderViewModel.updateCollection(collModel).observe(FragmentGiveLoan.this, responseModel -> {
                     if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-                        CommonFuncs.updateBalance(traderViewModel, balncesViewModel, collModel, responseModel.getPayoutkey(), AppConstants.LOAN);
+
+                        FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(collModel.getId());
+                        CommonFuncs.updateBalance(traderViewModel, balncesViewModel, collModel, responseModel.getPayoutkey(), AppConstants.LOAN, f, null);
+                        //});
 
                     } else {
 
 
                     }
                 });
-                famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
+            famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
             traderViewModel.updateFarmer(famerModel, false, false);
                 popOutFragments();
 

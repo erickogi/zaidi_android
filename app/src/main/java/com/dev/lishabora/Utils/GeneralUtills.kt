@@ -74,6 +74,42 @@ class GeneralUtills {
             return bd.toDouble()
         }
 
+        fun changeCOlor(value: String, view: View, type: Int) {
+            var value1 = 0.0
+            var txt = view as TextView
+
+            if (type == 1) {
+                try {
+                    txt = view
+                    value1 = java.lang.Double.valueOf(value)!!
+
+                } catch (nm: Exception) {
+
+                }
+            } else if (type == 2) {
+                try {
+                    txt = view as TextInputEditText
+                    value1 = java.lang.Double.valueOf(value)!!
+
+                } catch (nm: Exception) {
+
+                }
+            }
+
+            if (value1 < 0) {
+
+                view.setTextColor(Application.context.resources.getColor(R.color.red))
+            } else if (value1 > 0) {
+                view.setTextColor(Application.context.resources.getColor(R.color.green_color_picker))
+
+            } else {
+                view.setTextColor(Application.context.resources.getColor(R.color.textblack))
+
+            }
+
+
+        }
+
         fun round(value: String, places: Int): String {
 
             var d: Double
@@ -88,7 +124,6 @@ class GeneralUtills {
 
             return java.lang.String.valueOf(round(d, places))
         }
-
 
         fun capitalize(txt: String): String {
             var txt = txt

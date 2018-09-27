@@ -59,7 +59,7 @@
                             android:padding="3dp"
                             android:text="Your Names goes here"
                             android:textColor="#8b8788"
-                            android:textSize="11dp" />
+                            android:textSize="12dp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -82,7 +82,7 @@
                             android:padding="3dp"
                             android:text="4871"
                             android:textColor="#8b8788"
-                            android:textSize="11dp" />
+                            android:textSize="12dp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -105,7 +105,7 @@
                             android:padding="3dp"
                             android:text="+254 706828557"
                             android:textColor="#8b8788"
-                            android:textSize="11dp" />
+                            android:textSize="12dp" />
                     </LinearLayout>
 
                     <View
@@ -163,7 +163,7 @@
                             android:padding="3dp"
                             android:text="Milimani Avenue"
                             android:textColor="#8b8788"
-                            android:textSize="11dp" />
+                            android:textSize="12dp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -186,7 +186,7 @@
                             android:padding="3dp"
                             android:text="Weekly (Saturday - Sunday)"
                             android:textColor="#8b8788"
-                            android:textSize="11dp" />
+                            android:textSize="12dp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -209,7 +209,7 @@
                             android:padding="3dp"
                             android:text="1 Ltr "
                             android:textColor="#8b8788"
-                            android:textSize="11dp" />
+                            android:textSize="12dp" />
                     </LinearLayout>
 
 
@@ -408,7 +408,7 @@
                             android:text="Last Interaction Time: "
                             android:textAlignment="center"
                             android:textColor="#8b8788"
-                            android:textSize="11dp" />
+                            android:textSize="12dp" />
 
                         <TextView
                             android:id="@+id/txt_last_time"
@@ -420,7 +420,7 @@
                             android:text="12 Aug, 2018"
                             android:textAlignment="center"
                             android:textColor="#8b8788"
-                            android:textSize="11dp" />
+                            android:textSize="12dp" />
 
                     </LinearLayout>
 

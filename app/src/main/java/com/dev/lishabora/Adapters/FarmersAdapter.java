@@ -73,11 +73,12 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
         FamerModel farmer = modelList.get(position);
         String v = farmer.getTotalbalance();
         try {
-            v = String.valueOf(GeneralUtills.Companion.round(Double.valueOf(v), 0));
+            v = String.valueOf(GeneralUtills.Companion.round(v, 0));
         } catch (Exception nm) {
             nm.printStackTrace();
         }
         holder.balance.setText(String.format("%s%s", v, context.getString(R.string.ksh)));
+        GeneralUtills.Companion.changeCOlor(v, holder.balance, 1);
         holder.id.setText(farmer.getCode());
         holder.name.setText(GeneralUtills.Companion.capitalize(farmer.getNames()));
         holder.cycle.setText(farmer.getCyclename());

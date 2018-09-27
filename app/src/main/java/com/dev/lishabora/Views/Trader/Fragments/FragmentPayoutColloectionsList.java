@@ -28,6 +28,7 @@ import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
+import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.Views.CommonFuncs;
 import com.dev.lishabora.Views.Trader.PayoutConstants;
@@ -55,6 +56,7 @@ public class FragmentPayoutColloectionsList extends Fragment {
     private LinearLayout empty_layout;
     private Payouts payouts;
     private PayoutsVewModel payoutsVewModel;
+    private BalncesViewModel balncesViewModel;
     private List<DayCollectionModel> dayCollectionModels;
     private List<Collection> collections;
     TextView txtApprovalStatus;
@@ -158,6 +160,7 @@ public class FragmentPayoutColloectionsList extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         this.view = view;
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
+        balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
         btnApprove = view.findViewById(R.id.btn_approve);
         txtApprovalStatus = view.findViewById(R.id.txt_approval_status);
         btnApprove.setVisibility(View.GONE);
@@ -173,7 +176,7 @@ public class FragmentPayoutColloectionsList extends Fragment {
         }
         if (payouts != null) {
             payoutsVewModel.getPayoutsByPayoutNumber("" + payouts.getPayoutnumber()).observe(this, payouts -> {
-                this.payouts = CommonFuncs.createPayout(payouts, payoutsVewModel);
+                this.payouts = CommonFuncs.createPayout(payouts, payoutsVewModel, balncesViewModel, null, false, payoutsVewModel.getFarmersByCycleONe(payouts.getCycleCode()));
                 starterPack();
 
             });
@@ -218,6 +221,8 @@ public class FragmentPayoutColloectionsList extends Fragment {
             payouts.setStatus(1);
             payouts.setStatusName("Approved");
             payoutsVewModel.updatePayout(payouts);
+
+            //   CommonFuncs.doPayout(payouts,balncesViewModel,payoutsVewModel);
             starterPack();
 
         });

@@ -33,6 +33,7 @@ import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
+import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.Views.CommonFuncs;
 import com.dev.lishabora.Views.Trader.Activities.PayCard;
@@ -69,6 +70,7 @@ public class FragmentPayoutFarmersList extends Fragment {
     private LinearLayout empty_layout;
     private Payouts payouts;
     private PayoutsVewModel payoutsVewModel;
+    private BalncesViewModel balncesViewModel;
     private List<PayoutFarmersCollectionModel> dayCollectionModels;
     private List<PayoutFarmersCollectionModel> dayCollectionModels1;
     private List<FamerModel> famerModels;
@@ -259,6 +261,7 @@ public class FragmentPayoutFarmersList extends Fragment {
         setHasOptionsMenu(true);
 
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
+        balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
 
 
         if (getArguments() != null) {
@@ -270,7 +273,7 @@ public class FragmentPayoutFarmersList extends Fragment {
 
         if (payouts != null) {
             payoutsVewModel.getPayoutsByPayoutNumber("" + payouts.getPayoutnumber()).observe(this, payouts -> {
-                this.payouts = CommonFuncs.createPayout(payouts, payoutsVewModel);
+                this.payouts = CommonFuncs.createPayout(payouts, payoutsVewModel, balncesViewModel, null, false, payoutsVewModel.getFarmersByCycleONe(payouts.getCycleCode()));
 
                 log("GET PAYOUTS BY PAYOUT NUMBER AS PAYOUT FROM CONSTANT OR ");
                 // starterPack();
@@ -307,6 +310,7 @@ public class FragmentPayoutFarmersList extends Fragment {
         loanTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getLoanTotal(), 1), getActivity().getString(R.string.ksh)));
         orderTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getOrderTotal(), 1), getActivity().getString(R.string.ksh)));
         balance.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getBalance(), 1), getActivity().getString(R.string.ksh)));
+        GeneralUtills.Companion.changeCOlor(model.getBalance(), balance, 1);
 
 
 

@@ -107,7 +107,9 @@ public class MilkCardToolBarUI extends RelativeLayout {
 
     public void show(String balance) {
 
-        txtBalance.setText(String.format("%s %s", GeneralUtills.Companion.round(balance, 1), getResources().getString(R.string.ltrs)));
+        txtBalance.setText(String.format("%s %s", GeneralUtills.Companion.round(balance, 1), getResources().getString(R.string.ksh)));
+        GeneralUtills.Companion.changeCOlor(balance, txtBalance, 1);
+
 
     }
 
@@ -124,7 +126,9 @@ public class MilkCardToolBarUI extends RelativeLayout {
         setMilkTotal(orderTotal);
 
 
-        txtBalance.setText(String.format("%s %s", GeneralUtills.Companion.round(balance, 1), getResources().getString(R.string.ltrs)));
+        txtBalance.setText(String.format("%s %s", GeneralUtills.Companion.round(balance, 1), getResources().getString(R.string.ksh)));
+        GeneralUtills.Companion.changeCOlor(balance, txtBalance, 1);
+
         txtMilkTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(milkTotals, 1), getResources().getString(R.string.ltrs)));
         txtLoanTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(loaTotals, 1), getResources().getString(R.string.ltrs)));
         txtOrderTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(orderTotal, 1), getResources().getString(R.string.ltrs)));
@@ -144,6 +148,7 @@ public class MilkCardToolBarUI extends RelativeLayout {
         }
 
 
+
     }
 
     public void updateMilk(String v) {
@@ -153,14 +158,14 @@ public class MilkCardToolBarUI extends RelativeLayout {
     }
 
     public void updateLoan(String v) {
-        txtLoanTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(v, 1), getResources().getString(R.string.ltrs)));
+        txtLoanTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(v, 1), getResources().getString(R.string.ksh)));
         setLoanTotal(v);
 
     }
 
     public void updateOrder(String v) {
 
-        txtOrderTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(v, 1), getResources().getString(R.string.ltrs)));
+        txtOrderTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(v, 1), getResources().getString(R.string.ksh)));
         setOrderTotal(v);
     }
 
@@ -205,5 +210,8 @@ public class MilkCardToolBarUI extends RelativeLayout {
         this.milkTotal = milkTotal;
     }
 
+    public void setOnPayNoClickListener(OnClickListener clickListener) {
+        txtPayoutNumber.setOnClickListener(clickListener);
+    }
 
 }
