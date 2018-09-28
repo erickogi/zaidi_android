@@ -308,6 +308,10 @@ public class BalncesViewModel extends AndroidViewModel
         return loansTableRepo.getFarmerLoanByPayoutNumberByFarmerByStatus(farmer, status);
     }
 
+    public LiveData<List<FarmerLoansTable>> getFarmerLoanByFarmerByStatus(String farmer, int status) {
+        return loansTableRepo.getFarmerLoanByFarmerByStatus(farmer, status);
+    }
+
 
     public LiveData<List<FarmerLoansTable>> getFarmerLoanByFarmer(String farmer) {
         return loansTableRepo.getFarmerLoanByFarmer(farmer);
@@ -431,6 +435,10 @@ public class BalncesViewModel extends AndroidViewModel
 
     public List<FarmerOrdersTable> getFarmerOrderByPayoutNumberByFarmerByStatus(String farmer, int status) {
         return ordersTableRepo.getFarmerOrderByPayoutNumberByFarmerByStatus(farmer, status);
+    }
+
+    public LiveData<List<FarmerOrdersTable>> getFarmerOrderByFarmerByStatus(String farmer, int status) {
+        return ordersTableRepo.getFarmerOrderByFarmerByStatus(farmer, status);
     }
 
 

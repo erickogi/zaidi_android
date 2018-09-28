@@ -54,6 +54,7 @@ public class UpSyncJob extends Job {
         Context context = getContext();
 
         LMDatabase lmDatabase = LMDatabase.getDatabase(context);
+        //lmDatabase.cl
         List<SyncModel> list = lmDatabase.syncDao().getAllByStatusRaw(0);
         Intent intent = new Intent(getContext(), SyncWorks.class);
         intent.putExtra("type", "notification_cart");

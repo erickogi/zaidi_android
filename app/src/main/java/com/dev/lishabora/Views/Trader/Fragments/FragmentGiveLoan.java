@@ -400,14 +400,17 @@ public class FragmentGiveLoan extends Fragment {
         this.modelsDA = models;
 
         double milkTotal = 0.0, loanTotal = 0, OrderTotal = 0;
-        for (FarmerHistoryByDateModel f : models) {
-            milkTotal = milkTotal + Double.valueOf(f.getMilktotal());
 
-            loanTotal = loanTotal + Double.valueOf(f.getLoanTotal());
+        if (models != null) {
+            for (FarmerHistoryByDateModel f : models) {
+                milkTotal = milkTotal + Double.valueOf(f.getMilktotal());
 
-            OrderTotal = OrderTotal + Double.valueOf(f.getOrderTotal());
+                loanTotal = loanTotal + Double.valueOf(f.getLoanTotal());
+
+                OrderTotal = OrderTotal + Double.valueOf(f.getOrderTotal());
+            }
+
         }
-
 
         if (models == null) {
             models = new LinkedList<>();

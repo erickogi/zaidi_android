@@ -72,6 +72,11 @@ public class OrdersTableRepo {
 
     }
 
+    public LiveData<List<FarmerOrdersTable>> getFarmerOrderByFarmerByStatus(String farmer, int status) {
+        return dao.getFarmerOrderByFarmerByStatus(farmer, status);
+
+    }
+
 
     public LiveData<List<FarmerOrdersTable>> getFarmerOrderByFarmer(String farmer) {
         return dao.getFarmerOrderByFarmer(farmer);

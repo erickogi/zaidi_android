@@ -8,6 +8,7 @@ import android.support.design.button.MaterialButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -36,9 +37,11 @@ import com.dev.lishabora.Models.Trader.FarmerBalance;
 import com.dev.lishabora.Models.Trader.FarmerLoansTable;
 import com.dev.lishabora.Models.Trader.FarmerOrdersTable;
 import com.dev.lishabora.Models.UnitsModel;
+import com.dev.lishabora.Utils.ApproveFarmerPayCardListener;
 import com.dev.lishabora.Utils.CollectionCreateUpdateListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
+import com.dev.lishabora.Utils.InputFilterMinMax;
 import com.dev.lishabora.Utils.LoanEditValueListener;
 import com.dev.lishabora.Utils.MilkEditValueListener;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
@@ -698,7 +701,6 @@ public class CommonFuncs {
         return new String[]{String.valueOf(totals[0]), String.valueOf(totals[1]), String.valueOf(totals[2]), cycleCode};
     }
 
-    static Double milkCollectionD = 0.0;
 
     public static int getFarmerStatus(String code, List<Collection> collections) {
         int status = 0;
@@ -1413,7 +1415,6 @@ public class CommonFuncs {
 
     }
 
-    static Double loanTotalD = 0.0;
 
     public static List<ReportListModel> generateReportListModel(List<Collection> collections, int type) {
         List<ReportListModel> reportListModels = new LinkedList<>();
@@ -1623,9 +1624,6 @@ public class CommonFuncs {
         return String.valueOf(a + b);
     }
 
-    static Double orderTotalD = 0.0;
-    static Double loanInstallmentsd = 0.0;
-    static Double orderInstallmentsD = 0.0;
 
     public static Payouts createPayoutsByCollection(List<Collection> collections, Payouts p,
                                                     PayoutsVewModel payoutsVewModel,
@@ -1827,45 +1825,7 @@ public class CommonFuncs {
 
     }
 
-    public static void doAprove(Context context, BalncesViewModel balncesViewModel, TraderViewModel traderViewModel, FamerModel c, Payouts p) {
-
-        double loanTotalAmount = 0.0;
-        double loanInstalmentAmount = 0.0;
-        double loanPaid = 0.0;
-
-        double orderTotalAmount = 0.0;
-        double orderInstalmentAmount = 0.0;
-        double orderPaid = 0.0;
-
-
-        List<FarmerLoansTable> loansTables = balncesViewModel.getFarmerLoanByPayoutNumberByFarmerByStatus(c.getCode(), 0);
-        List<FarmerOrdersTable> ordersTables = balncesViewModel.getFarmerOrderByPayoutNumberByFarmerByStatus(c.getCode(), 0);
-
-        for (FarmerLoansTable fl : loansTables) {
-            loanTotalAmount = +(Double.valueOf(fl.getLoanAmount()));
-            loanInstalmentAmount = +(Double.valueOf(fl.getInstallmentAmount()));
-            loanPaid = +balncesViewModel.getSumPaidLoanPayment(fl.getId());
-        }
-
-        for (FarmerOrdersTable fo : ordersTables) {
-            orderTotalAmount = +(Double.valueOf(fo.getOrderAmount()));
-            orderInstalmentAmount = +(Double.valueOf(fo.getInstallmentAmount()));
-            orderPaid = +balncesViewModel.getSumPaidOrderPayment(fo.getId());
-        }
-        Log.d("RecordAsd", "Alll Order " + loanInstalmentAmount + "\n" + ordersTables.size());
-
-
-        double totalMilkForCurrentPayout = 0.0;
-        if (traderViewModel.getSumOfMilkForPayoutKshD(c.getCode(), p.getPayoutnumber()) != null) {
-            totalMilkForCurrentPayout += traderViewModel.getSumOfMilkForPayoutKshD(c.getCode(), p.getPayoutnumber());
-        }
-
-//        farmerBalance = balncesViewModel.getByFarmerCodeOne(c.getFarmerCode());
-//        farmerBalance.setBalanceOwed(String.valueOf((totalMilkForCurrentPayout - ((loanTotalAmount - loanPaid) + (orderTotalAmount - orderPaid)))));
-//        farmerBalance.setBalanceToPay(String.valueOf((totalMilkForCurrentPayout - ((loanInstalmentAmount) + (orderInstalmentAmount)))));
-
-        doPayout(context, "" + totalMilkForCurrentPayout, "" + (loanTotalAmount - loanPaid), "" + (orderTotalAmount - orderPaid), "" + loanInstalmentAmount, "" + orderInstalmentAmount);
-    }
+    static Double orderTotalD = 0.0;
 
     private static void refreshTotalBalances(BalncesViewModel balncesViewModel, TraderViewModel traderViewModel, Collection c) {
 
@@ -2077,8 +2037,61 @@ public class CommonFuncs {
 
     }
 
-    public static void doPayout(Context context, String milkCollection, String loanTotal, String orderTotal,
-                                String loanInstallments, String orderInstallments) {
+    static Double loanInstallmentsd = 0.0;
+    static Double orderInstallmentsD = 0.0;
+    static Double milkCollectionD = 0.0;
+    static Double loanTotalD = 0.0;
+    static Double totalToPay = 0.0;
+    static boolean isLoanEditable = false;
+    static boolean isOrderEditable = false;
+
+    public static void doAprove(Context context, BalncesViewModel balncesViewModel, TraderViewModel traderViewModel, PayoutFarmersCollectionModel model, FamerModel c, Payouts p, ApproveFarmerPayCardListener listener) {
+
+        double loanTotalAmount = 0.0;
+        double loanInstalmentAmount = 0.0;
+        double loanPaid = 0.0;
+
+        double orderTotalAmount = 0.0;
+        double orderInstalmentAmount = 0.0;
+        double orderPaid = 0.0;
+
+
+        List<FarmerLoansTable> loansTables = balncesViewModel.getFarmerLoanByPayoutNumberByFarmerByStatus(c.getCode(), 0);
+        List<FarmerOrdersTable> ordersTables = balncesViewModel.getFarmerOrderByPayoutNumberByFarmerByStatus(c.getCode(), 0);
+
+        for (FarmerLoansTable fl : loansTables) {
+            loanTotalAmount = +(Double.valueOf(fl.getLoanAmount()));
+            loanInstalmentAmount = +(Double.valueOf(fl.getInstallmentAmount()));
+            loanPaid = +balncesViewModel.getSumPaidLoanPayment(fl.getId());
+        }
+
+        for (FarmerOrdersTable fo : ordersTables) {
+            orderTotalAmount = +(Double.valueOf(fo.getOrderAmount()));
+            orderInstalmentAmount = +(Double.valueOf(fo.getInstallmentAmount()));
+            orderPaid = +balncesViewModel.getSumPaidOrderPayment(fo.getId());
+        }
+        Log.d("RecordAsd", "Alll Order " + loanInstalmentAmount + "\n" + ordersTables.size());
+
+
+        double totalMilkForCurrentPayout = 0.0;
+        if (traderViewModel.getSumOfMilkForPayoutKshD(c.getCode(), p.getPayoutnumber()) != null) {
+            totalMilkForCurrentPayout += traderViewModel.getSumOfMilkForPayoutKshD(c.getCode(), p.getPayoutnumber());
+        }
+
+//        farmerBalance = balncesViewModel.getByFarmerCodeOne(c.getFarmerCode());
+//        farmerBalance.setBalanceOwed(String.valueOf((totalMilkForCurrentPayout - ((loanTotalAmount - loanPaid) + (orderTotalAmount - orderPaid)))));
+//        farmerBalance.setBalanceToPay(String.valueOf((totalMilkForCurrentPayout - ((loanInstalmentAmount) + (orderInstalmentAmount)))));
+
+        doPayout(context, model, "" + totalMilkForCurrentPayout, "" + (loanTotalAmount - loanPaid), "" + (orderTotalAmount - orderPaid), "" + loanInstalmentAmount, "" + orderInstalmentAmount, listener);
+    }
+
+    public static void setInputLimiter(TextInputEditText edt, double limit) {
+
+        edt.setFilters(new InputFilter[]{new InputFilterMinMax(0, (int) limit)});
+    }
+
+    private static void doPayout(Context context, PayoutFarmersCollectionModel model, String milkCollection, String loanTotal, String orderTotal,
+                                 String loanInstallments, String orderInstallments, ApproveFarmerPayCardListener listener) {
 
         try {
             milkCollectionD = Double.valueOf(milkCollection);
@@ -2103,8 +2116,10 @@ public class CommonFuncs {
         try {
             loanInstallmentsd = Double.valueOf(loanInstallments);
         } catch (Exception nm) {
+            Log.d("doublerrr", nm.toString());
             nm.printStackTrace();
         }
+
 
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_approve_farmer_card, null);
@@ -2124,10 +2139,11 @@ public class CommonFuncs {
         edtOrderInstallment = mView.findViewById(R.id.edt_approve_order_installments);
 
 
-        txtMilkCollections.setText(GeneralUtills.Companion.round(milkCollection, 1));
-        txtTotalLoans.setText(GeneralUtills.Companion.round(loanTotal, 1));
-        txtTotalOrders.setText(GeneralUtills.Companion.round(orderTotal, 1));
+        txtMilkCollections.setText(GeneralUtills.Companion.round(milkCollection, 0));
+        txtTotalLoans.setText(GeneralUtills.Companion.round(loanTotal, 0));
+        txtTotalOrders.setText(GeneralUtills.Companion.round(orderTotal, 0));
 
+        // edtLoanInstallment.setFilters(new InputFilter[]{new InputFilterMinMax("0","100")});
 
         edtLoanInstallment.addTextChangedListener(new TextWatcher() {
             @Override
@@ -2146,7 +2162,8 @@ public class CommonFuncs {
 
                 if (editable != null) {
 
-                    if (edtLoanInstallment.getText().toString() != null && !TextUtils.isEmpty(edtLoanInstallment.getText().toString())) {
+                    edtLoanInstallment.getText().toString();
+                    if (!TextUtils.isEmpty(edtLoanInstallment.getText().toString())) {
                         try {
                             double value = Double.valueOf(edtLoanInstallment.getText().toString());
                             loanInstallmentsd = value;
@@ -2154,10 +2171,31 @@ public class CommonFuncs {
                         } catch (Exception nm) {
                             nm.printStackTrace();
                         }
-                        txtPayout.setText(GeneralUtills.Companion.round(String.valueOf(milkCollectionD - (loanInstallmentsd + orderInstallmentsD)), 0));
 
+                    } else {
+                        loanInstallmentsd = 0.0;
                     }
+                } else {
+                    loanInstallmentsd = 0.0;
                 }
+
+
+                if (isLoanEditable) {
+                    totalToPay = (milkCollectionD - (loanInstallmentsd + orderInstallmentsD));
+                    setInputLimiter(edtLoanInstallment, totalToPay);
+                } else {
+                    totalToPay = (milkCollectionD - (orderInstallmentsD));
+
+                }
+                if (totalToPay > 0) {
+                    txtPayout.setText(GeneralUtills.Companion.round(String.valueOf(totalToPay), 0));
+                } else {
+                    txtPayout.setText("0");
+
+                }
+
+
+
             }
         });
         edtOrderInstallment.addTextChangedListener(new TextWatcher() {
@@ -2177,7 +2215,8 @@ public class CommonFuncs {
 
                 if (editable != null) {
 
-                    if (edtOrderInstallment.getText().toString() != null && !TextUtils.isEmpty(edtOrderInstallment.getText().toString())) {
+                    edtOrderInstallment.getText().toString();
+                    if (!TextUtils.isEmpty(edtOrderInstallment.getText().toString())) {
 
                         try {
                             double value = Double.valueOf(edtOrderInstallment.getText().toString());
@@ -2186,17 +2225,115 @@ public class CommonFuncs {
                         } catch (Exception nm) {
                             nm.printStackTrace();
                         }
-                        txtPayout.setText(GeneralUtills.Companion.round(String.valueOf(milkCollectionD - (loanInstallmentsd + orderInstallmentsD)), 0));
 
+                    } else {
+                        orderInstallmentsD = 0.0;
                     }
+                } else {
+                    orderInstallmentsD = 0.0;
+                }
+
+
+                if (isLoanEditable) {
+                    totalToPay = (milkCollectionD - (loanInstallmentsd + orderInstallmentsD));
+                    setInputLimiter(edtLoanInstallment, totalToPay);
+                } else {
+                    totalToPay = (milkCollectionD - (orderInstallmentsD));
+
+                }
+                if (totalToPay > 0) {
+                    txtPayout.setText(GeneralUtills.Companion.round(String.valueOf(totalToPay), 0));
+                } else {
+                    txtPayout.setText("0");
+
                 }
             }
         });
 
+
+        double maxplayBalnce = milkCollectionD;
+
+
         edtLoanInstallment.setText(GeneralUtills.Companion.round(loanInstallments, 0));
+
         edtOrderInstallment.setText(GeneralUtills.Companion.round(orderInstallments, 0));
 
-        txtPayout.setText(GeneralUtills.Companion.round(String.valueOf(milkCollectionD - (loanInstallmentsd + orderInstallmentsD)), 0));
+
+        if (milkCollectionD > (loanInstallmentsd + orderInstallmentsD)) {
+
+
+            edtLoanInstallment.setText(GeneralUtills.Companion.roundD(loanInstallmentsd, 0));
+            edtOrderInstallment.setText(GeneralUtills.Companion.roundD(orderInstallmentsD, 0));
+            edtLoanInstallment.setVisibility(View.VISIBLE);
+            edtOrderInstallment.setVisibility(View.VISIBLE);
+
+
+            isLoanEditable = true;
+            isOrderEditable = true;
+
+
+            setInputLimiter(edtLoanInstallment, maxplayBalnce);
+            setInputLimiter(edtOrderInstallment, maxplayBalnce);
+
+
+        } else if (milkCollectionD > orderInstallmentsD && milkCollectionD < (loanInstallmentsd + orderInstallmentsD)) {
+            edtOrderInstallment.setText(GeneralUtills.Companion.roundD(orderInstallmentsD, 0));
+            edtLoanInstallment.setVisibility(View.GONE);
+            edtOrderInstallment.setVisibility(View.VISIBLE);
+
+            isLoanEditable = false;
+            isOrderEditable = true;
+
+            setInputLimiter(edtOrderInstallment, maxplayBalnce);
+
+
+        } else if (milkCollectionD > 0) {
+            edtOrderInstallment.setText(GeneralUtills.Companion.roundD(milkCollectionD, 0));
+            edtLoanInstallment.setVisibility(View.GONE);
+            edtOrderInstallment.setVisibility(View.VISIBLE);
+
+            isLoanEditable = false;
+            isOrderEditable = true;
+
+
+            setInputLimiter(edtOrderInstallment, milkCollectionD);
+
+
+        } else {
+            isLoanEditable = false;
+            isOrderEditable = false;
+
+            edtLoanInstallment.setVisibility(View.GONE);
+            edtOrderInstallment.setVisibility(View.GONE);
+        }
+
+
+        if (orderInstallmentsD < 1) {
+            edtOrderInstallment.setVisibility(View.GONE);
+        }
+        if (loanInstallmentsd < 1) {
+            edtLoanInstallment.setVisibility(View.GONE);
+        }
+
+        totalToPay = (milkCollectionD - (loanInstallmentsd + orderInstallmentsD));
+
+
+        if (totalToPay > 0) {
+            txtPayout.setText(GeneralUtills.Companion.round(String.valueOf(totalToPay), 0));
+        } else {
+            txtPayout.setText("0");
+
+        }
+
+        try {
+            edtLoanInstallment.setSelection(Objects.requireNonNull(edtLoanInstallment.getText()).toString().length());
+            edtOrderInstallment.setSelection(Objects.requireNonNull(edtOrderInstallment.getText()).toString().length());
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+
+
+
 
 
         alertDialogBuilderUserInput.setCancelable(false);
@@ -2228,11 +2365,36 @@ public class CommonFuncs {
 
         btnPositive.setOnClickListener(view -> {
 
+
+            if (totalToPay > 0 && loanInstallmentsd > 0 && orderInstallmentsD > 0) {
+                listener.onApprove(model, totalToPay, loanInstallmentsd, orderInstallmentsD);
+                alertDialogAndroid.dismiss();
+            } else if (totalToPay > 1 && loanInstallmentsd > 1 && orderInstallmentsD < 1) {
+                listener.onApprovePayLoan(model, totalToPay, loanInstallmentsd);
+                alertDialogAndroid.dismiss();
+
+            } else if (totalToPay > 1 && loanInstallmentsd < 1 && orderInstallmentsD > 1) {
+                listener.onApprovePayOrder(model, totalToPay, orderInstallmentsD);
+                alertDialogAndroid.dismiss();
+
+            } else if (totalToPay > 1 && loanInstallmentsd < 1 && orderInstallmentsD < 1) {
+                listener.onApprove(model, totalToPay);
+                alertDialogAndroid.dismiss();
+
+            } else {
+                listener.onApprove(model);
+                alertDialogAndroid.dismiss();
+            }
         });
         btnNeutral.setOnClickListener(view -> {
 
+            listener.onApproveDismiss();
         });
-        btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
+        btnNegative.setOnClickListener(view -> {
+            listener.onApproveDismiss();
+
+            alertDialogAndroid.dismiss();
+        });
 
 
 

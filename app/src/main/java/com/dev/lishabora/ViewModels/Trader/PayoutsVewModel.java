@@ -126,8 +126,10 @@ public class PayoutsVewModel extends AndroidViewModel {
         return syncRepo.getSynce(id);
     }
 
+
     public void createSync(SyncModel model) {
         syncRepo.insert(model);
+
 
     }
 

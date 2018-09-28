@@ -88,6 +88,7 @@ public class SyncRepo {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
+            com.dev.lishabora.Application.sync();
 
 
         }

@@ -63,6 +63,9 @@ public interface FarmersOrdersDao {
     @Query("SELECT * FROM FAMERSORDERS WHERE  farmerCode =:farmer AND status =:status")
     List<FarmerOrdersTable> getFarmerOrderByPayoutNumberByFarmerByStatus(String farmer, int status);
 
+    @Query("SELECT * FROM FAMERSORDERS WHERE  farmerCode =:farmer AND status =:status")
+    LiveData<List<FarmerOrdersTable>> getFarmerOrderByFarmerByStatus(String farmer, int status);
+
 
     @Query("SELECT * FROM FAMERSORDERS WHERE  farmerCode =:farmer ")
     LiveData<List<FarmerOrdersTable>> getFarmerOrderByFarmer(String farmer);

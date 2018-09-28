@@ -121,7 +121,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
 
-            android:text="Installment Totals"
+            android:text="Installment Totals To Deduct"
             android:textSize="13dp"
             android:textStyle="bold" />
 

@@ -116,10 +116,12 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
 
             FarmerConst.setFamerModel(new FamerModel());
         }
+        String phoneNumber = edtMobile.getText().toString().replaceAll(" ", "").trim();
+
 
 
         FarmerConst.getFamerModel().setNames(GeneralUtills.Companion.capitalize(edtNames.getText().toString()));
-        FarmerConst.getFamerModel().setMobile(edtMobile.getText().toString());
+        FarmerConst.getFamerModel().setMobile(phoneNumber);
 
 
         callback.goToNextStep();

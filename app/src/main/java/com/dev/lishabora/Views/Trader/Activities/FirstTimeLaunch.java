@@ -1,6 +1,7 @@
 package com.dev.lishabora.Views.Trader.Activities;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -54,7 +55,13 @@ public class FirstTimeLaunch extends AppCompatActivity implements StepperLayout.
     @Override
     public void onCompleted(View completeButton) {
         prefrenceManager.setIsTraderFirstTime(false);
+
+        Intent data = new Intent();
+
+        // data.putExtra("trader_back", FarmerConst.getFamerModel());
+        setResult(RESULT_OK, data);
         finish();
+
 
     }
 

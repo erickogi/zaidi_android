@@ -18,9 +18,13 @@ import com.dev.lishabora.Adapters.SyncSAdapter;
 import com.dev.lishabora.AppConstants;
 import com.dev.lishabora.Models.SyncHolderModel;
 import com.dev.lishabora.Models.SyncModel;
+import com.dev.lishabora.Models.SyncResponseModel;
 import com.dev.lishabora.Utils.DateTimeUtils;
+import com.dev.lishabora.Utils.Network.ApiConstants;
+import com.dev.lishabora.Utils.Network.Request;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.Utils.PrefrenceManager;
+import com.dev.lishabora.Utils.SyncResponseCallback;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishaboramobile.R;
 import com.google.gson.Gson;
@@ -130,6 +134,8 @@ public class SyncWorks extends AppCompatActivity {
         syncWorks1.addAll(syncWorks);
         PrefrenceManager p = new PrefrenceManager(this);
         SyncHolderModel s = new SyncHolderModel();
+
+
         s.setEntityCode(p.getTraderModel().getCode());
         s.setEntityType(AppConstants.ENTITY_TRADER);
         s.setSyncModels(syncWorks1);
@@ -142,13 +148,58 @@ public class SyncWorks extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Log.d("datasend", jsonObject.toString());
 
-        Log.d("datasend", new Gson().toJson(s, SyncHolderModel.class));
 
-        generateNoteOnSD(SyncWorks.this, "synworks.json", new Gson().toJson(s, SyncHolderModel.class));
+        // generateNoteOnSD(SyncWorks.this, "synworks.json", new Gson().toJson(s, SyncHolderModel.class));
 
-        Snackbar.make(view, "We are working on implementing sync sit tight", Snackbar.LENGTH_LONG).show();
+        // Snackbar.make(view, "We are working on implementing sync sit tight", Snackbar.LENGTH_LONG).show();
 
+
+        sync(jsonObject, view, syncWorks1);
+
+
+    }
+
+    public void sync(JSONObject jsonObject, View view, List<SyncModel> syncWorks) {
+        Request.Companion.getResponseSync(ApiConstants.Companion.getSync(), jsonObject, "", new SyncResponseCallback() {
+            @Override
+            public void response(SyncResponseModel responseModel) {
+                Log.d("datasend", responseModel.getResultDescription());
+
+
+                if (responseModel.getResultCode() == 2) {
+                    int failureId = Integer.valueOf(responseModel.getFailureId());
+                    for (int a = failureId; a > 0; a--) {
+
+                        for (SyncModel d : syncWorks) {
+                            if (d.getId() == failureId) {
+                                traderViewModel.deleteSync(d);
+                            }
+                        }
+                    }
+                } else if (responseModel.getResultCode() == 1) {
+                    for (SyncModel s : syncWorks) {
+                        traderViewModel.deleteSync(s);
+                    }
+
+                }
+
+                Snackbar.make(view, responseModel.getResultDescription(), Snackbar.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void response(String error) {
+                Log.d("datasend", error);
+
+                Snackbar.make(view, error, Snackbar.LENGTH_LONG).show();
+
+
+            }
+
+
+        });
 
     }
 

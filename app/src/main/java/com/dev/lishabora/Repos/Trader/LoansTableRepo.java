@@ -73,6 +73,10 @@ public class LoansTableRepo {
         return dao.getFarmerLoanByPayoutNumberByFarmerByStatus(farmer, status);
     }
 
+    public LiveData<List<FarmerLoansTable>> getFarmerLoanByFarmerByStatus(String farmer, int status) {
+        return dao.getFarmerLoanByFarmerByStatus(farmer, status);
+    }
+
 
     public LiveData<List<FarmerLoansTable>> getFarmerLoanByFarmer(String farmer) {
         return dao.getFarmerLoanByFarmer(farmer);

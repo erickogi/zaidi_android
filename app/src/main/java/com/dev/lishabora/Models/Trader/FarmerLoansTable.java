@@ -38,6 +38,10 @@ public class FarmerLoansTable {
 //        this.timestamp = timestamp;
 //    }
 
+
+    public FarmerLoansTable() {
+    }
+
     public FarmerLoansTable(int collectionId, int payoutId, String farmerCode, String loanAmount, String loanAmountPaid, String installmentAmount, String installmentNo, int status, String timestamp) {
         this.collectionId = collectionId;
         this.payoutId = payoutId;

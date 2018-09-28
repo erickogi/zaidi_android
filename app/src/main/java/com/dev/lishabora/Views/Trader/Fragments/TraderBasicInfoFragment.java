@@ -104,10 +104,13 @@ public class TraderBasicInfoFragment extends Fragment implements BlockingStep {
         }
         traderModel.setBusinessname(bs);
         traderModel.setNames(name.getText().toString());
-        traderModel.setMobile(phone.getText().toString());
+        String phoneNumber = phone.getText().toString().replaceAll(" ", "").trim();
+
+        traderModel.setMobile(phoneNumber);
         prefrenceManager.setLoggedUser(traderModel);
         callback.goToNextStep();
     }
+
 
     @Override
     public void onCompleteClicked(StepperLayout.OnCompleteClickedCallback callback) {

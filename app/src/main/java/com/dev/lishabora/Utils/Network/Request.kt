@@ -6,7 +6,9 @@ import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.StringRequestListener
 import com.dev.lishabora.Models.ResponseModel
 import com.dev.lishabora.Models.ResponseObject
+import com.dev.lishabora.Models.SyncResponseModel
 import com.dev.lishabora.Utils.ResponseCallback
+import com.dev.lishabora.Utils.SyncResponseCallback
 import com.google.gson.Gson
 import org.json.JSONArray
 import org.json.JSONObject
@@ -19,6 +21,7 @@ class Request {
     companion object {
         internal var responseModel = ResponseModel()
         internal var responseModelSingle = ResponseObject()
+        internal var syncresponseModelSingle = SyncResponseModel()
 
         fun getResponse(url: String, jsonObject: JSONObject, token: String, responseCallback: ResponseCallback) {
             postRequest(url, jsonObject, token, object : RequestListener {
@@ -112,7 +115,6 @@ class Request {
 
         }
 
-
         fun getResponseSingle(url: String, jsonObject: JSONObject, token: String, responseCallback: ResponseCallback) {
             postRequest(url, jsonObject, token, object : RequestListener {
                 override fun onError(error: ANError) {
@@ -150,6 +152,42 @@ class Request {
                         responseModelSingle.resultCode = 0
                         responseModelSingle.resultDescription = e.message
                         responseCallback.response(responseModelSingle)
+
+                        e.printStackTrace()
+                    }
+
+                }
+            })
+
+        }
+
+        fun getResponseSync(url: String, jsonObject: JSONObject, token: String, responseCallback: SyncResponseCallback) {
+            postRequest(url, jsonObject, token, object : RequestListener {
+                override fun onError(error: ANError) {
+
+                    responseCallback.response(error.toString())
+
+                }
+
+                override fun onError(error: String) {
+
+
+                    responseCallback.response(error)
+
+                }
+
+                override fun onSuccess(response: String) {
+                    try {
+
+
+                        val gson = Gson()
+                        syncresponseModelSingle = gson.fromJson(response, SyncResponseModel::class.java)
+                        Timber.tag("2ReTrRe").d(gson.toJson(syncresponseModelSingle))
+                        responseCallback.response(syncresponseModelSingle)
+
+
+                    } catch (e: Exception) {
+                        responseCallback.response(response)
 
                         e.printStackTrace()
                     }

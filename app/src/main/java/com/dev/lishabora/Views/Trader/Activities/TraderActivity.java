@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.ViewPagerAdapter;
+import com.dev.lishabora.Database.LMDatabase;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Admin.AdminsViewModel;
@@ -81,7 +82,11 @@ public class TraderActivity extends AppCompatActivity {
 
                 alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
                     dialogInterface.dismiss();
+                    LMDatabase lmDatabase = LMDatabase.getDatabase(TraderActivity.this);
+                    lmDatabase.clearAllTables();
                     new PrefrenceManager(TraderActivity.this).setIsLoggedIn(false, 0);
+
+
                     startActivity(new Intent(TraderActivity.this, LoginActivity.class));
                     finish();
                 }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());

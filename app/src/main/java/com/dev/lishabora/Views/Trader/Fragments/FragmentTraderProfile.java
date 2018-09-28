@@ -34,23 +34,24 @@ public class FragmentTraderProfile extends Fragment {
         return inflater.inflate(R.layout.trader_profile, container, false);
     }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //if (requestCode == 1001) {
+        set();
+        //}
+    }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.view = view;
         traderViewModel = ViewModelProviders.of(FragmentTraderProfile.this).get(TraderViewModel.class);
 
-        prefrenceManager = new PrefrenceManager(getContext());
-        traderModel = prefrenceManager.getTraderModel();
 
         btnEdit = view.findViewById(R.id.btn_edit);
-        btnEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getActivity(), FirstTimeLaunch.class);
-                i.putExtra("trader", traderModel);
-                startActivity(i);
-            }
+        btnEdit.setOnClickListener(view1 -> {
+            Intent i = new Intent(getActivity(), FirstTimeLaunch.class);
+            i.putExtra("trader", traderModel);
+            startActivityForResult(i, 1001);
+            //  startActivity(i);
         });
 
         txtName = view.findViewById(R.id.txt_name);
@@ -65,6 +66,16 @@ public class FragmentTraderProfile extends Fragment {
 
         txtStartDate = view.findViewById(R.id.txt_date_start);
         txtEndDate = view.findViewById(R.id.txt_date_end);
+
+
+        set();
+
+
+    }
+
+    public void set() {
+        prefrenceManager = new PrefrenceManager(getContext());
+        traderModel = prefrenceManager.getTraderModel();
 
 
         txtName.setText(traderModel.getNames());
@@ -88,7 +99,5 @@ public class FragmentTraderProfile extends Fragment {
                 txtRoutes.setText("" + integer);
             }
         });
-
-
     }
 }

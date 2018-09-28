@@ -10,7 +10,8 @@ class ApiConstants {
         var resultCode: String = "ResultCode"
         var resultDescription: String = "ResultDescription"
 
-        var baseUrl: String = "http://lishabora.net/512/Apis/"
+        var baseUrl1: String = "http://lishabora.net/512/Apis/"
+        var baseUrl: String = "http://lishabora.net/Dev/512/Apis/"
 
         //Accounts
         var Accounts: String = baseUrl + "Accounts/"
@@ -85,6 +86,11 @@ class ApiConstants {
         var Units: String = Unit + "List.php"
 
 
+        //SYNC UP
+        var Sync: String = baseUrl + "System/Sync.php"
+
+
 
     }
+
 }

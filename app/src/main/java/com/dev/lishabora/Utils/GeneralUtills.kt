@@ -66,13 +66,7 @@ class GeneralUtills {
         private val bitmapRect: RectF? = null
 
 
-        fun round(value: Double, places: Int): Double {
-            if (places < 0) throw IllegalArgumentException()
 
-            var bd = BigDecimal(value)
-            bd = bd.setScale(places, RoundingMode.HALF_UP)
-            return bd.toDouble()
-        }
 
         fun changeCOlor(value: String, view: View, type: Int) {
             var value1 = 0.0
@@ -110,6 +104,13 @@ class GeneralUtills {
 
         }
 
+        fun round(value: Double, places: Int): Double {
+            if (places < 0) throw IllegalArgumentException()
+
+            var bd = BigDecimal(value)
+            bd = bd.setScale(places, RoundingMode.HALF_UP)
+            return bd.toDouble()
+        }
         fun round(value: String, places: Int): String {
 
             var d: Double
@@ -124,6 +125,11 @@ class GeneralUtills {
 
             return java.lang.String.valueOf(round(d, places))
         }
+
+        fun roundD(value: Double, places: Int): String {
+            return java.lang.String.valueOf(round(value, places))
+        }
+
 
         fun capitalize(txt: String): String {
             var txt = txt
