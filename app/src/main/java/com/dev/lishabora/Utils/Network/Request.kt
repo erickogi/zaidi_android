@@ -23,6 +23,7 @@ class Request {
         internal var responseModelSingle = ResponseObject()
         internal var syncresponseModelSingle = SyncResponseModel()
 
+
         fun getResponse(url: String, jsonObject: JSONObject, token: String, responseCallback: ResponseCallback) {
             postRequest(url, jsonObject, token, object : RequestListener {
                 override fun onError(error: ANError) {

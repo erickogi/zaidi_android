@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?attr/selectableItemBackground"
-    app:cardCornerRadius="1dp"
-    app:cardElevation="1dp"
-    app:strokeColor="@color/divider"
-    app:strokeWidth="0dp">
+    android:orientation="vertical"
+    android:paddingStart="2dp"
 
+    android:paddingEnd="2dp"
+    app:cardElevation="1dp"
+    app:cardCornerRadius="1dp"
+
+
+    >
+    <!--android:foreground="?attr/selectableItemBackground"-->
+    <!--app:cardElevation="1dp"-->
+    <!--app:strokeColor="#F1F1F1"-->
+    <!--app:strokeWidth="0dp"-->
     <RelativeLayout
+
+        android:padding="5dp"
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,12 +30,14 @@
 
 
         <LinearLayout
+            android:id="@+id/linear"
+            android:layout_toStartOf="@+id/more"
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
+            android:paddingStart="2dp"
 
-            android:layout_marginStart="4dp"
             android:background="@color/white"
             android:clickable="true"
             android:focusable="true"
@@ -61,6 +72,7 @@
 
                             <de.hdodenhof.circleimageview.CircleImageView
                                 android:id="@+id/imgae_status"
+                                android:visibility="gone"
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
                                 android:src="@drawable/ic_done_black_24dp"
@@ -102,6 +114,7 @@
                             android:text="Farmers names"
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                             android:textStyle="bold"
+                            android:textColor="@color/textblack"
 
                             tools:capitalize="words" />
 
@@ -129,6 +142,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:padding="1.5dp"
                         android:id="@+id/l_big"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -211,6 +225,7 @@
 
                         </LinearLayout>
 
+
                         <LinearLayout
 
                             android:layout_width="match_parent"
@@ -288,11 +303,6 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/divider"
-                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -331,17 +341,27 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:background="@color/divider"
-                android:visibility="gone" />
 
 
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_more_vert_black_24dp" />
+
 
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="#F1F1F1" />
 
-</android.support.design.card.MaterialCardView>
+
+</LinearLayout>

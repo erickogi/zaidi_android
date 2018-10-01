@@ -1,6 +1,7 @@
 package com.dev.lishabora.Views.Trader.Activities;
 
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -34,7 +35,10 @@ import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Models.Trader.FarmerLoansTable;
 import com.dev.lishabora.Models.Trader.FarmerOrdersTable;
+import com.dev.lishabora.Models.Trader.LoanPayments;
+import com.dev.lishabora.Models.Trader.OrderPayments;
 import com.dev.lishabora.Utils.AdvancedOnclickRecyclerListener;
+import com.dev.lishabora.Utils.ApproveFarmerPayCardListener;
 import com.dev.lishabora.Utils.CollectionCreateUpdateListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.MyToast;
@@ -61,7 +65,7 @@ import timber.log.Timber;
 import static com.dev.lishabora.Views.CommonFuncs.getBalance;
 import static com.dev.lishabora.Views.CommonFuncs.setCardActionStatus;
 
-public class PayCard extends AppCompatActivity {
+public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardListener {
     public TextView status, id, name, balance, milk, loan, order;
     public RelativeLayout background;
     public View statusview;
@@ -94,6 +98,11 @@ public class PayCard extends AppCompatActivity {
     Double milkKsh = 0.0;
     private FamerModel famerModel;
     private MilkCardToolBarUI toolBar;
+    PayoutFarmersCollectionModel model;
+    double remaining = 0.0;
+    double remainingOrderInstall = 0.0;
+
+
 
 
 
@@ -215,24 +224,26 @@ public class PayCard extends AppCompatActivity {
         alertDialogAndroid.show();
     }
     private void approve(Payouts payouts, PayoutFarmersCollectionModel model) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(PayCard.this);
-        alertDialog.setMessage("Confirm that you wish to approve " + model.getFarmername() + "'s " + payouts.getCyclename() + " Collection card").setCancelable(false).setTitle("Approve " + model.getFarmername() + " Card");
+//        AlertDialog.Builder alertDialog = new AlertDialog.Builder(PayCard.this);
+//        alertDialog.setMessage("Confirm that you wish to approve " + model.getFarmername() + "'s " + payouts.getCyclename() + " Collection card").setCancelable(false).setTitle("Approve " + model.getFarmername() + " Card");
+//
+//
+//        alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
+//
+//            payoutsVewModel.approveFarmersPayoutCard(model.getFarmercode(), model.getPayoutNumber());
+//            model.setCardstatus(1);
+//            model.setStatusName("Approved");
+//            setData(model);
+//            dialogInterface.dismiss();
+//
+//
+//        }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
+//
+//        AlertDialog alertDialogAndroid = alertDialog.create();
+//        alertDialogAndroid.setCancelable(false);
+//        alertDialogAndroid.show();
+        CommonFuncs.doAprove(PayCard.this, balncesViewModel, traderViewModel, model, famerModel, payouts, this);
 
-
-        alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
-
-            payoutsVewModel.approveFarmersPayoutCard(model.getFarmercode(), model.getPayoutNumber());
-            model.setCardstatus(1);
-            model.setStatusName("Approved");
-            setData(model);
-            dialogInterface.dismiss();
-
-
-        }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
-
-        AlertDialog alertDialogAndroid = alertDialog.create();
-        alertDialogAndroid.setCancelable(false);
-        alertDialogAndroid.show();
 
     }
 
@@ -339,6 +350,7 @@ public class PayCard extends AppCompatActivity {
 
     private void setData(PayoutFarmersCollectionModel model) {
 
+        this.model = model;
 
         this.payoutfarmermodel = model;
 
@@ -629,6 +641,170 @@ public class PayCard extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    public void insertLoanPayment(double toLoanInstallmentPayment) {
+        balncesViewModel.getFarmerLoanByFarmerByStatus(famerModel.getCode(), 0).observe(PayCard.this, new Observer<List<FarmerLoansTable>>() {
+            @Override
+            public void onChanged(@Nullable List<FarmerLoansTable> farmerLoansTables) {
+                remaining = toLoanInstallmentPayment;
+
+                if (farmerLoansTables != null) {
+                    for (int a = 0; a < farmerLoansTables.size(); a++) {
+
+
+                        FarmerLoansTable farmerLoan = farmerLoansTables.get(a);
+                        Double amp = Double.valueOf(farmerLoan.getLoanAmount());
+                        Double inst = Double.valueOf(farmerLoan.getInstallmentAmount());
+
+
+                        Double valueToPay = 0.0;
+
+                        if (inst >= remaining) {
+                            valueToPay = remaining;
+                            LoanPayments loanPayments = new LoanPayments();
+                            loanPayments.setLoanId(farmerLoan.getId());
+                            loanPayments.setPaymentMethod("Payout");
+                            loanPayments.setRefNo("" + payouts.getPayoutnumber());
+                            loanPayments.setPayoutNo("" + payouts.getPayoutnumber());
+                            loanPayments.setTimeStamp(DateTimeUtils.Companion.getNow());
+                            loanPayments.setAmountPaid("" + valueToPay);
+                            loanPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
+
+                            remaining = 0.0;
+                            balncesViewModel.insertSingleLoanPayment(loanPayments);
+                            break;
+                        } else {
+
+
+                            valueToPay = remaining - inst;
+                            LoanPayments loanPayments = new LoanPayments();
+                            loanPayments.setLoanId(farmerLoan.getId());
+                            loanPayments.setPaymentMethod("Payout");
+                            loanPayments.setRefNo("" + payouts.getPayoutnumber());
+                            loanPayments.setPayoutNo("" + payouts.getPayoutnumber());
+                            loanPayments.setTimeStamp(DateTimeUtils.Companion.getNow());
+                            loanPayments.setAmountPaid("" + valueToPay);
+                            loanPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
+                            remaining = toLoanInstallmentPayment - inst;
+                            balncesViewModel.insertSingleLoanPayment(loanPayments);
+
+
+                        }
+
+                    }
+                }
+            }
+        });
+
+    }
+
+    public void insertOrderPayment(double toOrderInstallmentPayment) {
+        balncesViewModel.getFarmerOrderByFarmerByStatus(famerModel.getCode(), 0).observe(PayCard.this, new Observer<List<FarmerOrdersTable>>() {
+            @Override
+            public void onChanged(@Nullable List<FarmerOrdersTable> farmerOrdersTables) {
+                remainingOrderInstall = toOrderInstallmentPayment;
+
+                if (farmerOrdersTables != null) {
+                    for (int a = 0; a < farmerOrdersTables.size(); a++) {
+
+
+                        FarmerOrdersTable farmerOrders = farmerOrdersTables.get(a);
+                        Double amp = Double.valueOf(farmerOrders.getOrderAmount());
+                        Double inst = Double.valueOf(farmerOrders.getInstallmentAmount());
+
+
+                        Double valueToPay = 0.0;
+
+                        if (inst >= remainingOrderInstall) {
+
+                            valueToPay = remainingOrderInstall;
+                            OrderPayments orderPayments = new OrderPayments();
+                            orderPayments.setOrderId(farmerOrders.getId());
+                            orderPayments.setPaymentMethod("Payout");
+                            orderPayments.setRefNo("" + payouts.getPayoutnumber());
+                            orderPayments.setPayoutNo("" + payouts.getPayoutnumber());
+                            orderPayments.setTimestamp(DateTimeUtils.Companion.getNow());
+                            orderPayments.setAmountPaid("" + valueToPay);
+                            orderPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
+
+
+                            remainingOrderInstall = 0.0;
+                            balncesViewModel.insertSingleOrderPayment(orderPayments);
+
+
+                            break;
+                        } else {
+
+
+                            valueToPay = remainingOrderInstall - inst;
+                            OrderPayments orderPayments = new OrderPayments();
+                            orderPayments.setOrderId(orderPayments.getId());
+                            orderPayments.setPaymentMethod("Payout");
+                            orderPayments.setRefNo("" + payouts.getPayoutnumber());
+                            orderPayments.setPayoutNo("" + payouts.getPayoutnumber());
+                            orderPayments.setTimestamp(DateTimeUtils.Companion.getNow());
+                            orderPayments.setAmountPaid("" + valueToPay);
+                            orderPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
+                            remaining = toOrderInstallmentPayment - inst;
+                            balncesViewModel.insertSingleOrderPayment(orderPayments);
+
+
+                        }
+
+                    }
+                }
+            }
+        });
+
+    }
+
+
+    public void approveCard(PayoutFarmersCollectionModel model) {
+        payoutsVewModel.approveFarmersPayoutCard(model.getFarmercode(), model.getPayoutNumber());
+        model.setCardstatus(1);
+        model.setStatusName("Approved");
+        setData(model);
+    }
+
+    @Override
+    public void onApprove(PayoutFarmersCollectionModel model, Double totalKshToPay, Double toLoanInstallmentPayment, Double toOrderInstallmentPayment) {
+        insertLoanPayment(toLoanInstallmentPayment);
+        insertOrderPayment(toOrderInstallmentPayment);
+        approveCard(model);
+
+    }
+
+    @Override
+    public void onApprovePayLoan(PayoutFarmersCollectionModel model, Double totalKshToPay, Double toLoanInstallmentPayment) {
+        insertLoanPayment(toLoanInstallmentPayment);
+        approveCard(model);
+    }
+
+    @Override
+    public void onApprovePayOrder(PayoutFarmersCollectionModel model, Double totalKshToPay, Double toOrderInstallmentPayment) {
+        insertOrderPayment(toOrderInstallmentPayment);
+        approveCard(model);
+    }
+
+    @Override
+    public void onApprove(PayoutFarmersCollectionModel model, Double totalKshToPay) {
+        approveCard(model);
+    }
+
+    @Override
+    public void onApprove(PayoutFarmersCollectionModel model) {
+        approveCard(model);
+    }
+
+    @Override
+    public void onApproveError(String error) {
+
+    }
+
+    @Override
+    public void onApproveDismiss() {
+
+
+    }
 
 
 

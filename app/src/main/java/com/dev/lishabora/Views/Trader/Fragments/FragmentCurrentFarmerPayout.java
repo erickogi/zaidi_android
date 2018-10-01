@@ -90,6 +90,10 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
     private MilkCardToolBarUI toolBar;
 
     PayoutFarmersCollectionModel model;
+    double remaining = 0.0;
+    double remainingOrderInstall = 0.0;
+
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,13 +111,12 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
         return inflater.inflate(R.layout.fragment_farmer_card, container, false);
     }
 
-    double remaining = 0.0;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.view = view;
         toolBar = view.findViewById(R.id.toolbar);
-        toolBar.setOnPayNoClickListener(payNoClicked);
+        //  toolBar.setOnPayNoClickListener(payNoClicked);
 
 
         famerModel = (FamerModel) getArguments().getSerializable("farmer");
@@ -232,7 +235,6 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
         alertDialogAndroid.show();
     }
 
-    double remainingOrderInstall = 0.0;
 
 
     private void setBalance(Double milkKsh) {
@@ -412,8 +414,6 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
                     } else {
                         MyToast.toast("Future collections cannot be edited", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
 
-                        //CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
-                        // editValue(false,adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
 
                     }
                 } else {
@@ -445,11 +445,11 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
             case 10004:
 
                 if (resultCode == RESULT_OK && data != null) {
-                    String orderData = "";
+                    //String orderData = "";
                     OrderModel orderModel;
                     DayCollectionModel dayCollectionModel;
                     orderModel = (OrderModel) data.getSerializableExtra("orderDataModel");
-                    orderData = data.getStringExtra("orderData");
+                    // orderData = data.getStringExtra("orderData");
                     dayCollectionModel = (DayCollectionModel) data.getSerializableExtra("dayCollection");
                     updateCollectionValue(orderModel.getTotalOrderAmount(), 0, 3, dayCollectionModel, null, null, orderModel);
 
@@ -553,121 +553,113 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
     }
 
     public void insertLoanPayment(double toLoanInstallmentPayment) {
-        balncesViewModel.getFarmerLoanByFarmerByStatus(famerModel.getCode(), 0).observe(FragmentCurrentFarmerPayout.this, new Observer<List<FarmerLoansTable>>() {
-            @Override
-            public void onChanged(@Nullable List<FarmerLoansTable> farmerLoansTables) {
-                remaining = toLoanInstallmentPayment;
+        balncesViewModel.getFarmerLoanByFarmerByStatus(famerModel.getCode(), 0).observe(FragmentCurrentFarmerPayout.this, farmerLoansTables -> {
+            remaining = toLoanInstallmentPayment;
 
-                if (farmerLoansTables != null) {
-                    for (int a = 0; a < farmerLoansTables.size(); a++) {
+            if (farmerLoansTables != null) {
+                for (int a = 0; a < farmerLoansTables.size(); a++) {
 
 
-                        FarmerLoansTable farmerLoan = farmerLoansTables.get(a);
-                        Double amp = Double.valueOf(farmerLoan.getLoanAmount());
-                        Double inst = Double.valueOf(farmerLoan.getInstallmentAmount());
+                    FarmerLoansTable farmerLoan = farmerLoansTables.get(a);
+                    Double amp = Double.valueOf(farmerLoan.getLoanAmount());
+                    Double inst = Double.valueOf(farmerLoan.getInstallmentAmount());
 
 
-                        Double valueToPay = 0.0;
+                    Double valueToPay = 0.0;
 
-                        if (inst >= remaining) {
-                            valueToPay = remaining;
-                            LoanPayments loanPayments = new LoanPayments();
-                            loanPayments.setLoanId(farmerLoan.getId());
-                            loanPayments.setPaymentMethod("Payout");
-                            loanPayments.setRefNo("" + payouts.getPayoutnumber());
-                            loanPayments.setPayoutNo("" + payouts.getPayoutnumber());
-                            loanPayments.setTimeStamp(DateTimeUtils.Companion.getNow());
-                            loanPayments.setAmountPaid("" + valueToPay);
-                            loanPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
+                    if (inst >= remaining) {
+                        valueToPay = remaining;
+                        LoanPayments loanPayments = new LoanPayments();
+                        loanPayments.setLoanId(farmerLoan.getId());
+                        loanPayments.setPaymentMethod("Payout");
+                        loanPayments.setRefNo("" + payouts.getPayoutnumber());
+                        loanPayments.setPayoutNo("" + payouts.getPayoutnumber());
+                        loanPayments.setTimeStamp(DateTimeUtils.Companion.getNow());
+                        loanPayments.setAmountPaid("" + valueToPay);
+                        loanPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
 
-                            remaining = 0.0;
-                            balncesViewModel.insertSingleLoanPayment(loanPayments);
-                            break;
-                        } else {
-
-
-                            valueToPay = remaining - inst;
-                            LoanPayments loanPayments = new LoanPayments();
-                            loanPayments.setLoanId(farmerLoan.getId());
-                            loanPayments.setPaymentMethod("Payout");
-                            loanPayments.setRefNo("" + payouts.getPayoutnumber());
-                            loanPayments.setPayoutNo("" + payouts.getPayoutnumber());
-                            loanPayments.setTimeStamp(DateTimeUtils.Companion.getNow());
-                            loanPayments.setAmountPaid("" + valueToPay);
-                            loanPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
-                            remaining = toLoanInstallmentPayment - inst;
-                            balncesViewModel.insertSingleLoanPayment(loanPayments);
+                        remaining = 0.0;
+                        balncesViewModel.insertSingleLoanPayment(loanPayments);
+                        break;
+                    } else {
 
 
-                        }
+                        valueToPay = remaining - inst;
+                        LoanPayments loanPayments = new LoanPayments();
+                        loanPayments.setLoanId(farmerLoan.getId());
+                        loanPayments.setPaymentMethod("Payout");
+                        loanPayments.setRefNo("" + payouts.getPayoutnumber());
+                        loanPayments.setPayoutNo("" + payouts.getPayoutnumber());
+                        loanPayments.setTimeStamp(DateTimeUtils.Companion.getNow());
+                        loanPayments.setAmountPaid("" + valueToPay);
+                        loanPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
+
+                        remaining = toLoanInstallmentPayment - inst;
+                        balncesViewModel.insertSingleLoanPayment(loanPayments);
+
 
                     }
+
                 }
             }
         });
-
     }
 
     public void insertOrderPayment(double toOrderInstallmentPayment) {
-        balncesViewModel.getFarmerOrderByFarmerByStatus(famerModel.getCode(), 0).observe(FragmentCurrentFarmerPayout.this, new Observer<List<FarmerOrdersTable>>() {
-            @Override
-            public void onChanged(@Nullable List<FarmerOrdersTable> farmerOrdersTables) {
-                remainingOrderInstall = toOrderInstallmentPayment;
+        balncesViewModel.getFarmerOrderByFarmerByStatus(famerModel.getCode(), 0).observe(FragmentCurrentFarmerPayout.this, farmerOrdersTables -> {
+            remainingOrderInstall = toOrderInstallmentPayment;
 
-                if (farmerOrdersTables != null) {
-                    for (int a = 0; a < farmerOrdersTables.size(); a++) {
+            if (farmerOrdersTables != null) {
+                for (int a = 0; a < farmerOrdersTables.size(); a++) {
 
 
-                        FarmerOrdersTable farmerOrders = farmerOrdersTables.get(a);
-                        Double amp = Double.valueOf(farmerOrders.getOrderAmount());
-                        Double inst = Double.valueOf(farmerOrders.getInstallmentAmount());
+                    FarmerOrdersTable farmerOrders = farmerOrdersTables.get(a);
+                    Double amp = Double.valueOf(farmerOrders.getOrderAmount());
+                    Double inst = Double.valueOf(farmerOrders.getInstallmentAmount());
 
 
-                        Double valueToPay = 0.0;
+                    Double valueToPay = 0.0;
 
-                        if (inst >= remainingOrderInstall) {
+                    if (inst >= remainingOrderInstall) {
 
-                            valueToPay = remainingOrderInstall;
-                            OrderPayments orderPayments = new OrderPayments();
-                            orderPayments.setOrderId(farmerOrders.getId());
-                            orderPayments.setPaymentMethod("Payout");
-                            orderPayments.setRefNo("" + payouts.getPayoutnumber());
-                            orderPayments.setPayoutNo("" + payouts.getPayoutnumber());
-                            orderPayments.setTimestamp(DateTimeUtils.Companion.getNow());
-                            orderPayments.setAmountPaid("" + valueToPay);
-                            orderPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
-
-
-                            remainingOrderInstall = 0.0;
-                            balncesViewModel.insertSingleOrderPayment(orderPayments);
+                        valueToPay = remainingOrderInstall;
+                        OrderPayments orderPayments = new OrderPayments();
+                        orderPayments.setOrderId(farmerOrders.getId());
+                        orderPayments.setPaymentMethod("Payout");
+                        orderPayments.setRefNo("" + payouts.getPayoutnumber());
+                        orderPayments.setPayoutNo("" + payouts.getPayoutnumber());
+                        orderPayments.setTimestamp(DateTimeUtils.Companion.getNow());
+                        orderPayments.setAmountPaid("" + valueToPay);
+                        orderPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
 
 
-                            break;
-                        } else {
+                        remainingOrderInstall = 0.0;
+                        balncesViewModel.insertSingleOrderPayment(orderPayments);
 
 
-                            valueToPay = remainingOrderInstall - inst;
-                            OrderPayments orderPayments = new OrderPayments();
-                            orderPayments.setOrderId(orderPayments.getId());
-                            orderPayments.setPaymentMethod("Payout");
-                            orderPayments.setRefNo("" + payouts.getPayoutnumber());
-                            orderPayments.setPayoutNo("" + payouts.getPayoutnumber());
-                            orderPayments.setTimestamp(DateTimeUtils.Companion.getNow());
-                            orderPayments.setAmountPaid("" + valueToPay);
-                            orderPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
-                            remaining = toOrderInstallmentPayment - inst;
-                            balncesViewModel.insertSingleOrderPayment(orderPayments);
+                        break;
+                    } else {
 
 
-                        }
+                        valueToPay = remainingOrderInstall - inst;
+                        OrderPayments orderPayments = new OrderPayments();
+                        orderPayments.setOrderId(orderPayments.getId());
+                        orderPayments.setPaymentMethod("Payout");
+                        orderPayments.setRefNo("" + payouts.getPayoutnumber());
+                        orderPayments.setPayoutNo("" + payouts.getPayoutnumber());
+                        orderPayments.setTimestamp(DateTimeUtils.Companion.getNow());
+                        orderPayments.setAmountPaid("" + valueToPay);
+                        orderPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
+                        remaining = toOrderInstallmentPayment - inst;
+                        balncesViewModel.insertSingleOrderPayment(orderPayments);
+
 
                     }
+
                 }
             }
         });
-
     }
-
 
     public void approveCard(PayoutFarmersCollectionModel model) {
         payoutsVewModel.approveFarmersPayoutCard(model.getFarmercode(), model.getPayoutNumber());

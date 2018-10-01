@@ -13,7 +13,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -69,7 +68,6 @@ import java.util.List;
 import java.util.Objects;
 
 import github.nisrulz.recyclerviewhelper.RVHItemClickListener;
-import github.nisrulz.recyclerviewhelper.RVHItemDividerDecoration;
 import github.nisrulz.recyclerviewhelper.RVHItemTouchHelperCallback;
 import timber.log.Timber;
 
@@ -111,12 +109,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     private boolean isDraggable = true;
     private int SORTTYPE = 0;
     private CollectMilk collectMilk;
-
-
-
-
-
-
 
 
     public void initList() {
@@ -191,7 +183,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         helper.attachToRecyclerView(recyclerView);
 
         // Set the divider in the recyclerview
-        recyclerView.addItemDecoration(new RVHItemDividerDecoration(Objects.requireNonNull(getContext()), LinearLayoutManager.VERTICAL));
+        //  recyclerView.addItemDecoration(new RVHItemDividerDecoration(Objects.requireNonNull(getContext()), LinearLayoutManager.VERTICAL));
 
 
         recyclerView.addOnItemTouchListener(new RVHItemClickListener(context, (view, position) -> {
@@ -276,6 +268,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         searchView.setVisibility(View.GONE);
 
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -381,7 +374,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             fragmentManager.popBackStack();
         }
     }
-
 
 
     @Nullable
@@ -582,13 +574,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     }
 
 
-
-
-
-
-
-
-
     private void populateTraders() {
         mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(mStaggeredLayoutManager);
@@ -658,15 +643,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         }
 
 
-
-
-
-
-
-
-
-        }
-
+    }
 
 
     private void filterFarmersAlpahbetically() {
@@ -695,6 +672,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
 
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -713,7 +691,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         initList();
         populateTraders();
         fetchFarmers(0, "");
-
 
 
     }

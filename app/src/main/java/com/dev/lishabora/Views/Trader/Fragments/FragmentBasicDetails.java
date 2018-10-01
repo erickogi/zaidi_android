@@ -247,7 +247,7 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
     private boolean verifyMobile() {
         if (!TextUtils.isEmpty(edtMobile.getText().toString())) {
             String phoneNumber = edtMobile.getText().toString().replaceAll(" ", "").trim();
-            if (LoginController.isValidPhoneNumber(phoneNumber)) {
+            if (LoginController.isValidPhoneNumber(phoneNumber) && GeneralUtills.Companion.isValidPhoneNumber(phoneNumber)) {
                 return true;
 
             }

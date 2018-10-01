@@ -954,7 +954,7 @@ public class AdminsTradersListFragment extends Fragment {
             }
             String phoneNumber = phone.getText().toString().replaceAll(" ", "").trim();
 
-            if (!LoginController.isValidPhoneNumber(phoneNumber)) {
+            if (!LoginController.isValidPhoneNumber(phoneNumber) && !GeneralUtills.Companion.isValidPhoneNumber(phoneNumber)) {
                 stopAnim();
                 snack("Invalid phone number ");
                 phone.requestFocus();
@@ -1102,7 +1102,7 @@ public class AdminsTradersListFragment extends Fragment {
                 return;
             }
 
-            if (!LoginController.isValidPhoneNumber(phone.getText().toString())) {
+            if (!LoginController.isValidPhoneNumber(phone.getText().toString()) && !GeneralUtills.Companion.isValidPhoneNumber(phone.getText().toString())) {
                 stopAnim();
                 snack("Invalid phone number ");
                 phone.requestFocus();
@@ -1251,7 +1251,7 @@ public class AdminsTradersListFragment extends Fragment {
                 bussines = bussinessname.getText().toString();
             }
 
-            if (!LoginController.isValidPhoneNumber(phone.getText().toString())) {
+            if (!LoginController.isValidPhoneNumber(phone.getText().toString()) && !GeneralUtills.Companion.isValidPhoneNumber(phone.getText().toString())) {
                 snack("Invalid phone number ");
                 phone.requestFocus();
                 stopAnim();

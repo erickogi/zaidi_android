@@ -137,7 +137,9 @@ public class CreateFarmerActivity extends AppCompatActivity implements StepperLa
                 finish();
             }
         });
+
     }
+
     @Override
     public void onError(VerificationError verificationError) {
         snack(verificationError.getErrorMessage());

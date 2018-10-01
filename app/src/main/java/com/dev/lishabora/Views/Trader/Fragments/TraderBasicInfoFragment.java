@@ -17,6 +17,7 @@ import android.widget.Spinner;
 
 import com.dev.lishabora.COntrollers.LoginController;
 import com.dev.lishabora.Models.Trader.TraderModel;
+import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishaboramobile.R;
 import com.stepstone.stepper.BlockingStep;
@@ -150,7 +151,7 @@ public class TraderBasicInfoFragment extends Fragment implements BlockingStep {
         }
         String phoneNumber = phone.getText().toString().replaceAll(" ", "").trim();
 
-        if (!LoginController.isValidPhoneNumber(phoneNumber)) {
+        if (!LoginController.isValidPhoneNumber(phoneNumber) && GeneralUtills.Companion.isValidPhoneNumber(phoneNumber)) {
             phone.requestFocus();
             phone.setError("Invalid Phone number");
             return false;

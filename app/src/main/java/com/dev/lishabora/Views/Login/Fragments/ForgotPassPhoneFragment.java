@@ -22,6 +22,7 @@ import com.dev.lishabora.Models.Admin.AdminModel;
 import com.dev.lishabora.Models.Login.AuthModel;
 import com.dev.lishabora.Models.ResponseObject;
 import com.dev.lishabora.Models.Trader.TraderModel;
+import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.ViewModels.Login.LoginViewModel;
 import com.dev.lishabora.Views.Login.LoginConsts;
 import com.dev.lishaboramobile.R;
@@ -205,7 +206,7 @@ public class ForgotPassPhoneFragment extends Fragment implements View.OnClickLis
     private void nextOnForgotPassPhoneClicked() {
         if (!TextUtils.isEmpty(edtForgotPassPhone.getText().toString())) {
 
-            if (LoginController.isValidPhoneNumber(edtForgotPassPhone.getText().toString())) {
+            if (LoginController.isValidPhoneNumber(edtForgotPassPhone.getText().toString()) && GeneralUtills.Companion.isValidPhoneNumber(edtForgotPassPhone.getText().toString())) {
                 String phoneNumber = edtForgotPassPhone.getText().toString().replaceAll(" ", "").trim();
 
                 this.phoneNumber = phoneNumber;

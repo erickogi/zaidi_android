@@ -2021,7 +2021,25 @@ public class CommonFuncs {
         double toPay = 0.0;
 
         for (FarmerOrdersTable fg : farmerOrderTablesNotPaid) {
-            Double remaining = (Double.valueOf(fg.getOrderAmount()) - Double.valueOf(fg.getOrderAmountPaid()));
+            Log.d("comfdeb", "" + fg.getOrderAmount() + "" + fg.getOrderAmountPaid());
+            Double oAmount = 0.0;
+            Double oAmountPaid = 0.0;
+
+            try {
+                oAmount = Double.valueOf(fg.getOrderAmount());
+            } catch (Exception nm) {
+                nm.printStackTrace();
+            }
+
+
+            try {
+                oAmountPaid = Double.valueOf(fg.getOrderAmountPaid());
+            } catch (Exception nm) {
+                nm.printStackTrace();
+            }
+
+
+            Double remaining = oAmount - oAmountPaid;
             Double installmentAmount = Double.valueOf(fg.getInstallmentAmount());
 
 
@@ -2060,15 +2078,23 @@ public class CommonFuncs {
         List<FarmerOrdersTable> ordersTables = balncesViewModel.getFarmerOrderByPayoutNumberByFarmerByStatus(c.getCode(), 0);
 
         for (FarmerLoansTable fl : loansTables) {
-            loanTotalAmount = +(Double.valueOf(fl.getLoanAmount()));
-            loanInstalmentAmount = +(Double.valueOf(fl.getInstallmentAmount()));
-            loanPaid = +balncesViewModel.getSumPaidLoanPayment(fl.getId());
+            try {
+                loanTotalAmount = +(Double.valueOf(fl.getLoanAmount()));
+                loanInstalmentAmount = +(Double.valueOf(fl.getInstallmentAmount()));
+                loanPaid = +balncesViewModel.getSumPaidLoanPayment(fl.getId());
+            } catch (Exception nm) {
+                nm.printStackTrace();
+            }
         }
 
         for (FarmerOrdersTable fo : ordersTables) {
-            orderTotalAmount = +(Double.valueOf(fo.getOrderAmount()));
-            orderInstalmentAmount = +(Double.valueOf(fo.getInstallmentAmount()));
-            orderPaid = +balncesViewModel.getSumPaidOrderPayment(fo.getId());
+            try {
+                orderTotalAmount = +(Double.valueOf(fo.getOrderAmount()));
+                orderInstalmentAmount = +(Double.valueOf(fo.getInstallmentAmount()));
+                orderPaid = +balncesViewModel.getSumPaidOrderPayment(fo.getId());
+            } catch (Exception nm) {
+                nm.printStackTrace();
+            }
         }
         Log.d("RecordAsd", "Alll Order " + loanInstalmentAmount + "\n" + ordersTables.size());
 
@@ -2116,7 +2142,6 @@ public class CommonFuncs {
         try {
             loanInstallmentsd = Double.valueOf(loanInstallments);
         } catch (Exception nm) {
-            Log.d("doublerrr", nm.toString());
             nm.printStackTrace();
         }
 
