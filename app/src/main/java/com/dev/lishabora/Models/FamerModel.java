@@ -51,6 +51,21 @@ public class FamerModel implements Serializable {
     @Ignore
     private String traderCode;
 
+    private boolean isSynched = false;
+    private String lastCollectionTime;
+
+
+    @Ignore
+    private String resultDescription;
+    @Ignore
+    private int responseCode;
+    private int syncstatus;
+    private int position;
+    private String loanbalance, milkbalance, orderbalance;
+    @Ignore
+    private boolean show;
+
+
     public String getTraderCode() {
         return traderCode;
     }
@@ -101,7 +116,6 @@ public class FamerModel implements Serializable {
         //descending order
         //return FamerModelName2.compareTo(FamerModelName1);
     };
-    private String lastCollectionTime;
     /*Comparator for sorting the list by position no*/
     public static Comparator<FamerModel> farmerPosComparator = (s1, s2) -> {
 
@@ -118,18 +132,6 @@ public class FamerModel implements Serializable {
 
 
 
-    private boolean isSynched = false;
-
-
-    @Ignore
-    private String resultDescription;
-    @Ignore
-    private int responseCode;
-    private int syncstatus;
-    private int position;
-    private String loanbalance, milkbalance, orderbalance;
-    @Ignore
-    private boolean show;
 
     public String getLastCollectionTime() {
         return lastCollectionTime;

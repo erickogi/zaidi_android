@@ -1,7 +1,6 @@
 package com.dev.lishabora.Views.Trader.Fragments;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -432,24 +431,72 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
         listAdapterAll.notifyDataSetChanged();
         recyclerView.setAdapter(listAdapterAll);
 
+//
+//        alertDialogBuilderUserInput
+//                .setCancelable(false)
+//                .setPositiveButton("Done", (dialogBox, id) -> {
+//                    // ToDo get user input here
+//
+//
+//                })
+//
+//                .setNegativeButton("Dismiss",
+//                        (dialogBox, id) -> dialogBox.cancel());
+//
+//        AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
+//        alertDialogAndroid.setCancelable(false);
+//        alertDialogAndroid.show();
+//
+//        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
+//        theButton.setOnClickListener(new CustomListener(alertDialogAndroid, selected));
 
         alertDialogBuilderUserInput
-                .setCancelable(false)
-                .setPositiveButton("Done", (dialogBox, id) -> {
-                    // ToDo get user input here
-
-
-                })
-
-                .setNegativeButton("Dismiss",
-                        (dialogBox, id) -> dialogBox.cancel());
+                .setCancelable(false);
 
         AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
         alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
         alertDialogAndroid.show();
 
-        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
-        theButton.setOnClickListener(new CustomListener(alertDialogAndroid, selected));
+
+        MaterialButton btnPositive, btnNegative, btnNeutral;
+        TextView txtTitle;
+        LinearLayout lTitle;
+        ImageView imgIcon;
+        btnPositive = mView.findViewById(R.id.btn_positive);
+        btnNegative = mView.findViewById(R.id.btn_negative);
+        btnNeutral = mView.findViewById(R.id.btn_neutral);
+        txtTitle = mView.findViewById(R.id.txt_title);
+        lTitle = mView.findViewById(R.id.linear_title);
+        imgIcon = mView.findViewById(R.id.img_icon);
+
+
+        btnNeutral.setVisibility(View.GONE);
+        btnNeutral.setText("Delete");
+
+        btnNeutral.setBackgroundColor(this.getResources().getColor(R.color.red));
+        lTitle.setVisibility(View.GONE);
+        txtTitle.setVisibility(View.VISIBLE);
+        imgIcon.setVisibility(View.VISIBLE);
+        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
+        txtTitle.setText("Route");
+
+//        btnNeutral.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                OrderConstants.getProductOrderModels().remove(pos);
+//
+//                alertDialogAndroid.dismiss();
+//
+//                refreshList();
+//            }
+//        });
+
+        btnPositive.setOnClickListener(new CustomListener(alertDialogAndroid, selected));
+
+        btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
+
 
 
     }

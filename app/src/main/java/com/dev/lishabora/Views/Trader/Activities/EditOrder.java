@@ -2,7 +2,6 @@ package com.dev.lishabora.Views.Trader.Activities;
 
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
@@ -13,6 +12,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -37,6 +37,7 @@ import com.dev.lishabora.Models.ProductOrderModel;
 import com.dev.lishabora.Models.ProductsModel;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
+import com.dev.lishabora.Utils.InputFilterMinMax;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
@@ -479,8 +480,8 @@ public class EditOrder extends AppCompatActivity {
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_all_products_list, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(this));
         alertDialogBuilderUserInput.setView(mView);
-        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
-        alertDialogBuilderUserInput.setTitle("Products");
+//        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
+//        alertDialogBuilderUserInput.setTitle("Products");
 
 
         davi = mView.findViewById(R.id.avi);
@@ -542,24 +543,72 @@ public class EditOrder extends AppCompatActivity {
         listAdapterAll.notifyDataSetChanged();
         recyclerView.setAdapter(listAdapterAll);
 
+//
+//        alertDialogBuilderUserInput
+//                .setCancelable(false)
+//                .setPositiveButton("Done", (dialogBox, id) -> {
+//                    // ToDo get user input here
+//
+//
+//                })
+//
+//                .setNegativeButton("Dismiss",
+//                        (dialogBox, id) -> dialogBox.cancel());
+//
+//        AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
+//        alertDialogAndroid.setCancelable(false);
+//        alertDialogAndroid.show();
+//
+//        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
+        //        theButton.setOnClickListener(new CustomListener(alertDialogAndroid, selected));
 
         alertDialogBuilderUserInput
-                .setCancelable(false)
-                .setPositiveButton("Done", (dialogBox, id) -> {
-                    // ToDo get user input here
-
-
-                })
-
-                .setNegativeButton("Dismiss",
-                        (dialogBox, id) -> dialogBox.cancel());
+                .setCancelable(false);
 
         AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
         alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
         alertDialogAndroid.show();
 
-        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
-        theButton.setOnClickListener(new CustomListener(alertDialogAndroid, selected));
+
+        MaterialButton btnPositive, btnNegative, btnNeutral;
+        TextView txtTitle;
+        LinearLayout lTitle;
+        ImageView imgIcon;
+        btnPositive = mView.findViewById(R.id.btn_positive);
+        btnNegative = mView.findViewById(R.id.btn_negative);
+        btnNeutral = mView.findViewById(R.id.btn_neutral);
+        txtTitle = mView.findViewById(R.id.txt_title);
+        lTitle = mView.findViewById(R.id.linear_title);
+        imgIcon = mView.findViewById(R.id.img_icon);
+
+
+        btnNeutral.setVisibility(View.GONE);
+        btnNeutral.setText("Delete");
+
+        btnNeutral.setBackgroundColor(this.getResources().getColor(R.color.red));
+        lTitle.setVisibility(View.GONE);
+        txtTitle.setVisibility(View.VISIBLE);
+        imgIcon.setVisibility(View.VISIBLE);
+        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
+        txtTitle.setText("Route");
+
+//        btnNeutral.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                OrderConstants.getProductOrderModels().remove(pos);
+//
+//                alertDialogAndroid.dismiss();
+//
+//                refreshList();
+//            }
+//        });
+
+        btnPositive.setOnClickListener(new CustomListener(alertDialogAndroid, selected));
+
+        btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
+
 
 
     }
@@ -824,6 +873,10 @@ public class EditOrder extends AppCompatActivity {
 
         edtAmount = findViewById(R.id.edt_value);
         edtDeliveryFee = findViewById(R.id.edt_delivery);
+
+
+        edtDeliveryFee.setFilters(new InputFilter[]{new InputFilterMinMax(1, 1000)});
+
         txtQty = findViewById(R.id.txt_qty);
         txtPrice = findViewById(R.id.txt_installment);
 
@@ -846,6 +899,8 @@ public class EditOrder extends AppCompatActivity {
     void initActions() {
         imgAdd.setOnClickListener(view -> calc(imgAdd, txtQty));
         imgRemove.setOnClickListener(view -> calc(imgRemove, txtQty));
+
+
         edtAmount.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

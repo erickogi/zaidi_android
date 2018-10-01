@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_weight="1"
-            android:background="@color/transparent"
+            android:background="@color/white"
             android:gravity="start|center"
 
             android:text="Edit"
@@ -66,13 +66,14 @@
 
         <android.support.design.button.MaterialButton
             android:id="@+id/btn_negative"
+
             style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|center"
             android:layout_weight="1"
 
-            android:background="@color/transparent"
+            android:background="@color/white"
             android:gravity="end|center"
             android:text="Dismiss"
             android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
@@ -86,7 +87,7 @@
 
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/transparent"
+            android:background="@color/white"
             android:text="Save"
             android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
             android:textSize="14sp"

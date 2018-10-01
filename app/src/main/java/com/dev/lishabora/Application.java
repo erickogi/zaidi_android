@@ -11,11 +11,16 @@ import com.dev.lishabora.Database.LMDatabase;
 import com.dev.lishabora.Models.SyncHolderModel;
 import com.dev.lishabora.Models.SyncModel;
 import com.dev.lishabora.Models.SyncResponseModel;
+import com.dev.lishabora.Models.Trader.Data;
+import com.dev.lishabora.Models.Trader.TraderModel;
+import com.dev.lishabora.Network.ApiConstants;
+import com.dev.lishabora.Network.Request;
+import com.dev.lishabora.Repos.ProductsRepo;
+import com.dev.lishabora.Repos.RoutesRepo;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.Jobs.Evernote.SyncJobCreator;
-import com.dev.lishabora.Utils.Network.ApiConstants;
-import com.dev.lishabora.Utils.Network.Request;
 import com.dev.lishabora.Utils.PrefrenceManager;
+import com.dev.lishabora.Utils.SyncDownResponseCallback;
 import com.dev.lishabora.Utils.SyncResponseCallback;
 import com.dev.lishaboramobile.BuildConfig;
 import com.evernote.android.job.JobManager;
@@ -43,6 +48,8 @@ public class Application extends MultiDexApplication {
     private static volatile boolean applicationInited = false;
 
     public static volatile boolean isConnected;
+    public static volatile Application application;
+
 
     public static void sync() {
         LMDatabase lmDatabase = LMDatabase.getDatabase(context);
@@ -131,11 +138,56 @@ public class Application extends MultiDexApplication {
 
     }
 
+    public void syncDown() {
+
+        Gson gson = new Gson();
+
+        TraderModel f = new PrefrenceManager(context).getTraderModel();
+
+        try {
+            JSONObject jb = new JSONObject(gson.toJson(f));
+            Timber.tag("Syncdown").d(gson.toJson(jb.toString()));
+
+            Request.Companion.getResponseSyncDown(ApiConstants.Companion.getSyncDown(), jb, "",
+                    new SyncDownResponseCallback() {
+                        @Override
+                        public void response(Data responseModel) {
+
+                            try {
+                                // if (responseModel.getResultCode() != null && Integer.valueOf(responseModel.getResultCode()) == 1) {
+
+                                Log.d("rerreew", "" + responseModel);
+                                // new FarmerRepo(getActivity().getApplication()).insertMultiple(responseModel.getFarmerModels());
+                                new RoutesRepo(mInstance).insertMultipleRoutes(responseModel.getRouteModels());
+                                new ProductsRepo(mInstance).insert(responseModel.getProductModels());
+
+
+                                // }
+                            } catch (Exception nm) {
+                                nm.printStackTrace();
+                            }
+
+
+                        }
+
+                        @Override
+                        public void response(String error) {
+
+
+                        }
+                    });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
         applicationHandler = new Handler(context.getMainLooper());
+
 
         if (BuildConfig.DEBUG)
             Timber.plant(new Timber.DebugTree());

@@ -237,7 +237,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="3dp"
-                        android:text="Data Analytics and Other Info"
+                        android:text="Other Information"
                         android:textColor="#5c5c5c"
                         android:textSize="14dp"
                         android:textStyle="bold" />

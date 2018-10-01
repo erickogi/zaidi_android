@@ -1,4 +1,4 @@
-package com.dev.lishabora.Utils.Network
+package com.dev.lishabora.Network
 
 class ApiConstants {
 
@@ -88,6 +88,10 @@ class ApiConstants {
 
         //SYNC UP
         var Sync: String = baseUrl + "System/Sync.php"
+
+        //SYNC DOWN
+        var SyncDown: String = baseUrl + "Traders/ViewInfo.php"
+
 
 
 

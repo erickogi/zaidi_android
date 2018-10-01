@@ -17,6 +17,7 @@
         android:backgroundTint="@color/white"
         app:cardUseCompatPadding="true"
         app:strokeColor="@color/divider"
+
         app:strokeWidth="2dp">
 
 
@@ -24,7 +25,7 @@
             android:id="@+id/background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/rounded_border_tv"
+            android:background="@drawable/rounded_border_white"
             android:orientation="vertical">
 
             <LinearLayout

@@ -3,26 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="?android:selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
     app:strokeColor="@color/divider"
     android:foreground="?attr/selectableItemBackground"
-    app:cardBackgroundColor="@color/colorPrimary"
-    app:cardCornerRadius="1dp"
-    app:cardElevation="1dp"
-    app:cardUseCompatPadding="true"
-    app:strokeWidth="1dp">
+    android:layout_margin="1dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginEnd="4dp"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="3dp">
 
     <RelativeLayout
         android:id="@+id/background"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/green_color_picker">
+        android:layout_height="wrap_content">
 
 
         <LinearLayout
-            android:padding="4dp"
             android:id="@+id/linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -72,9 +71,11 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="Weekly"
-                            android:textColor="@color/black"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/textblack"
+                            android:textStyle="bold"
+
+                            tools:capitalize="words" />
 
                         <TextView
 
@@ -92,6 +93,7 @@
                     </LinearLayout>
 
                     <View
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="@color/divider" />
@@ -125,9 +127,9 @@
                                     android:text="Balance  :"
 
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                                    android:textColor="#000000"
-                                    android:textSize="12.5sp"
-                                    android:textStyle="normal" />
+                                    android:textColor="@color/textblack"
+
+                                    android:textStyle="bold" />
 
                                 <com.dev.customfonts.MyTextView_Roboto_Bold
                                     android:id="@+id/txt_Bal_out"
@@ -157,9 +159,9 @@
                                     android:text="Milk  :"
 
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                                    android:textColor="#000000"
-                                    android:textSize="12.5sp"
-                                    android:textStyle="normal" />
+                                    android:textColor="@color/textblack"
+
+                                    android:textStyle="bold" />
 
                                 <com.dev.customfonts.MyTextView_Roboto_Bold
                                     android:id="@+id/txt_milk_totals"
@@ -196,9 +198,9 @@
                                     android:text="Loans :"
 
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                                    android:textColor="#000000"
-                                    android:textSize="12.5sp"
-                                    android:textStyle="normal" />
+                                    android:textColor="@color/textblack"
+
+                                    android:textStyle="bold" />
 
                                 <com.dev.customfonts.MyTextView_Roboto_Bold
                                     android:id="@+id/txt_loans_total"
@@ -227,10 +229,9 @@
                                     android:layout_weight="1"
                                     android:text="Orders :"
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                                    android:textColor="@color/textblack"
 
-                                    android:textColor="#000000"
-                                    android:textSize="12.5sp"
-                                    android:textStyle="normal" />
+                                    android:textStyle="bold" />
 
                                 <com.dev.customfonts.MyTextView_Roboto_Bold
                                     android:id="@+id/txt_orders_total"
@@ -258,6 +259,7 @@
             </LinearLayout>
 
             <View
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/divider" />
@@ -309,7 +311,7 @@
                         android:layout_weight="1"
 
 
-                        android:text="Approved :"
+                        android:text="Approved "
 
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textSize="11.5sp"
@@ -341,7 +343,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
 
-                        android:text="Pending : "
+                        android:text="Pending "
 
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textSize="11.5sp"

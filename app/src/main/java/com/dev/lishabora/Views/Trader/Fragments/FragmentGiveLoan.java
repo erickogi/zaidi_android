@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import com.dev.lishabora.Models.MonthsDates;
 import com.dev.lishabora.Models.Trader.FarmerLoansTable;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
+import com.dev.lishabora.Utils.InputFilterMinMax;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
@@ -120,15 +122,6 @@ public class FragmentGiveLoan extends Fragment {
 
         if (!TextUtils.isEmpty(((TextView) txtQty).getText().toString())) {
 
-//            double mazx=0;
-//
-//            try{
-//                mazx=Double.valueOf(gty);
-//            }catch (Exception nm){
-//                nm.printStackTrace();
-//            }
-//
-//            if(mazx > 10.0) {
 
             if (imgAction.getId() == R.id.img_add) {
                 int vq = Integer.valueOf(gty) + 1;
@@ -324,6 +317,7 @@ public class FragmentGiveLoan extends Fragment {
             }
         });
 
+        edtAmount.setFilters(new InputFilter[]{new InputFilterMinMax(1, 10000)});
 
         edtAmount.addTextChangedListener(new TextWatcher() {
             @Override

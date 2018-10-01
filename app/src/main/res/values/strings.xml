@@ -65,7 +65,7 @@
     <string name="title_activity_payouts">Payouts</string>
     <string name="farmer_s_names">Farmer\'s Names</string>
     <string name="_12_12_2018">12/12/2018</string>
-    <string name="cycle">Cycle</string>
+    <string name="cycle">Cycle : </string>
     <string name="active">Active</string>
     <string name="title_activity_farmer_profile">FarmerProfile</string>
     <string name="ksh">/-</string>

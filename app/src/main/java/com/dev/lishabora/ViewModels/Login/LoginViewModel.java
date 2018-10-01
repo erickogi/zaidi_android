@@ -9,8 +9,8 @@ import android.support.annotation.NonNull;
 
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.ResponseObject;
-import com.dev.lishabora.Utils.Network.ApiConstants;
-import com.dev.lishabora.Utils.Network.Request;
+import com.dev.lishabora.Network.ApiConstants;
+import com.dev.lishabora.Network.Request;
 import com.dev.lishabora.Utils.ResponseCallback;
 
 import org.json.JSONObject;

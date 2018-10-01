@@ -104,7 +104,12 @@ class DateTimeUtils {
 
         fun conver2DateLong(mydate: String): DateTime? {
             val formatter = DateTimeFormat.forPattern(this.Format)
-            return formatter.parseDateTime(mydate)
+            try {
+                return formatter.parseDateTime(mydate)
+
+            } catch (hj: Exception) {
+                return null
+            }
         }
 
 

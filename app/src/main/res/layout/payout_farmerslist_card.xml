@@ -8,13 +8,11 @@
     android:focusable="true"
     app:strokeColor="@color/divider"
     android:foreground="?attr/selectableItemBackground"
-    app:cardBackgroundColor="@color/colorPrimary"
     app:cardCornerRadius="4dp"
-    app:cardElevation="2dp"
-    app:cardUseCompatPadding="true"
-    app:strokeWidth="2dp">
-
-
+    android:layout_margin="1dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginEnd="4dp"
+    app:cardElevation="3dp">
     <RelativeLayout
         android:id="@+id/background"
         android:layout_width="match_parent"

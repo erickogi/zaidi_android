@@ -163,21 +163,29 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
     }
 
     private void initActions() {
-        spinnerUnit.setOnItemSelectedListener((view, position, id, item) -> {
-            //   if (position != 0) {
-            UnitsModel unitsModel = unitsModels.get(position);
+        try {
+            spinnerUnit.setOnItemSelectedListener((view, position, id, item) -> {
+                //   if (position != 0) {
+                UnitsModel unitsModel = unitsModels.get(position);
                 edtUnitName.setText("" + unitsModel.getUnit());
                 edtUnitMeasurement.setText(unitsModel.getUnitcapacity());
                 edtUnitPrice.setText(unitsModel.getUnitprice());
-            //  }
-        });
-        spinnerRoute.setOnItemSelectedListener((view, position, id, item) -> {
-            //  if (position != 0) {
-            RoutesModel routesModel = routesModels.get(position);
+                //  }
+            });
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+        try {
+            spinnerRoute.setOnItemSelectedListener((view, position, id, item) -> {
+                //  if (position != 0) {
+                RoutesModel routesModel = routesModels.get(position);
                 edtRouteName.setText(routesModel.getRoute());
                 edtRouteCode.setText(routesModel.getCode());
-            //  }
-        });
+                //  }
+            });
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
     }
 
     private void initData() {

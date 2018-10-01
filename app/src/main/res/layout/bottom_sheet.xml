@@ -52,8 +52,11 @@
 
     </LinearLayout>
 
+    <include layout="@layout/view_payout_farmers_titles" />
+
     <LinearLayout
 
+        android:visibility="gone"
         android:id="@+id/linear_titles"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

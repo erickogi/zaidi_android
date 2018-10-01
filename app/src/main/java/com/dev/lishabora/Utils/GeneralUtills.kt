@@ -115,7 +115,7 @@ class GeneralUtills {
                 validPhoneNumber = "254" + matcher.group(1)
                 return true
             }
-            return false
+            return true
 //
         }
 

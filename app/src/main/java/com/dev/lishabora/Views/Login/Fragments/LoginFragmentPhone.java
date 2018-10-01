@@ -24,7 +24,6 @@ import com.dev.lishabora.COntrollers.LoginController;
 import com.dev.lishabora.Models.Login.AuthModel;
 import com.dev.lishabora.Models.ResponseObject;
 import com.dev.lishabora.Models.Trader.TraderModel;
-import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.NetworkUtils;
 import com.dev.lishabora.ViewModels.Login.LoginViewModel;
@@ -213,7 +212,10 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
 
         if (!TextUtils.isEmpty(edtPhone.getText().toString())) {
             String phoneNumber = edtPhone.getText().toString().replaceAll(" ", "").trim();
-            if (LoginController.isValidPhoneNumber(phoneNumber) && GeneralUtills.Companion.isValidPhoneNumber(edtPhone.getText().toString())) {
+            if (LoginController.isValidPhoneNumber(phoneNumber)
+                // && GeneralUtills.Companion.isValidPhoneNumber(edtPhone.getText().toString())
+
+                    ) {
 
                 aviPhone.setVisibility(View.VISIBLE);
                 aviPhone.smoothToShow();

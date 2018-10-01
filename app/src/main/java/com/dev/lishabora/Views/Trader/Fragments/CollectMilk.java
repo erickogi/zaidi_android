@@ -144,6 +144,15 @@ class CollectMilk implements NumberKeyboardListener {
         ImageView imgIcon = mView.findViewById(R.id.img_icon);
 
 
+        //       btnPositive.setBackgroundDrawable(Application.context.getResources().getDrawable(R.drawable.rectbackgroundyello));
+//        btnNegative.setBackgroundColor(Application.context.getResources().getColor(R.color.colorPrimary));
+//
+//        btnNegative.setTextColor(Application.context.getResources().getColor(R.color.white));
+//        btnPositive.setTextColor(Application.context.getResources().getColor(R.color.white));
+//
+//        btnNegative.set
+
+
         btnNeutral.setVisibility(View.GONE);
         lTitle.setVisibility(View.GONE);
         txtTitle.setVisibility(View.VISIBLE);
@@ -309,12 +318,17 @@ class CollectMilk implements NumberKeyboardListener {
                 if (editable != null && editable.length() > 0) {
                     if (unitsModel.getUnitprice() != null) {
 
-                        Double price = Double.valueOf(unitsModel.getUnitprice());
-                        Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity()) / 1000;
-                        Double total = (Double.valueOf(edtTodayPm.getText().toString()) * unitCapacity) * price;
+                        try {
+                            Double price = Double.valueOf(unitsModel.getUnitprice());
+                            Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity()) / 1000;
+                            Double total = (Double.valueOf(edtTodayPm.getText().toString()) * unitCapacity) * price;
+                            unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
 
 
-                        unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
+                        } catch (Exception nm) {
+                            nm.printStackTrace();
+                        }
+
 
                     }
                 } else {
@@ -743,13 +757,17 @@ class CollectMilk implements NumberKeyboardListener {
             if (edtTodayAm.getText().toString() != null && !TextUtils.isEmpty(edtTodayAm.getText().toString())) {
                 if (unitsModel.getUnitprice() != null) {
 
-                    Double price = Double.valueOf(unitsModel.getUnitprice());
-                    Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity()) / 1000;
-                    Double total = (Double.valueOf(edtTodayAm.getText().toString()) * unitCapacity) * price;
+                    try {
+                        Double price = Double.valueOf(unitsModel.getUnitprice());
+                        Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity()) / 1000;
+                        Double total = (Double.valueOf(edtTodayAm.getText().toString()) * unitCapacity) * price;
 
 
-                    unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
+                        unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
 
+                    } catch (Exception nm) {
+                        nm.printStackTrace();
+                    }
                 }
             } else {
                 unitTotal.setText("");
@@ -758,13 +776,17 @@ class CollectMilk implements NumberKeyboardListener {
             if (edtTodayPm.getText().toString() != null && !TextUtils.isEmpty(edtTodayPm.getText().toString())) {
                 if (unitsModel.getUnitprice() != null) {
 
-                    Double price = Double.valueOf(unitsModel.getUnitprice());
-                    Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity()) / 1000;
-                    Double total = (Double.valueOf(edtTodayPm.getText().toString()) * unitCapacity) * price;
+                    try {
+                        Double price = Double.valueOf(unitsModel.getUnitprice());
+                        Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity()) / 1000;
+                        Double total = (Double.valueOf(edtTodayPm.getText().toString()) * unitCapacity) * price;
 
 
-                    unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
+                        unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
 
+                    } catch (Exception nm) {
+                        nm.printStackTrace();
+                    }
                 }
             } else {
                 unitTotal.setText("");

@@ -240,6 +240,8 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         context = getContext();
+
+        //syncDown();
     }
 
     @Override
@@ -968,4 +970,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         snack(error);
 
     }
+
+
 }

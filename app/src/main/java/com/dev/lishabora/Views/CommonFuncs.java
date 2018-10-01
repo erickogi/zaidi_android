@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dev.lishabora.AppConstants;
+import com.dev.lishabora.Application;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.DayCollectionModel;
 import com.dev.lishabora.Models.DaysDates;
@@ -1011,6 +1012,7 @@ public class CommonFuncs {
         TextView txt = mView.findViewById(R.id.txt_desc);
         TextView unitName, unitPrice, unitTotal;
 
+        edtVL.setFilters(new InputFilter[]{new InputFilterMinMax(1, 100)});
 
         unitName = mView.findViewById(R.id.txtUnitName);
         unitPrice = mView.findViewById(R.id.txtUnitPrice);
@@ -1048,11 +1050,15 @@ public class CommonFuncs {
                     if (editable != null && editable.length() > 0) {
                         if (u.getUnitprice() != null) {
 
-                            Double price = Double.valueOf(u.getUnitprice());
-                            Double unitCapacity = Double.valueOf(u.getUnitcapacity()) / 1000;
-                            Double total = (Double.valueOf(edtVL.getText().toString()) * unitCapacity) * price;
-                            unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
+                            try {
+                                Double price = Double.valueOf(u.getUnitprice());
+                                Double unitCapacity = Double.valueOf(u.getUnitcapacity()) / 1000;
+                                Double total = (Double.valueOf(edtVL.getText().toString()) * unitCapacity) * price;
+                                unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
 
+                            } catch (Exception nm) {
+                                nm.printStackTrace();
+                            }
                         }
                     } else {
                         unitTotal.setText("");
@@ -1094,6 +1100,12 @@ public class CommonFuncs {
         txtTitle = mView.findViewById(R.id.txt_title);
         lTitle = mView.findViewById(R.id.linear_title);
         imgIcon = mView.findViewById(R.id.img_icon);
+
+        btnPositive.setBackgroundColor(Application.context.getResources().getColor(R.color.colorPrimary));
+        btnNegative.setBackgroundColor(Application.context.getResources().getColor(R.color.colorPrimary));
+
+        btnNegative.setTextColor(Application.context.getResources().getColor(R.color.white));
+        btnPositive.setTextColor(Application.context.getResources().getColor(R.color.white));
 
 
         btnNeutral.setVisibility(View.GONE);
@@ -1142,6 +1154,9 @@ public class CommonFuncs {
 
         edtAmount = mView.findViewById(R.id.edt_value);
         txtQty = mView.findViewById(R.id.txt_qty);
+
+        edtAmount.setFilters(new InputFilter[]{new InputFilterMinMax(1, 10000)});
+
 
         txtPrice = mView.findViewById(R.id.txt_installment);
 
@@ -1834,7 +1849,7 @@ public class CommonFuncs {
         if (farmerBalance == null) {
 
 
-            farmerBalance = new FarmerBalance(c.getFarmerCode(), null, null, null);
+            farmerBalance = new FarmerBalance(c.getFarmerCode(), "", "", "");
             balncesViewModel.insert(farmerBalance);
 
 
@@ -2062,6 +2077,7 @@ public class CommonFuncs {
     static Double totalToPay = 0.0;
     static boolean isLoanEditable = false;
     static boolean isOrderEditable = false;
+
 
     public static void doAprove(Context context, BalncesViewModel balncesViewModel, TraderViewModel traderViewModel, PayoutFarmersCollectionModel model, FamerModel c, Payouts p, ApproveFarmerPayCardListener listener) {
 
