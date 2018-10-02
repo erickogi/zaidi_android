@@ -12,6 +12,7 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,6 +109,8 @@ public class FragmentGiveLoan extends Fragment {
             if (l != null) {
                 if (l.getLoanAmount() != null && !l.getLoanAmount().equals("0.0"))
                     txt.setText(l.getLoanAmount());
+                Log.d("loandebug", l.getLoanAmount());
+
                 txtPrice.setText(l.getInstallmentAmount());
                 txtQty.setText(l.getInstallmentsNo());
 
@@ -317,7 +320,6 @@ public class FragmentGiveLoan extends Fragment {
             }
         });
 
-        edtAmount.setFilters(new InputFilter[]{new InputFilterMinMax(1, 10000)});
 
         edtAmount.addTextChangedListener(new TextWatcher() {
             @Override
@@ -353,6 +355,7 @@ public class FragmentGiveLoan extends Fragment {
 
 
         getCollection(famerModel.getCode(), DateTimeUtils.Companion.getToday(), edtAmount, txtPrice, txtQty);
+        edtAmount.setFilters(new InputFilter[]{new InputFilterMinMax(1, 10000)});
 
 
         btnGiveLoan.setOnClickListener(view -> {

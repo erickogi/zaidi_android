@@ -847,6 +847,7 @@ public class EditOrder extends AppCompatActivity {
 
 
         edtDeliveryFee.setText(String.valueOf(delivery));
+        edtDeliveryFee.setFilters(new InputFilter[]{new InputFilterMinMax(1, 1000)});
 
         edtAmount.setText(String.valueOf(dt));
 
@@ -875,7 +876,6 @@ public class EditOrder extends AppCompatActivity {
         edtDeliveryFee = findViewById(R.id.edt_delivery);
 
 
-        edtDeliveryFee.setFilters(new InputFilter[]{new InputFilterMinMax(1, 1000)});
 
         txtQty = findViewById(R.id.txt_qty);
         txtPrice = findViewById(R.id.txt_installment);

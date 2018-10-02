@@ -22,9 +22,6 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -53,6 +50,8 @@ import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.Utils.RequestDataCallback;
 import com.dev.lishabora.ViewModels.Admin.AdminsViewModel;
 import com.dev.lishabora.Views.Admin.Activities.AdimTraderProfile;
+import com.dev.lishabora.Views.Admin.Activities.CreateTrader;
+import com.dev.lishabora.Views.Admin.CreateTraderConstants;
 import com.dev.lishaboramobile.R;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.google.gson.Gson;
@@ -72,6 +71,8 @@ import java.util.Objects;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+
+import static android.app.Activity.RESULT_OK;
 
 
 public class AdminsTradersListFragment extends Fragment {
@@ -679,110 +680,120 @@ public class AdminsTradersListFragment extends Fragment {
     }
 
     public void createTrader() {
-        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
-        View mView = layoutInflaterAndroid.inflate(R.layout.dialog_add_trader, null);
-        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(context));
-        alertDialogBuilderUserInput.setView(mView);
 
+        CreateTraderConstants.setTraderModel(new TraderModel());
+        CreateTraderConstants.setProductModels(new LinkedList<>());
 
-        avi = mView.findViewById(R.id.avi);
+        //startActivity(new Intent(getActivity(),CreateTrader.class));
 
-        TextView txtKe;
-        txtKe = mView.findViewById(R.id.txt_ke);
-        TextInputEditText phone = mView.findViewById(R.id.edt_traders_phone);
-        final char space = ' ';
+        Intent intent2 = new Intent(getContext(), CreateTrader.class);
 
-        phone.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        startActivityForResult(intent2, 10004);
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                // if(s.length()>0&&editTextCarrierNumber.getText().toString().charAt(0)!='0') {
-                try {
-                    if (s.charAt(0) == '0') {
-                        s.delete(s.length() - 1, s.length());
-                        txtKe.setText("+254-0");
-                    } else if (s != null && s.length() < 1) {
-                        txtKe.setText("+254");
-
-                    }
-
-
-                } catch (Exception nm) {
-                    nm.printStackTrace();
-                }
-                if (s.length() > 0 && (s.length() % 4) == 0) {
-                    final char c = s.charAt(s.length() - 1);
-                    if (space == c) {
-                        s.delete(s.length() - 1, s.length());
-                    }
-
-                }
-                // Insert char where needed.
-                if (s.length() > 0 && (s.length() % 4) == 0) {
-                    char c = s.charAt(s.length() - 1);
-                    // Only if its a digit where there should be a space we insert a space
-                    if (Character.isDigit(c) && TextUtils.split(s.toString(), String.valueOf(space)).length <= 3) {
-                        s.insert(s.length() - 1, String.valueOf(space));
-                    }
-
-                }
-            }
-        });
-
-
-
-        alertDialogBuilderUserInput
-                .setCancelable(false);
-//                .setPositiveButton("Save", (dialogBox, id) -> {
-//                    // ToDo get user input here
+//        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
+//        View mView = layoutInflaterAndroid.inflate(R.layout.dialog_add_trader, null);
+//        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(context));
+//        alertDialogBuilderUserInput.setView(mView);
 //
 //
-//                })
+//        avi = mView.findViewById(R.id.avi);
 //
-//                .setNegativeButton("Dismiss",
-//                        (dialogBox, id) -> dialogBox.cancel());
-
-
-        AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
-        alertDialogAndroid.setCancelable(false);
-        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
-        alertDialogAndroid.show();
-
-//        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
-//        theButton.setOnClickListener(new CustomListener(alertDialogAndroid));
-
-
-        MaterialButton btnPositive, btnNegative, btnNeutral;
-        TextView txtTitle;
-        LinearLayout lTitle;
-        ImageView imgIcon;
-        btnPositive = mView.findViewById(R.id.btn_positive);
-        btnNegative = mView.findViewById(R.id.btn_negative);
-        btnNeutral = mView.findViewById(R.id.btn_neutral);
-        txtTitle = mView.findViewById(R.id.txt_title);
-        lTitle = mView.findViewById(R.id.linear_title);
-        imgIcon = mView.findViewById(R.id.img_icon);
-
-
-        btnNeutral.setVisibility(View.GONE);
-        lTitle.setVisibility(View.GONE);
-        txtTitle.setVisibility(View.VISIBLE);
-        imgIcon.setVisibility(View.VISIBLE);
-        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
-        txtTitle.setText("Add Trader");
-
-        btnPositive.setOnClickListener(new CustomListener(alertDialogAndroid));
-        btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
+//        TextView txtKe;
+//        txtKe = mView.findViewById(R.id.txt_ke);
+//        TextInputEditText phone = mView.findViewById(R.id.edt_traders_phone);
+//        final char space = ' ';
+//
+//        phone.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                // if(s.length()>0&&editTextCarrierNumber.getText().toString().charAt(0)!='0') {
+//                try {
+//                    if (s.charAt(0) == '0') {
+//                        s.delete(s.length() - 1, s.length());
+//                        txtKe.setText("+254-0");
+//                    } else if (s != null && s.length() < 1) {
+//                        txtKe.setText("+254");
+//
+//                    }
+//
+//
+//                } catch (Exception nm) {
+//                    nm.printStackTrace();
+//                }
+//                if (s.length() > 0 && (s.length() % 4) == 0) {
+//                    final char c = s.charAt(s.length() - 1);
+//                    if (space == c) {
+//                        s.delete(s.length() - 1, s.length());
+//                    }
+//
+//                }
+//                // Insert char where needed.
+//                if (s.length() > 0 && (s.length() % 4) == 0) {
+//                    char c = s.charAt(s.length() - 1);
+//                    // Only if its a digit where there should be a space we insert a space
+//                    if (Character.isDigit(c) && TextUtils.split(s.toString(), String.valueOf(space)).length <= 3) {
+//                        s.insert(s.length() - 1, String.valueOf(space));
+//                    }
+//
+//                }
+//            }
+//        });
+//
+//
+//
+//        alertDialogBuilderUserInput
+//                .setCancelable(false);
+////                .setPositiveButton("Save", (dialogBox, id) -> {
+////                    // ToDo get user input here
+////
+////
+////                })
+////
+////                .setNegativeButton("Dismiss",
+////                        (dialogBox, id) -> dialogBox.cancel());
+//
+//
+//        AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
+//        alertDialogAndroid.setCancelable(false);
+//        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//
+//        alertDialogAndroid.show();
+//
+////        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
+////        theButton.setOnClickListener(new CustomListener(alertDialogAndroid));
+//
+//
+//        MaterialButton btnPositive, btnNegative, btnNeutral;
+//        TextView txtTitle;
+//        LinearLayout lTitle;
+//        ImageView imgIcon;
+//        btnPositive = mView.findViewById(R.id.btn_positive);
+//        btnNegative = mView.findViewById(R.id.btn_negative);
+//        btnNeutral = mView.findViewById(R.id.btn_neutral);
+//        txtTitle = mView.findViewById(R.id.txt_title);
+//        lTitle = mView.findViewById(R.id.linear_title);
+//        imgIcon = mView.findViewById(R.id.img_icon);
+//
+//
+//        btnNeutral.setVisibility(View.GONE);
+//        lTitle.setVisibility(View.GONE);
+//        txtTitle.setVisibility(View.VISIBLE);
+//        imgIcon.setVisibility(View.VISIBLE);
+//        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
+//        txtTitle.setText("Add Trader");
+//
+//        btnPositive.setOnClickListener(new CustomListener(alertDialogAndroid));
+//        btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
 
 //        LinearLayout.LayoutParams buttonParams;
 //
@@ -1309,5 +1320,29 @@ public class AdminsTradersListFragment extends Fragment {
 
     }
 
+    @Override
+    public void onActivityResult(
+            int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
 
+            case 10004:
+
+                if (resultCode == RESULT_OK) {
+                    initTradersList();
+
+
+                }
+                break;
+
+            default:
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
 }

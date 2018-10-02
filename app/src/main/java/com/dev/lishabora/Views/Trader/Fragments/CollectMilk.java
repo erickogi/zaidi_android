@@ -199,24 +199,9 @@ class CollectMilk implements NumberKeyboardListener {
 
         clearDialog();
 
-        Double amDoubleValue = 0.0;
-        Double pmDoubleValue = 0.0;
+
         collModel = null;
         collModel = mViewModel.getCollectionByDateByFarmerByTimeSngle(famerModel.getCode(), DateTimeUtils.Companion.getToday());
-
-        if (collModel != null) {
-
-            if (collModel.getMilkCollectedAm() != null) {
-
-                // amDoubleValue = amDoubleValue + Double.valueOf(collModel.getMilkCollectedAm());
-                // amStringValue = String.valueOf(amDoubleValue);
-            }
-            if (collModel.getMilkCollectedPm() != null) {
-
-                // pmDoubleValue = pmDoubleValue + Double.valueOf(collModel.getMilkCollectedIdPm());
-                // pmStringValue = String.valueOf(pmDoubleValue);
-            }
-        }
 
 
 
@@ -420,9 +405,9 @@ class CollectMilk implements NumberKeyboardListener {
                 c.setApproved(0);
 
 
-                listener.createCollection(c);
+                listener.createCollection(c, famerModel);
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                mViewModel.updateFarmer(famerModel, false, false);
+                // mViewModel.updateFarmer(famerModel, false, false);
 
             } else {
 
@@ -431,11 +416,13 @@ class CollectMilk implements NumberKeyboardListener {
                 collModel.setMilkCollectedValueKshAm(milkModel.getValueKsh());
                 collModel.setMilkCollectedValueLtrsAm(milkModel.getValueLtrs());
                 collModel.setMilkDetailsAm(new Gson().toJson(milkModel));
-                listener.updateCollection(collModel);
-
 
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                mViewModel.updateFarmer(famerModel, false, false);
+
+                listener.updateCollection(collModel, famerModel);
+
+
+                //mViewModel.updateFarmer(famerModel, false, false);
 
             }
 
@@ -479,11 +466,12 @@ class CollectMilk implements NumberKeyboardListener {
                 c.setSynced(false);
                 c.setApproved(0);
 
-
-                listener.createCollection(c);
-
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                mViewModel.updateFarmer(famerModel, false, false);
+
+
+                listener.createCollection(c, famerModel);
+
+                //  mViewModel.updateFarmer(famerModel, false, false);
 
             } else {
                 collModel.setMilkCollectedPm(milkPm);
@@ -491,9 +479,10 @@ class CollectMilk implements NumberKeyboardListener {
                 collModel.setMilkCollectedValueLtrsPm(milkModel.getValueLtrs());
                 collModel.setMilkDetailsPm(new Gson().toJson(milkModel));
 
-                listener.updateCollection(collModel);
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                mViewModel.updateFarmer(famerModel, false, false);
+
+                listener.updateCollection(collModel, famerModel);
+                // mViewModel.updateFarmer(famerModel, false, false);
 
 
             }
@@ -568,10 +557,11 @@ class CollectMilk implements NumberKeyboardListener {
                 co.setSynced(false);
                 co.setApproved(0);
 
-
-                listener.createCollection(co);
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                mViewModel.updateFarmer(famerModel, false, false);
+
+
+                listener.createCollection(co, famerModel);
+                //  mViewModel.updateFarmer(famerModel, false, false);
 
 
             } else {
@@ -587,11 +577,13 @@ class CollectMilk implements NumberKeyboardListener {
                 collModel.setMilkCollectedValueLtrsPm(milkModelPm.getValueLtrs());
                 collModel.setMilkDetailsPm(new Gson().toJson(milkModelPm));
 
-                listener.updateCollection(collModel);
-
-
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                mViewModel.updateFarmer(famerModel, false, false);
+
+
+                listener.updateCollection(collModel, famerModel);
+
+
+                //   mViewModel.updateFarmer(famerModel, false, false);
 
             }
 

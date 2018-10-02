@@ -3,6 +3,7 @@ package com.dev.lishabora.Views.Login.Fragments;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,13 +11,17 @@ import android.support.design.card.MaterialCardView;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +31,7 @@ import com.dev.lishabora.Models.ResponseObject;
 import com.dev.lishabora.Models.Trader.TraderModel;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.NetworkUtils;
+import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Login.LoginViewModel;
 import com.dev.lishabora.Views.Login.LoginConsts;
 import com.dev.lishaboramobile.R;
@@ -60,6 +66,7 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
     private Button btnNextPhoneView;
     private int headerCardState = 0;
     private Fragment fragment;
+    int v = 0;
 
 
     public static LoginFragmentPhone newInstance() {
@@ -88,11 +95,51 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
         this.view = view;
     }
 
+    private ImageView imageCow;
+
+    public void di() {
+        // MaterialDialog.Builder builder=new MaterialDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Dev");
+
+// Set up the input
+        final EditText input = new EditText(getContext());
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+// Set up the buttons
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            if (!TextUtils.isEmpty(input.getText())) {
+                new PrefrenceManager(getContext()).setDev_folder(input.getText().toString());
+                dialog.cancel();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
     void initCards() {
         //Find views
         headerCard = view.findViewById(R.id.card_header);
         phoneCard = view.findViewById(R.id.card_phone_view);
         txtKe = view.findViewById(R.id.txt_ke);
+        imageCow = view.findViewById(R.id.img_cow);
+        imageCow.setOnClickListener(view -> {
+
+            if (v >= 5) {
+                v = 0;
+                di();
+            }
+            v++;
+
+        });
 
 
         initWidgets();

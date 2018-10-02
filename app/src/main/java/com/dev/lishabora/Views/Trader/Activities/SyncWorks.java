@@ -151,12 +151,12 @@ public class SyncWorks extends AppCompatActivity {
         Log.d("datasend", jsonObject.toString());
 
 
-        // generateNoteOnSD(SyncWorks.this, "synworks.json", new Gson().toJson(s, SyncHolderModel.class));
+        generateNoteOnSD(SyncWorks.this, "synworks.json", new Gson().toJson(s, SyncHolderModel.class));
 
         // Snackbar.make(view, "We are working on implementing sync sit tight", Snackbar.LENGTH_LONG).show();
 
 
-        sync(jsonObject, view, syncWorks1);
+        // sync(jsonObject, view, syncWorks1);
 
 
     }
@@ -242,6 +242,8 @@ public class SyncWorks extends AppCompatActivity {
             Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
+            Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
+
         }
     }
 

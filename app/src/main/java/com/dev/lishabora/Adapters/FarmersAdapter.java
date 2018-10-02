@@ -77,6 +77,8 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
         } catch (Exception nm) {
             nm.printStackTrace();
         }
+
+
         holder.balance.setText(String.format("%s%s", v, context.getString(R.string.ksh)));
         GeneralUtills.Companion.changeCOlor(v, holder.balance, 1);
         holder.id.setText(farmer.getCode());

@@ -18,6 +18,7 @@ public class PrefrenceManager {
     private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
     private static final String KEY_TYPE_LOGGED_IN = "typeLoggedIn";
 
+    private static final String dev_folder = "devfolder";
     //ADMIN
 
     private static final String NAMES = "names";
@@ -91,6 +92,15 @@ public class PrefrenceManager {
         editor = pref.edit();
     }
 
+    public String getDev_folder() {
+        return pref.getString(dev_folder, "Dev");
+
+    }
+
+    public void setDev_folder(String dev_folde) {
+        editor.putString(dev_folder, dev_folde);
+        editor.commit();
+    }
 
     public boolean isLoggedIn() {
         return pref.getBoolean(KEY_IS_LOGGED_IN, false);

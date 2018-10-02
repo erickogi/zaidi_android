@@ -1,9 +1,13 @@
 package com.dev.lishabora.Network
 
+import com.dev.lishabora.Application
+import com.dev.lishabora.Utils.PrefrenceManager
+
 class ApiConstants {
 
 
     companion object {
+
 
 
         //KEY VALUES
@@ -11,7 +15,10 @@ class ApiConstants {
         var resultDescription: String = "ResultDescription"
 
         var baseUrl1: String = "http://lishabora.net/512/Apis/"
-        var baseUrl: String = "http://lishabora.net/Dev/512/Apis/"
+        var baseUrl2: String = "http://lishabora.net/Dev/512/Apis/"
+
+
+        var baseUrl: String = "http://lishabora.net/" + PrefrenceManager(Application.context).dev_folder + "/512/Apis/"
 
         //Accounts
         var Accounts: String = baseUrl + "Accounts/"

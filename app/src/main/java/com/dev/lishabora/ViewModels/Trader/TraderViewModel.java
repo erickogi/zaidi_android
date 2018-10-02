@@ -821,7 +821,7 @@ public class TraderViewModel extends AndroidViewModel
                 productsModels.get(i).setTraderCode(prefrenceManager.getTraderModel().getCode());
             }
 
-            synch(AppConstants.INSERT, AppConstants.ENTITY_PRODUCTS, null, productsModels, 2);
+            //synch(AppConstants.INSERT, AppConstants.ENTITY_PRODUCTS, null, productsModels, 2);
 
             if (productsRepo.insert(productsModels)) {
                 ResponseModel responseModel = new ResponseModel();

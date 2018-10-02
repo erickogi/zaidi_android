@@ -70,7 +70,11 @@ public class BalanceRepo {
 
         @Override
         protected Boolean doInBackground(final FarmerBalance... params) {
-            mAsyncTaskDao.insertSingle(params[0]);
+            try {
+                mAsyncTaskDao.insertSingle(params[0]);
+            } catch (Exception nm) {
+
+            }
             return true;
 
         }
@@ -93,7 +97,11 @@ public class BalanceRepo {
 
         @Override
         protected Boolean doInBackground(final List<FarmerBalance>... params) {
-            mAsyncTaskDao.insertMultiple(params[0]);
+            try {
+                mAsyncTaskDao.insertMultiple(params[0]);
+            } catch (Exception nm) {
+
+            }
             return true;
 
         }

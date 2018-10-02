@@ -179,7 +179,11 @@ public class CollectionsRepo {
 
         @Override
         protected Boolean doInBackground(final Collection... params) {
-            mAsyncTaskDao.insertSingleCollection(params[0]);
+            try {
+                mAsyncTaskDao.insertSingleCollection(params[0]);
+            } catch (Exception nm) {
+
+            }
             return true;
 
         }

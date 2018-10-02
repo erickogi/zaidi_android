@@ -1012,7 +1012,6 @@ public class CommonFuncs {
         TextView txt = mView.findViewById(R.id.txt_desc);
         TextView unitName, unitPrice, unitTotal;
 
-        edtVL.setFilters(new InputFilter[]{new InputFilterMinMax(1, 100)});
 
         unitName = mView.findViewById(R.id.txtUnitName);
         unitPrice = mView.findViewById(R.id.txtUnitPrice);
@@ -1081,6 +1080,7 @@ public class CommonFuncs {
         }
 
 
+        edtVL.setFilters(new InputFilter[]{new InputFilterMinMax(1, 1000)});
 
         alertDialogBuilderUserInput
                 .setCancelable(false);
@@ -1155,7 +1155,6 @@ public class CommonFuncs {
         edtAmount = mView.findViewById(R.id.edt_value);
         txtQty = mView.findViewById(R.id.txt_qty);
 
-        edtAmount.setFilters(new InputFilter[]{new InputFilterMinMax(1, 10000)});
 
 
         txtPrice = mView.findViewById(R.id.txt_installment);
@@ -1211,6 +1210,9 @@ public class CommonFuncs {
         } else {
             edtAmount.setText("");
         }
+        edtAmount.setFilters(new InputFilter[]{new InputFilterMinMax(1, 10000)});
+
+        // edtAmount.setFilters(new InputFilter[]{new InputFilterMinMax(1, 10000)});
 
 
 
@@ -1656,6 +1658,7 @@ public class CommonFuncs {
 
 
         double milkLtrs = 0.0;
+
         double milkKsh = 0.0;
 
 
@@ -1845,59 +1848,73 @@ public class CommonFuncs {
     private static void refreshTotalBalances(BalncesViewModel balncesViewModel, TraderViewModel traderViewModel, Collection c) {
 
 
-        FarmerBalance farmerBalance = balncesViewModel.getByFarmerCodeOne(c.getFarmerCode());
-        if (farmerBalance == null) {
+        try {
+            FarmerBalance farmerBalance = balncesViewModel.getByFarmerCodeOne(c.getFarmerCode());
 
 
-            farmerBalance = new FarmerBalance(c.getFarmerCode(), "", "", "");
-            balncesViewModel.insert(farmerBalance);
+            double loanTotalAmount = 0.0;
+            double loanInstalmentAmount = 0.0;
+            double loanPaid = 0.0;
+
+            double orderTotalAmount = 0.0;
+            double orderInstalmentAmount = 0.0;
+            double orderPaid = 0.0;
 
 
+            List<FarmerLoansTable> loansTables = balncesViewModel.getFarmerLoanByPayoutNumberByFarmerByStatus(c.getFarmerCode(), 0);
+            List<FarmerOrdersTable> ordersTables = balncesViewModel.getFarmerOrderByPayoutNumberByFarmerByStatus(c.getFarmerCode(), 0);
+
+            for (FarmerLoansTable fl : loansTables) {
+                loanTotalAmount = +(Double.valueOf(fl.getLoanAmount()));
+                loanInstalmentAmount = +(Double.valueOf(fl.getInstallmentAmount()));
+                loanPaid = +balncesViewModel.getSumPaidLoanPayment(fl.getId());
+            }
+
+            for (FarmerOrdersTable fo : ordersTables) {
+                orderTotalAmount = +(Double.valueOf(fo.getOrderAmount()));
+                orderInstalmentAmount = +(Double.valueOf(fo.getInstallmentAmount()));
+                orderPaid = +balncesViewModel.getSumPaidOrderPayment(fo.getId());
+            }
+            Log.d("RecordAsd", "Alll Order " + loanInstalmentAmount + "\n" + ordersTables.size());
+
+
+            double totalMilkForCurrentPayout = 0.0;
+            if (traderViewModel.getSumOfMilkForPayoutKshD(c.getFarmerCode(), c.getPayoutnumber()) != null) {
+                totalMilkForCurrentPayout += traderViewModel.getSumOfMilkForPayoutKshD(c.getFarmerCode(), c.getPayoutnumber());
+            }
+
+
+            if (farmerBalance == null) {
+
+
+                farmerBalance = new FarmerBalance(c.getFarmerCode(), "", "", "");
+                //farmerBalance = balncesViewModel.getByFarmerCodeOne(c.getFarmerCode());
+                farmerBalance.setBalanceOwed(String.valueOf((totalMilkForCurrentPayout - ((loanTotalAmount - loanPaid) + (orderTotalAmount - orderPaid)))));
+                farmerBalance.setBalanceToPay(String.valueOf((totalMilkForCurrentPayout - ((loanInstalmentAmount) + (orderInstalmentAmount)))));
+
+                Log.d("RecordAsd", " insert Balnce to pay " + farmerBalance.getBalanceToPay() + "\n" + farmerBalance.getBalanceOwed());
+
+                balncesViewModel.insert(farmerBalance);
+
+                //  traderViewModel.updateFarmer()
+
+
+            } else {
+
+
+                //farmerBalance = balncesViewModel.getByFarmerCodeOne(c.getFarmerCode());
+                farmerBalance.setBalanceOwed(String.valueOf((totalMilkForCurrentPayout - ((loanTotalAmount - loanPaid) + (orderTotalAmount - orderPaid)))));
+                farmerBalance.setBalanceToPay(String.valueOf((totalMilkForCurrentPayout - ((loanInstalmentAmount) + (orderInstalmentAmount)))));
+
+                Log.d("RecordAsd", "update Balnce to pay " + farmerBalance.getBalanceToPay() + "\n" + farmerBalance.getBalanceOwed());
+
+
+                balncesViewModel.updateRecord(farmerBalance);
+
+            }
+        } catch (Exception nm) {
+            nm.printStackTrace();
         }
-
-
-        double loanTotalAmount = 0.0;
-        double loanInstalmentAmount = 0.0;
-        double loanPaid = 0.0;
-
-        double orderTotalAmount = 0.0;
-        double orderInstalmentAmount = 0.0;
-        double orderPaid = 0.0;
-
-
-        List<FarmerLoansTable> loansTables = balncesViewModel.getFarmerLoanByPayoutNumberByFarmerByStatus(c.getFarmerCode(), 0);
-        List<FarmerOrdersTable> ordersTables = balncesViewModel.getFarmerOrderByPayoutNumberByFarmerByStatus(c.getFarmerCode(), 0);
-
-        for (FarmerLoansTable fl : loansTables) {
-            loanTotalAmount = +(Double.valueOf(fl.getLoanAmount()));
-            loanInstalmentAmount = +(Double.valueOf(fl.getInstallmentAmount()));
-            loanPaid = +balncesViewModel.getSumPaidLoanPayment(fl.getId());
-        }
-
-        for (FarmerOrdersTable fo : ordersTables) {
-            orderTotalAmount = +(Double.valueOf(fo.getOrderAmount()));
-            orderInstalmentAmount = +(Double.valueOf(fo.getInstallmentAmount()));
-            orderPaid = +balncesViewModel.getSumPaidOrderPayment(fo.getId());
-        }
-        Log.d("RecordAsd", "Alll Order " + loanInstalmentAmount + "\n" + ordersTables.size());
-
-
-        double totalMilkForCurrentPayout = 0.0;
-        if (traderViewModel.getSumOfMilkForPayoutKshD(c.getFarmerCode(), c.getPayoutnumber()) != null) {
-            totalMilkForCurrentPayout += traderViewModel.getSumOfMilkForPayoutKshD(c.getFarmerCode(), c.getPayoutnumber());
-        }
-
-        farmerBalance = balncesViewModel.getByFarmerCodeOne(c.getFarmerCode());
-
-
-        farmerBalance.setBalanceOwed(String.valueOf((totalMilkForCurrentPayout - ((loanTotalAmount - loanPaid) + (orderTotalAmount - orderPaid)))));
-        farmerBalance.setBalanceToPay(String.valueOf((totalMilkForCurrentPayout - ((loanInstalmentAmount) + (orderInstalmentAmount)))));
-
-        Log.d("RecordAsd", "Balnce to pay " + farmerBalance.getBalanceToPay() + "\n" + farmerBalance.getBalanceOwed());
-
-
-        balncesViewModel.updateRecord(farmerBalance);
-
 
     }
 

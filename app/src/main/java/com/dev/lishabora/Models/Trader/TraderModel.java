@@ -2,11 +2,15 @@ package com.dev.lishabora.Models.Trader;
 
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import com.dev.lishabora.Models.ProductsModel;
+
 import java.io.Serializable;
+import java.util.List;
 
 
 @Entity(tableName = "traders",indices = {@Index(value = {"code"}, unique = true)})
@@ -55,6 +59,18 @@ public class TraderModel implements Serializable {
     private   int deleted ;
     private   int synced ;
     private   int dummy ;
+
+    @Ignore
+    private List<ProductsModel> productModels;
+
+
+    public List<ProductsModel> getProductModels() {
+        return productModels;
+    }
+
+    public void setProductModels(List<ProductsModel> productModels) {
+        this.productModels = productModels;
+    }
 
     public int getCycleStartDayNumber() {
         return cycleStartDayNumber;

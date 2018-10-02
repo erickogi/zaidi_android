@@ -83,6 +83,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name="com.dev.lishabora.Views.Trader.Activities.CreateFarmerActivity" />
         <activity
+            android:name="com.dev.lishabora.Views.Admin.Activities.CreateTrader"
+            android:label="New Trader"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name="com.dev.lishabora.Views.Login.Activities.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />

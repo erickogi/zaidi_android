@@ -65,7 +65,11 @@ public class CyclesRepo {
 
         @Override
         protected Boolean doInBackground(final List<Cycles>... params) {
-            mAsyncTaskDao.insertMultipleCycles(params[0]);
+            try {
+                mAsyncTaskDao.insertMultipleCycles(params[0]);
+            } catch (Exception nm) {
+
+            }
             return true;
 
         }
