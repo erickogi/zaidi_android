@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -213,6 +214,7 @@ class CollectMilk implements NumberKeyboardListener {
         unitsModel.setUnitprice(famerModel.getUnitprice());
         unitsModel.setUnit(famerModel.getUnitname());
 
+        Log.d("farmermoddel", "" + new Gson().toJson(famerModel));
 
         names.setText(famerModel.getNames());
         balance.setText(GeneralUtills.Companion.round(famerModel.getTotalbalance(), 1));
@@ -482,7 +484,6 @@ class CollectMilk implements NumberKeyboardListener {
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
 
                 listener.updateCollection(collModel, famerModel);
-                // mViewModel.updateFarmer(famerModel, false, false);
 
 
             }
@@ -515,7 +516,7 @@ class CollectMilk implements NumberKeyboardListener {
                 co.setMilkCollectedAm(milkAm);
                 co.setMilkCollectedValueKshAm(milkModelAm.getValueKsh());
                 co.setMilkCollectedValueLtrsAm(milkModelAm.getValueLtrs());
-                co.setMilkDetailsAm(new Gson().toJson(milkAm));
+                co.setMilkDetailsAm(new Gson().toJson(milkModelAm));
 
 
                 co.setLoanAmountGivenOutPrice("0");
@@ -528,24 +529,12 @@ class CollectMilk implements NumberKeyboardListener {
                 co.setApproved(0);
 
 
-//                Collection co = new Collection();
-//                co.setCycleCode(famerModel.getCyclecode());
-//                co.setFarmerCode(famerModel.getCode());
-//                co.setFarmerName(famerModel.getNames());
-//                co.setCycleId(famerModel.getCode());
-//                co.setDayName(today.getText().toString());
-//                co.setLoanAmountGivenOutPrice("0");
-//                co.setDayDate(DateTimeUtils.Companion.getToday());
-//                co.setDayDateLog(DateTimeUtils.Companion.getLongDate(co.getDayDate()));
-
-
-                //co.setTimeOfDay("Pm");
 
 
                 co.setMilkCollectedPm(milkPm);
                 co.setMilkCollectedValueKshPm(milkModelPm.getValueKsh());
                 co.setMilkCollectedValueLtrsPm(milkModelPm.getValueLtrs());
-                co.setMilkDetailsPm(new Gson().toJson(milkPm));
+                co.setMilkDetailsPm(new Gson().toJson(milkModelPm));
 
 
                 co.setLoanAmountGivenOutPrice("0");
@@ -578,12 +567,9 @@ class CollectMilk implements NumberKeyboardListener {
                 collModel.setMilkDetailsPm(new Gson().toJson(milkModelPm));
 
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-
-
                 listener.updateCollection(collModel, famerModel);
 
 
-                //   mViewModel.updateFarmer(famerModel, false, false);
 
             }
 
@@ -593,7 +579,6 @@ class CollectMilk implements NumberKeyboardListener {
 
     private void getCollection(String code, String date, TextView txtAm, TextView txtPm) {
 
-        // Timber.tag("tagssearch").d(code + "  Date " + date);
         Collection c = mViewModel.getCollectionByDateByFarmerByTimeSngle(code, date);//.observe(FragementFarmersList.this, collections -> {
 
         if (txtAm != null && txtPm != null) {

@@ -40,6 +40,7 @@ import com.dev.lishabora.Utils.AdvancedOnclickRecyclerListener;
 import com.dev.lishabora.Utils.ApproveFarmerPayCardListener;
 import com.dev.lishabora.Utils.CollectionCreateUpdateListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
+import com.dev.lishabora.Utils.MilkEditValueListener;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
@@ -251,7 +252,12 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
     public void editValue(boolean isEditable, int adapterPosition, int time, int type, String value, Object o, View editable, DayCollectionModel dayCollectionModel) {
 
         if (type == 1) {
-            CommonFuncs.editValueMilk(isEditable, adapterPosition, time, type, value, o, dayCollectionModel, getContext(), avi, famerModel, (s, adapterPosition1, time1, type1, dayCollectionModel1, a) -> FragmentCurrentFarmerPayout.this.updateCollectionValue(s, time, type, dayCollectionModel1, a, null, null));
+            CommonFuncs.editValueMilk(isEditable, adapterPosition, time, type, value, o, dayCollectionModel, getContext(), avi, famerModel, new MilkEditValueListener() {
+                @Override
+                public void updateCollection(String s, int adapterPosition1, int time1, int type1, DayCollectionModel dayCollectionModel1, AlertDialog a) {
+                    FragmentCurrentFarmerPayout.this.updateCollectionValue(s, time, type, dayCollectionModel1, a, null, null);
+                }
+            });
 
         } else if (type == 2) {
             CommonFuncs.editValueLoan(isEditable, dayCollectionModel, getContext(), famerModel, (value1, loanModel, time12, dayCollectionModel12, alertDialogAndroid) -> FragmentCurrentFarmerPayout.this.updateCollectionValue(value1, 0, type, dayCollectionModel12, alertDialogAndroid, loanModel, null));

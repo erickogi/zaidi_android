@@ -7,7 +7,6 @@ import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
 import com.dev.lishabora.Database.LMDatabase;
-import com.dev.lishabora.Models.ProductsModel;
 import com.dev.lishabora.Models.SyncHolderModel;
 import com.dev.lishabora.Models.SyncModel;
 import com.dev.lishabora.Models.SyncResponseModel;
@@ -17,7 +16,14 @@ import com.dev.lishabora.Network.ApiConstants;
 import com.dev.lishabora.Network.Request;
 import com.dev.lishabora.Repos.ProductsRepo;
 import com.dev.lishabora.Repos.RoutesRepo;
-import com.dev.lishabora.Repos.Trader.SyncRepo;
+import com.dev.lishabora.Repos.Trader.BalanceRepo;
+import com.dev.lishabora.Repos.Trader.CollectionsRepo;
+import com.dev.lishabora.Repos.Trader.FarmerRepo;
+import com.dev.lishabora.Repos.Trader.LoanPaymentsRepo;
+import com.dev.lishabora.Repos.Trader.LoansTableRepo;
+import com.dev.lishabora.Repos.Trader.OrderPaymentsRepo;
+import com.dev.lishabora.Repos.Trader.OrdersTableRepo;
+import com.dev.lishabora.Repos.Trader.PayoutsRepo;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.Jobs.Evernote.SyncJobCreator;
 import com.dev.lishabora.Utils.PrefrenceManager;
@@ -27,14 +33,11 @@ import com.dev.lishaboramobile.BuildConfig;
 import com.evernote.android.job.JobManager;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.reflect.TypeToken;
 import com.rohitss.uceh.UCEHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -53,6 +56,9 @@ public class Application extends MultiDexApplication {
 
     public static volatile boolean isConnected;
     public static volatile Application application;
+
+    public static volatile int UpsyncTag = 0;
+    public static volatile int DownsyncTag = 0;
 
 
     public static void sync() {
@@ -83,8 +89,11 @@ public class Application extends MultiDexApplication {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                Log.d("datasend", "" + jsonObject);
 
-                sync(jsonObject, syncWorks1);
+                if (UpsyncTag == 0) {
+                    sync(jsonObject, syncWorks1);
+                }
             }
 
         } catch (Exception nm) {
@@ -97,9 +106,11 @@ public class Application extends MultiDexApplication {
         Log.d("datasend", "Started in Aplication class");
 
         try {
+            UpsyncTag = 1;
             Request.Companion.getResponseSync(ApiConstants.Companion.getSync(), jsonObject, "", new SyncResponseCallback() {
                 @Override
                 public void response(SyncResponseModel responseModel) {
+                    UpsyncTag = 0;
                     Log.d("datasend", responseModel.getResultDescription());
 
 
@@ -126,6 +137,7 @@ public class Application extends MultiDexApplication {
                 @Override
                 public void response(String error) {
                     Log.d("datasend", error);
+                    UpsyncTag = 0;
 
                 }
 
@@ -133,6 +145,7 @@ public class Application extends MultiDexApplication {
             });
         } catch (Exception nm) {
             nm.printStackTrace();
+            UpsyncTag = 0;
         }
 
     }
@@ -144,6 +157,12 @@ public class Application extends MultiDexApplication {
     }
 
     public static void syncDown() {
+        //if(DownsyncTag==0) {
+        syncDown(true);
+        // }
+    }
+
+    public static void syncDown(boolean s) {
 
         Gson gson = new Gson();
 
@@ -155,58 +174,54 @@ public class Application extends MultiDexApplication {
             JSONObject jb = new JSONObject(gson.toJson(f));
             Timber.tag("Syncdownpref").d(gson.toJson(jb.toString()));
 
+            DownsyncTag = 1;
             Request.Companion.getResponseSyncDown(ApiConstants.Companion.getSyncDown(), jb, "",
                     new SyncDownResponseCallback() {
                         @Override
                         public void response(Data responseModel) {
 
+                            DownsyncTag = 0;
                             try {
-                                // if (responseModel.getResultCode() != null && Integer.valueOf(responseModel.getResultCode()) == 1) {
 
-                                Log.d("rerreew", "" + responseModel);
-                                // new FarmerRepo(getActivity().getApplication()).insertMultiple(responseModel.getFarmerModels());
-                                new RoutesRepo(mInstance).insertMultipleRoutes(responseModel.getRouteModels());
-                                new ProductsRepo(mInstance).insert(responseModel.getProductModels());
 
-                                List<ProductsModel> productsModels = new LinkedList<>();
-                                for (ProductsModel p : responseModel.getProductModels()) {
-                                    if (p.getSubscribed().equals("0")) {
-                                        p.setSubscribed("1");
-                                        productsModels.add(p);
-                                    }
+                                try {
 
+                                    new FarmerRepo(mInstance).insertMultiple(responseModel.getFarmerModels());
+                                    new RoutesRepo(mInstance).insertMultipleRoutes(responseModel.getRouteModels());
+                                    new ProductsRepo(mInstance).insert(responseModel.getProductModels());
+                                    new CollectionsRepo(mInstance).insert(responseModel.getCollectionModels());
+                                    new PayoutsRepo(mInstance).insert(responseModel.getPayoutModels());
+
+                                } catch (Exception nm) {
+                                    nm.printStackTrace();
                                 }
 
-                                Gson gson = new Gson();
-                                SyncModel syncModel = new SyncModel();
-                                syncModel.setActionType(AppConstants.UPDATE);
-                                JsonArray jsonArray = gson.toJsonTree(productsModels).getAsJsonArray();
-                                Type listType = new TypeToken<LinkedList<ProductsModel>>() {
-                                }.getType();
+                                try {
 
 
-                                syncModel.setObjects(gson.toJson(jsonArray));
+                                    new LoansTableRepo(mInstance).insertMultiple(responseModel.getLoanModels());
+                                    new OrdersTableRepo(mInstance).insertMultiple(responseModel.getOrderModels());
+                                    new LoanPaymentsRepo(mInstance).insertMultiple(responseModel.getLoanPaymentModels());
+                                    new OrderPaymentsRepo(mInstance).insertMultiple(responseModel.getOrderPaymentModels());
+                                    new BalanceRepo(mInstance).insert(responseModel.getBalanceModel());
 
 
-                                syncModel.setObjectData(null);
-                                //syncModel.setObject(new Gson().toJson(o));
-                                syncModel.setDataType(2);
-                                syncModel.setEntityType(AppConstants.ENTITY_PRODUCTS);
-                                syncModel.setSyncStatus(0);
-                                syncModel.setTimeStamp(DateTimeUtils.Companion.getNow());
-                                syncModel.setSyncTime("");
-                                syncModel.setEntityTypeName("Products");
-                                syncModel.setTraderCode(new PrefrenceManager(context).getTraderModel().getCode());
-                                syncModel.setActionTypeName("Update");
+                                    try {
+                                        if (responseModel.getTraderModel() != null) {
 
-                                syncModel.setEntityTypeName("Products");
-                                new SyncRepo(mInstance).insert(syncModel);
+                                            new PrefrenceManager(context).setLoggedUser(responseModel.getTraderModel());
+                                        }
+                                    } catch (Exception nm) {
+                                        nm.printStackTrace();
+                                    }
 
 
-                                // }
+                                } catch (Exception nm) {
+                                    nm.printStackTrace();
+                                }
+
                             } catch (Exception nm) {
                                 nm.printStackTrace();
-                                Log.d("rerreew", "" + nm.toString());
 
                             }
 
@@ -215,18 +230,28 @@ public class Application extends MultiDexApplication {
 
                         @Override
                         public void response(String error) {
+                            DownsyncTag = 0;
 
-                            Log.d("rerreew", "" + error);
 
                         }
                     });
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.d("rerreew", "" + e.toString());
+            DownsyncTag = 0;
+
 
         }
 
     }
+
+    public static boolean canLogOut() {
+        LMDatabase lmDatabase = LMDatabase.getDatabase(context);
+        int count = lmDatabase.syncDao().getCount();
+        return count <= 0;
+
+    }
+
+
 
     @Override
     public void onCreate() {
@@ -261,6 +286,7 @@ public class Application extends MultiDexApplication {
 
                     if (isConnectedToInternet) {
                         sync();
+                        syncDown();
                     } else {
 
 

@@ -21,6 +21,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -988,9 +989,12 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     @Override
     public void updateCollection(Collection c, FamerModel famerModel) {
 
+        Log.d("collectionMilkj", new Gson().toJson(c));
         mViewModel.updateCollection(c).observe(FragementFarmersList.this, responseModel -> {
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+
                 CommonFuncs.updateBalance(mViewModel, balncesViewModel, c, responseModel.getPayoutkey(), AppConstants.MILK, null, null);
+
                 mViewModel.updateFarmer(famerModel, false, false);
 
             } else {

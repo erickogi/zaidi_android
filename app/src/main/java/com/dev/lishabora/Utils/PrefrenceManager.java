@@ -93,7 +93,7 @@ public class PrefrenceManager {
     }
 
     public String getDev_folder() {
-        return pref.getString(dev_folder, "Dev");
+        return pref.getString(dev_folder, "MCU");
 
     }
 
@@ -173,7 +173,7 @@ public class PrefrenceManager {
         editor.putInt(isdummy, trader.getDummy());
         editor.putString(password, trader.getPassword());
         editor.putString(apikey, trader.getApikey());
-        editor.putString(firebasetoken, trader.getFirebasetoken());
+        //editor.putString(firebasetoken, trader.getFirebasetoken());
         editor.putString(status, trader.getStatus());
         editor.putString(transactiontime, trader.getTransactiontime());
         editor.putString(cycleStart, trader.getCycleStartDay());
@@ -295,4 +295,12 @@ public class PrefrenceManager {
         editor.commit();
     }
 
+    public String getFirebase() {
+        return pref.getString(firebasetoken, "");
+    }
+
+    public void setFirebase(String refreshedToken) {
+        editor.putString(firebasetoken, refreshedToken);
+        editor.commit();
+    }
 }

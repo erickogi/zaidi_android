@@ -1,6 +1,5 @@
 package com.dev.lishabora.Utils.Jobs.Evernote;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -43,39 +42,11 @@ public class UpSyncJob extends Job {
     @NonNull
     @Override
     protected Result onRunJob(Params params) {
-        Context context = getContext();
 
         Application.sync();
+        Application.syncDown();
 
-//        LMDatabase lmDatabase = LMDatabase.getDatabase(context);
-//        //lmDatabase.cl
-//        List<SyncModel> list = lmDatabase.syncDao().getAllByStatusRaw(0);
-//        Intent intent = new Intent(getContext(), SyncWorks.class);
-//        intent.putExtra("type", "notification_cart");
-//
-//
-//        PendingIntent pi = PendingIntent.getActivity(getContext(), 0,
-//                intent, 0);
-//
-//        if (list != null && list.size() > 0) {
-//            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, "ctx")
-//                    .setSmallIcon(R.drawable.ic_dehaze_black_24dp)
-//                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
-//                    .setSmallIcon(R.drawable.ic_launcher_background)
-//                    .setContentTitle("Sync Worker class Notification")
-//                    .setContentIntent(pi)
-//
-//                    .setContentText("You have content  waiting for sync .... \nWe are working on implementing sync sit tight");
-//
-//            android.app.NotificationManager notificationManager =
-//                    (android.app.NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-//
-//            if (notificationManager != null) {
-//                // notificationManager.notify(new Random().nextInt(), notificationBuilder.build());
-//                notificationManager.notify(0, notificationBuilder.build());
-//            }
-//
-//        }
+
 
 
 

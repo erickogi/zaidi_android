@@ -3,9 +3,7 @@ package com.dev.lishabora.Models.Trader;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
-import com.dev.lishabora.Models.LoanModel;
 import com.dev.lishabora.Models.Notifications;
-import com.dev.lishabora.Models.OrderModel;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Models.ProductsModel;
 import com.dev.lishabora.Models.RoutesModel;
@@ -21,23 +19,44 @@ public class Data {
     private List<FamerModel> farmerModels;
 
 
-    private List<OrderModel> orderModels;
-    private List<LoanModel> loanModels;
+    private List<FarmerOrdersTable> orderModels;
+    private List<FarmerLoansTable> loanModels;
 
     private List<LoanPayments> loanPaymentModels;
     private List<OrderPayments> orderPaymentModels;
 
     private List<Collection> collectionModels;
     private List<Payouts> payoutModels;
+    //  private List<Payouts> payoutModels;
 
 
     private List<Cycles> cycleModels;
     private List<UnitsModel> unitsModels;
     private List<Notifications> notificationModels;
 
+    private FarmerBalance balanceModel;
+    private TraderModel traderModel;
+
+
 
     private String ResultCode;
     private String ResultDescription;
+
+    public TraderModel getTraderModel() {
+        return traderModel;
+    }
+
+    public void setTraderModel(TraderModel traderModel) {
+        this.traderModel = traderModel;
+    }
+
+    public FarmerBalance getBalanceModel() {
+        return balanceModel;
+    }
+
+    public void setBalanceModel(FarmerBalance balanceModel) {
+        this.balanceModel = balanceModel;
+    }
 
     public List<RoutesModel> getRouteModels() {
         return routeModels;
@@ -63,19 +82,19 @@ public class Data {
         this.farmerModels = farmerModels;
     }
 
-    public List<OrderModel> getOrderModels() {
+    public List<FarmerOrdersTable> getOrderModels() {
         return orderModels;
     }
 
-    public void setOrderModels(List<OrderModel> orderModels) {
+    public void setOrderModels(List<FarmerOrdersTable> orderModels) {
         this.orderModels = orderModels;
     }
 
-    public List<LoanModel> getLoanModels() {
+    public List<FarmerLoansTable> getLoanModels() {
         return loanModels;
     }
 
-    public void setLoanModels(List<LoanModel> loanModels) {
+    public void setLoanModels(List<FarmerLoansTable> loanModels) {
         this.loanModels = loanModels;
     }
 

@@ -170,7 +170,12 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
                 edtUnitName.setText("" + unitsModel.getUnit());
                 edtUnitMeasurement.setText(unitsModel.getUnitcapacity());
                 edtUnitPrice.setText(unitsModel.getUnitprice());
-                //  }
+                if (edtUnitPrice.getText().equals("") || TextUtils.isEmpty(edtUnitPrice.getText())) {
+
+                    edtUnitPrice.setText("0");
+
+                }
+
             });
         } catch (Exception nm) {
             nm.printStackTrace();

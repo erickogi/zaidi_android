@@ -19,8 +19,17 @@ public class ResponseModel extends LiveData<ResponseModel> implements Serializab
 
     private TraderModel traderModel;
     private List<TraderModel> traderModels;
+    private List<ProductsModel> productsModels;
 
     private int payoutkey;
+
+    public List<ProductsModel> getProductsModels() {
+        return productsModels;
+    }
+
+    public void setProductsModels(List<ProductsModel> productsModels) {
+        this.productsModels = productsModels;
+    }
 
     public int getPayoutkey() {
         return payoutkey;

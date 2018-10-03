@@ -267,6 +267,7 @@ public class TraderViewModel extends AndroidViewModel
 
         return collectionsRepo.getLast(cyclecode);
     }
+
     public LiveData<ResponseModel> getProductsModels(JSONObject jsonObject, boolean fetchFromOnline) {
 
         if (this.productss == null) {
@@ -288,6 +289,9 @@ public class TraderViewModel extends AndroidViewModel
 
             } else {
 
+
+                // farmers = (productsRepo.fetchAllData(false));
+
             }
 
 
@@ -295,6 +299,14 @@ public class TraderViewModel extends AndroidViewModel
 
 
         return productss;
+    }
+
+    public LiveData<List<ProductsModel>> getProductsModels(int status) {
+
+
+        return productsRepo.getAllByStatus(status);
+
+
     }
     public LiveData<List<FamerModel>> getFarmers(JSONObject jsonObject, boolean isOnline) {
         if (farmers == null) {
@@ -752,9 +764,10 @@ public class TraderViewModel extends AndroidViewModel
 
         } else {
             routesModel.setTraderCode(prefrenceManager.getTraderModel().getCode());
-            synch(AppConstants.UPDATE, AppConstants.ENTITY_ROUTES, routesModel, null, 1);
 
             routesRepo.upDateRecord(routesModel);
+            synch(AppConstants.UPDATE, AppConstants.ENTITY_ROUTES, routesModel, null, 1);
+
             ResponseModel responseModel = new ResponseModel();
             responseModel.setResultCode(1);
             responseModel.setResultDescription("Updated");
@@ -810,7 +823,6 @@ public class TraderViewModel extends AndroidViewModel
     public LiveData<ResponseModel> createProducts(List<ProductsModel> productsModels, boolean b) {
         if (this.createProductSuccess == null) {
         }
-        // synch(AppConstants.INSERT,AppConstants.ENTITY_PRODUCTS,productsModels);
 
         this.createProductSuccess = new MutableLiveData();
 
@@ -821,7 +833,7 @@ public class TraderViewModel extends AndroidViewModel
                 productsModels.get(i).setTraderCode(prefrenceManager.getTraderModel().getCode());
             }
 
-            //synch(AppConstants.INSERT, AppConstants.ENTITY_PRODUCTS, null, productsModels, 2);
+            synch(AppConstants.UPDATE, AppConstants.ENTITY_PRODUCTS, null, productsModels, 2);
 
             if (productsRepo.insert(productsModels)) {
                 ResponseModel responseModel = new ResponseModel();
@@ -925,7 +937,8 @@ public class TraderViewModel extends AndroidViewModel
 
                 Payouts payouts = new Payouts();
                 payouts.setCycleCode(collection.getCycleCode());
-                payouts.setCyclename(c.getCycle());
+
+                payouts.setCyclename(getCycleName(collection.getCycleCode()));
                 payouts.setFarmersCount("" + farmerCountPerCycle);
                 payouts.setStatus(0);
 
@@ -982,6 +995,20 @@ public class TraderViewModel extends AndroidViewModel
         return createCollectionSuccess;
     }
 
+    private String getCycleName(String cycleCode) {
+        if (cycleCode.equals("1")) {
+            return "Weekly";
+        } else if (cycleCode.equals("2")) {
+            return "Bi Weekly";
+        } else if (cycleCode.equals("3")) {
+            return "Semi Monthly";
+        } else if (cycleCode.equals("4")) {
+            return "Monthly";
+        } else {
+            return "";
+        }
+    }
+
     private void insertCycles() {
         Cycles cycles = new Cycles();
         cycles.setCode(1);
@@ -990,14 +1017,14 @@ public class TraderViewModel extends AndroidViewModel
         cycles.setStatus("1");
 
         Cycles cycles1 = new Cycles();
-        cycles1.setCode(1);
+        cycles1.setCode(2);
         cycles1.setCycle("Bi Weekly");
         cycles1.setPeriod("14");
         cycles1.setStatus("1");
 
 
         Cycles cycles2 = new Cycles();
-        cycles2.setCode(1);
+        cycles2.setCode(3);
         cycles2.setCycle("Semi Monthly");
         cycles2.setPeriod("14");
         cycles2.setStatus("1");

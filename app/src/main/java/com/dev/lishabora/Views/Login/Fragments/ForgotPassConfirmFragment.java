@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.dev.lishabora.Application;
 import com.dev.lishabora.COntrollers.LoginController;
 import com.dev.lishabora.Models.Admin.AdminModel;
 import com.dev.lishabora.Models.Login.AuthModel;
@@ -269,6 +270,8 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
 
         prefrenceManager.setIsLoggedIn(true, LoginController.TRADER);
         prefrenceManager.setLoggedUser(traderModel);
+
+        Application.syncDown();
 
         startActivity(new Intent(getActivity(), TraderActivity.class));
         Objects.requireNonNull(getActivity()).finish();

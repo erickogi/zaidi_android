@@ -20,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dev.lishabora.AppConstants;
-import com.dev.lishabora.Application;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.DayCollectionModel;
 import com.dev.lishabora.Models.DaysDates;
@@ -1101,12 +1100,12 @@ public class CommonFuncs {
         lTitle = mView.findViewById(R.id.linear_title);
         imgIcon = mView.findViewById(R.id.img_icon);
 
-        btnPositive.setBackgroundColor(Application.context.getResources().getColor(R.color.colorPrimary));
-        btnNegative.setBackgroundColor(Application.context.getResources().getColor(R.color.colorPrimary));
-
-        btnNegative.setTextColor(Application.context.getResources().getColor(R.color.white));
-        btnPositive.setTextColor(Application.context.getResources().getColor(R.color.white));
-
+//        btnPositive.setBackgroundColor(Application.context.getResources().getColor(R.color.colorPrimary));
+//        btnNegative.setBackgroundColor(Application.context.getResources().getColor(R.color.colorPrimary));
+//
+//        btnNegative.setTextColor(Application.context.getResources().getColor(R.color.white));
+//        btnPositive.setTextColor(Application.context.getResources().getColor(R.color.white));
+//
 
         btnNeutral.setVisibility(View.GONE);
         lTitle.setVisibility(View.GONE);
@@ -1212,7 +1211,6 @@ public class CommonFuncs {
         }
         edtAmount.setFilters(new InputFilter[]{new InputFilterMinMax(1, 10000)});
 
-        // edtAmount.setFilters(new InputFilter[]{new InputFilterMinMax(1, 10000)});
 
 
 

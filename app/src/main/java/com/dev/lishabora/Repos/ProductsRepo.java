@@ -83,7 +83,7 @@ public class ProductsRepo {
         return db.productsDao().getProductByKeyID(key);
     }
 
-    public LiveData<List<ProductsModel>> getAllByStatus(String status) {
+    public LiveData<List<ProductsModel>> getAllByStatus(int status) {
         return db.productsDao().getAllByStatus(status);
     }
 

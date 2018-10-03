@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Date;
 
-@Entity(tableName = "farmers", indices = {@Index(value = {"compositecode", "mobile", "apikey"}, unique = true)})
+@Entity(tableName = "farmers", indices = {@Index(value = {"code"}, unique = true)})
 
 public class FamerModel implements Serializable {
     @PrimaryKey(autoGenerate = true)

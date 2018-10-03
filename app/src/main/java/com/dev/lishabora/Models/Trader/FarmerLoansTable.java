@@ -22,21 +22,11 @@ public class FarmerLoansTable {
     private String loanAmountPaid;
 
     private String installmentAmount;
+
     private String installmentNo;
 
     private int status;
     private String timestamp;
-
-//    public FarmerLoansTable(int collectionId, int payoutId, String farmerCode, String loanAmount, String installmentAmount, String installmentNo, int status, String timestamp) {
-//        this.collectionId = collectionId;
-//        this.payoutId = payoutId;
-//        this.farmerCode = farmerCode;
-//        this.loanAmount = loanAmount;
-//        this.installmentAmount = installmentAmount;
-//        this.installmentNo = installmentNo;
-//        this.status = status;
-//        this.timestamp = timestamp;
-//    }
 
 
     public FarmerLoansTable() {

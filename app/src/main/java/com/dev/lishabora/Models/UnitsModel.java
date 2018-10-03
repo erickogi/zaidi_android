@@ -58,7 +58,11 @@ public class UnitsModel implements Serializable {
     }
 
     public String getUnitprice() {
-        return unitprice;
+        if (unitprice != null) {
+            return unitprice;
+        } else {
+            return "0";
+        }
     }
 
     public void setUnitprice(String unitprice) {

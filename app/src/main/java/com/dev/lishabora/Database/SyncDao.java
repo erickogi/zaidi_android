@@ -49,5 +49,7 @@ public interface SyncDao {
     @Delete
     void deleteRecord(SyncModel SyncModel);
 
+    @Query("SELECT COUNT(id) FROM sync ")
+    int getCount();
 
 }

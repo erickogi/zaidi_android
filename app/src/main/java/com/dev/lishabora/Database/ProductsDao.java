@@ -34,8 +34,8 @@ public interface ProductsDao {
     LiveData<ProductsModel> getProductByKeyID(int keyid);
 
 
-    @Query("SELECT * FROM PRODUCTS WHERE status =:status")
-    LiveData<List<ProductsModel>> getAllByStatus(String status);
+    @Query("SELECT * FROM PRODUCTS WHERE subscribed =:status")
+    LiveData<List<ProductsModel>> getAllByStatus(int status);
 
 
     @Query("SELECT * FROM PRODUCTS WHERE code =:code")

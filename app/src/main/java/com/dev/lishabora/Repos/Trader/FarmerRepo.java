@@ -19,6 +19,9 @@ public class FarmerRepo {
 
     private LMDatabase db;
 
+    public void delete() {
+
+    }
 
     public FarmerRepo(Application application) {
         db = LMDatabase.getDatabase(application);

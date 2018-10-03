@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.ViewPagerAdapter;
+import com.dev.lishabora.Application;
 import com.dev.lishabora.Database.LMDatabase;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.PrefrenceManager;
@@ -76,25 +77,31 @@ public class TraderActivity extends AppCompatActivity {
 
             @Override
             public void logOutClicked() {
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(TraderActivity.this);
-                alertDialog.setMessage("Are sure you want to log out").setCancelable(false).setTitle("Log Out");
+
+                if (Application.canLogOut()) {
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(TraderActivity.this);
+                    alertDialog.setMessage("Are sure you want to log out").setCancelable(false).setTitle("Log Out");
 
 
-                alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
-                    dialogInterface.dismiss();
-                    LMDatabase lmDatabase = LMDatabase.getDatabase(TraderActivity.this);
-                    lmDatabase.clearAllTables();
-                    new PrefrenceManager(TraderActivity.this).setIsLoggedIn(false, 0);
+                    alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
+                        LMDatabase lmDatabase = LMDatabase.getDatabase(TraderActivity.this);
+                        lmDatabase.clearAllTables();
+                        new PrefrenceManager(TraderActivity.this).setIsLoggedIn(false, 0);
 
 
-                    startActivity(new Intent(TraderActivity.this, LoginActivity.class));
-                    finish();
-                }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
+                        startActivity(new Intent(TraderActivity.this, LoginActivity.class));
+                        finish();
+                    }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
 
-                AlertDialog alertDialogAndroid = alertDialog.create();
-                alertDialogAndroid.setCancelable(false);
-                alertDialogAndroid.show();
+                    AlertDialog alertDialogAndroid = alertDialog.create();
+                    alertDialogAndroid.setCancelable(false);
+                    alertDialogAndroid.show();
 
+                } else {
+
+                    MyToast.toast("You have un-synced data... ", TraderActivity.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                }
 
 
             }

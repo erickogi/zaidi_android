@@ -28,22 +28,17 @@ import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.ProductsAdapter;
 import com.dev.lishabora.Models.ProductsModel;
-import com.dev.lishabora.Models.RPFSearchModel;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
-import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishaboramobile.R;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.reflect.TypeToken;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -58,7 +53,7 @@ public class FragmentProductList extends Fragment {
     private View view;
     private TraderViewModel mViewModel;
     private LinkedList<ProductsModel> productsModel;
-    private LinkedList<ProductsModel> productsModelAll;
+    private List<ProductsModel> productsModelAll;
     private AVLoadingIndicatorView avi;
     private AVLoadingIndicatorView davi;
     private String filterText = "";
@@ -97,9 +92,7 @@ public class FragmentProductList extends Fragment {
     private void getProducts() {
         avi.smoothToShow();
         avi.setVisibility(View.VISIBLE);
-
-
-        mViewModel.getProducts(false).observe(FragmentProductList.this, productsModels -> {
+        mViewModel.getProductsModels(1).observe(FragmentProductList.this, productsModels -> {
             avi.smoothToHide();
             update(productsModels);
 
@@ -108,19 +101,6 @@ public class FragmentProductList extends Fragment {
 
     }
 
-    private JSONObject getTraderProductsObject() {
-
-
-        RPFSearchModel rpfSearchModel = new RPFSearchModel();
-        rpfSearchModel.setEntitycode(new PrefrenceManager(getActivity()).getTraderModel().getCode());
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = new JSONObject(gson.toJson(rpfSearchModel));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
-    }
 
 
     @Nullable
@@ -158,7 +138,7 @@ public class FragmentProductList extends Fragment {
 
     }
 
-    LinkedList<ProductsModel> sort(LinkedList<ProductsModel> a, LinkedList<ProductsModel> b) {
+    LinkedList<ProductsModel> sort(LinkedList<ProductsModel> a, List<ProductsModel> b) {
         LinkedList<ProductsModel> sortedList = new LinkedList<>();
 
         sortedList.addAll(a);
@@ -183,7 +163,7 @@ public class FragmentProductList extends Fragment {
         return myImages;
     }
 
-    private void subscribeProduct(LinkedList<ProductsModel> productsModels) {
+    private void subscribeProduct(List<ProductsModel> productsModels) {
 
         Log.d("ReTrReqd", " Dialog is has called");
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
@@ -430,10 +410,8 @@ public class FragmentProductList extends Fragment {
 
     public void update(List<ProductsModel> productsModel) {
 
-        Log.d("ReTr", "update started");
 
         if (this.productsModel != null && listAdapter != null) {
-            Log.d("ReTr", "update started");
 
             this.productsModel.clear();
             this.productsModel.addAll(productsModel);
@@ -455,7 +433,7 @@ public class FragmentProductList extends Fragment {
 
             }
             listAdapter.refresh(filteredProductsModel);
-            //listAdapter.notifyDataSetChanged();
+
         }
 
     }
@@ -519,44 +497,34 @@ public class FragmentProductList extends Fragment {
 
             avi.smoothToShow();
 
-            mViewModel.getProductsModels(getSearchObject(), true).observe(this, responseModel -> {
+            mViewModel.getProductsModels(0).observe(this, (List<ProductsModel> responseModel) -> {
 
                 Gson gson = new Gson();
 
                 avi.smoothToHide();
 
 
-                if (responseModel.getResultCode() == 1 && responseModel.getData() != null) {
-                    JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
-                    Type listType = new TypeToken<LinkedList<ProductsModel>>() {
-                    }.getType();
-                    productsModelAll = gson.fromJson(jsonArray, listType);
+                if (responseModel != null) {
+                    productsModelAll = responseModel;
                     if (productsModel == null || productsModel.size() > 0) {
-                        Log.d("ReTrReqd", " Dialog is has init");
 
                         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
                         if (launchDialog) {
-                            subscribeProduct(productsModelAll);
+                            subscribeProduct(responseModel);
                         } else {
                             getProducts();
                         }
                     } else {
                         if (launchDialog) {
-                            Log.d("ReTrReqd", " Dialog is has init2");
                             LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
                             subscribeProduct(sort(productsModel, productsModelAll));
                         } else {
                             getProducts();
                         }
                     }
-
-                } else if (responseModel.getResultCode() == 2) {
-                    productsModelAll.clear();
-
-                } else {
-
-
                 }
+
+
 
             });
 
@@ -657,72 +625,21 @@ public class FragmentProductList extends Fragment {
         @Override
         public void onClick(View v) {
             if (selectedProducts != null && selectedProducts.size() > 0) {
-                Log.d("createproducts", " products" + selectedProducts.size() + selectedProducts.get(0).getNames());
+
+                for (int a = 0; a < selectedProducts.size(); a++) {
+                    selectedProducts.get(a).setSubscribed("1");
+                }
+
 
                 mViewModel.createProducts(selectedProducts, false).observe(FragmentProductList.this, responseModel -> {
-                    avi.smoothToHide();
-                    //  Snackbar.make(view, "" + mViewModel.getProductsCount(), Snackbar.LENGTH_LONG).show();
 
                     dialog.dismiss();
-                    if (responseModel != null) {
-                        // Snackbar.make(view, responseModel.getResultDescription(), Snackbar.LENGTH_LONG).show();
-                    }
+
                 });
 
             } else {
 
-                // dialog.dismiss();
-//            }
-//
-//            if (selectedProducts != null && selectedProducts.size() > 0) {
-//
-//                LinkedList<ProductSubscriptionModel> productSubscriptionModels = new LinkedList<>();
-//                PrefrenceManager prefrenceManager = new PrefrenceManager(getActivity());
-//                TraderModel traderModel = prefrenceManager.getTraderModel();
-//                for (ProductsModel s : selectedProducts) {
-//                    ProductSubscriptionModel productSubscriptionModel = new ProductSubscriptionModel();
-//                    productSubscriptionModel.setEntitycode(traderModel.getCode());
-//                    productSubscriptionModel.setProductcode(s.getId() + "");
-//                    productSubscriptionModel.setStatus("1");
-//                    productSubscriptionModel.setSubscribed(1);
-//                    productSubscriptionModel.setSynctime("");
-//                    productSubscriptionModel.setTransactontime(DateTimeUtils.Companion.getNow());
-//                    productSubscriptionModel.setTransactedby("" + traderModel.getApikey());
-//
-//                    productSubscriptionModels.add(productSubscriptionModel);
-//
-//                }
-//                davi.smoothToShow();
-//                JSONArray jsonObject = null;
-//                try {
-//                    String element = gson.toJson(
-//                            productSubscriptionModels,
-//                            new TypeToken<ArrayList<ProductSubscriptionModel>>() {
-//                            }.getType());
-//
-//                    jsonObject = new JSONArray(element);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                Log.d("uploaddata", jsonObject.toString());
-//
-//                mViewModel.subscribeProducts(jsonObject, true).observe(FragmentProductList.this, responseModel -> {
-//                    davi.smoothToHide();
-//                    //  snack(responseModel.getResultDescription());
-//                    if (responseModel.getResultCode() == 1) {
-//                        dialog.dismiss();
-//                        mViewModel.refreshProducts(getTraderProductsObject(), true);
-//                    } else {
-//                        MyToast.toast(responseModel.getResultDescription(), getActivity(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
-//                    }
-//                });
-//
-//
-//            } else {
-//
-//                // dialog.dismiss();
-//            }
+                dialog.dismiss();
 
 
             }

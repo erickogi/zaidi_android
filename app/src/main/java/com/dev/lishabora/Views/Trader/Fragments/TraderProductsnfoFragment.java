@@ -30,8 +30,6 @@ import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishaboramobile.R;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.reflect.TypeToken;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
@@ -41,7 +39,6 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -128,7 +125,7 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
 
     }
 
-    LinkedList<ProductsModel> sort(LinkedList<ProductsModel> a, LinkedList<ProductsModel> b) {
+    LinkedList<ProductsModel> sort(LinkedList<ProductsModel> a, List<ProductsModel> b) {
         LinkedList<ProductsModel> sortedList = new LinkedList<>();
 
         sortedList.addAll(a);
@@ -153,7 +150,7 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
         return myImages;
     }
 
-    private void subscribeProduct(LinkedList<ProductsModel> productsModels) {
+    private void subscribeProduct(List<ProductsModel> productsModels) {
 
         Log.d("ReTrReqd", " Dialog is has called");
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
@@ -385,7 +382,7 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
         avi.setVisibility(View.VISIBLE);
 
 
-        tViewModel.getProducts(false).observe(TraderProductsnfoFragment.this, productsModels -> {
+        tViewModel.getProductsModels(1).observe(TraderProductsnfoFragment.this, productsModels -> {
             avi.smoothToHide();
             update(productsModels);
 
@@ -476,18 +473,16 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
 
         avi.smoothToShow();
 
-        tViewModel.getProductsModels(getSearchObject(), true).observe(this, responseModel -> {
+        tViewModel.getProductsModels(0).observe(this, responseModel -> {
 
             Gson gson = new Gson();
 
             avi.smoothToHide();
 
 
-            if (responseModel.getResultCode() == 1 && responseModel.getData() != null) {
-                JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
-                Type listType = new TypeToken<LinkedList<ProductsModel>>() {
-                }.getType();
-                subscribeProduct(gson.fromJson(jsonArray, listType));
+            if (responseModel != null) {
+
+                subscribeProduct(responseModel);
 
 
             }
@@ -513,7 +508,6 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
 
 
             if (selectedProducts != null && selectedProducts.size() > 0) {
-                Log.d("createproducts", " products" + selectedProducts.size() + selectedProducts.get(0).getNames());
 
                 tViewModel.createProducts(selectedProducts, false).observe(TraderProductsnfoFragment.this, responseModel -> {
                     avi.smoothToHide();
@@ -522,11 +516,6 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
 
                 });
 
-            } else {
-                Log.d("createproducts", "error  products" + selectedProducts.size() + selectedProducts.get(0).getNames());
-
-
-                // dialog.dismiss();
             }
 
 
