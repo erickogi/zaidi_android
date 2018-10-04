@@ -565,8 +565,9 @@ class CollectMilk implements NumberKeyboardListener {
                 collModel.setMilkCollectedValueKshPm(milkModelPm.getValueKsh());
                 collModel.setMilkCollectedValueLtrsPm(milkModelPm.getValueLtrs());
                 collModel.setMilkDetailsPm(new Gson().toJson(milkModelPm));
-
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
+
+
                 listener.updateCollection(collModel, famerModel);
 
 

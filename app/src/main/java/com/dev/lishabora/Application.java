@@ -89,7 +89,6 @@ public class Application extends MultiDexApplication {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Log.d("datasend", "" + jsonObject);
 
                 if (UpsyncTag == 0) {
                     sync(jsonObject, syncWorks1);
@@ -103,7 +102,6 @@ public class Application extends MultiDexApplication {
     }
 
     public static void sync(JSONObject jsonObject, List<SyncModel> syncWorks) {
-        Log.d("datasend", "Started in Aplication class");
 
         try {
             UpsyncTag = 1;
@@ -111,7 +109,6 @@ public class Application extends MultiDexApplication {
                 @Override
                 public void response(SyncResponseModel responseModel) {
                     UpsyncTag = 0;
-                    Log.d("datasend", responseModel.getResultDescription());
 
 
                     if (responseModel.getResultCode() == 2) {
