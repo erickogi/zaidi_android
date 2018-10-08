@@ -140,6 +140,8 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
         edtUnitMeasurement = view.findViewById(R.id.edt_unit_size);
         edtRouteName = view.findViewById(R.id.edt_route_names);
         edtRouteCode = view.findViewById(R.id.edt_route_code);
+
+
         hideKeyboardFrom(Objects.requireNonNull(getContext()), view);
 
         initData();
@@ -150,7 +152,7 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
     }
 
     private void setEditData(FamerModel fm) {
-        FarmerConst.getFamerModel().setUnitprice(edtUnitPrice.getText().toString());
+        //FarmerConst.getFamerModel().setUnitprice(edtUnitPrice.getText().toString());
 
         edtRouteName.setText(fm.getRoutename());
         edtRouteCode.setText(fm.getRoutecode());

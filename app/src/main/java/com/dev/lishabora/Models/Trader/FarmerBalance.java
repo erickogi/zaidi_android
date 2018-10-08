@@ -38,8 +38,8 @@ public class FarmerBalance {
     public FarmerBalance() {
     }
 
-    public FarmerBalance(String farmerCode, String balanceToPay, String balanceOwed, String lastUpdated) {
-
+    public FarmerBalance(String code, String farmerCode, String balanceToPay, String balanceOwed, String lastUpdated) {
+        this.code = code;
         this.farmerCode = farmerCode;
         this.balanceToPay = balanceToPay;
         this.balanceOwed = balanceOwed;

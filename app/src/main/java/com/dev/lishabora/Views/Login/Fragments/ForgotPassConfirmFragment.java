@@ -25,6 +25,7 @@ import com.dev.lishabora.Models.ResponseObject;
 import com.dev.lishabora.Models.Trader.TraderModel;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Login.LoginViewModel;
+import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Admin.Activities.AdminsActivity;
 import com.dev.lishabora.Views.Login.LoginConsts;
 import com.dev.lishabora.Views.Trader.Activities.TraderActivity;
@@ -49,6 +50,7 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
     private String phoneNumber = "";
     private AdminModel adminModel = null;
     private TraderModel traderModel = null;
+    private TraderViewModel traderViewModel;
 
 
     //CARDS
@@ -92,6 +94,7 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
+        traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
 
         // TODO: Use the ViewModel
     }
@@ -270,6 +273,8 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
 
         prefrenceManager.setIsLoggedIn(true, LoginController.TRADER);
         prefrenceManager.setLoggedUser(traderModel);
+        traderViewModel.createTrader(traderModel);
+
 
         Application.syncDown();
 

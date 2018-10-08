@@ -66,6 +66,13 @@ class GeneralUtills {
         private val roundPaint: Paint? = null
         private val bitmapRect: RectF? = null
 
+        fun createCode(farmerCode: String): String {
+            return "F : " + farmerCode + "" + createCode()
+        }
+
+        fun createCode(): String {
+            return " E : " + PrefrenceManager(Application.context).traderModel.code + " T : " + DateTimeUtils.getNow()
+        }
 
 
 

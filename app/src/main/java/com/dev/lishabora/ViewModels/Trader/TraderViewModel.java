@@ -28,8 +28,10 @@ import com.dev.lishabora.Repos.Trader.CyclesRepo;
 import com.dev.lishabora.Repos.Trader.FarmerRepo;
 import com.dev.lishabora.Repos.Trader.PayoutsRepo;
 import com.dev.lishabora.Repos.Trader.SyncRepo;
+import com.dev.lishabora.Repos.Trader.TraderRepo;
 import com.dev.lishabora.Repos.Trader.UnitsRepo;
 import com.dev.lishabora.Utils.DateTimeUtils;
+import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.PayoutsCyclesDatesUtills;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.Utils.ResponseCallback;
@@ -58,6 +60,7 @@ public class TraderViewModel extends AndroidViewModel
     CollectionsRepo collectionsRepo;
     PayoutsRepo payoutsRepo;
     SyncRepo syncRepo;
+    TraderRepo traderRepo;
 
 
     Gson gson = new Gson();
@@ -128,6 +131,8 @@ public class TraderViewModel extends AndroidViewModel
         payoutsRepo = new PayoutsRepo(application);
         prefrenceManager = new PrefrenceManager(application);
         syncRepo = new SyncRepo(application);
+        traderRepo = new TraderRepo(application);
+
 
 
 //
@@ -137,6 +142,18 @@ public class TraderViewModel extends AndroidViewModel
 
 //
 //
+    }
+
+    public LiveData<TraderModel> getTrader(String traderCode) {
+        return traderRepo.getTraderByCode(traderCode);
+    }
+
+    public void updateTrader(TraderModel traderModel) {
+        traderRepo.upDateRecord(traderModel);
+    }
+
+    public void createTrader(TraderModel traderModel) {
+        traderRepo.insert(traderModel);
     }
 
     public LiveData<List<SyncModel>> fetchAll() {
@@ -246,18 +263,18 @@ public class TraderViewModel extends AndroidViewModel
         createSync(syncModel);
     }
 
-    public LiveData<Double> getSumOfMilkForPayoutKsh(String farmercode, int payoutNumber) {
+    public LiveData<Double> getSumOfMilkForPayoutKsh(String farmercode, String payoutCode) {
         if (milkTotalKsh == null) {
             milkTotalKsh = new MutableLiveData<>();
         }
-        milkTotalKsh = collectionsRepo.getSumOfMilkFarmerPayoutKsh(farmercode, payoutNumber);
+        milkTotalKsh = collectionsRepo.getSumOfMilkFarmerPayoutKsh(farmercode, payoutCode);
 
         return milkTotalKsh;
     }
 
-    public Double getSumOfMilkForPayoutKshD(String farmercode, int payoutNumber) {
+    public Double getSumOfMilkForPayoutKshD(String farmercode, String payoutCode) {
 
-        return collectionsRepo.getSumOfMilkFarmerPayoutKshD(farmercode, payoutNumber);
+        return collectionsRepo.getSumOfMilkFarmerPayoutKshD(farmercode, payoutCode);
 
         //return milkTotalKsh;
     }
@@ -391,6 +408,11 @@ public class TraderViewModel extends AndroidViewModel
         }
 
         return farmers;
+    }
+
+    public LiveData<FamerModel> getFarmersByCode(String code) {
+
+        return farmerRepo.getFramerByCode(code);
     }
     public LiveData<List<FamerModel>> getFarmersByCycle(String code) {
         if (farmers == null) {
@@ -737,6 +759,7 @@ public class TraderViewModel extends AndroidViewModel
             routesModel.setTraderCode(prefrenceManager.getTraderModel().getCode());
 
             synch(AppConstants.INSERT, AppConstants.ENTITY_ROUTES, routesModel, null, 1);
+
             routesRepo.insert(routesModel);
             ResponseModel responseModel = new ResponseModel();
             responseModel.setResultCode(1);
@@ -882,28 +905,30 @@ public class TraderViewModel extends AndroidViewModel
         }
         int farmerCountPerCycle = getFarmersCountByCycle(collection.getCycleCode());
 
+        int tradersStartDay = prefrenceManager.getTraderModel().getCycleStartDayNumber();
+        int tradersEndDay = prefrenceManager.getTraderModel().getCycleEndDayNumber();
+
+
+        Payouts payouts = new Payouts();
+        payouts.setCycleCode(collection.getCycleCode());
+        payouts.setCyclename(getCycleName(collection.getCycleCode()));
+        payouts.setFarmersCount("" + farmerCountPerCycle);
+        payouts.setStatus(0);
+        payouts.setCode(GeneralUtills.Companion.createCode());
+        PayoutsCyclesDatesUtills.EndAndStart endAndStart = new PayoutsCyclesDatesUtills.EndAndStart();
+
+
+        payouts.setApprovedCards("");
+        payouts.setMilkTotal("");
+        payouts.setBalance("");
+        payouts.setLoanTotal("");
+
+
         if (p == null) {
-
-            int tradersStartDay = prefrenceManager.getTraderModel().getCycleStartDayNumber();
-            int tradersEndDay = prefrenceManager.getTraderModel().getCycleEndDayNumber();
-
-
-
-            Payouts payouts = new Payouts();
-            payouts.setCycleCode(collection.getCycleCode());
-            payouts.setCyclename(c.getCycle());
-            payouts.setFarmersCount("" + farmerCountPerCycle);
-            payouts.setStatus(0);
-
-            PayoutsCyclesDatesUtills.EndAndStart endAndStart = new PayoutsCyclesDatesUtills.EndAndStart();
             endAndStart = PayoutsCyclesDatesUtills.getPayoutStartEndDate(c.getCode(), new PayoutsCyclesDatesUtills.EndAndStart(tradersStartDay, tradersEndDay), null);
             payouts.setStartDate(endAndStart.getStartDate());
             payouts.setEndDate(endAndStart.getEndDate());
 
-            payouts.setApprovedCards("");
-            payouts.setMilkTotal("");
-            payouts.setBalance("");
-            payouts.setLoanTotal("");
 
             if (plastIfOne != null) {
                 payouts.setPayoutnumber(plastIfOne.getPayoutnumber() + 1);
@@ -917,7 +942,7 @@ public class TraderViewModel extends AndroidViewModel
             insertPayout(payouts);
             collection.setCycleStartedOn(payouts.getStartDate());
             collection.setPayoutnumber(payouts.getPayoutnumber());
-
+            collection.setPayoutCode(payouts.getCode());
 
 
             collectionsRepo.insert(collection);
@@ -925,11 +950,10 @@ public class TraderViewModel extends AndroidViewModel
             responseModel.setResultCode(1);
             responseModel.setResultDescription("Collection Inserted \nNew  payout \n(No other  payouts available)");
             responseModel.setData(null);
-            responseModel.setPayoutkey(payouts.getPayoutnumber());
+            responseModel.setPayoutCode(payouts.getCode());
 
 
             createCollectionSuccess.setValue(responseModel);
-
 
 
         } else {
@@ -938,34 +962,18 @@ public class TraderViewModel extends AndroidViewModel
             if (DateTimeUtils.Companion.isPastLastDay(p.getEndDate())) {
 
 
-                int tradersStartDay = prefrenceManager.getTraderModel().getCycleStartDayNumber();
-                int tradersEndDay = prefrenceManager.getTraderModel().getCycleEndDayNumber();
-
-
-                Payouts plast = getLastPayout();
-
-                Payouts payouts = new Payouts();
-                payouts.setCycleCode(collection.getCycleCode());
-
-                payouts.setCyclename(getCycleName(collection.getCycleCode()));
-                payouts.setFarmersCount("" + farmerCountPerCycle);
-                payouts.setStatus(0);
-
-                PayoutsCyclesDatesUtills.EndAndStart endAndStart;
                 endAndStart = PayoutsCyclesDatesUtills.getPayoutStartEndDate(c.getCode(), new PayoutsCyclesDatesUtills.EndAndStart(tradersStartDay, tradersEndDay), new PayoutsCyclesDatesUtills.EndAndStart(p.getStartDate(), p.getEndDate()));
                 payouts.setStartDate(endAndStart.getStartDate());
                 payouts.setEndDate(endAndStart.getEndDate());
 
-                payouts.setApprovedCards("");
-                payouts.setMilkTotal("");
-                payouts.setBalance("");
-                payouts.setLoanTotal("");
-                payouts.setPayoutnumber(plast.getPayoutnumber() + 1);
+
+                payouts.setPayoutnumber(plastIfOne.getPayoutnumber() + 1);
 
 
                 insertPayout(payouts);
                 collection.setCycleStartedOn(payouts.getStartDate());
                 collection.setPayoutnumber(payouts.getPayoutnumber());
+                collection.setPayoutCode(payouts.getCode());
 
 
                 collectionsRepo.insert(collection);
@@ -973,7 +981,7 @@ public class TraderViewModel extends AndroidViewModel
                 responseModel.setResultCode(1);
                 responseModel.setResultDescription("Collection Inserted \nNew  payout \nOther cycles payouts available");
                 responseModel.setData(null);
-                responseModel.setPayoutkey(payouts.getPayoutnumber());
+                responseModel.setPayoutCode(payouts.getCode());
 
                 createCollectionSuccess.setValue(responseModel);
 
@@ -981,13 +989,15 @@ public class TraderViewModel extends AndroidViewModel
             } else {
                 collection.setCycleStartedOn(p.getStartDate());
                 collection.setPayoutnumber(p.getPayoutnumber());
+                collection.setPayoutCode(payouts.getCode());
+
 
                 collectionsRepo.insert(collection);
                 ResponseModel responseModel = new ResponseModel();
                 responseModel.setResultCode(1);
                 responseModel.setResultDescription("Collection Inserted \nExisting payout");
                 responseModel.setData(null);
-                responseModel.setPayoutkey(p.getPayoutnumber());
+                responseModel.setPayoutCode(p.getCode());
 
                 createCollectionSuccess.setValue(responseModel);
 
@@ -1244,8 +1254,8 @@ public class TraderViewModel extends AndroidViewModel
         return payoutsRepo.fetchAllData(false);
     }
 
-    public LiveData<Payouts> getPayoutById(int id) {
-        return payoutsRepo.getPayoutById(id);
+    public LiveData<Payouts> getPayoutByCode(String code) {
+        return payoutsRepo.getPayoutByCode(code);
     }
 
     public LiveData<List<Payouts>> getPayoutsByCycleCode(String code) {
@@ -1328,7 +1338,7 @@ public class TraderViewModel extends AndroidViewModel
         responseModel.setResultDescription("Farmer updated successfully");
         responseModel.setData(null);
         if (c != null) {
-            responseModel.setPayoutkey(c.getPayoutnumber());
+            responseModel.setPayoutCode(c.getCode());
         }
 
         updateCollectionSuccess.setValue(responseModel);
@@ -1336,45 +1346,49 @@ public class TraderViewModel extends AndroidViewModel
         return updateCollectionSuccess;
     }
 
-    public Payouts createPayout(Cycles collection) {
+    public Payouts createPayout(Cycles cycles, FamerModel famerModel) {
 
 
-        Payouts p = getLastPayout("" + collection.getCode());
+        Payouts p = getLastPayout("" + cycles.getCode());
 
 
         Payouts plastIfOne = getLastPayout();
 
-        Cycles c = getCycleO("" + collection.getCode());
+        Cycles c = getCycleO("" + cycles.getCode());
         if (c == null) {
             insertCycles();
-            c = getCycleO("" + collection.getCode());
+            c = getCycleO("" + cycles.getCode());
 
         }
 
+        int tradersStartDay = prefrenceManager.getTraderModel().getCycleStartDayNumber();
+        int tradersEndDay = prefrenceManager.getTraderModel().getCycleEndDayNumber();
 
-        int farmerCountPerCycle = getFarmersCountByCycle("" + collection.getCode());
+        int farmerCountPerCycle = getFarmersCountByCycle("" + cycles.getCode());
+
+        Payouts payouts = new Payouts();
+        payouts.setCycleCode("" + cycles.getCode());
+        payouts.setCyclename(c.getCycle());
+        payouts.setFarmersCount("" + farmerCountPerCycle);
+        payouts.setStatus(0);
+        payouts.setCode(GeneralUtills.Companion.createCode());
+
+
+        PayoutsCyclesDatesUtills.EndAndStart endAndStart = new PayoutsCyclesDatesUtills.EndAndStart();
+
+        payouts.setApprovedCards("");
+        payouts.setMilkTotal("");
+        payouts.setBalance("");
+        payouts.setLoanTotal("");
+
 
         if (p == null) {
 
-            int tradersStartDay = prefrenceManager.getTraderModel().getCycleStartDayNumber();
-            int tradersEndDay = prefrenceManager.getTraderModel().getCycleEndDayNumber();
 
-
-            Payouts payouts = new Payouts();
-            payouts.setCycleCode("" + collection.getCode());
-            payouts.setCyclename(c.getCycle());
-            payouts.setFarmersCount("" + farmerCountPerCycle);
-            payouts.setStatus(0);
-
-            PayoutsCyclesDatesUtills.EndAndStart endAndStart = new PayoutsCyclesDatesUtills.EndAndStart();
             endAndStart = PayoutsCyclesDatesUtills.getPayoutStartEndDate(c.getCode(), new PayoutsCyclesDatesUtills.EndAndStart(tradersStartDay, tradersEndDay), null);
             payouts.setStartDate(endAndStart.getStartDate());
             payouts.setEndDate(endAndStart.getEndDate());
 
-            payouts.setApprovedCards("");
-            payouts.setMilkTotal("");
-            payouts.setBalance("");
-            payouts.setLoanTotal("");
 
             if (plastIfOne != null) {
                 payouts.setPayoutnumber(plastIfOne.getPayoutnumber() + 1);
@@ -1387,31 +1401,22 @@ public class TraderViewModel extends AndroidViewModel
 
             insertPayout(payouts);
 
-            return getLastPayout("" + collection.getCode());
+            return getLastPayout("" + cycles.getCode());
 
         } else {
 
 
             if (DateTimeUtils.Companion.isPastLastDay(p.getEndDate())) {
-                int tradersStartDay = prefrenceManager.getTraderModel().getCycleStartDayNumber();
-                int tradersEndDay = prefrenceManager.getTraderModel().getCycleEndDayNumber();
                 Payouts plast = getLastPayout();
-                Payouts payouts = new Payouts();
-                payouts.setCycleCode("" + collection.getCode());
-                payouts.setCyclename(c.getCycle());
-                payouts.setFarmersCount("" + farmerCountPerCycle);
-                payouts.setStatus(0);
-                PayoutsCyclesDatesUtills.EndAndStart endAndStart;
+
+
                 endAndStart = PayoutsCyclesDatesUtills.getPayoutStartEndDate(c.getCode(), new PayoutsCyclesDatesUtills.EndAndStart(tradersStartDay, tradersEndDay), new PayoutsCyclesDatesUtills.EndAndStart(p.getStartDate(), p.getEndDate()));
                 payouts.setStartDate(endAndStart.getStartDate());
                 payouts.setEndDate(endAndStart.getEndDate());
-                payouts.setApprovedCards("");
-                payouts.setMilkTotal("");
-                payouts.setBalance("");
-                payouts.setLoanTotal("");
+
                 payouts.setPayoutnumber(plast.getPayoutnumber() + 1);
                 insertPayout(payouts);
-                return getLastPayout("" + collection.getCode());
+                return getLastPayout("" + cycles.getCode());
 
 
             } else {
@@ -1429,4 +1434,6 @@ public class TraderViewModel extends AndroidViewModel
     public double getBalance(String code) {
         return collectionsRepo.getFarmerBalance(code);
     }
+
+
 }

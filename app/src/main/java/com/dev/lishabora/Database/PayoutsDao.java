@@ -31,8 +31,8 @@ public interface PayoutsDao {
     LiveData<Payouts> getPayoutsByCode(String code);
 
 
-    @Query("SELECT * FROM PAYOUTS WHERE payoutnumber =:payoutnumber")
-    LiveData<Payouts> getPayoutsByPayoutNumber(String payoutnumber);
+    @Query("SELECT * FROM PAYOUTS WHERE code =:code")
+    LiveData<Payouts> getPayoutsByPayoutCode(String code);
 
     @Query("SELECT * FROM PAYOUTS WHERE cycleCode =:cycleCode")
     LiveData<List<Payouts>> getPayoutsByCycleCode(String cycleCode);

@@ -157,54 +157,7 @@ public class SyncWorks extends AppCompatActivity {
 
     }
 
-//    public void sync(JSONObject jsonObject, View view, List<SyncModel> syncWorks) {
-//        Request.Companion.getResponseSync(ApiConstants.Companion.getSync(), jsonObject, "", new SyncResponseCallback() {
-//            @Override
-//            public void response(SyncResponseModel responseModel) {
-//                Log.d("datasend", responseModel.getResultDescription());
-//
-//
-//                if (responseModel.getResultCode() == 2) {
-//                    int failureId = Integer.valueOf(responseModel.getFailureId());
-//                    for (int a = failureId; a > 0; a--) {
-//
-//                        for (SyncModel d : syncWorks) {
-//                            if (d.getId() == failureId) {
-//                                traderViewModel.deleteSync(d);
-//                            }
-//                        }
-//                    }
-//                } else if (responseModel.getResultCode() == 1) {
-//                    for (SyncModel s : syncWorks) {
-//                        traderViewModel.deleteSync(s);
-//                    }
-//
-//                }
-//
-//                Snackbar.make(view, responseModel.getResultDescription(), Snackbar.LENGTH_LONG).show();
-//
-//            }
-//
-//            @Override
-//            public void response(String error) {
-//                Log.d("datasend", error);
-//
-//                Snackbar.make(view, error, Snackbar.LENGTH_LONG).show();
-//
-//
-//            }
-//
-//
-//        });
-//
-//    }
 
-//    public void deleteNow(View view) {
-//        if (syncWorks != null) {
-//            delete(syncWorks);
-//        }
-//
-//    }
 
     private String read(Context context, String fileName) {
         try {

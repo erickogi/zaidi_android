@@ -434,8 +434,8 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(viehw -> {
 
-            if (mViewModel.getUnits1(false).size() > 0) {
-                getRoutes();
+            if (mViewModel.getUnits1(false).size() < 1) {
+                // getRoutes();
             } else {
                 if (isSetUp()) {
                     FragementFarmersList.this.createFarmers();
@@ -456,7 +456,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
 
         spinner1.setItems("Active", "Archived", "Deleted", "Dummy", "All(Status)");
-        //getRoutes();
+        getRoutes();
 
         spinner1.setOnItemSelectedListener((MaterialSpinner.OnItemSelectedListener<String>) (view1, position, id, item) -> fetchFarmers(getSelectedAccountStatus(), getSelectedRoute()));
         spinner2.setOnItemSelectedListener((view12, position, id, item) -> fetchFarmers(getSelectedAccountStatus(), getSelectedRoute()));
@@ -935,7 +935,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         listenOnBalance(famerModel);
         mViewModel.createCollections(c, false).observe(FragementFarmersList.this, responseModel -> {
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-                CommonFuncs.addBalance(mViewModel, balncesViewModel, c, responseModel.getPayoutkey(), AppConstants.MILK, null, null);
+                CommonFuncs.addBalance(mViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.MILK, null, null);
                 mViewModel.updateFarmer(famerModel, false, false);
 
             } else {
@@ -981,7 +981,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         mViewModel.updateCollection(c).observe(FragementFarmersList.this, responseModel -> {
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
 
-                CommonFuncs.updateBalance(mViewModel, balncesViewModel, c, responseModel.getPayoutkey(), AppConstants.MILK, null, null);
+                CommonFuncs.updateBalance(mViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.MILK, null, null);
 
                 mViewModel.updateFarmer(famerModel, false, false);
 

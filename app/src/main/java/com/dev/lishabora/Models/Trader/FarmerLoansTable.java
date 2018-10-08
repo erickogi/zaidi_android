@@ -29,9 +29,11 @@ public class FarmerLoansTable {
     private int status;
     private String timestamp;
 
-    public FarmerLoansTable(String collectionId, String payoutId, String farmerCode, String loanAmount, String loanAmountPaid, String installmentAmount, String installmentNo, int status, String timestamp) {
-        this.collectionCode = collectionId;
-        this.payoutCode = payoutId;
+
+    public FarmerLoansTable(String code, String collectionCode, String payoutCode, String farmerCode, String loanAmount, String loanAmountPaid, String installmentAmount, String installmentNo, int status, String timestamp) {
+        this.code = code;
+        this.collectionCode = collectionCode;
+        this.payoutCode = payoutCode;
         this.farmerCode = farmerCode;
         this.loanAmount = loanAmount;
         this.loanAmountPaid = loanAmountPaid;

@@ -1,5 +1,7 @@
 package com.dev.lishabora.Views.Trader.Fragments;
 
+
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,17 +17,20 @@ import android.widget.TextView;
 
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Utils.GeneralUtills;
+import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Trader.Activities.CreateFarmerActivity;
 import com.dev.lishabora.Views.Trader.FarmerConst;
 import com.dev.lishaboramobile.R;
 
 import static android.app.Activity.RESULT_OK;
 
+
 public class FragmentFarmerProfile extends Fragment {
     FamerModel famerModel;
     TextView txtName, txtCode, txtPhone, txtRoute, txtCycle, txtUnit, txtMilk, txtLoan, txtOrder, txtBalance, txtTime;
 
     private View mView;
+    private TraderViewModel traderViewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,10 +50,9 @@ public class FragmentFarmerProfile extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // Do something that differs the Activity's menu here
+
         super.onCreateOptionsMenu(menu, inflater);
 
-        //inflater.inflate(R.menu.menu_main, menu);
         MenuItem mEdit = menu.findItem(R.id.action_edit);
 
 
@@ -59,7 +63,6 @@ public class FragmentFarmerProfile extends Fragment {
         switch (item.getItemId()) {
 
             case R.id.action_edit:
-                // Do Fragment menu item stuff here
                 Intent intent = new Intent(getActivity(), CreateFarmerActivity.class);
                 intent.putExtra("type", 1);
                 intent.putExtra("farmer", famerModel);
@@ -86,7 +89,7 @@ public class FragmentFarmerProfile extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         this.mView = view;
         famerModel = (FamerModel) getArguments().getSerializable("farmer");
-
+        traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
 
     }
 
@@ -121,22 +124,28 @@ public class FragmentFarmerProfile extends Fragment {
 
     void setUpData() {
         if (famerModel != null) {
-            txtName.setText(famerModel.getNames());
-            txtCode.setText(famerModel.getCode());
-            txtPhone.setText(famerModel.getMobile());
 
+            traderViewModel.getFarmersByCode(famerModel.getCode()).observe(this, famerModel -> {
 
-            txtRoute.setText(famerModel.getRoutename());
-            txtCycle.setText(famerModel.getCyclename());
-            txtUnit.setText(famerModel.getUnitname());
+                txtName.setText(famerModel.getNames());
+                txtCode.setText(famerModel.getCode());
+                txtPhone.setText(famerModel.getMobile());
+                txtRoute.setText(famerModel.getRoutename());
+                txtCycle.setText(famerModel.getCyclename());
+                txtUnit.setText(famerModel.getUnitname());
+                txtMilk.setText("");
+                txtLoan.setText("");
+                txtOrder.setText("");
+                txtBalance.setText(GeneralUtills.Companion.round(famerModel.getTotalbalance(), 1));
+                txtTime.setText(famerModel.getLastCollectionTime());
 
+                try {
+                    getActivity().setTitle(famerModel.getNames());
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
 
-            txtMilk.setText("");
-            txtLoan.setText("");
-            txtOrder.setText("");
-            txtBalance.setText(GeneralUtills.Companion.round(famerModel.getTotalbalance(), 1));
-
-            txtTime.setText(famerModel.getLastCollectionTime());
+            });
 
         }
     }

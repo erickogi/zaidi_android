@@ -122,8 +122,8 @@ public class PayoutsVewModel extends AndroidViewModel {
         return syncRepo.getAllByStatus(status);
     }
 
-    public LiveData<SyncModel> fetchById(int id) {
-        return syncRepo.getSynce(id);
+    public LiveData<SyncModel> fetchByCode(int code) {
+        return syncRepo.getSynce(code);
     }
 
 
@@ -226,8 +226,8 @@ public class PayoutsVewModel extends AndroidViewModel {
         return payoutsRepo.fetchAllData(false);
     }
 
-    public LiveData<Payouts> getPayoutById(int id) {
-        return payoutsRepo.getPayoutById(id);
+    public LiveData<Payouts> getPayoutByCode(String code) {
+        return payoutsRepo.getPayoutByCode(code);
     }
 
     public LiveData<List<Payouts>> getPayoutsByCycleCode(String code) {
@@ -259,7 +259,7 @@ public class PayoutsVewModel extends AndroidViewModel {
         payoutsRepo.upDateRecord(payouts);
 
         synch(AppConstants.UPDATE, AppConstants.ENTITY_PAYOUTS, payouts, null, 1);
-        collectionsRepo.updateCollectionsByPayout(payouts.getPayoutnumber(), payouts.getStatus());
+        collectionsRepo.updateCollectionsByPayout(payouts.getCode(), payouts.getStatus());
 
 
     }
@@ -405,15 +405,15 @@ public class PayoutsVewModel extends AndroidViewModel {
         return collectionsRepo.getCollectionsBetweenDates(date1, date2, code);
     }
 
-    public LiveData<Payouts> getPayoutsByPayoutNumber(String number) {
-        return payoutsRepo.getPayoutsByPayout(number);
+    public LiveData<Payouts> getPayoutsByPayoutCode(String code) {
+        return payoutsRepo.getPayoutsByPayout(code);
     }
 
-    public List<Collection> getCollectionByDateByPayoutListOne(String payoutnumber) {
+    public List<Collection> getCollectionByDateByPayoutListOne(String code) {
         if (collectionListOne == null) {
             collectionListOne = new LinkedList<>();
         }
-        return collectionsRepo.getCollectionByPayoutListOne(payoutnumber);
+        return collectionsRepo.getCollectionByPayoutListOne(code);
     }
 
     public List<FamerModel> getFarmersByCycleONe(String code) {
@@ -428,20 +428,20 @@ public class PayoutsVewModel extends AndroidViewModel {
         return farmersListOne;
     }
 
-    public LiveData<Collection> getCollectionById(int collectionId) {
+    public LiveData<Collection> getCollectionByCode(String collectionCode) {
         if (collection == null) {
             collection = new MutableLiveData<>();
 
         }
-        return collectionsRepo.getCollectionById(collectionId);
+        return collectionsRepo.getCollectionByCode(collectionCode);
     }
 
-    public Collection getCollectionByIdOne(int collectionId) {
+    public Collection getCollectionByCodeOne(String collectionCode) {
         if (collectionOne == null) {
             collectionOne = new Collection();
 
         }
-        return collectionsRepo.getCollectionByIdOne(collectionId);
+        return collectionsRepo.getCollectionByCodeOne(collectionCode);
     }
 
     public LiveData<List<Collection>> getCollectionByDateByPayoutByFarmer(String payoutnumber, String farmer) {
@@ -457,47 +457,48 @@ public class PayoutsVewModel extends AndroidViewModel {
         }
         return collectionsRepo.getCollectionByFarmer(farmer);
     }
-    public LiveData<Double> getSumOfMilkForPayout(String farmercode, int payoutNumber) {
+
+    public LiveData<Double> getSumOfMilkForPayout(String farmercode, String payoutCode) {
         if (milkTotal == null) {
             milkTotal = new MutableLiveData<>();
         }
-        milkTotal = collectionsRepo.getSumOfMilkFarmerPayout(farmercode, payoutNumber);
+        milkTotal = collectionsRepo.getSumOfMilkFarmerPayout(farmercode, payoutCode);
 
         return milkTotal;
     }
 
-    public LiveData<Double> getSumOfMilkForPayoutLtrs(String farmercode, int payoutNumber) {
+    public LiveData<Double> getSumOfMilkForPayoutLtrs(String farmercode, String payoutCode) {
         if (milkTotalLtrs == null) {
             milkTotalLtrs = new MutableLiveData<>();
         }
-        milkTotalLtrs = collectionsRepo.getSumOfMilkFarmerPayoutLtrs(farmercode, payoutNumber);
+        milkTotalLtrs = collectionsRepo.getSumOfMilkFarmerPayoutLtrs(farmercode, payoutCode);
 
         return milkTotalLtrs;
     }
 
-    public LiveData<Double> getSumOfMilkForPayoutKsh(String farmercode, int payoutNumber) {
+    public LiveData<Double> getSumOfMilkForPayoutKsh(String farmercode, String payoutCode) {
         if (milkTotalKsh == null) {
             milkTotalKsh = new MutableLiveData<>();
         }
-        milkTotalKsh = collectionsRepo.getSumOfMilkFarmerPayoutKsh(farmercode, payoutNumber);
+        milkTotalKsh = collectionsRepo.getSumOfMilkFarmerPayoutKsh(farmercode, payoutCode);
 
         return milkTotalKsh;
     }
 
-    public LiveData<Double> getSumOfLoansForPayout(String farmercode, int payoutNumber) {
+    public LiveData<Double> getSumOfLoansForPayout(String farmercode, String payoutCode) {
         if (loanTotal == null) {
             loanTotal = new MutableLiveData<>();
         }
-        loanTotal = collectionsRepo.getSumOfLoanFarmerPayout(farmercode, payoutNumber);
+        loanTotal = collectionsRepo.getSumOfLoanFarmerPayout(farmercode, payoutCode);
 
         return loanTotal;
     }
 
-    public LiveData<Double> getSumOfOrdersForPayout(String farmercode, int payoutNumber) {
+    public LiveData<Double> getSumOfOrdersForPayout(String farmercode, String payoutCode) {
         if (orderTotal == null) {
             orderTotal = new MutableLiveData<>();
         }
-        orderTotal = collectionsRepo.getSumOfOrderFarmerPayout(farmercode, payoutNumber);
+        orderTotal = collectionsRepo.getSumOfOrderFarmerPayout(farmercode, payoutCode);
 
         return orderTotal;
     }
@@ -522,7 +523,7 @@ public class PayoutsVewModel extends AndroidViewModel {
         responseModel.setResultDescription("Farmer updated successfully");
         responseModel.setData(null);
         if (c != null) {
-            responseModel.setPayoutkey(c.getPayoutnumber());
+            responseModel.setPayoutCode(c.getCode());
         }
 
         updateCollectionSuccess.setValue(responseModel);
@@ -545,24 +546,24 @@ public class PayoutsVewModel extends AndroidViewModel {
         responseModel.setResultCode(1);
         responseModel.setResultDescription("Collection Inserted \nExisting payout");
         responseModel.setData(null);
-        responseModel.setPayoutkey(collection.getPayoutnumber());
+        responseModel.setPayoutCode(collection.getCode());
         createCollectionSuccess.setValue(responseModel);
 
 
         return createCollectionSuccess;
     }
 
-    public void approveFarmersPayoutCard(String farmercode, int payoutNumber) {
+    public void approveFarmersPayoutCard(String farmercode, String payoutCode) {
 
-        collectionsRepo.approveFarmersPayoutCard(farmercode, payoutNumber);
+        collectionsRepo.approveFarmersPayoutCard(farmercode, payoutCode);
     }
 
-    public void cancelFarmersPayoutCard(String farmercode, int payoutNumber) {
-        collectionsRepo.cancelFarmersPayoutCard(farmercode, payoutNumber);
+    public void cancelFarmersPayoutCard(String farmercode, String payoutCode) {
+        collectionsRepo.cancelFarmersPayoutCard(farmercode, payoutCode);
     }
 
 
-//    public LiveData<Integer> getStatusForFarmerPayout(String farmercode, int payoutNumber) {
+//    public LiveData<Integer> getStatusForFarmerPayout(String farmercode, String payoutCode) {
 //
 //    }
 }

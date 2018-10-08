@@ -158,8 +158,8 @@ public class RoutesRepo {
         return db.routesDao().getNumberOfRows();
     }
 
-    public LiveData<RoutesModel> getRouteByKeyID(int key) {
-        return db.routesDao().getRouteByKeyID(key);
+    public LiveData<RoutesModel> getRouteByKeyID(String key) {
+        return db.routesDao().getRouteByKeyCode(key);
     }
 
 

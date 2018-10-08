@@ -18,12 +18,14 @@ import com.dev.lishabora.Repos.ProductsRepo;
 import com.dev.lishabora.Repos.RoutesRepo;
 import com.dev.lishabora.Repos.Trader.BalanceRepo;
 import com.dev.lishabora.Repos.Trader.CollectionsRepo;
+import com.dev.lishabora.Repos.Trader.CyclesRepo;
 import com.dev.lishabora.Repos.Trader.FarmerRepo;
 import com.dev.lishabora.Repos.Trader.LoanPaymentsRepo;
 import com.dev.lishabora.Repos.Trader.LoansTableRepo;
 import com.dev.lishabora.Repos.Trader.OrderPaymentsRepo;
 import com.dev.lishabora.Repos.Trader.OrdersTableRepo;
 import com.dev.lishabora.Repos.Trader.PayoutsRepo;
+import com.dev.lishabora.Repos.Trader.UnitsRepo;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.Jobs.Evernote.SyncJobCreator;
 import com.dev.lishabora.Utils.PrefrenceManager;
@@ -201,6 +203,8 @@ public class Application extends MultiDexApplication {
                                     new LoanPaymentsRepo(mInstance).insertMultiple(responseModel.getLoanPaymentModels());
                                     new OrderPaymentsRepo(mInstance).insertMultiple(responseModel.getOrderPaymentModels());
                                     new BalanceRepo(mInstance).insertMultiple(responseModel.getBalanceModel());
+                                    new CyclesRepo(mInstance).insert(responseModel.getCycleModels());
+                                    new UnitsRepo(mInstance).insert(responseModel.getUnitsModels());
 
 
                                     try {

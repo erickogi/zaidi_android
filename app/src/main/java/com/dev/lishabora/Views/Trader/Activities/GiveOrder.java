@@ -21,6 +21,7 @@ import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.OrderModel;
 import com.dev.lishabora.Models.Trader.FarmerOrdersTable;
 import com.dev.lishabora.Utils.DateTimeUtils;
+import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
@@ -145,6 +146,7 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
                 c.setCycleId(famerModel.getCode());
                 c.setDayName(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "E"));
                 c.setLoanAmountGivenOutPrice("0");
+            c.setCode(GeneralUtills.Companion.createCode(famerModel.getCode()));
                 c.setDayDate(DateTimeUtils.Companion.getToday());
             c.setDayDateLog(DateTimeUtils.Companion.getLongDate(c.getDayDate()));
 
@@ -164,8 +166,8 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
 
                 traderViewModel.createCollections(c, false).observe(this, responseModel -> {
                     if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-                        FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getId());
-                        CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), AppConstants.ORDER, null, f);
+                        FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getCode());
+                        CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.ORDER, null, f);
 
                     } else {
 
@@ -186,8 +188,8 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
             }
             traderViewModel.updateCollection(CollModel).observe(this, responseModel -> {
                     if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-                        FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(CollModel.getId());
-                        CommonFuncs.updateBalance(traderViewModel, balncesViewModel, CollModel, responseModel.getPayoutkey(), AppConstants.ORDER, null, f);
+                        FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(CollModel.getCode());
+                        CommonFuncs.updateBalance(traderViewModel, balncesViewModel, CollModel, responseModel.getPayoutCode(), AppConstants.ORDER, null, f);
 
                     } else {
 

@@ -12,6 +12,7 @@ public class FarmerOrdersTable {
 
 
     private int id;
+
     @Ignore
     private String traderCode;
 
@@ -29,9 +30,23 @@ public class FarmerOrdersTable {
 
     private String code;
 
-    public FarmerOrdersTable(String collectionId, String payoutId, String farmerCode, String orderAmount, String orderAmountPaid, String installmentAmount, String installmentNo, int status, String timestamp) {
-        this.collectionCode = collectionId;
-        this.collectionCode = payoutId;
+//    public FarmerOrdersTable(String code,String collectionId, String payoutCode, String farmerCode, String orderAmount, String orderAmountPaid, String installmentAmount, String installmentNo, int status, String timestamp) {
+//        this.code=code;
+//        this.collectionCode = collectionId;
+//        this.payoutCode = payoutCode;
+//        this.farmerCode = farmerCode;
+//
+//        this.orderAmount = orderAmount;
+//        this.orderAmountPaid = orderAmountPaid;
+//        this.installmentAmount = installmentAmount;
+//        this.installmentNo = installmentNo;
+//        this.status = status;
+//        this.timestamp = timestamp;
+//    }
+
+    public FarmerOrdersTable(String collectionCode, String payoutCode, String farmerCode, String orderAmount, String orderAmountPaid, String installmentAmount, String installmentNo, int status, String timestamp, String code) {
+        this.collectionCode = collectionCode;
+        this.payoutCode = payoutCode;
         this.farmerCode = farmerCode;
         this.orderAmount = orderAmount;
         this.orderAmountPaid = orderAmountPaid;
@@ -39,6 +54,7 @@ public class FarmerOrdersTable {
         this.installmentNo = installmentNo;
         this.status = status;
         this.timestamp = timestamp;
+        this.code = code;
     }
 
     public String getCode() {

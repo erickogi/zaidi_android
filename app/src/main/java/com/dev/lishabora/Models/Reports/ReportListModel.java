@@ -3,7 +3,7 @@ package com.dev.lishabora.Models.Reports;
 import java.io.Serializable;
 
 public class ReportListModel implements Serializable {
-    private int collectionId;
+    private String collectionCode;
     private String day;
     private String date;
     private String value1;
@@ -12,16 +12,16 @@ public class ReportListModel implements Serializable {
     private String valueMilkAm;
     private String valueMilkPm;
 
-    public ReportListModel(int collectionId, String day, String date, String value1, String value2) {
-        this.collectionId = collectionId;
+    public ReportListModel(String collectionCode, String day, String date, String value1, String value2) {
+        this.collectionCode = collectionCode;
         this.day = day;
         this.date = date;
         this.value1 = value1;
         this.value2 = value2;
     }
 
-    public ReportListModel(int collectionId, String day, String date, String value1, String value2, String valueMilkAm, String valueMilkPm) {
-        this.collectionId = collectionId;
+    public ReportListModel(String collectionCode, String day, String date, String value1, String value2, String valueMilkAm, String valueMilkPm) {
+        this.collectionCode = collectionCode;
         this.day = day;
         this.date = date;
         this.value1 = value1;
@@ -46,12 +46,12 @@ public class ReportListModel implements Serializable {
         this.valueMilkPm = valueMilkPm;
     }
 
-    public int getCollectionId() {
-        return collectionId;
+    public String getCollectionId() {
+        return collectionCode;
     }
 
-    public void setCollectionId(int collectionId) {
-        this.collectionId = collectionId;
+    public void setCollectionId(String collectionCode) {
+        this.collectionCode = collectionCode;
     }
 
     public String getDay() {

@@ -18,7 +18,9 @@ import java.util.List;
 public class TraderModel implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private   int id ;
+
     private   String code ;
+
     private   String entity ;
     private   String entitycode ;
     private String entityname;

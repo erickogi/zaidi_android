@@ -68,7 +68,7 @@ public class CreateTrader extends AppCompatActivity implements StepperLayout.Ste
     public void onCompleted(View completeButton) {
         TraderModel traderModel = CreateTraderConstants.getTraderModel();
         //if(type==ISCREATE) {
-        traderModel.setId(0);
+        //traderModel.setId(0);
         traderModel.setCode("" + new GeneralUtills(this).getRandon(9000, 1000));
         traderModel.setEntity("Admin");
         traderModel.setEntityname("LishaBora");

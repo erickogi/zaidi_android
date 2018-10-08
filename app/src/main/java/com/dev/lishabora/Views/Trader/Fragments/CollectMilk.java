@@ -372,6 +372,31 @@ class CollectMilk implements NumberKeyboardListener {
     }
 
     private void doCollect(FamerModel famerModel, UnitsModel unitsModel, String milkAm, String milkPm) {
+        Collection c = null;
+
+        if (collModel == null) {
+            c = new Collection();
+
+            c.setCode(GeneralUtills.Companion.createCode(famerModel.getCode()));
+            c.setCycleCode(famerModel.getCyclecode());
+            c.setFarmerCode(famerModel.getCode());
+            c.setFarmerName(famerModel.getNames());
+            c.setCycleId(famerModel.getCode());
+            c.setDayName(today.getText().toString());
+            c.setLoanAmountGivenOutPrice("0");
+            c.setDayDate(DateTimeUtils.Companion.getToday());
+            c.setDayDateLog(DateTimeUtils.Companion.getLongDate(c.getDayDate()));
+
+            c.setLoanAmountGivenOutPrice("0");
+            c.setOrderGivenOutPrice("0");
+            c.setLoanId("");
+            c.setOrderId("");
+            c.setSynced(0);
+            c.setSynced(false);
+            c.setApproved(0);
+        }
+
+
         if (hasAmChanged && !hasPmChanged && !TextUtils.isEmpty(edtTodayAm.getText())) {
             MilkModel milkModel = new MilkModel();
             milkModel.setUnitQty(milkAm);
@@ -379,15 +404,7 @@ class CollectMilk implements NumberKeyboardListener {
 
 
             if (collModel == null) {
-                Collection c = new Collection();
-                c.setCycleCode(famerModel.getCyclecode());
-                c.setFarmerCode(famerModel.getCode());
-                c.setFarmerName(famerModel.getNames());
-                c.setCycleId(famerModel.getCode());
-                c.setDayName(today.getText().toString());
-                c.setLoanAmountGivenOutPrice("0");
-                c.setDayDate(DateTimeUtils.Companion.getToday());
-                c.setDayDateLog(DateTimeUtils.Companion.getLongDate(c.getDayDate()));
+                assert c != null;
                 c.setTimeOfDay("AM");
 
 
@@ -397,19 +414,10 @@ class CollectMilk implements NumberKeyboardListener {
                 c.setMilkDetailsAm(new Gson().toJson(milkModel));
 
 
-                c.setLoanAmountGivenOutPrice("0");
-                c.setOrderGivenOutPrice("0");
 
-                c.setLoanId("");
-                c.setOrderId("");
-                c.setSynced(0);
-                c.setSynced(false);
-                c.setApproved(0);
-
-
-                listener.createCollection(c, famerModel);
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                // mViewModel.updateFarmer(famerModel, false, false);
+                listener.createCollection(c, famerModel);
+
 
             } else {
 
@@ -419,12 +427,11 @@ class CollectMilk implements NumberKeyboardListener {
                 collModel.setMilkCollectedValueLtrsAm(milkModel.getValueLtrs());
                 collModel.setMilkDetailsAm(new Gson().toJson(milkModel));
 
-                famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
 
+                famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
                 listener.updateCollection(collModel, famerModel);
 
 
-                //mViewModel.updateFarmer(famerModel, false, false);
 
             }
 
@@ -440,16 +447,7 @@ class CollectMilk implements NumberKeyboardListener {
             if (collModel == null) {
 
 
-                Collection c = new Collection();
-                c.setCycleCode(famerModel.getCyclecode());
-                c.setFarmerCode(famerModel.getCode());
-                c.setFarmerName(famerModel.getNames());
-                c.setCycleId(famerModel.getCode());
-                c.setDayName(today.getText().toString());
-                c.setLoanAmountGivenOutPrice("0");
-                c.setDayDate(DateTimeUtils.Companion.getToday());
-                c.setDayDateLog(DateTimeUtils.Companion.getLongDate(c.getDayDate()));
-
+                assert c != null;
                 c.setTimeOfDay("PM");
 
 
@@ -459,21 +457,12 @@ class CollectMilk implements NumberKeyboardListener {
                 c.setMilkDetailsAm(new Gson().toJson(milkModel));
 
 
-                c.setLoanAmountGivenOutPrice("0");
-                c.setOrderGivenOutPrice("0");
-
-                c.setLoanId("");
-                c.setOrderId("");
-                c.setSynced(0);
-                c.setSynced(false);
-                c.setApproved(0);
 
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
 
 
                 listener.createCollection(c, famerModel);
 
-                //  mViewModel.updateFarmer(famerModel, false, false);
 
             } else {
                 collModel.setMilkCollectedPm(milkPm);
@@ -501,56 +490,24 @@ class CollectMilk implements NumberKeyboardListener {
 
             if (collModel == null) {
 
-                Collection co = new Collection();
-                co.setCycleCode(famerModel.getCyclecode());
-                co.setFarmerCode(famerModel.getCode());
-                co.setFarmerName(famerModel.getNames());
-                co.setCycleId(famerModel.getCode());
-                co.setDayName(today.getText().toString());
-                co.setLoanAmountGivenOutPrice("0");
-                co.setDayDate(DateTimeUtils.Companion.getToday());
-                co.setDayDateLog(DateTimeUtils.Companion.getLongDate(co.getDayDate()));
-                co.setTimeOfDay("AM");
+                assert c != null;
+                c.setTimeOfDay("AM");
 
 
-                co.setMilkCollectedAm(milkAm);
-                co.setMilkCollectedValueKshAm(milkModelAm.getValueKsh());
-                co.setMilkCollectedValueLtrsAm(milkModelAm.getValueLtrs());
-                co.setMilkDetailsAm(new Gson().toJson(milkModelAm));
+                c.setMilkCollectedAm(milkAm);
+                c.setMilkCollectedValueKshAm(milkModelAm.getValueKsh());
+                c.setMilkCollectedValueLtrsAm(milkModelAm.getValueLtrs());
+                c.setMilkDetailsAm(new Gson().toJson(milkModelAm));
+
+                c.setMilkCollectedPm(milkPm);
+                c.setMilkCollectedValueKshPm(milkModelPm.getValueKsh());
+                c.setMilkCollectedValueLtrsPm(milkModelPm.getValueLtrs());
+                c.setMilkDetailsPm(new Gson().toJson(milkModelPm));
 
 
-                co.setLoanAmountGivenOutPrice("0");
-                co.setOrderGivenOutPrice("0");
-
-                co.setLoanId("");
-                co.setOrderId("");
-                co.setSynced(0);
-                co.setSynced(false);
-                co.setApproved(0);
-
-
-
-
-                co.setMilkCollectedPm(milkPm);
-                co.setMilkCollectedValueKshPm(milkModelPm.getValueKsh());
-                co.setMilkCollectedValueLtrsPm(milkModelPm.getValueLtrs());
-                co.setMilkDetailsPm(new Gson().toJson(milkModelPm));
-
-
-                co.setLoanAmountGivenOutPrice("0");
-                co.setOrderGivenOutPrice("0");
-
-                co.setLoanId("");
-                co.setOrderId("");
-                co.setSynced(0);
-                co.setSynced(false);
-                co.setApproved(0);
 
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-
-
-                listener.createCollection(co, famerModel);
-                //  mViewModel.updateFarmer(famerModel, false, false);
+                listener.createCollection(c, famerModel);
 
 
             } else {
@@ -565,9 +522,9 @@ class CollectMilk implements NumberKeyboardListener {
                 collModel.setMilkCollectedValueKshPm(milkModelPm.getValueKsh());
                 collModel.setMilkCollectedValueLtrsPm(milkModelPm.getValueLtrs());
                 collModel.setMilkDetailsPm(new Gson().toJson(milkModelPm));
+
+
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-
-
                 listener.updateCollection(collModel, famerModel);
 
 
@@ -737,8 +694,8 @@ class CollectMilk implements NumberKeyboardListener {
 
                     try {
                         Double price = Double.valueOf(unitsModel.getUnitprice());
-                        Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity()) / 1000;
-                        Double total = (Double.valueOf(edtTodayAm.getText().toString()) * unitCapacity) * price;
+                        Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity());// / 1000;
+                        Double total = (Double.valueOf(edtTodayAm.getText().toString())) * price;
 
 
                         unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
@@ -756,8 +713,8 @@ class CollectMilk implements NumberKeyboardListener {
 
                     try {
                         Double price = Double.valueOf(unitsModel.getUnitprice());
-                        Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity()) / 1000;
-                        Double total = (Double.valueOf(edtTodayPm.getText().toString()) * unitCapacity) * price;
+                        Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity());// / 1000;
+                        Double total = (Double.valueOf(edtTodayPm.getText().toString())) * price;
 
 
                         unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));

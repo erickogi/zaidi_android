@@ -21,7 +21,7 @@ public class ResponseModel extends LiveData<ResponseModel> implements Serializab
     private List<TraderModel> traderModels;
     private List<ProductsModel> productsModels;
 
-    private int payoutkey;
+    private String payoutCode;
 
     public List<ProductsModel> getProductsModels() {
         return productsModels;
@@ -31,12 +31,12 @@ public class ResponseModel extends LiveData<ResponseModel> implements Serializab
         this.productsModels = productsModels;
     }
 
-    public int getPayoutkey() {
-        return payoutkey;
+    public String getPayoutCode() {
+        return payoutCode;
     }
 
-    public void setPayoutkey(int payoutkey) {
-        this.payoutkey = payoutkey;
+    public void setPayoutCode(String payoutCode) {
+        this.payoutCode = payoutCode;
     }
 
     public LinkedList<Object> getData() {

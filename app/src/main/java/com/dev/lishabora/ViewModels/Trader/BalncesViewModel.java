@@ -75,7 +75,7 @@ public class BalncesViewModel extends AndroidViewModel
         return syncRepo.getAllByStatus(status);
     }
 
-    public LiveData<SyncModel> fetchById(int id) {
+    public LiveData<SyncModel> fetchByCode(int id) {
         return syncRepo.getSynce(id);
     }
 
@@ -272,40 +272,40 @@ public class BalncesViewModel extends AndroidViewModel
         synch(AppConstants.INSERT, AppConstants.ENTITY_LOANS, farmerLoansTable, null, 1);
     }
 
-    public LiveData<FarmerLoansTable> getFarmerLoanById(int keyid) {
-        return loansTableRepo.getFarmerLoanById(keyid);
+    public LiveData<FarmerLoansTable> getFarmerLoanByCode(String code) {
+        return loansTableRepo.getFarmerLoanByCode(code);
     }
 
-    public FarmerLoansTable getFarmerLoanByIdOne(int id) {
-        return loansTableRepo.getFarmerLoanByIdOne(id);
+    public FarmerLoansTable getFarmerLoanByCodeOne(String code) {
+        return loansTableRepo.getFarmerLoanByCodeOne(code);
     }
 
     public LiveData<List<FarmerLoansTable>> getFarmerLoanByDate(String date) {
         return getFarmerLoanByDate(date);
     }
 
-    public LiveData<List<FarmerLoansTable>> getFarmerLoanByPayoutNumber(String payoutcode) {
-        return loansTableRepo.getFarmerLoanByPayoutNumber(payoutcode);
+    public LiveData<List<FarmerLoansTable>> getFarmerLoanByPayoutCode(String payoutcode) {
+        return loansTableRepo.getFarmerLoanByPayoutCode(payoutcode);
     }
 
-    public FarmerLoansTable getFarmerLoanByCollectionOne(int collId) {
-        return loansTableRepo.getFarmerLoanByCollectionOne(collId);
+    public FarmerLoansTable getFarmerLoanByCollectionOne(String collCode) {
+        return loansTableRepo.getFarmerLoanByCollectionOne(collCode);
     }
 
-    public LiveData<FarmerLoansTable> getFarmerLoanByCollection(int collId) {
-        return loansTableRepo.getFarmerLoanByCollection(collId);
+    public LiveData<FarmerLoansTable> getFarmerLoanByCollection(String collCode) {
+        return loansTableRepo.getFarmerLoanByCollection(collCode);
     }
 
-    public LiveData<List<FarmerLoansTable>> getFarmerLoanByPayoutNumberByFarmer(String payoutnumber, String farmer) {
-        return loansTableRepo.getFarmerLoanByPayoutNumberByFarmer(payoutnumber, farmer);
+    public LiveData<List<FarmerLoansTable>> getFarmerLoanByPayoutNumberByFarmer(String payoutNo, String farmer) {
+        return loansTableRepo.getFarmerLoanByPayoutCodeByFarmer(payoutNo, farmer);
     }
 
-    public List<FarmerLoansTable> getFarmerLoanByPayoutNumberByFarmerByStatus(String payoutnumber, String farmer, int status) {
-        return loansTableRepo.getFarmerLoanByPayoutNumberByFarmerByStatus(payoutnumber, farmer, status);
+    public List<FarmerLoansTable> getFarmerLoanByPayoutNumberByFarmerByStatus(String payoutNo, String farmer, int status) {
+        return loansTableRepo.getFarmerLoanByPayoutCodeByFarmerByStatus(payoutNo, farmer, status);
     }
 
     public List<FarmerLoansTable> getFarmerLoanByPayoutNumberByFarmerByStatus(String farmer, int status) {
-        return loansTableRepo.getFarmerLoanByPayoutNumberByFarmerByStatus(farmer, status);
+        return loansTableRepo.getFarmerLoanByPayoutCodeByFarmerByStatus(farmer, status);
     }
 
     public LiveData<List<FarmerLoansTable>> getFarmerLoanByFarmerByStatus(String farmer, int status) {
@@ -317,12 +317,12 @@ public class BalncesViewModel extends AndroidViewModel
         return loansTableRepo.getFarmerLoanByFarmer(farmer);
     }
 
-    public List<FarmerLoansTable> getFarmerLoanByPayoutNumberListOne(String payoutnumber) {
-        return loansTableRepo.getFarmerLoanByPayoutNumberListOne(payoutnumber);
+    public List<FarmerLoansTable> getFarmerLoanByPayoutNumberListOne(String payoutNo) {
+        return loansTableRepo.getFarmerLoanByPayoutCodeListOne(payoutNo);
     }
 
-    public void approveFarmersoan(int a, String farmercode, int payoutNumber) {
-        loansTableRepo.approveFarmersPayoutCard(a, farmercode, payoutNumber);
+    public void approveFarmersoan(int a, String farmercode, String payoutNo) {
+        loansTableRepo.approveFarmersPayoutCard(a, farmercode, payoutNo);
     }
 
     public void updateRecordLoan(FarmerLoansTable farmerLoansTable) {
@@ -343,12 +343,12 @@ public class BalncesViewModel extends AndroidViewModel
         return loansTableRepo.getBalanceByFarmerCode(farmercode);
     }
 
-    public double getBalanceLoanByPayout(int payoutid) {
-        return loansTableRepo.getBalanceByPayout(payoutid);
+    public double getBalanceLoanByPayout(String payoutNo) {
+        return loansTableRepo.getBalanceByPayout(payoutNo);
     }
 
-    public double getLoanInstallmentSumByPayoutCode(int payoutid) {
-        return loansTableRepo.getInstallmentSumByPayoutCode(payoutid);
+    public double getLoanInstallmentSumByPayoutCode(String payoutNo) {
+        return loansTableRepo.getInstallmentSumByPayoutCode(payoutNo);
     }
 
     public double getLoanInstallmentSumByFarmerCode(String code) {
@@ -368,8 +368,8 @@ public class BalncesViewModel extends AndroidViewModel
         return loansTableRepo.getLast();
     }
 
-    public void updateStatusLoan(int id, int status) {
-        loansTableRepo.updateStatus(id, status);
+    public void updateStatusLoan(String code, int status) {
+        loansTableRepo.updateStatus(code, status);
     }
 
     public LiveData<List<FarmerLoansTable>> getFarmerLoansBetweenDates(Long date1, Long date2) {
@@ -401,12 +401,12 @@ public class BalncesViewModel extends AndroidViewModel
         return ordersTableRepo.fetchAll();
     }
 
-    public LiveData<FarmerOrdersTable> getFarmerOrderById(int keyid) {
-        return ordersTableRepo.getFarmerOrderById(keyid);
+    public LiveData<FarmerOrdersTable> getFarmerOrderByCode(String code) {
+        return ordersTableRepo.getFarmerOrderByCode(code);
     }
 
-    public FarmerOrdersTable getFarmerOrderByIdOne(int id) {
-        return ordersTableRepo.getFarmerOrderByIdOne(id);
+    public FarmerOrdersTable getFarmerOrderByCodeOne(String code) {
+        return ordersTableRepo.getFarmerOrderByCodeOne(code);
     }
 
     public LiveData<List<FarmerOrdersTable>> getFarmerOrderByDate(String date) {
@@ -414,27 +414,27 @@ public class BalncesViewModel extends AndroidViewModel
     }
 
     public LiveData<List<FarmerOrdersTable>> getFarmerOrderByPayoutNumber(String payoutNo) {
-        return ordersTableRepo.getFarmerOrderByPayoutNumber(payoutNo);
+        return ordersTableRepo.getFarmerOrderByPayoutCode(payoutNo);
     }
 
-    public FarmerOrdersTable getFarmerOrderByCollectionOne(int collId) {
-        return ordersTableRepo.getFarmerOrderByCollection(collId);
+    public FarmerOrdersTable getFarmerOrderByCollectionOne(String collCode) {
+        return ordersTableRepo.getFarmerOrderByCollection(collCode);
     }
 
-    public LiveData<FarmerOrdersTable> getFarmerOrderByCollection(int collId) {
-        return ordersTableRepo.getFarmerOrderByCollectionLive(collId);
+    public LiveData<FarmerOrdersTable> getFarmerOrderByCollection(String collCode) {
+        return ordersTableRepo.getFarmerOrderByCollectionLive(collCode);
     }
 
-    public LiveData<List<FarmerOrdersTable>> getFarmerOrderByPayoutNumberByFarmer(String payoutnumber, String farmer) {
-        return ordersTableRepo.getFarmerOrderByPayoutNumberByFarmer(payoutnumber, farmer);
+    public LiveData<List<FarmerOrdersTable>> getFarmerOrderByPayoutNumberByFarmer(String payoutNo, String farmer) {
+        return ordersTableRepo.getFarmerOrderByPayoutCodeByFarmer(payoutNo, farmer);
     }
 
-    public List<FarmerOrdersTable> getFarmerOrderByPayoutNumberByFarmerByStatus(String payoutnumber, String farmer, int status) {
-        return ordersTableRepo.getFarmerOrderByPayoutNumberByFarmerByStatus(payoutnumber, farmer, status);
+    public List<FarmerOrdersTable> getFarmerOrderByPayoutNumberByFarmerByStatus(String payoutNo, String farmer, int status) {
+        return ordersTableRepo.getFarmerOrderByPayoutCodeByFarmerByStatus(payoutNo, farmer, status);
     }
 
     public List<FarmerOrdersTable> getFarmerOrderByPayoutNumberByFarmerByStatus(String farmer, int status) {
-        return ordersTableRepo.getFarmerOrderByPayoutNumberByFarmerByStatus(farmer, status);
+        return ordersTableRepo.getFarmerOrderByPayoutCodeByFarmerByStatus(farmer, status);
     }
 
     public LiveData<List<FarmerOrdersTable>> getFarmerOrderByFarmerByStatus(String farmer, int status) {
@@ -446,12 +446,12 @@ public class BalncesViewModel extends AndroidViewModel
         return ordersTableRepo.getFarmerOrderByFarmer(farmer);
     }
 
-    public List<FarmerOrdersTable> getFarmerOrderByPayoutNumberListOne(String payoutnumber) {
-        return ordersTableRepo.getFarmerOrderByPayoutNumberListOne(payoutnumber);
+    public List<FarmerOrdersTable> getFarmerOrderByPayoutCodeListOne(String payoutNo) {
+        return ordersTableRepo.getFarmerOrderByPayoutCodeListOne(payoutNo);
     }
 
-    public void approveFarmersOrder(int a, String farmercode, int payoutNumber) {
-        ordersTableRepo.approveFarmersPayoutCard(a, farmercode, payoutNumber);
+    public void approveFarmersOrder(int a, String farmercode, String payoutNo) {
+        ordersTableRepo.approveFarmersPayoutCard(a, farmercode, payoutNo);
     }
 
     public void updateRecord(FarmerOrdersTable farmerOrdersTable) {
@@ -474,12 +474,12 @@ public class BalncesViewModel extends AndroidViewModel
         return ordersTableRepo.getBalanceByFarmerCode(farmercode);
     }
 
-    public double getBalanceOrderByPayout(int payoutid) {
-        return ordersTableRepo.getBalanceByPayout(payoutid);
+    public double getBalanceOrderByPayout(String payoutNo) {
+        return ordersTableRepo.getBalanceByPayout(payoutNo);
     }
 
-    public double getOrderInstallmentSumByPayoutCode(int payoutid) {
-        return ordersTableRepo.getInstallmentSumByPayoutCode(payoutid);
+    public double getOrderInstallmentSumByPayoutCode(String payoutNo) {
+        return ordersTableRepo.getInstallmentSumByPayoutCode(payoutNo);
     }
 
     public double getOrderInstallmentSumByFarmerCode(String code) {
@@ -499,8 +499,8 @@ public class BalncesViewModel extends AndroidViewModel
         return ordersTableRepo.getLast();
     }
 
-    public void updateStatusOrder(int id, int status) {
-        ordersTableRepo.updateStatus(id, status);
+    public void updateStatusOrder(String code, int status) {
+        ordersTableRepo.updateStatus(code, status);
     }
 
     public LiveData<List<FarmerOrdersTable>> getFarmerOrdersBetweenDates(Long date1, Long date2) {
@@ -533,13 +533,13 @@ public class BalncesViewModel extends AndroidViewModel
         return loanPaymentsRepo.fetchAllData();
     }
 
-    public LiveData<LoanPayments> getLoanPaymentById(int keyid) {
-        return loanPaymentsRepo.getLoanPaymentById(keyid);
+    public LiveData<LoanPayments> getLoanPaymentByCode(String code) {
+        return loanPaymentsRepo.getLoanPaymentByCode(code);
     }
 
 
-    public LoanPayments getLoanPaymentByIdOne(int keyid) {
-        return loanPaymentsRepo.getLoanPaymentByIdOne(keyid);
+    public LoanPayments getLoanPaymentByCodeOne(String code) {
+        return loanPaymentsRepo.getLoanPaymentByCodeOne(code);
     }
 
 
@@ -547,11 +547,11 @@ public class BalncesViewModel extends AndroidViewModel
         return loanPaymentsRepo.getLoanPaymentByDate(date);
     }
 
-    public LiveData<List<LoanPayments>> getLoanPaymentByLoanId(String loanId) {
-        return loanPaymentsRepo.getLoanPaymentByLoanId(loanId);
+    public LiveData<List<LoanPayments>> getLoanPaymentByLoanCode(String loanCode) {
+        return loanPaymentsRepo.getLoanPaymentByLoanCode(loanCode);
     }
 
-    public LiveData<List<LoanPayments>> getLoanPaymentByPaout(int payoutNo) {
+    public LiveData<List<LoanPayments>> getLoanPaymentByPaout(String payoutNo) {
         return loanPaymentsRepo.getLoanPaymentByPaout(payoutNo);
     }
 
@@ -586,18 +586,18 @@ public class BalncesViewModel extends AndroidViewModel
 
     }
 
-    public double getSumPaidLoanPayment(int loanId) {
-        return loanPaymentsRepo.getSumPaid(loanId);
+    public double getSumPaidLoanPayment(String loanCode) {
+        return loanPaymentsRepo.getSumPaid(loanCode);
     }
 
 
-    public double getSumPaidByPayoutLoanPayment(int payoutid) {
+    public double getSumPaidByPayoutLoanPayment(String payoutid) {
         return loanPaymentsRepo.getSumPaidByPayout(payoutid);
     }
 
 
-    public LoanPayments getLoanPaymentByDateByFarmerByTimeSingle(int loanId, String today) {
-        return loanPaymentsRepo.getLoanPaymentByDateByFarmerByTimeSingle(loanId, today);
+    public LoanPayments getLoanPaymentByDateByFarmerByTimeSingle(String loanCode, String today) {
+        return loanPaymentsRepo.getLoanPaymentByDateByFarmerByTimeSingle(loanCode, today);
     }
 
 
@@ -611,8 +611,8 @@ public class BalncesViewModel extends AndroidViewModel
     }
 
 
-    public LiveData<List<LoanPayments>> getLoanPaymentsBetweenDates(Long date1, Long date2, int loanId) {
-        return loanPaymentsRepo.getLoanPaymentsBetweenDates(date1, date2, loanId);
+    public LiveData<List<LoanPayments>> getLoanPaymentsBetweenDates(Long date1, Long date2, String loanCode) {
+        return loanPaymentsRepo.getLoanPaymentsBetweenDates(date1, date2, loanCode);
     }
 
 
@@ -635,13 +635,13 @@ public class BalncesViewModel extends AndroidViewModel
         return orderPaymentsRepo.fetchAllData();
     }
 
-    public LiveData<OrderPayments> getOrderPaymentById(int keyid) {
-        return orderPaymentsRepo.getOrderPaymentById(keyid);
+    public LiveData<OrderPayments> getOrderPaymentByCode(String keyid) {
+        return orderPaymentsRepo.getOrderPaymentByCode(keyid);
     }
 
 
-    public OrderPayments getOrderPaymentByIdOne(int keyid) {
-        return orderPaymentsRepo.getOrderPaymentByIdOne(keyid);
+    public OrderPayments getOrderPaymentByCodeOne(String code) {
+        return orderPaymentsRepo.getOrderPaymentByCodeOne(code);
     }
 
 
@@ -649,11 +649,11 @@ public class BalncesViewModel extends AndroidViewModel
         return orderPaymentsRepo.getOrderPaymentByDate(date);
     }
 
-    public LiveData<List<OrderPayments>> getOrderPaymentByOrderId(String orderId) {
-        return orderPaymentsRepo.getOrderPaymentByOrderId(orderId);
+    public LiveData<List<OrderPayments>> getOrderPaymentByOrderCode(String orderCode) {
+        return orderPaymentsRepo.getOrderPaymentByOrderCode(orderCode);
     }
 
-    public LiveData<List<OrderPayments>> getOrderPaymentByPaout(int payoutNo) {
+    public LiveData<List<OrderPayments>> getOrderPaymentByPaout(String payoutNo) {
         return orderPaymentsRepo.getOrderPaymentByPaout(payoutNo);
     }
 
@@ -688,18 +688,18 @@ public class BalncesViewModel extends AndroidViewModel
 
     }
 
-    public double getSumPaidOrderPayment(int loanId) {
-        return orderPaymentsRepo.getSumPaid(loanId);
+    public double getSumPaidOrderPayment(String loanCode) {
+        return orderPaymentsRepo.getSumPaid(loanCode);
     }
 
 
-    public double getSumPaidByPayoutOrderPayment(int payoutid) {
-        return orderPaymentsRepo.getSumPaidByPayout(payoutid);
+    public double getSumPaidByPayoutOrderPayment(String payoutCode) {
+        return orderPaymentsRepo.getSumPaidByPayout(payoutCode);
     }
 
 
-    public OrderPayments getOrderPaymentByDateByFarmerByTimeSingle(int loanId, String today) {
-        return orderPaymentsRepo.getOrderPaymentByDateByFarmerByTimeSingle(loanId, today);
+    public OrderPayments getOrderPaymentByDateByFarmerByTimeSingle(String loanCode, String today) {
+        return orderPaymentsRepo.getOrderPaymentByDateByFarmerByTimeSingle(loanCode, today);
     }
 
 
@@ -713,8 +713,8 @@ public class BalncesViewModel extends AndroidViewModel
     }
 
 
-    public LiveData<List<OrderPayments>> getOrderPaymentsBetweenDates(Long date1, Long date2, int loanId) {
-        return orderPaymentsRepo.getOrderPaymentsBetweenDates(date1, date2, loanId);
+    public LiveData<List<OrderPayments>> getOrderPaymentsBetweenDates(Long date1, Long date2, String loanCode) {
+        return orderPaymentsRepo.getOrderPaymentsBetweenDates(date1, date2, loanCode);
     }
 
 
@@ -737,8 +737,8 @@ public class BalncesViewModel extends AndroidViewModel
         return balanceRepo.fetchAll();
     }
 
-    public LiveData<FarmerBalance> getByKeyID(int keyid) {
-        return balanceRepo.getByKeyID(keyid);
+    public LiveData<FarmerBalance> getByKeyCode(String code) {
+        return balanceRepo.getByKeyCode(code);
     }
 
 

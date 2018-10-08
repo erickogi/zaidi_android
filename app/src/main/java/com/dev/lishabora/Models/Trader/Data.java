@@ -31,7 +31,7 @@ public class Data {
 
 
     private List<Cycles> cycleModels;
-    private List<UnitsModel> unitsModels;
+    private List<UnitsModel> unitModels;
     private List<Notifications> notificationModels;
 
     private List<FarmerBalance> balanceModel;
@@ -139,11 +139,11 @@ public class Data {
     }
 
     public List<UnitsModel> getUnitsModels() {
-        return unitsModels;
+        return unitModels;
     }
 
     public void setUnitsModels(List<UnitsModel> unitsModels) {
-        this.unitsModels = unitsModels;
+        this.unitModels = unitsModels;
     }
 
     public List<Notifications> getNotificationModels() {

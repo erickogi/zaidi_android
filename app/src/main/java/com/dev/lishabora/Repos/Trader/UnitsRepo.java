@@ -3,10 +3,12 @@ package com.dev.lishabora.Repos.Trader;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.dev.lishabora.Database.LMDatabase;
 import com.dev.lishabora.Database.UnitsDao;
 import com.dev.lishabora.Models.UnitsModel;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -42,6 +44,7 @@ public class UnitsRepo {
     public void insert (List<UnitsModel> unitsModel) {
         unitsDao = db.unitsDao();
 
+        Log.d("insertUnits", new Gson().toJson(unitsModel));
         new insertUnitsAsyncTask(unitsDao).execute(unitsModel);
     }
     public void upDateRecord(UnitsModel unitsModel){
@@ -140,10 +143,10 @@ public class UnitsRepo {
     }
 
 
-    public void insertMultipleUnits(List<UnitsModel> traderModels){
+    public void insertMultipleUnits(List<UnitsModel> unitsModels) {
         unitsDao = db.unitsDao();
 
-        new insertUnitsAsyncTask(unitsDao).execute(traderModels);
+        new insertUnitsAsyncTask(unitsDao).execute(unitsModels);
     }
 
     public void insertSingleTrader(UnitsModel unitsModel,boolean isOnline){

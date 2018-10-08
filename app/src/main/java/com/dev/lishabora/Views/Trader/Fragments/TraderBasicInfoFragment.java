@@ -1,6 +1,8 @@
 package com.dev.lishabora.Views.Trader.Fragments;
 
 import android.app.Activity;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,6 +21,7 @@ import com.dev.lishabora.COntrollers.LoginController;
 import com.dev.lishabora.Models.Trader.TraderModel;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.PrefrenceManager;
+import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishaboramobile.R;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
@@ -35,6 +38,7 @@ public class TraderBasicInfoFragment extends Fragment implements BlockingStep {
     CheckBox chkDummy;
     Spinner spinnerPayment;
     TraderModel traderModel;
+    TraderViewModel traderViewModel;
     private View view;
     private PrefrenceManager prefrenceManager;
 
@@ -52,6 +56,7 @@ public class TraderBasicInfoFragment extends Fragment implements BlockingStep {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
         prefrenceManager = new PrefrenceManager(getContext());
         if (getType_selected() == INTENT_TYPE_EDIT) {
             traderModel = getTraderModel();
@@ -83,10 +88,20 @@ public class TraderBasicInfoFragment extends Fragment implements BlockingStep {
     }
 
     private void initData() {
-        traderModel = prefrenceManager.getTraderModel();
-        bussinessname.setText(traderModel.getBusinessname());
-        name.setText(traderModel.getNames());
-        phone.setText(traderModel.getMobile());
+
+        traderViewModel.getTrader(prefrenceManager.getCode()).observe(this, new Observer<TraderModel>() {
+            @Override
+            public void onChanged(@Nullable TraderModel traderModel) {
+                if (traderModel != null) {
+                    TraderBasicInfoFragment.this.traderModel = traderModel;
+                    bussinessname.setText(traderModel.getBusinessname());
+                    name.setText(traderModel.getNames());
+                    phone.setText(traderModel.getMobile());
+                }
+
+            }
+        });
+        // traderModel = prefrenceManager.getTraderModel();
         hideKeyboardFrom(Objects.requireNonNull(getContext()), getView());
 
     }
@@ -103,12 +118,19 @@ public class TraderBasicInfoFragment extends Fragment implements BlockingStep {
 
             bs = bussinessname.getText().toString();
         }
+
+
         traderModel.setBusinessname(bs);
         traderModel.setNames(name.getText().toString());
         String phoneNumber = phone.getText().toString().replaceAll(" ", "").trim();
 
         traderModel.setMobile(phoneNumber);
+
+
         prefrenceManager.setLoggedUser(traderModel);
+        traderViewModel.updateTrader(traderModel);
+
+
         callback.goToNextStep();
     }
 
@@ -166,6 +188,7 @@ public class TraderBasicInfoFragment extends Fragment implements BlockingStep {
     public void onSelected() {
         view = getView();
         Objects.requireNonNull(getActivity()).setTitle("Basic Details");
+
 
         initData();
 

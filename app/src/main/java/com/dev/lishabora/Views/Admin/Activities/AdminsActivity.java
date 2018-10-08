@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dev.lishabora.Database.LMDatabase;
 import com.dev.lishabora.Models.Admin.AdminModel;
 import com.dev.lishabora.Utils.BottomNav.AHBottomNavigation;
 import com.dev.lishabora.Utils.BottomNav.AHBottomNavigationItem;
@@ -184,6 +185,8 @@ public class AdminsActivity extends AppCompatActivity {
                 alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
                     dialogInterface.dismiss();
                     new PrefrenceManager(AdminsActivity.this).setIsLoggedIn(false, 0);
+                    LMDatabase lmDatabase = LMDatabase.getDatabase(AdminsActivity.this);
+                    lmDatabase.clearAllTables();
                     startActivity(new Intent(AdminsActivity.this, LoginActivity.class));
                     finish();
                 }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());

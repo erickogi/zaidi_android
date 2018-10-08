@@ -29,6 +29,7 @@ import com.dev.lishabora.Models.Trader.TraderModel;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Login.LoginViewModel;
+import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Admin.Activities.AdminsActivity;
 import com.dev.lishabora.Views.Login.LoginConsts;
 import com.dev.lishabora.Views.Trader.Activities.TraderActivity;
@@ -48,6 +49,7 @@ public class LoginFragmentPassword extends Fragment implements View.OnClickListe
     private static int spalsh_time_out = 1000;
     private String TAG = "lsbLoginTag";
     private LoginViewModel mViewModel;
+    private TraderViewModel traderViewModel;
     private Gson gson = new Gson();
 
     //CARDS
@@ -91,6 +93,7 @@ public class LoginFragmentPassword extends Fragment implements View.OnClickListe
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
 
+        traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
 
     }
 
@@ -279,6 +282,11 @@ public class LoginFragmentPassword extends Fragment implements View.OnClickListe
 
         prefrenceManager.setIsLoggedIn(true, LoginController.TRADER);
         prefrenceManager.setLoggedUser(traderModel);
+
+        traderViewModel.createTrader(traderModel);
+
+
+
 
         Application.syncDown();
 

@@ -53,7 +53,7 @@ public class PayoutsRepo {
     }
 
     public LiveData<Payouts> getPayoutsByPayout(String payout) {
-        return dao.getPayoutsByPayoutNumber(payout);
+        return dao.getPayoutsByPayoutCode(payout);
     }
 
     public Payouts getLast(String cycleCode) {

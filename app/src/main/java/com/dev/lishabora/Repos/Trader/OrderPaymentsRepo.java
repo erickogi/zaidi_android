@@ -41,7 +41,7 @@ public class OrderPaymentsRepo {
     }
 
 
-    public OrderPayments getOrderPaymentByIdOne(String Code) {
+    public OrderPayments getOrderPaymentByCodeOne(String Code) {
         return dao.getOrderPaymentByCodeOne(Code);
     }
 
@@ -50,7 +50,7 @@ public class OrderPaymentsRepo {
         return dao.getOrderPaymentByDate(date);
     }
 
-    public LiveData<List<OrderPayments>> getOrderPaymentByOrderId(String orderCode) {
+    public LiveData<List<OrderPayments>> getOrderPaymentByOrderCode(String orderCode) {
         return dao.getOrderPaymentByOrderCode(orderCode);
     }
 

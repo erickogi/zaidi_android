@@ -45,6 +45,7 @@ public class FirebaseService extends FirebaseMessagingService {
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         //Log.d(TAG, "From: " + remoteMessage.getFrom());
+        //  handleNow(remoteMessage.getNotification().getBody());
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
@@ -75,16 +76,16 @@ public class FirebaseService extends FirebaseMessagingService {
         try {
 
             JSONObject json = new JSONObject(result);
-            JSONObject data = json.getJSONObject("data");
-            String title = data.getString("title");
-            String message = data.getString("message");
+            // JSONObject data = json.getJSONObject("data");
+            String title = json.getString("title");
+            String message = json.getString("message");
 
 
-            int code = data.getInt("code");// MPESA 1, NOTIFICATION
-            int status = data.getInt("status");
+            //int code = data.getInt("code");// MPESA 1, NOTIFICATION
+            //int status = data.getInt("status");
 
 
-            sendNotification(title,message,true,code);
+            sendNotification(title, message, true, 0);
         } catch (Exception e) {
         Log.e(TAG, "Exception: " + e.getMessage());
         }
@@ -94,39 +95,46 @@ public class FirebaseService extends FirebaseMessagingService {
             Intent intent = null;
 
 
+            try {
 
-            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            NotificationCompat.Builder notificationBuilder;
-            if (intent != null) {
-                PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                        PendingIntent.FLAG_ONE_SHOT);
+                Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                NotificationCompat.Builder notificationBuilder;
+                if (intent != null) {
+                    PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+                            PendingIntent.FLAG_ONE_SHOT);
 
 
-                notificationBuilder =
-                        new NotificationCompat.Builder(this)
-                                .setSmallIcon(R.drawable.ic_launcher_background)
-                                .setContentTitle(title)
-                                .setContentText(message)
-                                .setAutoCancel(true)
-                                .setSound(defaultSoundUri)
-                                .setContentIntent(pendingIntent);
-            } else {
-                notificationBuilder =
-                        new NotificationCompat.Builder(this)
-                                .setSmallIcon(R.drawable.ic_launcher_background)
-                                .setContentTitle(title)
-                                .setContentText(message)
-                                .setAutoCancel(true)
-                                .setSound(defaultSoundUri);
-            }
+                    notificationBuilder =
+                            new NotificationCompat.Builder(this)
+                                    .setSmallIcon(R.drawable.ic_launcher_background)
+                                    .setContentTitle(title)
+                                    .setContentText(message)
+                                    .setAutoCancel(true)
+                                    .setSound(defaultSoundUri)
+                                    .setContentIntent(pendingIntent);
+                } else {
+                    notificationBuilder =
+                            new NotificationCompat.Builder(this)
+                                    .setSmallIcon(R.drawable.ic_launcher_background)
+                                    .setContentTitle(title)
+                                    .setContentText(message)
+                                    .setAutoCancel(true)
+                                    .setSound(defaultSoundUri);
+                }
 
-            NotificationManager notificationManager =
-                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                NotificationManager notificationManager =
+                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-            if (notificationManager != null) {
-                notificationManager.notify(new Random().nextInt() /* ID of notification */, notificationBuilder.build());
+                if (notificationManager != null) {
+                    notificationManager.notify(new Random().nextInt() /* ID of notification */, notificationBuilder.build());
+                }
+            } catch (Exception nm) {
+                Log.e(TAG, "Exception: " + nm.getMessage());
+
+                nm.printStackTrace();
             }
         }
+
     }
 
 

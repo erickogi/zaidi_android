@@ -107,12 +107,6 @@ public class EditOrder extends AppCompatActivity {
         txtTitle.setText("Route");
 
 
-//        if(!isEditable){
-//            if(currentSide==EasyFlipView.FlipState.FRONT_SIDE){
-//                b
-//            }
-//            btnPositive.setEnabled(false);
-//        }
 
         btnPositive.setOnClickListener(view -> btnPositiveClicked());
         btnNeutral.setOnClickListener(view -> btnNeutralClicked());
@@ -749,26 +743,6 @@ public class EditOrder extends AppCompatActivity {
         //getCollection(famerModel.getCode(), DateTimeUtils.Companion.getToday());
     }
 
-    private void getCollection(String code, String date) {
-
-        Collection collections = traderViewModel.getCollectionByDateByFarmerByTimeSngle(code, date);//.observe(FragementFarmersList.this, collections -> {
-
-
-        if (collections != null) {
-
-            OrderModel l = new Gson().fromJson(collections.getOrderDetails(), OrderModel.class);
-
-            if (l != null) {
-
-                OrderConstants.setOrderModel(l);
-                OrderConstants.setProductOrderModels(l.getProductOrderModels());
-                OrderConstants.setOrderData(new Gson().toJson(l));
-                listAdapter.refresh(OrderConstants.getProductOrderModels());
-            }
-        }
-
-
-    }
 
     /********COMPLETE ORDER     ******/
     public void calc(View imgAction, View txtQty) {

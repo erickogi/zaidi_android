@@ -272,7 +272,7 @@ public class FragmentPayoutFarmersList extends Fragment {
 
 
         if (payouts != null) {
-            payoutsVewModel.getPayoutsByPayoutNumber("" + payouts.getPayoutnumber()).observe(this, payouts -> {
+            payoutsVewModel.getPayoutsByPayoutCode("" + payouts.getCode()).observe(this, payouts -> {
                 this.payouts = CommonFuncs.createPayout(payouts, payoutsVewModel, balncesViewModel, null, false, payoutsVewModel.getFarmersByCycleONe(payouts.getCycleCode()));
 
                 log("GET PAYOUTS BY PAYOUT NUMBER AS PAYOUT FROM CONSTANT OR ");
@@ -359,7 +359,7 @@ public class FragmentPayoutFarmersList extends Fragment {
     private void loadCollectionPayouts() {
         log("LOAD COLLECTIONS STARTED  ");
 
-        payoutsVewModel.getCollectionByDateByPayout("" + payouts.getPayoutnumber()).observe(this, collections -> {
+        payoutsVewModel.getCollectionByDateByPayout("" + payouts.getCode()).observe(this, collections -> {
             if (collections != null) {
 
                 log("LOAD COLLECTIONS RESULT  " + collections.size());

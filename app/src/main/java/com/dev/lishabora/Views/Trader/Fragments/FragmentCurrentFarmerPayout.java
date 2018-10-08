@@ -40,6 +40,7 @@ import com.dev.lishabora.Utils.AdvancedOnclickRecyclerListener;
 import com.dev.lishabora.Utils.ApproveFarmerPayCardListener;
 import com.dev.lishabora.Utils.CollectionCreateUpdateListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
+import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.MilkEditValueListener;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
@@ -192,7 +193,7 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
         c.setCode(Integer.valueOf(famerModel.getCyclecode()));
 
 
-        this.payouts = traderViewModel.createPayout(c);
+        this.payouts = traderViewModel.createPayout(c, famerModel);
         if (payouts != null) {
             payoutsVewModel.getCollectionByDateByPayoutByFarmer("" + payouts.getPayoutnumber(), famerModel.getCode()).observe(this, (List<Collection> collections) -> {
 
@@ -221,7 +222,7 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
 
         alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
 
-            payoutsVewModel.cancelFarmersPayoutCard(model.getFarmercode(), model.getPayoutNumber());
+            payoutsVewModel.cancelFarmersPayoutCard(model.getFarmercode(), model.getPayoutCode());
             model.setCardstatus(0);
             model.setStatusName("Canceled");
             setData(model);
@@ -291,17 +292,17 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
                             a.dismiss();
                         }
                         if (type == AppConstants.MILK) {
-                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type, null, null);
+                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, null);
                         } else if (type == AppConstants.LOAN) {
-                            FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getId());
+                            FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getCode());
 
-                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type, f, null);
+                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, f, null);
 
 
                         } else if (type == AppConstants.ORDER) {
-                            FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getId());
+                            FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getCode());
 
-                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type, null, f);
+                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, f);
 
 
                         }
@@ -323,19 +324,19 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
                                 a.dismiss();
                             }
                             if (type == AppConstants.MILK) {
-                                CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type, null, null);
+                                CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, null);
                             } else if (type == AppConstants.LOAN) {
-                                FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getId());
+                                FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getCode());
 
-                                CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type, f, null);
+                                CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, f, null);
 
 
                             } else if (type == AppConstants.ORDER) {
 
 
-                                FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getId());
+                                FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getCode());
 
-                                CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type, null, f);
+                                CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, f);
 
 
                             }
@@ -511,12 +512,12 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
         toolBar.show(model.getMilktotal(), model.getLoanTotal(), model.getOrderTotal(), "", famerModel, payouts, isApproved, isPast);
 
 
-        payoutsVewModel.getSumOfMilkForPayoutLtrs(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
+        payoutsVewModel.getSumOfMilkForPayoutLtrs(model.getFarmercode(), model.getPayoutCode()).observe(this, integer -> {
             toolBar.updateMilk(String.valueOf(integer));
             setBalance(milkKsh);
         });
 
-        payoutsVewModel.getSumOfMilkForPayoutKsh(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
+        payoutsVewModel.getSumOfMilkForPayoutKsh(model.getFarmercode(), model.getPayoutCode()).observe(this, integer -> {
             milkKsh = integer;
             setBalance(milkKsh);
         });
@@ -572,15 +573,17 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
 
 
                     Double valueToPay = 0.0;
+                    LoanPayments loanPayments = new LoanPayments();
+                    loanPayments.setLoanCode(farmerLoan.getCode());
+                    loanPayments.setPaymentMethod("Payout");
+                    loanPayments.setRefNo("" + payouts.getCode());
+                    loanPayments.setPayoutCode("" + payouts.getCode());
+                    loanPayments.setTimeStamp(DateTimeUtils.Companion.getNow());
+                    loanPayments.setCode(GeneralUtills.Companion.createCode(farmerLoan.getFarmerCode()));
 
                     if (inst >= remaining) {
                         valueToPay = remaining;
-                        LoanPayments loanPayments = new LoanPayments();
-                        loanPayments.setLoanId(farmerLoan.getId());
-                        loanPayments.setPaymentMethod("Payout");
-                        loanPayments.setRefNo("" + payouts.getPayoutnumber());
-                        loanPayments.setPayoutNo("" + payouts.getPayoutnumber());
-                        loanPayments.setTimeStamp(DateTimeUtils.Companion.getNow());
+
                         loanPayments.setAmountPaid("" + valueToPay);
                         loanPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
 
@@ -591,12 +594,7 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
 
 
                         valueToPay = remaining - inst;
-                        LoanPayments loanPayments = new LoanPayments();
-                        loanPayments.setLoanId(farmerLoan.getId());
-                        loanPayments.setPaymentMethod("Payout");
-                        loanPayments.setRefNo("" + payouts.getPayoutnumber());
-                        loanPayments.setPayoutNo("" + payouts.getPayoutnumber());
-                        loanPayments.setTimeStamp(DateTimeUtils.Companion.getNow());
+
                         loanPayments.setAmountPaid("" + valueToPay);
                         loanPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
 
@@ -623,18 +621,21 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
                     Double amp = Double.valueOf(farmerOrders.getOrderAmount());
                     Double inst = Double.valueOf(farmerOrders.getInstallmentAmount());
 
+                    OrderPayments orderPayments = new OrderPayments();
+                    orderPayments.setOrderCode(farmerOrders.getCode());
+                    orderPayments.setPaymentMethod("Payout");
+                    orderPayments.setRefNo("" + payouts.getCode());
+                    orderPayments.setPayoutCode("" + payouts.getCode());
+                    orderPayments.setTimestamp(DateTimeUtils.Companion.getNow());
+                    orderPayments.setCode(GeneralUtills.Companion.createCode(farmerOrders.getFarmerCode()));
+
 
                     Double valueToPay = 0.0;
 
                     if (inst >= remainingOrderInstall) {
 
                         valueToPay = remainingOrderInstall;
-                        OrderPayments orderPayments = new OrderPayments();
-                        orderPayments.setOrderId(farmerOrders.getId());
-                        orderPayments.setPaymentMethod("Payout");
-                        orderPayments.setRefNo("" + payouts.getPayoutnumber());
-                        orderPayments.setPayoutNo("" + payouts.getPayoutnumber());
-                        orderPayments.setTimestamp(DateTimeUtils.Companion.getNow());
+
                         orderPayments.setAmountPaid("" + valueToPay);
                         orderPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
 
@@ -648,12 +649,7 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
 
 
                         valueToPay = remainingOrderInstall - inst;
-                        OrderPayments orderPayments = new OrderPayments();
-                        orderPayments.setOrderId(orderPayments.getId());
-                        orderPayments.setPaymentMethod("Payout");
-                        orderPayments.setRefNo("" + payouts.getPayoutnumber());
-                        orderPayments.setPayoutNo("" + payouts.getPayoutnumber());
-                        orderPayments.setTimestamp(DateTimeUtils.Companion.getNow());
+
                         orderPayments.setAmountPaid("" + valueToPay);
                         orderPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
                         remaining = toOrderInstallmentPayment - inst;
@@ -668,7 +664,7 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
     }
 
     public void approveCard(PayoutFarmersCollectionModel model) {
-        payoutsVewModel.approveFarmersPayoutCard(model.getFarmercode(), model.getPayoutNumber());
+        payoutsVewModel.approveFarmersPayoutCard(model.getFarmercode(), model.getPayoutCode());
         model.setCardstatus(1);
         model.setStatusName("Approved");
         setData(model);

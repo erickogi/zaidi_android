@@ -48,10 +48,12 @@ public class FragmentTraderProfile extends Fragment {
 
         btnEdit = view.findViewById(R.id.btn_edit);
         btnEdit.setOnClickListener(view1 -> {
-            Intent i = new Intent(getActivity(), FirstTimeLaunch.class);
-            i.putExtra("trader", traderModel);
-            startActivityForResult(i, 1001);
-            //  startActivity(i);
+            if (traderModel != null) {
+                Intent i = new Intent(getActivity(), FirstTimeLaunch.class);
+                i.putExtra("trader", traderModel);
+                startActivityForResult(i, 1001);
+            }
+
         });
 
         txtName = view.findViewById(R.id.txt_name);
@@ -75,29 +77,45 @@ public class FragmentTraderProfile extends Fragment {
 
     public void set() {
         prefrenceManager = new PrefrenceManager(getContext());
-        traderModel = prefrenceManager.getTraderModel();
+
+        //traderModel = prefrenceManager.getTraderModel();
 
 
-        txtName.setText(traderModel.getNames());
-        txtCode.setText(traderModel.getCode());
-        txtPhone.setText(traderModel.getMobile());
-        txtBussinesName.setText(traderModel.getBusinessname());
-
-        txtStartDate.setText(traderModel.getCycleStartDay());
-        txtEndDate.setText(traderModel.getCycleEndDay());
-
-
-        traderViewModel.getProductsCountLive().observe(this, new Observer<Integer>() {
+        traderViewModel.getTrader(prefrenceManager.getCode()).observe(this, new Observer<TraderModel>() {
             @Override
-            public void onChanged(@Nullable Integer integer) {
-                txtProducts.setText("" + integer);
+            public void onChanged(@Nullable TraderModel traderModel) {
+
+                FragmentTraderProfile.this.traderModel = traderModel;
+                txtName.setText(traderModel.getNames());
+                txtCode.setText(traderModel.getCode());
+                txtPhone.setText(traderModel.getMobile());
+                txtBussinesName.setText(traderModel.getBusinessname());
+
+                txtStartDate.setText(traderModel.getCycleStartDay());
+                txtEndDate.setText(traderModel.getCycleEndDay());
+
+
+                traderViewModel.getProductsCountLive().observe(FragmentTraderProfile.this, new Observer<Integer>() {
+                    @Override
+                    public void onChanged(@Nullable Integer integer) {
+                        txtProducts.setText("" + integer);
+                    }
+                });
+                traderViewModel.getRoutesCountLive().observe(FragmentTraderProfile.this, new Observer<Integer>() {
+                    @Override
+                    public void onChanged(@Nullable Integer integer) {
+                        txtRoutes.setText("" + integer);
+                    }
+                });
+
+                try {
+                    getActivity().setTitle(traderModel.getNames());
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
+
             }
         });
-        traderViewModel.getRoutesCountLive().observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(@Nullable Integer integer) {
-                txtRoutes.setText("" + integer);
-            }
-        });
+
     }
 }

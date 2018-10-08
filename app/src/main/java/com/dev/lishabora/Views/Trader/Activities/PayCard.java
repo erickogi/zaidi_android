@@ -41,6 +41,7 @@ import com.dev.lishabora.Utils.AdvancedOnclickRecyclerListener;
 import com.dev.lishabora.Utils.ApproveFarmerPayCardListener;
 import com.dev.lishabora.Utils.CollectionCreateUpdateListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
+import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
@@ -103,21 +104,17 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
     double remainingOrderInstall = 0.0;
 
 
-
-
-
-
-    private void loadCollections(String payoutNumber, String farmerCode) {
-        payoutsVewModel.getCollectionByDateByPayoutByFarmer(payoutNumber, farmerCode).observe(this, collections -> {
+    private void loadCollections(String payoutCode, String farmerCode) {
+        payoutsVewModel.getCollectionByDateByPayoutByFarmer(payoutCode, farmerCode).observe(this, collections -> {
             if (collections != null) {
                 PayCard.this.collections = collections;
-                getPayout(payoutNumber, collections);
+                getPayout(payoutCode, collections);
             }
         });
     }
 
-    private void getPayout(String payout, List<Collection> collections) {
-        payoutsVewModel.getPayoutsByPayoutNumber(payout).observe(this, payouts -> {
+    private void getPayout(String payoutCode, List<Collection> collections) {
+        payoutsVewModel.getPayoutsByPayoutCode(payoutCode).observe(this, payouts -> {
             if (payouts != null) {
                 setUpDayCollectionsModel(payouts, collections);
             }
@@ -209,7 +206,7 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
 
         alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
 
-            payoutsVewModel.cancelFarmersPayoutCard(model.getFarmercode(), model.getPayoutNumber());
+            payoutsVewModel.cancelFarmersPayoutCard(model.getFarmercode(), model.getPayoutCode());
             model.setCardstatus(0);
             model.setStatusName("Canceled");
             setData(model);
@@ -367,23 +364,16 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
         toolBar.show(model.getMilktotal(), model.getLoanTotal(), model.getOrderTotal(), "", famerModel, payouts, isApproved, isPast);
 
 
-
-
-
-
-
-
-
-        loadCollections("" + model.getPayoutNumber(), model.getFarmercode());
+        loadCollections("" + model.getPayoutCode(), model.getFarmercode());
 
 
 //
-        payoutsVewModel.getSumOfMilkForPayoutLtrs(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
+        payoutsVewModel.getSumOfMilkForPayoutLtrs(model.getFarmercode(), model.getPayoutCode()).observe(this, integer -> {
             //milk.setText(String.valueOf(integer));
             toolBar.updateMilk(String.valueOf(integer));
             setBalance(milkKsh);
         });
-        payoutsVewModel.getSumOfMilkForPayoutKsh(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
+        payoutsVewModel.getSumOfMilkForPayoutKsh(model.getFarmercode(), model.getPayoutCode()).observe(this, integer -> {
             milkKsh = integer;
             setBalance(milkKsh);
         });
@@ -463,17 +453,17 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
 
                         }
                         if (type == AppConstants.MILK) {
-                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type, null, null);
+                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, null);
                         } else if (type == AppConstants.LOAN) {
-                            FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getId());
+                            FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getCode());
 
-                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type, f, null);
+                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, f, null);
 
                         } else if (type == AppConstants.ORDER) {
 
-                            FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getId());
+                            FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getCode());
 
-                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type, null, f);
+                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, f);
 
 
                         }
@@ -493,18 +483,18 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
                             a.dismiss();
                         }
                         if (type == AppConstants.MILK) {
-                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type, null, null);
+                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, null);
                         } else if (type == AppConstants.LOAN) {
-                            FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getId());
+                            FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getCode());
 
-                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type, f, null);
+                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, f, null);
 
 
                         } else if (type == AppConstants.ORDER) {
 
-                            FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getId());
+                            FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getCode());
 
-                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), type, null, f);
+                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, f);
 
 
 
@@ -654,18 +644,19 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
                         FarmerLoansTable farmerLoan = farmerLoansTables.get(a);
                         Double amp = Double.valueOf(farmerLoan.getLoanAmount());
                         Double inst = Double.valueOf(farmerLoan.getInstallmentAmount());
-
+                        LoanPayments loanPayments = new LoanPayments();
+                        loanPayments.setLoanCode(farmerLoan.getCode());
+                        loanPayments.setPaymentMethod("Payout");
+                        loanPayments.setRefNo("" + payouts.getCode());
+                        loanPayments.setPayoutCode("" + payouts.getCode());
+                        loanPayments.setTimeStamp(DateTimeUtils.Companion.getNow());
+                        loanPayments.setCode(GeneralUtills.Companion.createCode(farmerLoan.getFarmerCode()));
 
                         Double valueToPay = 0.0;
 
                         if (inst >= remaining) {
                             valueToPay = remaining;
-                            LoanPayments loanPayments = new LoanPayments();
-                            loanPayments.setLoanId(farmerLoan.getId());
-                            loanPayments.setPaymentMethod("Payout");
-                            loanPayments.setRefNo("" + payouts.getPayoutnumber());
-                            loanPayments.setPayoutNo("" + payouts.getPayoutnumber());
-                            loanPayments.setTimeStamp(DateTimeUtils.Companion.getNow());
+
                             loanPayments.setAmountPaid("" + valueToPay);
                             loanPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
 
@@ -676,12 +667,7 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
 
 
                             valueToPay = remaining - inst;
-                            LoanPayments loanPayments = new LoanPayments();
-                            loanPayments.setLoanId(farmerLoan.getId());
-                            loanPayments.setPaymentMethod("Payout");
-                            loanPayments.setRefNo("" + payouts.getPayoutnumber());
-                            loanPayments.setPayoutNo("" + payouts.getPayoutnumber());
-                            loanPayments.setTimeStamp(DateTimeUtils.Companion.getNow());
+
                             loanPayments.setAmountPaid("" + valueToPay);
                             loanPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
                             remaining = toLoanInstallmentPayment - inst;
@@ -711,18 +697,19 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
                         Double amp = Double.valueOf(farmerOrders.getOrderAmount());
                         Double inst = Double.valueOf(farmerOrders.getInstallmentAmount());
 
+                        OrderPayments orderPayments = new OrderPayments();
+                        orderPayments.setOrderCode(farmerOrders.getCode());
+                        orderPayments.setPaymentMethod("Payout");
+                        orderPayments.setRefNo(payouts.getCode());
+                        orderPayments.setPayoutCode(payouts.getCode());
+                        orderPayments.setTimestamp(DateTimeUtils.Companion.getNow());
 
                         Double valueToPay = 0.0;
 
                         if (inst >= remainingOrderInstall) {
 
                             valueToPay = remainingOrderInstall;
-                            OrderPayments orderPayments = new OrderPayments();
-                            orderPayments.setOrderId(farmerOrders.getId());
-                            orderPayments.setPaymentMethod("Payout");
-                            orderPayments.setRefNo("" + payouts.getPayoutnumber());
-                            orderPayments.setPayoutNo("" + payouts.getPayoutnumber());
-                            orderPayments.setTimestamp(DateTimeUtils.Companion.getNow());
+
                             orderPayments.setAmountPaid("" + valueToPay);
                             orderPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
 
@@ -736,12 +723,7 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
 
 
                             valueToPay = remainingOrderInstall - inst;
-                            OrderPayments orderPayments = new OrderPayments();
-                            orderPayments.setOrderId(orderPayments.getId());
-                            orderPayments.setPaymentMethod("Payout");
-                            orderPayments.setRefNo("" + payouts.getPayoutnumber());
-                            orderPayments.setPayoutNo("" + payouts.getPayoutnumber());
-                            orderPayments.setTimestamp(DateTimeUtils.Companion.getNow());
+
                             orderPayments.setAmountPaid("" + valueToPay);
                             orderPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
                             remaining = toOrderInstallmentPayment - inst;
@@ -759,7 +741,7 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
 
 
     public void approveCard(PayoutFarmersCollectionModel model) {
-        payoutsVewModel.approveFarmersPayoutCard(model.getFarmercode(), model.getPayoutNumber());
+        payoutsVewModel.approveFarmersPayoutCard(model.getFarmercode(), model.getPayoutCode());
         model.setCardstatus(1);
         model.setStatusName("Approved");
         setData(model);

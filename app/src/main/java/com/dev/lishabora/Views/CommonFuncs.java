@@ -380,12 +380,14 @@ public class CommonFuncs {
         }
 
 
-        if (dayCollectionModel.getCollectionId() != null) {
+        if (dayCollectionModel.getCollectionCode() != null) {
                 collection = collectionExisting;
 
 
             } else {
                 Collection c = new Collection();
+            c.setCode(GeneralUtills.Companion.createCode(famerModel.getCode()));
+
                 c.setCycleCode(payouts.getCycleCode());
                 c.setFarmerCode(famerModel.getCode());
                 c.setFarmerName(famerModel.getNames());
@@ -426,8 +428,10 @@ public class CommonFuncs {
                 c.setSynced(false);
                 c.setApproved(0);
 
-                c.setPayoutnumber(dayCollectionModel.getPayoutNumber());
-                c.setCycleStartedOn(payouts.getStartDate());
+            c.setPayoutCode(dayCollectionModel.getPayoutCode());
+            c.setPayoutCode(payouts.getCode());
+
+            c.setCycleStartedOn(payouts.getStartDate());
 
                 if (type == 1) {
 
@@ -1252,7 +1256,7 @@ public class CommonFuncs {
 
 
         if (dayCollectionModel.getCollectionCode() != null) {
-            collection = payoutsVewModel.getCollectionByIdOne(Integer.valueOf(dayCollectionModel.getCollectionId()));
+            collection = payoutsVewModel.getCollectionByCodeOne(dayCollectionModel.getCollectionCode());
                 ctoUpdate = CommonFuncs.updateCollection(s, time, type, dayCollectionModel, collection, payouts, famerModel, loanModel, orderModel);
         } else {
                 Collection c;
@@ -1399,15 +1403,15 @@ public class CommonFuncs {
         for (Collection c : collections) {
 
             if (type == 1) {
-                reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), c.getMilkCollectedValueLtrsAm(), c.getMilkCollectedValueLtrsPm()));
+                reportListModels.add(new ReportListModel(c.getCode(), c.getDayName(), c.getDayDate(), c.getMilkCollectedValueLtrsAm(), c.getMilkCollectedValueLtrsPm()));
             } else if (type == 2) {
-                reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), null, c.getLoanAmountGivenOutPrice()));
+                reportListModels.add(new ReportListModel(c.getCode(), c.getDayName(), c.getDayDate(), null, c.getLoanAmountGivenOutPrice()));
 
             } else if (type == 3) {
-                reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), null, c.getOrderGivenOutPrice()));
+                reportListModels.add(new ReportListModel(c.getCode(), c.getDayName(), c.getDayDate(), null, c.getOrderGivenOutPrice()));
 
             } else if (type == 4) {
-                reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), null, getTotal(c.getMilkCollectedValueLtrsAm(), c.getMilkCollectedValueLtrsPm(), c.getLoanAmountGivenOutPrice(), c.getOrderGivenOutPrice())));
+                reportListModels.add(new ReportListModel(c.getCode(), c.getDayName(), c.getDayDate(), null, getTotal(c.getMilkCollectedValueLtrsAm(), c.getMilkCollectedValueLtrsPm(), c.getLoanAmountGivenOutPrice(), c.getOrderGivenOutPrice())));
 
             }
 
@@ -1423,12 +1427,12 @@ public class CommonFuncs {
             if (DateTimeUtils.Companion.isInMonth(c.getDayDate(), mds.getMonthName())) {
 
                 if (type == 1) {
-                    reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), c.getMilkCollectedValueLtrsAm(), c.getMilkCollectedValueLtrsPm()));
+                    reportListModels.add(new ReportListModel(c.getCode(), c.getDayName(), c.getDayDate(), c.getMilkCollectedValueLtrsAm(), c.getMilkCollectedValueLtrsPm()));
                 } else if (type == 2) {
-                    reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), null, c.getLoanAmountGivenOutPrice()));
+                    reportListModels.add(new ReportListModel(c.getCode(), c.getDayName(), c.getDayDate(), null, c.getLoanAmountGivenOutPrice()));
 
                 } else if (type == 3) {
-                    reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), null, c.getOrderGivenOutPrice()));
+                    reportListModels.add(new ReportListModel(c.getCode(), c.getDayName(), c.getDayDate(), null, c.getOrderGivenOutPrice()));
 
                 } else if (type == 4) {
                     //  reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), null, "Milk "+getTotal(c.getMilkCollectedValueLtrsAm(),c.getMilkCollectedValueLtrsPm())+" Loan "+c.getLoanAmountGivenOutPrice()+" Order "+c.getOrderGivenOutPrice()));
@@ -1451,12 +1455,12 @@ public class CommonFuncs {
             if (DateTimeUtils.Companion.isInMonth(c.getDayDate(), mds.getMonthName())) {
 
                 if (type == 1) {
-                    reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), null, getTotal(c.getMilkCollectedValueLtrsAm(), c.getMilkCollectedValueLtrsPm())));
+                    reportListModels.add(new ReportListModel(c.getCode(), c.getDayName(), c.getDayDate(), null, getTotal(c.getMilkCollectedValueLtrsAm(), c.getMilkCollectedValueLtrsPm())));
                 } else if (type == 2) {
-                    reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), null, c.getLoanAmountGivenOutPrice()));
+                    reportListModels.add(new ReportListModel(c.getCode(), c.getDayName(), c.getDayDate(), null, c.getLoanAmountGivenOutPrice()));
 
                 } else if (type == 3) {
-                    reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), null, c.getOrderGivenOutPrice()));
+                    reportListModels.add(new ReportListModel(c.getCode(), c.getDayName(), c.getDayDate(), null, c.getOrderGivenOutPrice()));
 
                 } else if (type == 4) {
                     //  reportListModels.add(new ReportListModel(c.getId(), c.getDayName(), c.getDayDate(), null, "Milk "+getTotal(c.getMilkCollectedValueLtrsAm(),c.getMilkCollectedValueLtrsPm())+" Loan "+c.getLoanAmountGivenOutPrice()+" Order "+c.getOrderGivenOutPrice()));
@@ -1645,14 +1649,14 @@ public class CommonFuncs {
             }
 
 
-            FarmerLoansTable farmerLoansTable = balncesViewModel.getFarmerLoanByCollectionOne(coll.getId());
-            FarmerOrdersTable farmerOrdersTable = balncesViewModel.getFarmerOrderByCollectionOne(coll.getId());
+            FarmerLoansTable farmerLoansTable = balncesViewModel.getFarmerLoanByCollectionOne(coll.getCode());
+            FarmerOrdersTable farmerOrdersTable = balncesViewModel.getFarmerOrderByCollectionOne(coll.getCode());
 
             try {
                 if (farmerLoansTable != null) {
                     loans = +Double.valueOf(farmerLoansTable.getLoanAmount());
                     loansInstallments = +Double.valueOf(farmerLoansTable.getInstallmentAmount());
-                    loansPaid = +balncesViewModel.getSumPaidLoanPayment(farmerLoansTable.getId());
+                    loansPaid = +balncesViewModel.getSumPaidLoanPayment(farmerLoansTable.getCode());
                 }
 
             } catch (Exception nm) {
@@ -1663,7 +1667,7 @@ public class CommonFuncs {
                 if (farmerOrdersTable != null) {
                     orders = +Double.valueOf(farmerOrdersTable.getOrderAmount());
                     orderInstallments = +Double.valueOf(farmerOrdersTable.getInstallmentAmount());
-                    orderPaid = +balncesViewModel.getSumPaidOrderPayment(farmerOrdersTable.getId());
+                    orderPaid = +balncesViewModel.getSumPaidOrderPayment(farmerOrdersTable.getCode());
 
                 }
 
@@ -1706,29 +1710,29 @@ public class CommonFuncs {
 
     }
 
-    public static Payouts createPayout(Payouts payouts, PayoutsVewModel payoutsVewModel, BalncesViewModel balncesViewModel, String fa, boolean f, List<FamerModel> famerModels) {
+    public static Payouts createPayout(Payouts payouts, PayoutsVewModel payoutsVewModel, BalncesViewModel balncesViewModel, String farmerCode, boolean f, List<FamerModel> famerModels) {
         if (payouts != null) {
 
 
-            List<Collection> c = payoutsVewModel.getCollectionByDateByPayoutListOne("" + payouts.getPayoutnumber());
-            return CommonFuncs.createPayoutsByCollection(c, payouts, payoutsVewModel, balncesViewModel, fa, f, famerModels);
+            List<Collection> c = payoutsVewModel.getCollectionByDateByPayoutListOne(payouts.getCode());
+            return CommonFuncs.createPayoutsByCollection(c, payouts, payoutsVewModel, balncesViewModel, farmerCode, f, famerModels);
 
 
         }
         return null;
     }
 
-    public static void addBalance(TraderViewModel traderViewModel, BalncesViewModel balncesViewModel, Collection c, int payoutkey, int type, FarmerLoansTable farmerLoansTable, FarmerOrdersTable farmerOrdersTable) {
+    public static void addBalance(TraderViewModel traderViewModel, BalncesViewModel balncesViewModel, Collection c, String payoutCode, int type, FarmerLoansTable farmerLoansTable, FarmerOrdersTable farmerOrdersTable) {
 
         Log.d("RecordAsd", "Called     ");
 
-        updateBalance(traderViewModel, balncesViewModel, c, payoutkey, type, farmerLoansTable, farmerOrdersTable);
+        updateBalance(traderViewModel, balncesViewModel, c, payoutCode, type, farmerLoansTable, farmerOrdersTable);
 
 
 
     }
 
-    public static void updateBalance(TraderViewModel traderViewModel, BalncesViewModel balncesViewModel, Collection c, int payoutkey, int type, FarmerLoansTable farmerLoan, FarmerOrdersTable farmerOrder) {
+    public static void updateBalance(TraderViewModel traderViewModel, BalncesViewModel balncesViewModel, Collection c, String payoutCode, int type, FarmerLoansTable farmerLoan, FarmerOrdersTable farmerOrder) {
 
 
         Log.d("RecordAsd", "Called     ");
@@ -1744,12 +1748,23 @@ public class CommonFuncs {
         } else if (type == AppConstants.LOAN) {
             LoanModel loanModelm = new Gson().fromJson(c.getLoanDetails(), LoanModel.class);
 
+
             if (farmerLoan == null) {
-                farmerLoan = new FarmerLoansTable(c.getId(), payoutkey, c.getFarmerCode(), c.getLoanAmountGivenOutPrice(), "0", loanModelm.getInstallmentAmount(), loanModelm.getInstallmentsNo(), 0, DateTimeUtils.Companion.getNow());
+                farmerLoan = new FarmerLoansTable(
+                        GeneralUtills.Companion.createCode(farmerLoan.getFarmerCode()),
+                        c.getCode(),
+                        payoutCode,
+                        c.getFarmerCode(),
+                        c.getLoanAmountGivenOutPrice(),
+                        "0",
+                        loanModelm.getInstallmentAmount(),
+                        loanModelm.getInstallmentsNo(),
+                        0,
+                        DateTimeUtils.Companion.getNow());
                 Log.d("RecordAsd", "Insert Loan" + farmerLoan.getLoanAmount() + "\n" + new Gson().toJson(loanModelm, LoanModel.class));
 
 
-                refreshLoanStatus(balncesViewModel, c.getId(), 1, farmerLoan, traderViewModel, c);
+                refreshLoanStatus(balncesViewModel, c.getCode(), 1, farmerLoan, traderViewModel, c);
 
 
             } else {
@@ -1761,7 +1776,7 @@ public class CommonFuncs {
 
 
                 Log.d("RecordAsd", "Update Loan" + farmerLoan.getLoanAmount() + "\n" + new Gson().toJson(loanModelm, LoanModel.class));
-                refreshLoanStatus(balncesViewModel, c.getId(), 2, farmerLoan, traderViewModel, c);
+                refreshLoanStatus(balncesViewModel, c.getCode(), 2, farmerLoan, traderViewModel, c);
 
 
             }
@@ -1770,12 +1785,22 @@ public class CommonFuncs {
         } else if (type == AppConstants.ORDER) {
             OrderModel orderModel = new Gson().fromJson(c.getOrderDetails(), OrderModel.class);
 
-            if (farmerOrder == null) {
-                farmerOrder = new FarmerOrdersTable(c.getId(), payoutkey, c.getFarmerCode(), c.getOrderGivenOutPrice(), "0", orderModel.getInstallmentAmount(), orderModel.getInstallmentNo(), 0, DateTimeUtils.Companion.getNow());
-                balncesViewModel.insertOrder(farmerOrder);
-                // Log.d("RecordAsd", "Insert Order frt " + farmerOrder.getOrderAmount() + "\n" + new Gson().toJson(balncesViewModel.getFarmerOrderByCollectionOne(c.getId()), FarmerOrdersTable.class));
 
-                refreshOrderStatus(balncesViewModel, c.getId(), 2, farmerOrder, traderViewModel, c);
+            if (farmerOrder == null) {
+                farmerOrder = new FarmerOrdersTable(
+                        c.getCode(),
+                        payoutCode,
+                        c.getFarmerCode(),
+                        c.getOrderGivenOutPrice(),
+                        "0",
+                        orderModel.getInstallmentAmount(),
+                        orderModel.getInstallmentNo(),
+                        0,
+                        DateTimeUtils.Companion.getNow(),
+                        GeneralUtills.Companion.createCode());
+                balncesViewModel.insertOrder(farmerOrder);
+
+                refreshOrderStatus(balncesViewModel, c.getCode(), 2, farmerOrder, traderViewModel, c);
 
 
             } else {
@@ -1791,7 +1816,7 @@ public class CommonFuncs {
 
                 Log.d("RecordAsd", "Update Order " + farmerOrder.getOrderAmount() + "\n" + new Gson().toJson(orderModel, OrderModel.class));
 
-                refreshOrderStatus(balncesViewModel, c.getId(), 1, farmerOrder, traderViewModel, c);
+                refreshOrderStatus(balncesViewModel, c.getCode(), 1, farmerOrder, traderViewModel, c);
 
 
             }
@@ -1828,46 +1853,44 @@ public class CommonFuncs {
             for (FarmerLoansTable fl : loansTables) {
                 loanTotalAmount = +(Double.valueOf(fl.getLoanAmount()));
                 loanInstalmentAmount = +(Double.valueOf(fl.getInstallmentAmount()));
-                loanPaid = +balncesViewModel.getSumPaidLoanPayment(fl.getId());
+                loanPaid = +balncesViewModel.getSumPaidLoanPayment(fl.getCode());
             }
 
             for (FarmerOrdersTable fo : ordersTables) {
                 orderTotalAmount = +(Double.valueOf(fo.getOrderAmount()));
                 orderInstalmentAmount = +(Double.valueOf(fo.getInstallmentAmount()));
-                orderPaid = +balncesViewModel.getSumPaidOrderPayment(fo.getId());
+                orderPaid = +balncesViewModel.getSumPaidOrderPayment(fo.getCode());
             }
-            Log.d("RecordAsd", "Alll Order " + loanInstalmentAmount + "\n" + ordersTables.size());
+            //  Log.d("RecordAsd", "Alll Order " + loanInstalmentAmount + "\n" + ordersTables.size());
 
 
             double totalMilkForCurrentPayout = 0.0;
-            if (traderViewModel.getSumOfMilkForPayoutKshD(c.getFarmerCode(), c.getPayoutnumber()) != null) {
-                totalMilkForCurrentPayout += traderViewModel.getSumOfMilkForPayoutKshD(c.getFarmerCode(), c.getPayoutnumber());
+            if (traderViewModel.getSumOfMilkForPayoutKshD(c.getFarmerCode(), c.getPayoutCode()) != null) {
+                totalMilkForCurrentPayout += traderViewModel.getSumOfMilkForPayoutKshD(c.getFarmerCode(), c.getPayoutCode());
             }
 
 
             if (farmerBalance == null) {
 
 
-                farmerBalance = new FarmerBalance(c.getFarmerCode(), "", "", "");
-                //farmerBalance = balncesViewModel.getByFarmerCodeOne(c.getFarmerCode());
+                farmerBalance = new FarmerBalance(GeneralUtills.Companion.createCode(c.getFarmerCode()), c.getFarmerCode(), "", "", "");
+
                 farmerBalance.setBalanceOwed(String.valueOf((totalMilkForCurrentPayout - ((loanTotalAmount - loanPaid) + (orderTotalAmount - orderPaid)))));
                 farmerBalance.setBalanceToPay(String.valueOf((totalMilkForCurrentPayout - ((loanInstalmentAmount) + (orderInstalmentAmount)))));
 
-                Log.d("RecordAsd", " insert Balnce to pay " + farmerBalance.getBalanceToPay() + "\n" + farmerBalance.getBalanceOwed());
+                Log.d("RecordAsd", " insert Balnce to pay \n Total milk current" + totalMilkForCurrentPayout + "" + farmerBalance.getBalanceToPay() + "\n" + farmerBalance.getBalanceOwed());
 
                 balncesViewModel.insert(farmerBalance);
 
-                //  traderViewModel.updateFarmer()
 
 
             } else {
 
 
-                //farmerBalance = balncesViewModel.getByFarmerCodeOne(c.getFarmerCode());
                 farmerBalance.setBalanceOwed(String.valueOf((totalMilkForCurrentPayout - ((loanTotalAmount - loanPaid) + (orderTotalAmount - orderPaid)))));
                 farmerBalance.setBalanceToPay(String.valueOf((totalMilkForCurrentPayout - ((loanInstalmentAmount) + (orderInstalmentAmount)))));
 
-                Log.d("RecordAsd", "update Balnce to pay " + farmerBalance.getBalanceToPay() + "\n" + farmerBalance.getBalanceOwed());
+                Log.d("RecordAsd", "update Balnce to pay \n Total milk current" + totalMilkForCurrentPayout + " Balance to pay " + farmerBalance.getBalanceToPay() + "\n" + farmerBalance.getBalanceOwed());
 
 
                 balncesViewModel.updateRecord(farmerBalance);
@@ -1879,7 +1902,7 @@ public class CommonFuncs {
 
     }
 
-    private static void refreshLoanStatus(BalncesViewModel balncesViewModel, int id, int type, FarmerLoansTable farmerLoansTable, TraderViewModel traderViewModel, Collection c) {
+    private static void refreshLoanStatus(BalncesViewModel balncesViewModel, String id, int type, FarmerLoansTable farmerLoansTable, TraderViewModel traderViewModel, Collection c) {
 
 
         if (type == 2) {//UPDATE LOAN
@@ -1887,7 +1910,7 @@ public class CommonFuncs {
             //FarmerLoansTable farmerLoansTable = balncesViewModel.getFarmerLoanByCollectionOne(id);
             double paid = 0.0;
             try {
-                paid = balncesViewModel.getSumPaidLoanPayment(farmerLoansTable.getId());
+                paid = balncesViewModel.getSumPaidLoanPayment(farmerLoansTable.getCode());
             } catch (Exception nm) {
                 nm.printStackTrace();
             }
@@ -1925,14 +1948,14 @@ public class CommonFuncs {
 
     }
 
-    private static void refreshOrderStatus(BalncesViewModel balncesViewModel, int id, int type, FarmerOrdersTable farmerOrdersTable, TraderViewModel traderViewModel, Collection c) {
+    private static void refreshOrderStatus(BalncesViewModel balncesViewModel, String id, int type, FarmerOrdersTable farmerOrdersTable, TraderViewModel traderViewModel, Collection c) {
 
 
         if (type == 2) {//UPDATE
 
             double paid = 0.0;
             try {
-                paid = balncesViewModel.getSumPaidOrderPayment(farmerOrdersTable.getId());
+                paid = balncesViewModel.getSumPaidOrderPayment(farmerOrdersTable.getCode());
             } catch (Exception nm) {
                 nm.printStackTrace();
             }
@@ -2075,7 +2098,7 @@ public class CommonFuncs {
             try {
                 loanTotalAmount = +(Double.valueOf(fl.getLoanAmount()));
                 loanInstalmentAmount = +(Double.valueOf(fl.getInstallmentAmount()));
-                loanPaid = +balncesViewModel.getSumPaidLoanPayment(fl.getId());
+                loanPaid = +balncesViewModel.getSumPaidLoanPayment(fl.getCode());
             } catch (Exception nm) {
                 nm.printStackTrace();
             }
@@ -2085,7 +2108,7 @@ public class CommonFuncs {
             try {
                 orderTotalAmount = +(Double.valueOf(fo.getOrderAmount()));
                 orderInstalmentAmount = +(Double.valueOf(fo.getInstallmentAmount()));
-                orderPaid = +balncesViewModel.getSumPaidOrderPayment(fo.getId());
+                orderPaid = +balncesViewModel.getSumPaidOrderPayment(fo.getCode());
             } catch (Exception nm) {
                 nm.printStackTrace();
             }
@@ -2094,13 +2117,10 @@ public class CommonFuncs {
 
 
         double totalMilkForCurrentPayout = 0.0;
-        if (traderViewModel.getSumOfMilkForPayoutKshD(c.getCode(), p.getPayoutnumber()) != null) {
-            totalMilkForCurrentPayout += traderViewModel.getSumOfMilkForPayoutKshD(c.getCode(), p.getPayoutnumber());
+        if (traderViewModel.getSumOfMilkForPayoutKshD(c.getCode(), p.getCode()) != null) {
+            totalMilkForCurrentPayout += traderViewModel.getSumOfMilkForPayoutKshD(c.getCode(), p.getCode());
         }
 
-//        farmerBalance = balncesViewModel.getByFarmerCodeOne(c.getFarmerCode());
-//        farmerBalance.setBalanceOwed(String.valueOf((totalMilkForCurrentPayout - ((loanTotalAmount - loanPaid) + (orderTotalAmount - orderPaid)))));
-//        farmerBalance.setBalanceToPay(String.valueOf((totalMilkForCurrentPayout - ((loanInstalmentAmount) + (orderInstalmentAmount)))));
 
         doPayout(context, model, "" + totalMilkForCurrentPayout, "" + (loanTotalAmount - loanPaid), "" + (orderTotalAmount - orderPaid), "" + loanInstalmentAmount, "" + orderInstalmentAmount, listener);
     }

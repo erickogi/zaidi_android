@@ -135,12 +135,12 @@ public class CollectionsRepo {
 
     }
 
-    public LiveData<Collection> getCollectionById(String collectionCode) {
+    public LiveData<Collection> getCollectionByCode(String collectionCode) {
         return collectionsDao.getCollectionByCode(collectionCode);
     }
 
-    public Collection getCollectionByIdOne(String collectionId) {
-        return collectionsDao.getCollectionByCodeOne(collectionId);
+    public Collection getCollectionByCodeOne(String collectionCode) {
+        return collectionsDao.getCollectionByCodeOne(collectionCode);
     }
 
     public void approveFarmersPayoutCard(String farmercode, String payoutCode) {

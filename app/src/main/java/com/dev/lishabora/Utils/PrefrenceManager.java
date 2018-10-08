@@ -186,6 +186,10 @@ public class PrefrenceManager {
 
     }
 
+    public String getCode() {
+        return pref.getString(code, null);
+    }
+
     public TraderModel getTraderModel() {
         TraderModel traderModel = new TraderModel();
         traderModel.setNames(pref.getString(names, null));
@@ -201,7 +205,7 @@ public class PrefrenceManager {
         traderModel.setDummy(pref.getInt(isdummy, 0));
         traderModel.setPassword(pref.getString(password, null));
         traderModel.setApikey(pref.getString(apikey, null));
-        traderModel.setFirebasetoken(pref.getString(firebasetoken, null));
+        traderModel.setFirebasetoken(pref.getString(firebasetoken, "empty"));
         traderModel.setStatus(pref.getString(status, null));
         traderModel.setTransactiontime(pref.getString(transactiontime, null));
         traderModel.setCycleStartDay(pref.getString(cycleStart, ""));

@@ -207,6 +207,7 @@ public class FragmentGiveLoan extends Fragment {
                 c.setLoanAmountGivenOutPrice("0");
                 c.setDayDate(DateTimeUtils.Companion.getToday());
             c.setDayDateLog(DateTimeUtils.Companion.getLongDate(c.getDayDate()));
+            c.setCode(GeneralUtills.Companion.createCode(famerModel.getCode()));
 
             c.setTimeOfDay(ampm);
             c.setMilkCollectedAm("0");
@@ -226,8 +227,8 @@ public class FragmentGiveLoan extends Fragment {
                 traderViewModel.createCollections(c, false).observe(FragmentGiveLoan.this, responseModel -> {
                     if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
                         // balncesViewModel.getFarmerLoanByCollection(c.getId()).observe(FragmentGiveLoan.this, farmerLoansTable -> {
-                        FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getId());
-                        CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutkey(), AppConstants.LOAN, f, null);
+                        FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getCode());
+                        CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.LOAN, f, null);
                         // });
 
                     } else {
@@ -253,8 +254,8 @@ public class FragmentGiveLoan extends Fragment {
             traderViewModel.updateCollection(collModel).observe(FragmentGiveLoan.this, responseModel -> {
                     if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
 
-                        FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(collModel.getId());
-                        CommonFuncs.updateBalance(traderViewModel, balncesViewModel, collModel, responseModel.getPayoutkey(), AppConstants.LOAN, f, null);
+                        FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(collModel.getCode());
+                        CommonFuncs.updateBalance(traderViewModel, balncesViewModel, collModel, responseModel.getPayoutCode(), AppConstants.LOAN, f, null);
                         //});
 
                     } else {
@@ -412,34 +413,7 @@ public class FragmentGiveLoan extends Fragment {
         if (models == null) {
             models = new LinkedList<>();
         }
-//        String[] months = new String[models.size()];
-//        for (int a = 0; a < models.size(); a++) {
-//            months[a] = models.get(a).getMonthsDates().getMonthName() + " ";
-//
-//        }
 
-//        String m = DateTimeUtils.Companion.getMonth(DateTimeUtils.Companion.getToday());
-//
-//        spinnerMonths.setItems(months);
-//        int curr = 0;
-//        for (int a = 0; a < months.length; a++) {
-//            if (months[a].contains(m)) {
-//                curr = a;
-//            }
-//        }
-//        try {
-//            spinnerMonths.setSelectedIndex(curr);
-//            setData(modelsDA.get(curr));
-//        }catch (Exception nm){
-//            nm.printStackTrace();
-//        }
-//        spinnerMonths.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
-//                setData(modelsDA.get(position));
-//            }
-
-//        });
         int x = 1;
         if (models.size() > 0) {
             x = models.size();

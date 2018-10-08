@@ -1,6 +1,7 @@
 package com.dev.lishabora.Views.Trader.Fragments;
 
 import android.app.Activity;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
@@ -170,12 +171,22 @@ public class TraderCyclesInfoFragment extends Fragment implements BlockingStep, 
     }
 
     private void initData() {
-        traderModel = prefrenceManager.getTraderModel();
-        txtStartDay.setText(traderModel.getCycleStartDay());
-        txtEndDay.setText(traderModel.getCycleEndDay());
+        traderViewModel.getTrader(prefrenceManager.getCode()).observe(this, new Observer<TraderModel>() {
+            @Override
+            public void onChanged(@Nullable TraderModel traderModel) {
+                if (traderModel != null) {
+                    TraderCyclesInfoFragment.this.traderModel = traderModel;
+                    txtStartDay.setText(traderModel.getCycleStartDay());
+                    txtEndDay.setText(traderModel.getCycleEndDay());
 
-        startDayNumber = traderModel.getCycleStartDayNumber();
-        endDayNumber = traderModel.getCycleEndDayNumber();
+                    startDayNumber = traderModel.getCycleStartDayNumber();
+                    endDayNumber = traderModel.getCycleEndDayNumber();
+
+                }
+
+            }
+        });
+        // traderModel = prefrenceManager.getTraderModel();
 
 
 
@@ -199,6 +210,7 @@ public class TraderCyclesInfoFragment extends Fragment implements BlockingStep, 
         traderModel.setCycleStartDayNumber(startDayNumber);
         traderModel.setCycleEndDayNumber(endDayNumber);
         prefrenceManager.setLoggedUser(traderModel);
+        traderViewModel.updateTrader(traderModel);
 
 
         traderViewModel.synch(AppConstants.UPDATE, AppConstants.ENTITY_TRADER, traderModel, null, 1);
