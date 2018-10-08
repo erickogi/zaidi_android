@@ -12,6 +12,16 @@ public class Notifications {
     private String title;
     private String message;
 
+    private String code;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     public int getId() {
         return id;
     }

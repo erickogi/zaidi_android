@@ -29,38 +29,38 @@ public interface FarmersLoansDao {
     @Query("SELECT * FROM FAMERSLOANS")
     LiveData<List<FarmerLoansTable>> fetchAllData();
 
-    @Query("SELECT * FROM FAMERSLOANS WHERE id =:keyid")
-    LiveData<FarmerLoansTable> getFarmerLoanById(int keyid);
+    @Query("SELECT * FROM FAMERSLOANS WHERE code =:code")
+    LiveData<FarmerLoansTable> getFarmerLoanByCode(String code);
 
-    @Query("SELECT * FROM FAMERSLOANS WHERE id =:keyid")
-    FarmerLoansTable getFarmerLoanByIdOne(int keyid);
+    @Query("SELECT * FROM FAMERSLOANS WHERE code =:code")
+    FarmerLoansTable getFarmerLoanByCodeOne(String code);
 
 
     @Query("SELECT * FROM FAMERSLOANS WHERE timestamp =:date")
     LiveData<List<FarmerLoansTable>> getFarmerLoanByDate(String date);
 
-    @Query("SELECT * FROM FAMERSLOANS WHERE payoutId =:payoutnumber")
-    LiveData<List<FarmerLoansTable>> getFarmerLoanByPayoutNumber(String payoutnumber);
+    @Query("SELECT * FROM FAMERSLOANS WHERE payoutCode =:payoutCode")
+    LiveData<List<FarmerLoansTable>> getFarmerLoanByPayoutCode(String payoutCode);
 
-    @Query("SELECT * FROM FAMERSLOANS WHERE collectionId =:collId")
-    LiveData<List<FarmerLoansTable>> getFarmerLoansByCollection(int collId);
+    @Query("SELECT * FROM FAMERSLOANS WHERE collectionCode =:collCode")
+    LiveData<List<FarmerLoansTable>> getFarmerLoansByCollection(int collCode);
 
-    @Query("SELECT * FROM FAMERSLOANS WHERE collectionId =:collId")
-    FarmerLoansTable getFarmerLoanByCollectionOne(int collId);
+    @Query("SELECT * FROM FAMERSLOANS WHERE collectionCode =:collCode")
+    FarmerLoansTable getFarmerLoanByCollectionOne(String collCode);
 
-    @Query("SELECT * FROM FAMERSLOANS WHERE collectionId =:collId")
-    LiveData<FarmerLoansTable> getFarmerLoanByCollection(int collId);
+    @Query("SELECT * FROM FAMERSLOANS WHERE collectionCode =:collCode")
+    LiveData<FarmerLoansTable> getFarmerLoanByCollection(String collCode);
 
 
-    @Query("SELECT * FROM FAMERSLOANS WHERE payoutId =:payoutnumber AND farmerCode =:farmer")
-    LiveData<List<FarmerLoansTable>> getFarmerLoanByPayoutNumberByFarmer(String payoutnumber, String farmer);
+    @Query("SELECT * FROM FAMERSLOANS WHERE payoutCode =:payoutCode AND farmerCode =:farmer")
+    LiveData<List<FarmerLoansTable>> getFarmerLoanByPayoutCodeByFarmer(String payoutCode, String farmer);
 
-    @Query("SELECT * FROM FAMERSLOANS WHERE payoutId =:payoutnumber AND farmerCode =:farmer AND status =:status")
-    List<FarmerLoansTable> getFarmerLoanByPayoutNumberByFarmerByStatus(String payoutnumber, String farmer, int status);
+    @Query("SELECT * FROM FAMERSLOANS WHERE payoutCode =:payoutCode AND farmerCode =:farmer AND status =:status")
+    List<FarmerLoansTable> getFarmerLoanByPayoutCodeByFarmerByStatus(String payoutCode, String farmer, int status);
 
 
     @Query("SELECT * FROM FAMERSLOANS WHERE   farmerCode =:farmer AND status =:status")
-    List<FarmerLoansTable> getFarmerLoanByPayoutNumberByFarmerByStatus(String farmer, int status);
+    List<FarmerLoansTable> getFarmerLoanByPayoutCodeByFarmerByStatus(String farmer, int status);
 
 
     @Query("SELECT * FROM FAMERSLOANS WHERE   farmerCode =:farmer AND status =:status")
@@ -71,11 +71,11 @@ public interface FarmersLoansDao {
     LiveData<List<FarmerLoansTable>> getFarmerLoanByFarmer(String farmer);
 
 
-    @Query("SELECT * FROM FAMERSLOANS WHERE payoutId =:payoutnumber")
-    List<FarmerLoansTable> getFarmerLoanByPayoutNumberListOne(String payoutnumber);
+    @Query("SELECT * FROM FAMERSLOANS WHERE payoutCode =:payoutCode")
+    List<FarmerLoansTable> getFarmerLoanByPayoutCodeListOne(String payoutCode);
 
-    @Query("UPDATE FAMERSLOANS SET status =:a  WHERE farmerCode =:farmercode AND payoutId =:payoutNumber")
-    void approveFarmersPayoutCard(int a, String farmercode, int payoutNumber);
+    @Query("UPDATE FAMERSLOANS SET status =:a  WHERE farmerCode =:farmercode AND payoutCode =:payoutCode")
+    void approveFarmersPayoutCard(int a, String farmercode, String payoutCode);
 
 
     @Update
@@ -88,11 +88,11 @@ public interface FarmersLoansDao {
     double getBalanceByFarmerCode(String farmercode);
 
 
-    @Query("SELECT (SUM(loanAmount)) FROM FAMERSLOANS WHERE payoutId =:payoutid")
-    double getBalanceBySumCode(int payoutid);
+    @Query("SELECT (SUM(loanAmount)) FROM FAMERSLOANS WHERE payoutCode =:payoutCode")
+    double getBalanceBySumCode(String payoutCode);
 
-    @Query("SELECT (SUM(installmentAmount)) FROM FAMERSLOANS WHERE payoutId =:payoutid")
-    double getInstallmentSumByPayoutCode(int payoutid);
+    @Query("SELECT (SUM(installmentAmount)) FROM FAMERSLOANS WHERE payoutCode =:payoutCode")
+    double getInstallmentSumByPayoutCode(String payoutCode);
 
     @Query("SELECT (SUM(installmentAmount)) FROM FAMERSLOANS WHERE farmerCode =:code")
     double getInstallmentSumByFarmerCode(String code);
@@ -110,8 +110,8 @@ public interface FarmersLoansDao {
     FarmerLoansTable getLast();
 
 
-    @Query("UPDATE FAMERSLOANS SET status =:status WHERE  id =:id")
-    void updateStatus(int id, int status);
+    @Query("UPDATE FAMERSLOANS SET status =:status WHERE  code =:code")
+    void updateStatus(String code, int status);
 
     @Query("SELECT * FROM FAMERSLOANS WHERE timestamp BETWEEN :date1 AND :date2")
     LiveData<List<FarmerLoansTable>> getFarmerLoansBetweenDates(Long date1, Long date2);

@@ -5,10 +5,10 @@ import java.io.Serializable;
 public class DayCollectionModel implements Serializable {
 
 
-    private String collectionId;
+    private String collectionCode;
 
 
-    private int payoutNumber;
+    private String payoutCode;
 
     private String day;
     private String date;
@@ -35,19 +35,18 @@ public class DayCollectionModel implements Serializable {
     private int payoutStatus;
 
 
-
-    public DayCollectionModel(int payoutNumber, String day, String date, String milkAm, String milkPm
-            , String collectionId,
+    public DayCollectionModel(String payoutCode, String day, String date, String milkAm, String milkPm
+            , String collectionCode,
                               MilkModel milkModelAm,
                               MilkModel milkModelPm, String loan, String order,
-                              String loanCollectionId, LoanModel loanModel, String orderCollectionId, OrderModel orderModel, int payoutStatus) {
-        this.payoutNumber = payoutNumber;
+                              String loanCollectionCode, LoanModel loanModel, String orderCollectionCode, OrderModel orderModel, int payoutStatus) {
+        this.payoutCode = payoutCode;
         this.day = day;
         this.date = date;
         this.milkAm = milkAm;
         this.milkPm = milkPm;
 
-        this.collectionId = collectionId;
+        this.collectionCode = collectionCode;
 
         this.milkModelAm = milkModelAm;
 
@@ -63,19 +62,19 @@ public class DayCollectionModel implements Serializable {
 
     }
 
-    public DayCollectionModel(int payoutNumber, String day, String date, String milkAm, String milkPm
-            , String collectionId,
+    public DayCollectionModel(String payoutCode, String day, String date, String milkAm, String milkPm
+            , String collectionCode,
                               MilkModel milkModelAm,
                               MilkModel milkModelPm, String loan, String order,
-                              String loanCollectionId, LoanModel loanModel, String orderCollectionId, OrderModel orderModel,
+                              String loanCollectionCode, LoanModel loanModel, String orderCollectionCode, OrderModel orderModel,
                               int payoutStatus, String milkAmLtrs, String milkAmKsh, String milkPmLtrs, String milkPmKsh) {
-        this.payoutNumber = payoutNumber;
+        this.payoutCode = payoutCode;
         this.day = day;
         this.date = date;
         this.milkAm = milkAm;
         this.milkPm = milkPm;
 
-        this.collectionId = collectionId;
+        this.collectionCode = collectionCode;
 
         this.milkModelAm = milkModelAm;
 
@@ -161,20 +160,20 @@ public class DayCollectionModel implements Serializable {
     }
 
 
-    public String getCollectionId() {
-        return collectionId;
+    public String getCollectionCode() {
+        return collectionCode;
     }
 
-    public void setCollectionId(String collectionId) {
-        this.collectionId = collectionId;
+    public void setCollectionCode(String collectionCode) {
+        this.collectionCode = collectionCode;
     }
 
-    public int getPayoutNumber() {
-        return payoutNumber;
+    public String getPayoutCode() {
+        return payoutCode;
     }
 
-    public void setPayoutNumber(int payoutNumber) {
-        this.payoutNumber = payoutNumber;
+    public void setPayoutCode(String payoutCode) {
+        this.payoutCode = payoutCode;
     }
 
     public String getDay() {

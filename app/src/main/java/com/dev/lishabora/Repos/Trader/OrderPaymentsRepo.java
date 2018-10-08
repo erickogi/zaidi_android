@@ -36,13 +36,13 @@ public class OrderPaymentsRepo {
         return dao.fetchAllData();
     }
 
-    public LiveData<OrderPayments> getOrderPaymentById(int keyid) {
-        return dao.getOrderPaymentById(keyid);
+    public LiveData<OrderPayments> getOrderPaymentByCode(String code) {
+        return dao.getOrderPaymentByCode(code);
     }
 
 
-    public OrderPayments getOrderPaymentByIdOne(int keyid) {
-        return dao.getOrderPaymentByIdOne(keyid);
+    public OrderPayments getOrderPaymentByIdOne(String Code) {
+        return dao.getOrderPaymentByCodeOne(Code);
     }
 
 
@@ -50,12 +50,12 @@ public class OrderPaymentsRepo {
         return dao.getOrderPaymentByDate(date);
     }
 
-    public LiveData<List<OrderPayments>> getOrderPaymentByOrderId(String orderId) {
-        return dao.getOrderPaymentByOrderId(orderId);
+    public LiveData<List<OrderPayments>> getOrderPaymentByOrderId(String orderCode) {
+        return dao.getOrderPaymentByOrderCode(orderCode);
     }
 
-    public LiveData<List<OrderPayments>> getOrderPaymentByPaout(int payoutNo) {
-        return dao.getOrderPaymentByPaout(payoutNo);
+    public LiveData<List<OrderPayments>> getOrderPaymentByPaout(String payoutCode) {
+        return dao.getOrderPaymentByPaout(payoutCode);
     }
 
 
@@ -81,18 +81,18 @@ public class OrderPaymentsRepo {
         new deleteAsyncTask(dao).execute(orderPayments);
     }
 
-    public double getSumPaid(int loanId) {
-        return dao.getSumPaid(loanId);
+    public double getSumPaid(String loanCode) {
+        return dao.getSumPaid(loanCode);
     }
 
 
-    public double getSumPaidByPayout(int payoutid) {
-        return dao.getSumPaidByPayout(payoutid);
+    public double getSumPaidByPayout(String payoutCode) {
+        return dao.getSumPaidByPayout(payoutCode);
     }
 
 
-    public OrderPayments getOrderPaymentByDateByFarmerByTimeSingle(int loanId, String today) {
-        return dao.getOrderPaymentByDateByFarmerByTimeSingle(loanId, today);
+    public OrderPayments getOrderPaymentByDateByFarmerByTimeSingle(String loanCode, String today) {
+        return dao.getOrderPaymentByDateByFarmerByTimeSingle(loanCode, today);
     }
 
 
@@ -106,8 +106,8 @@ public class OrderPaymentsRepo {
     }
 
 
-    public LiveData<List<OrderPayments>> getOrderPaymentsBetweenDates(Long date1, Long date2, int loanId) {
-        return dao.getOrderPaymentsBetweenDates(date1, date2, loanId);
+    public LiveData<List<OrderPayments>> getOrderPaymentsBetweenDates(Long date1, Long date2, String loanCode) {
+        return dao.getOrderPaymentsBetweenDates(date1, date2, loanCode);
     }
 
 

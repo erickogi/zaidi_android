@@ -27,8 +27,8 @@ public interface PayoutsDao {
     @Query("SELECT * FROM PAYOUTS ORDER BY status DESC")
     LiveData<List<Payouts>> fetchAllData();
 
-    @Query("SELECT * FROM PAYOUTS WHERE id =:keyid")
-    LiveData<Payouts> getPayoutsById(int keyid);
+    @Query("SELECT * FROM PAYOUTS WHERE code =:code")
+    LiveData<Payouts> getPayoutsByCode(String code);
 
 
     @Query("SELECT * FROM PAYOUTS WHERE payoutnumber =:payoutnumber")

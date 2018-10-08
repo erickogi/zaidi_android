@@ -36,8 +36,8 @@ public class BalanceRepo {
         return dao.fetchAllData();
     }
 
-    public LiveData<FarmerBalance> getByKeyID(int keyid) {
-        return dao.getByKeyID(keyid);
+    public LiveData<FarmerBalance> getByKeyCode(String code) {
+        return dao.getByKeyCode(code);
     }
 
 

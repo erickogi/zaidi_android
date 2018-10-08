@@ -32,10 +32,14 @@ public interface UnitsDao {
     @Query("SELECT * FROM UNITS")
     LiveData<List<UnitsModel>> fetchAllData();
 
-    @Query("SELECT * FROM UNITS WHERE id =:keyid")
-    LiveData<UnitsModel> getUnitByKeyID(int keyid);
+    @Query("SELECT * FROM UNITS WHERE code =:code")
+    LiveData<UnitsModel> getUnitByKeyCode(String code);
 
-  
+    @Query("SELECT * FROM UNITS ")
+    List<UnitsModel> getUnits();
+
+
+
     @Query("SELECT * FROM UNITS WHERE status =:status")
     LiveData<List<UnitsModel>> getAllByStatus(String status);
 

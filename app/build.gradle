@@ -114,6 +114,13 @@ dependencies {
     implementation 'com.jaredrummler:material-spinner:1.2.5'
     implementation 'com.jakewharton.timber:timber:4.7.1'
     implementation 'com.wajahatkarim3.EasyFlipView:EasyFlipView:2.1.0'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude group: 'com.android.support', module: 'design'
+        exclude group: 'com.android.support', module: 'recyclerview-v7'
+    }
     //compile 'com.applandeo:material-calendar-view:1.4.0'
     //implementation 'com.fxn769:numpad:1.0'
     //implementation 'com.github.davidmigloz:number-keyboard:2.0.1'

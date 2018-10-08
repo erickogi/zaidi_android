@@ -35,40 +35,40 @@ public class OrdersTableRepo {
         return dao.fetchAllData();
     }
 
-    public LiveData<FarmerOrdersTable> getFarmerOrderById(int keyid) {
-        return dao.getFarmerOrderById(keyid);
+    public LiveData<FarmerOrdersTable> getFarmerOrderByCode(String code) {
+        return dao.getFarmerOrderByCode(code);
     }
 
-    public FarmerOrdersTable getFarmerOrderByIdOne(int id) {
-        return dao.getFarmerOrderByIdOne(id);
+    public FarmerOrdersTable getFarmerOrderByCodeOne(String code) {
+        return dao.getFarmerOrderByCodeOne(code);
     }
 
     public LiveData<List<FarmerOrdersTable>> getFarmerOrderByDate(String date) {
         return getFarmerOrderByDate(date);
     }
 
-    public LiveData<List<FarmerOrdersTable>> getFarmerOrderByPayoutNumber(String payoutNo) {
-        return dao.getFarmerOrderByPayoutNumber(payoutNo);
+    public LiveData<List<FarmerOrdersTable>> getFarmerOrderByPayoutCode(String payoutCode) {
+        return dao.getFarmerOrderByPayoutCode(payoutCode);
     }
 
-    public FarmerOrdersTable getFarmerOrderByCollection(int collId) {
+    public FarmerOrdersTable getFarmerOrderByCollection(String collId) {
         return dao.getFarmerOrderByCollection(collId);
     }
 
-    public LiveData<FarmerOrdersTable> getFarmerOrderByCollectionLive(int collId) {
+    public LiveData<FarmerOrdersTable> getFarmerOrderByCollectionLive(String collId) {
         return dao.getFarmerOrderByCollectionLive(collId);
     }
 
-    public LiveData<List<FarmerOrdersTable>> getFarmerOrderByPayoutNumberByFarmer(String payoutnumber, String farmer) {
-        return dao.getFarmerOrderByPayoutNumberByFarmer(payoutnumber, farmer);
+    public LiveData<List<FarmerOrdersTable>> getFarmerOrderByPayoutCodeByFarmer(String payoutCode, String farmer) {
+        return dao.getFarmerOrderByPayoutCodeByFarmer(payoutCode, farmer);
     }
 
-    public List<FarmerOrdersTable> getFarmerOrderByPayoutNumberByFarmerByStatus(String payoutnumber, String farmer, int status) {
-        return dao.getFarmerOrderByPayoutNumberByFarmerByStatus(payoutnumber, farmer, status);
+    public List<FarmerOrdersTable> getFarmerOrderByPayoutCodeByFarmerByStatus(String payoutCode, String farmer, int status) {
+        return dao.getFarmerOrderByPayoutCodeByFarmerByStatus(payoutCode, farmer, status);
     }
 
-    public List<FarmerOrdersTable> getFarmerOrderByPayoutNumberByFarmerByStatus(String farmer, int status) {
-        return dao.getFarmerOrderByPayoutNumberByFarmerByStatus(farmer, status);
+    public List<FarmerOrdersTable> getFarmerOrderByPayoutCodeByFarmerByStatus(String farmer, int status) {
+        return dao.getFarmerOrderByPayoutCodeByFarmerByStatus(farmer, status);
 
     }
 
@@ -82,12 +82,12 @@ public class OrdersTableRepo {
         return dao.getFarmerOrderByFarmer(farmer);
     }
 
-    public List<FarmerOrdersTable> getFarmerOrderByPayoutNumberListOne(String payoutnumber) {
-        return dao.getFarmerOrderByPayoutNumberListOne(payoutnumber);
+    public List<FarmerOrdersTable> getFarmerOrderByPayoutCodeListOne(String payoutCode) {
+        return dao.getFarmerOrderByPayoutCodeListOne(payoutCode);
     }
 
-    public void approveFarmersPayoutCard(int a, String farmercode, int payoutNumber) {
-        dao.approveFarmersPayoutCard(a, farmercode, payoutNumber);
+    public void approveFarmersPayoutCard(int a, String farmercode, String payoutCode) {
+        dao.approveFarmersPayoutCard(a, farmercode, payoutCode);
     }
 
     public void updateRecord(FarmerOrdersTable farmerOrdersTable) {
@@ -102,12 +102,12 @@ public class OrdersTableRepo {
         return dao.getBalanceByFarmerCode(farmercode);
     }
 
-    public double getBalanceByPayout(int payoutid) {
-        return dao.getBalanceBySumCode(payoutid);
+    public double getBalanceByPayout(String payoutCode) {
+        return dao.getBalanceBySumCode(payoutCode);
     }
 
-    public double getInstallmentSumByPayoutCode(int payoutid) {
-        return dao.getInstallmentSumByPayoutCode(payoutid);
+    public double getInstallmentSumByPayoutCode(String payoutCode) {
+        return dao.getInstallmentSumByPayoutCode(payoutCode);
     }
 
     public double getInstallmentSumByFarmerCode(String code) {
@@ -127,7 +127,7 @@ public class OrdersTableRepo {
         return dao.getLast();
     }
 
-    public void updateStatus(int id, int status) {
+    public void updateStatus(String id, int status) {
         dao.updateStatus(id, status);
     }
 

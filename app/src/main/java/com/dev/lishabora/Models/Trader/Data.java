@@ -34,7 +34,7 @@ public class Data {
     private List<UnitsModel> unitsModels;
     private List<Notifications> notificationModels;
 
-    private FarmerBalance balanceModel;
+    private List<FarmerBalance> balanceModel;
     private TraderModel traderModel;
 
 
@@ -50,11 +50,11 @@ public class Data {
         this.traderModel = traderModel;
     }
 
-    public FarmerBalance getBalanceModel() {
+    public List<FarmerBalance> getBalanceModel() {
         return balanceModel;
     }
 
-    public void setBalanceModel(FarmerBalance balanceModel) {
+    public void setBalanceModel(List<FarmerBalance> balanceModel) {
         this.balanceModel = balanceModel;
     }
 

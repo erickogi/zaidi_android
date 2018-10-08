@@ -16,8 +16,10 @@ public class Cycles {
     private String transactiontime;
     private String status;
 
+
     @Ignore
     private String traderCode;
+
 
     public String getTraderCode() {
         return traderCode;

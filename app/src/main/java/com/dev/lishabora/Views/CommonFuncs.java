@@ -286,7 +286,7 @@ public class CommonFuncs {
 
     }
 
-    public static String getCollectionId(String date, List<Collection> collections) {
+    public static String getCollectionCode(String date, List<Collection> collections) {
         if (collections != null) {
             Timber.tag("collectisdid").d("Am Called  " + date
                     + "" + collections);
@@ -295,7 +295,7 @@ public class CommonFuncs {
 
                 if (c.getDayDate().contains(date)) {
 
-                    return "" + c.getId();
+                    return "" + c.getCode();
                 }
             }
 
@@ -341,23 +341,6 @@ public class CommonFuncs {
     }
 
     private static PeriodFormatter mPeriodFormat;
-
-    public static String getCollectionIdPm(String date, List<Collection> collections) {
-        if (collections != null) {
-            Timber.tag("collectisdid").d("Pm Called ");
-
-            for (Collection c : collections) {
-
-                if (c.getDayDate().contains(date) && c.getTimeOfDay().equals("PM")) {
-                    Timber.tag("collectisdid").d("PM %s", c.getId());
-
-                    return "" + c.getId();
-                }
-            }
-
-        }
-        return null;
-    }
 
     @NonNull
     public static String getBalance(String milkTotal, String loanTotal, String orderTotal) {
@@ -546,26 +529,6 @@ public class CommonFuncs {
         return null;
     }
 
-    public static LinkedList<FarmerHistoryByDateModel> createMonthlyList(List<Collection> collections, FamerModel famerModel) {
-
-        List<MonthsDates> monthsDates = DateTimeUtils.Companion.getMonths(12);
-        if (monthsDates.size() > 0) {
-
-            LinkedList<FarmerHistoryByDateModel> fmh = new LinkedList<>();
-
-            for (MonthsDates mds : monthsDates) {
-
-                String[] totals = getCollectionsTotals(mds, collections);
-                fmh.add(new FarmerHistoryByDateModel(mds, famerModel, totals[0], totals[1], totals[2], totals[3]));
-
-            }
-            return fmh;
-
-        }
-        return null;
-
-
-    }
 
     public static LinkedList<FarmerHistoryByDateModel> createHistoryList(List<Collection> collections,
                                                                          MonthsDates monthsDatesa,
@@ -814,19 +777,19 @@ public class CommonFuncs {
             String order = orderModel.getOrderAmount();
 
 
-            String collectionId = getCollectionId(d.getDate(), collections);
+            String collectionCode = getCollectionCode(d.getDate(), collections);
 
             dayCollectionModels.add(new DayCollectionModel(
-                            payouts.getPayoutnumber(),
+                    payouts.getCode(),
                             d.getDay(),
                             d.getDate(),
                             milkAm,
                             milkPm,
-                    collectionId,
+                    collectionCode,
                     milkModelAm,
                     milkModelPm, loan, order,
-                    loanModel.getCollectionId(),
-                    loanModel, orderModel.getCollectionId(), orderModel, payouts.getStatus(), milkModelAm.getValueLtrs(),
+                    loanModel.getCollectionCode(),
+                    loanModel, orderModel.getCollectionCode(), orderModel, payouts.getStatus(), milkModelAm.getValueLtrs(),
                     milkModelAm.getValueKsh(),
                     milkModelPm.getValueLtrs(),
                     milkModelPm.getValueKsh()
@@ -976,7 +939,7 @@ public class CommonFuncs {
                 payouts.getStatus(),
                 statusText,
                 balance,
-                payouts.getPayoutnumber(),
+                payouts.getCode(),
                 famerModel.getCyclecode(),
                 milkTotalKsh, milkTotalLtrs, payouts.getStartDate(), payouts.getEndDate()
         );
@@ -993,7 +956,7 @@ public class CommonFuncs {
                 p.getStatus(),
                 p.getStatus(),
                 p.getStatusName(),
-                p.getBalance(), p.getPayoutnumber(), famerModel.getCyclecode(),
+                p.getBalance(), p.getCode(), famerModel.getCyclecode(),
                 p.getMilkTotalKsh(), p.getMilkTotalLtrs(), p.getStartDate(), p.getEndDate()
         );
     }
@@ -1288,7 +1251,7 @@ public class CommonFuncs {
         Collection ctoUpdate;
 
 
-        if (dayCollectionModel.getCollectionId() != null) {
+        if (dayCollectionModel.getCollectionCode() != null) {
             collection = payoutsVewModel.getCollectionByIdOne(Integer.valueOf(dayCollectionModel.getCollectionId()));
                 ctoUpdate = CommonFuncs.updateCollection(s, time, type, dayCollectionModel, collection, payouts, famerModel, loanModel, orderModel);
         } else {

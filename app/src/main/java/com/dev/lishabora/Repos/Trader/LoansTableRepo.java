@@ -36,41 +36,41 @@ public class LoansTableRepo {
         return dao.fetchAllData();
     }
 
-    public LiveData<FarmerLoansTable> getFarmerLoanById(int keyid) {
-        return dao.getFarmerLoanById(keyid);
+    public LiveData<FarmerLoansTable> getFarmerLoanByCode(String code) {
+        return dao.getFarmerLoanByCode(code);
     }
 
-    public FarmerLoansTable getFarmerLoanByIdOne(int id) {
-        return dao.getFarmerLoanByIdOne(id);
+    public FarmerLoansTable getFarmerLoanByCodeOne(String code) {
+        return dao.getFarmerLoanByCodeOne(code);
     }
 
     public LiveData<List<FarmerLoansTable>> getFarmerLoanByDate(String date) {
         return getFarmerLoanByDate(date);
     }
 
-    public LiveData<List<FarmerLoansTable>> getFarmerLoanByPayoutNumber(String payoutNo) {
-        return dao.getFarmerLoanByPayoutNumber(payoutNo);
+    public LiveData<List<FarmerLoansTable>> getFarmerLoanByPayoutCode(String payouCode) {
+        return dao.getFarmerLoanByPayoutCode(payouCode);
     }
 
 
-    public FarmerLoansTable getFarmerLoanByCollectionOne(int collId) {
-        return dao.getFarmerLoanByCollectionOne(collId);
+    public FarmerLoansTable getFarmerLoanByCollectionOne(String collCode) {
+        return dao.getFarmerLoanByCollectionOne(collCode);
     }
 
-    public LiveData<FarmerLoansTable> getFarmerLoanByCollection(int collId) {
-        return dao.getFarmerLoanByCollection(collId);
+    public LiveData<FarmerLoansTable> getFarmerLoanByCollection(String collCode) {
+        return dao.getFarmerLoanByCollection(collCode);
     }
 
-    public LiveData<List<FarmerLoansTable>> getFarmerLoanByPayoutNumberByFarmer(String payoutnumber, String farmer) {
-        return dao.getFarmerLoanByPayoutNumberByFarmer(payoutnumber, farmer);
+    public LiveData<List<FarmerLoansTable>> getFarmerLoanByPayoutCodeByFarmer(String payoutCode, String farmer) {
+        return dao.getFarmerLoanByPayoutCodeByFarmer(payoutCode, farmer);
     }
 
-    public List<FarmerLoansTable> getFarmerLoanByPayoutNumberByFarmerByStatus(String payoutnumber, String farmer, int status) {
-        return dao.getFarmerLoanByPayoutNumberByFarmerByStatus(payoutnumber, farmer, status);
+    public List<FarmerLoansTable> getFarmerLoanByPayoutCodeByFarmerByStatus(String payoutCode, String farmer, int status) {
+        return dao.getFarmerLoanByPayoutCodeByFarmerByStatus(payoutCode, farmer, status);
     }
 
-    public List<FarmerLoansTable> getFarmerLoanByPayoutNumberByFarmerByStatus(String farmer, int status) {
-        return dao.getFarmerLoanByPayoutNumberByFarmerByStatus(farmer, status);
+    public List<FarmerLoansTable> getFarmerLoanByPayoutCodeByFarmerByStatus(String farmer, int status) {
+        return dao.getFarmerLoanByPayoutCodeByFarmerByStatus(farmer, status);
     }
 
     public LiveData<List<FarmerLoansTable>> getFarmerLoanByFarmerByStatus(String farmer, int status) {
@@ -82,13 +82,13 @@ public class LoansTableRepo {
         return dao.getFarmerLoanByFarmer(farmer);
     }
 
-    public List<FarmerLoansTable> getFarmerLoanByPayoutNumberListOne(String payoutnumber) {
-        return dao.getFarmerLoanByPayoutNumberListOne(payoutnumber);
+    public List<FarmerLoansTable> getFarmerLoanByPayoutCodeListOne(String payoutCode) {
+        return dao.getFarmerLoanByPayoutCodeListOne(payoutCode);
     }
 
 
-    public void approveFarmersPayoutCard(int a, String farmercode, int payoutNumber) {
-        dao.approveFarmersPayoutCard(a, farmercode, payoutNumber);
+    public void approveFarmersPayoutCard(int a, String farmercode, String payoutCode) {
+        dao.approveFarmersPayoutCard(a, farmercode, payoutCode);
     }
 
 
@@ -106,13 +106,13 @@ public class LoansTableRepo {
     }
 
 
-    public double getBalanceByPayout(int payoutid) {
-        return dao.getBalanceBySumCode(payoutid);
+    public double getBalanceByPayout(String payoutCode) {
+        return dao.getBalanceBySumCode(payoutCode);
     }
 
 
-    public double getInstallmentSumByPayoutCode(int payoutid) {
-        return dao.getInstallmentSumByPayoutCode(payoutid);
+    public double getInstallmentSumByPayoutCode(String payoutCode) {
+        return dao.getInstallmentSumByPayoutCode(payoutCode);
     }
 
     public double getInstallmentSumByFarmerCode(String code) {
@@ -136,8 +136,8 @@ public class LoansTableRepo {
     }
 
 
-    public void updateStatus(int id, int status) {
-        dao.updateStatus(id, status);
+    public void updateStatus(String code, int status) {
+        dao.updateStatus(code, status);
     }
 
     public LiveData<List<FarmerLoansTable>> getFarmerLoansBetweenDates(Long date1, Long date2) {

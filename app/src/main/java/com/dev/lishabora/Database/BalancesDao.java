@@ -30,8 +30,8 @@ public interface BalancesDao {
     @Query("SELECT * FROM FARMERBALANCE")
     LiveData<List<FarmerBalance>> fetchAllData();
 
-    @Query("SELECT * FROM FARMERBALANCE WHERE id =:keyid")
-    LiveData<FarmerBalance> getByKeyID(int keyid);
+    @Query("SELECT * FROM FARMERBALANCE WHERE code =:code")
+    LiveData<FarmerBalance> getByKeyCode(String code);
 
     @Query("SELECT * FROM FARMERBALANCE WHERE farmerCode =:code")
     LiveData<FarmerBalance> getByFarmerCode(String code);

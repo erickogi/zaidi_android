@@ -6,19 +6,19 @@ public class LoanModel implements Serializable {
     private String loanAmount;
     private String installmentAmount;
     private String installmentsNo;
-    private String collectionId;
+    private String collectionCode;
 
 
     public String getLoanAmount() {
         return loanAmount;
     }
 
-    public String getCollectionId() {
-        return collectionId;
+    public String getCollectionCode() {
+        return collectionCode;
     }
 
-    public void setCollectionId(String collectionId) {
-        this.collectionId = collectionId;
+    public void setCollectionCode(String collectionCode) {
+        this.collectionCode = collectionCode;
     }
 
     public void setLoanAmount(String loanAmount) {

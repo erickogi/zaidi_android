@@ -13,14 +13,23 @@ public class LoanPayments {
     @Ignore
     private String traderCode;
 
-    private int loanId;
+    private String loanCode;
     private String amountPaid;
     private String amountRemaining;
     private String paymentMethod;
     private String refNo;
-    private String payoutNo;
+    private String payoutCode;
     private String timeStamp;
 
+    private String code;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
     public String getTraderCode() {
         return traderCode;
     }
@@ -37,13 +46,14 @@ public class LoanPayments {
         this.id = id;
     }
 
-    public int getLoanId() {
-        return loanId;
+    public String getLoanCode() {
+        return loanCode;
     }
 
-    public void setLoanId(int loanId) {
-        this.loanId = loanId;
+    public void setLoanCode(String loanCode) {
+        this.loanCode = loanCode;
     }
+
 
     public String getAmountPaid() {
         return amountPaid;
@@ -77,12 +87,12 @@ public class LoanPayments {
         this.refNo = refNo;
     }
 
-    public String getPayoutNo() {
-        return payoutNo;
+    public String getPayoutCode() {
+        return payoutCode;
     }
 
-    public void setPayoutNo(String payoutNo) {
-        this.payoutNo = payoutNo;
+    public void setPayoutCode(String payoutCode) {
+        this.payoutCode = payoutCode;
     }
 
     public String getTimeStamp() {

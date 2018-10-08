@@ -284,8 +284,8 @@ public class BalncesViewModel extends AndroidViewModel
         return getFarmerLoanByDate(date);
     }
 
-    public LiveData<List<FarmerLoansTable>> getFarmerLoanByPayoutNumber(String payoutNo) {
-        return loansTableRepo.getFarmerLoanByPayoutNumber(payoutNo);
+    public LiveData<List<FarmerLoansTable>> getFarmerLoanByPayoutNumber(String payoutcode) {
+        return loansTableRepo.getFarmerLoanByPayoutNumber(payoutcode);
     }
 
     public FarmerLoansTable getFarmerLoanByCollectionOne(int collId) {

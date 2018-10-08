@@ -6,6 +6,7 @@ import android.arch.persistence.room.Entity;
 
 public class ApprovalDetails {
 
+    private String code;
     private int IdAffected;
     private int typeAffected;
     private String timeStamp;

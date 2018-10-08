@@ -159,8 +159,12 @@ public class UnitsRepo {
 
     }
 
-    public LiveData<UnitsModel> getUnitByKeyID(int key) {
-        return db.unitsDao().getUnitByKeyID(key);
+    public List<UnitsModel> getUnits() {
+        return db.unitsDao().getUnits();
+    }
+
+    public LiveData<UnitsModel> getUnitByKeyCode(String code) {
+        return db.unitsDao().getUnitByKeyCode(code);
     }
 
     

@@ -9,7 +9,7 @@ public class OrderModel implements Serializable {
     private String installmentNo;
     private List<ProductOrderModel> productOrderModels;
     private String productsOrderModels;
-    private String collectionId;
+    private String collectionCode;
     private String orderDeliveryFee;
 
     public String getOrderDeliveryFee() {
@@ -27,17 +27,14 @@ public class OrderModel implements Serializable {
     }
 
 
-
-
-
-
-    public String getCollectionId() {
-        return collectionId;
+    public String getCollectionCode() {
+        return collectionCode;
     }
 
-    public void setCollectionId(String collectionId) {
-        this.collectionId = collectionId;
+    public void setCollectionCode(String collectionCode) {
+        this.collectionCode = collectionCode;
     }
+
 
     public String getOrderAmount() {
         return orderAmount;

@@ -36,13 +36,13 @@ public class LoanPaymentsRepo {
         return dao.fetchAllData();
     }
 
-    public LiveData<LoanPayments> getLoanPaymentById(int keyid) {
-        return dao.getLoanPaymentById(keyid);
+    public LiveData<LoanPayments> getLoanPaymentByCode(String code) {
+        return dao.getLoanPaymentByCode(code);
     }
 
 
-    public LoanPayments getLoanPaymentByIdOne(int keyid) {
-        return dao.getLoanPaymentByIdOne(keyid);
+    public LoanPayments getLoanPaymentByCodeOne(String code) {
+        return dao.getLoanPaymentByCodeOne(code);
     }
 
 
@@ -50,12 +50,12 @@ public class LoanPaymentsRepo {
         return dao.getLoanPaymentByDate(date);
     }
 
-    public LiveData<List<LoanPayments>> getLoanPaymentByLoanId(String loanId) {
-        return dao.getLoanPaymentByLoanId(loanId);
+    public LiveData<List<LoanPayments>> getLoanPaymentByLoanCode(String loanCode) {
+        return dao.getLoanPaymentByLoanCode(loanCode);
     }
 
-    public LiveData<List<LoanPayments>> getLoanPaymentByPaout(int payoutNo) {
-        return dao.getLoanPaymentByPaout(payoutNo);
+    public LiveData<List<LoanPayments>> getLoanPaymentByPaout(String payoutCode) {
+        return dao.getLoanPaymentByPaout(payoutCode);
     }
 
 
@@ -81,18 +81,18 @@ public class LoanPaymentsRepo {
         dao.deleteRecord(loanPayment);
     }
 
-    public double getSumPaid(int loanId) {
-        return dao.getSumPaid(loanId);
+    public double getSumPaid(String loanCode) {
+        return dao.getSumPaid(loanCode);
     }
 
 
-    public double getSumPaidByPayout(int payoutid) {
-        return dao.getSumPaidByPayout(payoutid);
+    public double getSumPaidByPayout(String payoutCode) {
+        return dao.getSumPaidByPayout(payoutCode);
     }
 
 
-    public LoanPayments getLoanPaymentByDateByFarmerByTimeSingle(int loanId, String today) {
-        return dao.getLoanPaymentByDateByFarmerByTimeSingle(loanId, today);
+    public LoanPayments getLoanPaymentByDateByFarmerByTimeSingle(String loanCode, String today) {
+        return dao.getLoanPaymentByDateByFarmerByTimeSingle(loanCode, today);
     }
 
 
@@ -106,8 +106,8 @@ public class LoanPaymentsRepo {
     }
 
 
-    public LiveData<List<LoanPayments>> getLoanPaymentsBetweenDates(Long date1, Long date2, int loanId) {
-        return dao.getLoanPaymentsBetweenDates(date1, date2, loanId);
+    public LiveData<List<LoanPayments>> getLoanPaymentsBetweenDates(Long date1, Long date2, String loanCode) {
+        return dao.getLoanPaymentsBetweenDates(date1, date2, loanCode);
     }
 
 

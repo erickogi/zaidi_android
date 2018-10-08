@@ -10,6 +10,8 @@ public class Collection {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
+    private String code;
+
     @Ignore
     private String traderCode;
 
@@ -27,6 +29,7 @@ public class Collection {
 
 
     private int payoutnumber;
+    private String payoutCode;
     private String cycleId;
 
     private String cycleStartedOn;
@@ -88,6 +91,22 @@ public class Collection {
 
 
     private int approved;
+
+    public String getPayoutCode() {
+        return payoutCode;
+    }
+
+    public void setPayoutCode(String payoutCode) {
+        this.payoutCode = payoutCode;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public String getTraderCode() {
         return traderCode;

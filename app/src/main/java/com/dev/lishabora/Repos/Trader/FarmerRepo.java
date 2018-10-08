@@ -197,9 +197,6 @@ public class FarmerRepo {
         
     }
 
-    public LiveData<FamerModel> getFramerByKeyID(int key) {
-        return db.farmersDao().getFramerByKeyID(key);
-    }
 
     public LiveData<FamerModel> getLastFarmer() {
         return db.farmersDao().getLastFarmer();

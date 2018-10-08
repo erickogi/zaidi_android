@@ -79,8 +79,8 @@ public class ProductsRepo {
 
     }
 
-    public LiveData<ProductsModel> getProductByKeyID(int key) {
-        return db.productsDao().getProductByKeyID(key);
+    public LiveData<ProductsModel> getProductByKeyCode(String key) {
+        return db.productsDao().getProductByKeyCode(key);
     }
 
     public LiveData<List<ProductsModel>> getAllByStatus(int status) {

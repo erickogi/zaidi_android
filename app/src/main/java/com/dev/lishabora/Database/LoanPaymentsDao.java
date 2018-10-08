@@ -29,21 +29,21 @@ public interface LoanPaymentsDao {
     @Query("SELECT * FROM LOANPAYMENTS")
     LiveData<List<LoanPayments>> fetchAllData();
 
-    @Query("SELECT * FROM LOANPAYMENTS WHERE id =:keyid")
-    LiveData<LoanPayments> getLoanPaymentById(int keyid);
+    @Query("SELECT * FROM LOANPAYMENTS WHERE code =:code")
+    LiveData<LoanPayments> getLoanPaymentByCode(String code);
 
-    @Query("SELECT * FROM LOANPAYMENTS WHERE id =:keyid")
-    LoanPayments getLoanPaymentByIdOne(int keyid);
+    @Query("SELECT * FROM LOANPAYMENTS WHERE code =:code")
+    LoanPayments getLoanPaymentByCodeOne(String code);
 
 
     @Query("SELECT * FROM LOANPAYMENTS WHERE timestamp =:date")
     LiveData<List<LoanPayments>> getLoanPaymentByDate(String date);
 
-    @Query("SELECT * FROM LOANPAYMENTS WHERE loanId =:loanId")
-    LiveData<List<LoanPayments>> getLoanPaymentByLoanId(String loanId);
+    @Query("SELECT * FROM LOANPAYMENTS WHERE loanCode =:loanCode")
+    LiveData<List<LoanPayments>> getLoanPaymentByLoanCode(String loanCode);
 
-    @Query("SELECT * FROM LOANPAYMENTS WHERE payoutNo =:payoutNo")
-    LiveData<List<LoanPayments>> getLoanPaymentByPaout(int payoutNo);
+    @Query("SELECT * FROM LOANPAYMENTS WHERE payoutCode =:payoutCode")
+    LiveData<List<LoanPayments>> getLoanPaymentByPaout(String payoutCode);
 
 
     @Query("SELECT * FROM LOANPAYMENTS WHERE  paymentMethod =:payment ")
@@ -63,16 +63,16 @@ public interface LoanPaymentsDao {
     @Delete
     void deleteRecord(LoanPayments loanPayment);
 
-    @Query("SELECT (SUM(amountPaid)) FROM LOANPAYMENTS WHERE loanId =:loanId")
-    double getSumPaid(int loanId);
+    @Query("SELECT (SUM(amountPaid)) FROM LOANPAYMENTS WHERE loanCode =:loanCode")
+    double getSumPaid(String loanCode);
 
 
-    @Query("SELECT (SUM(amountPaid)) FROM LOANPAYMENTS WHERE payoutNo =:payoutid")
-    double getSumPaidByPayout(int payoutid);
+    @Query("SELECT (SUM(amountPaid)) FROM LOANPAYMENTS WHERE payoutCode =:payoutCode")
+    double getSumPaidByPayout(String payoutCode);
 
 
-    @Query("SELECT * FROM LOANPAYMENTS WHERE loanId = :loanId  AND timestamp LIKE :today")
-    LoanPayments getLoanPaymentByDateByFarmerByTimeSingle(int loanId, String today);
+    @Query("SELECT * FROM LOANPAYMENTS WHERE loanCode = :loanId  AND timestamp LIKE :today")
+    LoanPayments getLoanPaymentByDateByFarmerByTimeSingle(String loanId, String today);
 
 
     @Query("SELECT * FROM LOANPAYMENTS  ORDER BY id DESC LIMIT 1")
@@ -83,8 +83,8 @@ public interface LoanPaymentsDao {
     LiveData<List<LoanPayments>> getLoanPaymentsBetweenDates(Long date1, Long date2);
 
 
-    @Query("SELECT * FROM LOANPAYMENTS WHERE loanId = :loanId AND  timestamp BETWEEN :date1 AND :date2")
-    LiveData<List<LoanPayments>> getLoanPaymentsBetweenDates(Long date1, Long date2, int loanId);
+    @Query("SELECT * FROM LOANPAYMENTS WHERE loanCode = :loanId AND  timestamp BETWEEN :date1 AND :date2")
+    LiveData<List<LoanPayments>> getLoanPaymentsBetweenDates(Long date1, Long date2, String loanId);
 
 
 }

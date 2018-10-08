@@ -434,8 +434,8 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(viehw -> {
 
-            if (prefrenceManager.isTraderFirstTime()) {
-                alertDialogFirstTime();
+            if (mViewModel.getUnits1(false).size() > 0) {
+                getRoutes();
             } else {
                 if (isSetUp()) {
                     FragementFarmersList.this.createFarmers();
@@ -456,7 +456,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
 
         spinner1.setItems("Active", "Archived", "Deleted", "Dummy", "All(Status)");
-        getRoutes();
+        //getRoutes();
 
         spinner1.setOnItemSelectedListener((MaterialSpinner.OnItemSelectedListener<String>) (view1, position, id, item) -> fetchFarmers(getSelectedAccountStatus(), getSelectedRoute()));
         spinner2.setOnItemSelectedListener((view12, position, id, item) -> fetchFarmers(getSelectedAccountStatus(), getSelectedRoute()));
@@ -904,22 +904,22 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
         });
 
-        mViewModel.getUnits(isUnitFirst).observe(this, unitsModels -> {
-            if (unitsModels != null && unitsModels.size() > 0) {
-                prefrenceManager.setIsRoutesListFirst(false);
-                FragementFarmersList.this.getUnits = unitsModels;
-
-
-            }
-        });
-        mViewModel.getCycles(true).observe(this, cycles -> {
-            if (cycles != null && cycles.size() > 0) {
-                prefrenceManager.setIsCyclesListFirst(false);
-                FragementFarmersList.this.getCycles = cycles;
-
-
-            }
-        });
+//        mViewModel.getUnits(isUnitFirst).observe(this, unitsModels -> {
+//            if (unitsModels != null && unitsModels.size() > 0) {
+//                prefrenceManager.setIsRoutesListFirst(false);
+//                FragementFarmersList.this.getUnits = unitsModels;
+//
+//
+//            }
+//        });
+//        mViewModel.getCycles(true).observe(this, cycles -> {
+//            if (cycles != null && cycles.size() > 0) {
+//                prefrenceManager.setIsCyclesListFirst(false);
+//                FragementFarmersList.this.getCycles = cycles;
+//
+//
+//            }
+//        });
     }
 
     @Override
@@ -995,10 +995,10 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
     private void listenOnBalance(FamerModel famerModel) {
         balncesViewModel.getByFarmerCode(famerModel.getCode()).observe(this, farmerBalance -> {
-            // famerModel.setTotalbalance(farmerBalance.getBalanceToPay());
             mViewModel.updateFarmer(famerModel, false, false);
-
+            fetchFarmers(0, "");
         });
+
 
     }
 

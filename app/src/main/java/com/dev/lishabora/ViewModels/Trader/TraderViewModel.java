@@ -531,6 +531,15 @@ public class TraderViewModel extends AndroidViewModel
         return units;
     }
 
+    public List<UnitsModel> getUnits1(boolean isOnline) {
+
+
+        return unitsRepo.getUnits();
+
+
+        //return units;
+    }
+
     public LiveData<List<Cycles>> getCycles(boolean isOnline) {
         if (cycles == null) {
             cycles = new MutableLiveData();

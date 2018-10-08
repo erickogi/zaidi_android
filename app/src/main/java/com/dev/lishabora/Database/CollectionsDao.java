@@ -27,34 +27,33 @@ public interface CollectionsDao {
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS")
     LiveData<List<Collection>> fetchAllData();
 
-    @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE id =:keyid")
-    LiveData<Collection> getCollectionById(int keyid);
+    @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE code =:code")
+    LiveData<Collection> getCollectionByCode(String code);
 
-    @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE id =:keyid")
-    Collection getCollectionByIdOne(int keyid);
+    @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE code =:code")
+    Collection getCollectionByCodeOne(String code);
 
 
 
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE daydate =:date")
     LiveData<List<Collection>> getCollectionByDate(String date);
 
-    @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE payoutnumber =:payoutnumber")
-    LiveData<List<Collection>> getCollectionByPayoutNumber(String payoutnumber);
+    @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE payoutCode =:payoutCode")
+    LiveData<List<Collection>> getCollectionByPayoutCode(String payoutCode);
 
 
-    @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE payoutnumber =:payoutnumber AND farmerCode =:farmer")
-    LiveData<List<Collection>> getCollectionByPayoutNumberByFarmer(String payoutnumber, String farmer);
+    @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE payoutCode =:payoutCode AND farmerCode =:farmer")
+    LiveData<List<Collection>> getCollectionByPayoutCodeByFarmer(String payoutCode, String farmer);
 
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE  farmerCode =:farmer ")
     LiveData<List<Collection>> getCollectionByFarmer(String farmer);
 
 
+    @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE payoutCode =:payoutCode")
+    List<Collection> getCollectionByPayoutCodeListOne(String payoutCode);
 
-    @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE payoutnumber =:payoutnumber")
-    List<Collection> getCollectionByPayoutNumberListOne(String payoutnumber);
-
-    @Query("UPDATE COLLECTIONTRANSACTIONS SET approved =:a  WHERE farmerCode =:farmercode AND payoutnumber =:payoutNumber")
-    void approveFarmersPayoutCard(int a, String farmercode, int payoutNumber);
+    @Query("UPDATE COLLECTIONTRANSACTIONS SET approved =:a  WHERE farmerCode =:farmercode AND payoutCode =:payoutCode")
+    void approveFarmersPayoutCard(int a, String farmercode, String payoutCode);
 
 
     @Update
@@ -85,32 +84,31 @@ public interface CollectionsDao {
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE cycleCode = :cycleCode ORDER BY id DESC LIMIT 1")
     Collection getLast(String cycleCode);
 
-    @Query("SELECT SUM(milkCollectedValueKshAm+milkCollectedValueKshPm) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutnumber = :payoutNumber")
-    Double getSumOfLastMilkFarmerPayoutKshD(String farmercode, int payoutNumber);
+    @Query("SELECT SUM(milkCollectedValueKshAm+milkCollectedValueKshPm) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutCode = :payoutcode")
+    Double getSumOfLastMilkFarmerPayoutKshD(String farmercode, String payoutcode);
 
 
+    @Query("SELECT SUM(milkCollectedValueLtrsAm+milkCollectedValueLtrsPm) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutCode = :payoutCode")
+    LiveData<Double> getSumOfMilkFarmerPayoutLtrs(String farmercode, String payoutCode);
 
-    @Query("SELECT SUM(milkCollectedValueLtrsAm+milkCollectedValueLtrsPm) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutnumber = :payoutNumber")
-    LiveData<Double> getSumOfMilkFarmerPayoutLtrs(String farmercode, int payoutNumber);
+    @Query("SELECT SUM(milkCollectedValueKshAm+milkCollectedValueKshPm) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutCode = :payoutCode")
+    LiveData<Double> getSumOfMilkFarmerPayoutKsh(String farmercode, String payoutCode);
 
-    @Query("SELECT SUM(milkCollectedValueKshAm+milkCollectedValueKshPm) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutnumber = :payoutNumber")
-    LiveData<Double> getSumOfMilkFarmerPayoutKsh(String farmercode, int payoutNumber);
+    @Query("SELECT SUM(milkCollectedValueKshAm+milkCollectedValueKshPm) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutCode = :payoutCode")
+    Double getSumOfMilkFarmerPayoutKshD(String farmercode, String payoutCode);
 
-    @Query("SELECT SUM(milkCollectedValueKshAm+milkCollectedValueKshPm) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutnumber = :payoutNumber")
-    Double getSumOfMilkFarmerPayoutKshD(String farmercode, int payoutNumber);
-
-    @Query("SELECT SUM(milkCollectedAm+milkCollectedPm) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutnumber = :payoutNumber")
-    LiveData<Double> getSumOfMilkFarmerPayout(String farmercode, int payoutNumber);
+    @Query("SELECT SUM(milkCollectedAm+milkCollectedPm) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutCode = :payoutCode")
+    LiveData<Double> getSumOfMilkFarmerPayout(String farmercode, String payoutCode);
 
 
-    @Query("SELECT SUM(loanAmountGivenOutPrice) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutnumber = :payoutNumber")
-    LiveData<Double> getSumOfLoanFarmerPayout(String farmercode, int payoutNumber);
+    @Query("SELECT SUM(loanAmountGivenOutPrice) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutCode = :payoutCode")
+    LiveData<Double> getSumOfLoanFarmerPayout(String farmercode, String payoutCode);
 
-    @Query("SELECT SUM(orderGivenOutPrice) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutnumber = :payoutNumber")
-    LiveData<Double> getSumOfOrderFarmerPayout(String farmercode, int payoutNumber);
+    @Query("SELECT SUM(orderGivenOutPrice) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND payoutCode = :payoutCode")
+    LiveData<Double> getSumOfOrderFarmerPayout(String farmercode, String payoutCode);
 
-    @Query("UPDATE COLLECTIONTRANSACTIONS SET approved =:status WHERE  payoutnumber =:payoutnumber")
-    void approvePayout(int payoutnumber, int status);
+    @Query("UPDATE COLLECTIONTRANSACTIONS SET approved =:status WHERE  payoutCode =:payoutCode")
+    void approvePayout(String payoutCode, int status);
 
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE dayDateLog BETWEEN :date1 AND :date2")
     LiveData<List<Collection>> getCollectionsBetweenDates(Long date1, Long date2);

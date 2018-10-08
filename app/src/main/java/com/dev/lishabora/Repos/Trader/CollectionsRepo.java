@@ -58,50 +58,50 @@ public class CollectionsRepo {
 
     }
 
-    public LiveData<List<Collection>> getCollectionByPayout(String payout) {
-        return collectionsDao.getCollectionByPayoutNumber(payout);
+    public LiveData<List<Collection>> getCollectionByPayout(String payoutCode) {
+        return collectionsDao.getCollectionByPayoutCode(payoutCode);
     }
 
-    public LiveData<List<Collection>> getCollectionByPayoutByFarmer(String payout, String farmer) {
-        return collectionsDao.getCollectionByPayoutNumberByFarmer(payout, farmer);
+    public LiveData<List<Collection>> getCollectionByPayoutByFarmer(String payoutCode, String farmer) {
+        return collectionsDao.getCollectionByPayoutCodeByFarmer(payoutCode, farmer);
     }
 
     public LiveData<List<Collection>> getCollectionByFarmer(String farmer) {
         return collectionsDao.getCollectionByFarmer(farmer);
     }
 
-    public LiveData<Double> getSumOfMilkFarmerPayout(String farmercode, int payoutNumber) {
-        return collectionsDao.getSumOfMilkFarmerPayout(farmercode, payoutNumber);
+    public LiveData<Double> getSumOfMilkFarmerPayout(String farmercode, String payoutCode) {
+        return collectionsDao.getSumOfMilkFarmerPayout(farmercode, payoutCode);
 
     }
 
-    public LiveData<Double> getSumOfMilkFarmerPayoutLtrs(String farmercode, int payoutNumber) {
-        return collectionsDao.getSumOfMilkFarmerPayoutLtrs(farmercode, payoutNumber);
+    public LiveData<Double> getSumOfMilkFarmerPayoutLtrs(String farmercode, String payoutCode) {
+        return collectionsDao.getSumOfMilkFarmerPayoutLtrs(farmercode, payoutCode);
 
     }
 
-    public LiveData<Double> getSumOfMilkFarmerPayoutKsh(String farmercode, int payoutNumber) {
-        return collectionsDao.getSumOfMilkFarmerPayoutKsh(farmercode, payoutNumber);
+    public LiveData<Double> getSumOfMilkFarmerPayoutKsh(String farmercode, String payoutCode) {
+        return collectionsDao.getSumOfMilkFarmerPayoutKsh(farmercode, payoutCode);
 
     }
 
-    public Double getSumOfMilkFarmerPayoutKshD(String farmercode, int payoutNumber) {
-        return collectionsDao.getSumOfMilkFarmerPayoutKshD(farmercode, payoutNumber);
+    public Double getSumOfMilkFarmerPayoutKshD(String farmercode, String payoutCode) {
+        return collectionsDao.getSumOfMilkFarmerPayoutKshD(farmercode, payoutCode);
 
     }
 
-    public LiveData<Double> getSumOfLoanFarmerPayout(String farmercode, int payoutNumber) {
-        return collectionsDao.getSumOfLoanFarmerPayout(farmercode, payoutNumber);
+    public LiveData<Double> getSumOfLoanFarmerPayout(String farmercode, String payoutCode) {
+        return collectionsDao.getSumOfLoanFarmerPayout(farmercode, payoutCode);
 
     }
 
-    public LiveData<Double> getSumOfOrderFarmerPayout(String farmercode, int payoutNumber) {
-        return collectionsDao.getSumOfOrderFarmerPayout(farmercode, payoutNumber);
+    public LiveData<Double> getSumOfOrderFarmerPayout(String farmercode, String payoutCode) {
+        return collectionsDao.getSumOfOrderFarmerPayout(farmercode, payoutCode);
 
     }
 
-    public List<Collection> getCollectionByPayoutListOne(String payout) {
-        return collectionsDao.getCollectionByPayoutNumberListOne(payout);
+    public List<Collection> getCollectionByPayoutListOne(String payoutCode) {
+        return collectionsDao.getCollectionByPayoutCodeListOne(payoutCode);
     }
 
     public Collection getLast(String cycleCode) {
@@ -135,26 +135,26 @@ public class CollectionsRepo {
 
     }
 
-    public LiveData<Collection> getCollectionById(int collectionId) {
-        return collectionsDao.getCollectionById(collectionId);
+    public LiveData<Collection> getCollectionById(String collectionCode) {
+        return collectionsDao.getCollectionByCode(collectionCode);
     }
 
-    public Collection getCollectionByIdOne(int collectionId) {
-        return collectionsDao.getCollectionByIdOne(collectionId);
+    public Collection getCollectionByIdOne(String collectionId) {
+        return collectionsDao.getCollectionByCodeOne(collectionId);
     }
 
-    public void approveFarmersPayoutCard(String farmercode, int payoutNumber) {
-        collectionsDao.approveFarmersPayoutCard(1, farmercode, payoutNumber);
-
-    }
-
-    public void cancelFarmersPayoutCard(String farmercode, int payoutNumber) {
-        collectionsDao.approveFarmersPayoutCard(0, farmercode, payoutNumber);
+    public void approveFarmersPayoutCard(String farmercode, String payoutCode) {
+        collectionsDao.approveFarmersPayoutCard(1, farmercode, payoutCode);
 
     }
 
-    public void updateCollectionsByPayout(int payoutnumber, int status) {
-        collectionsDao.approvePayout(payoutnumber, status);
+    public void cancelFarmersPayoutCard(String farmercode, String payoutCode) {
+        collectionsDao.approveFarmersPayoutCard(0, farmercode, payoutCode);
+
+    }
+
+    public void updateCollectionsByPayout(String payoutCode, int status) {
+        collectionsDao.approvePayout(payoutCode, status);
 
     }
 

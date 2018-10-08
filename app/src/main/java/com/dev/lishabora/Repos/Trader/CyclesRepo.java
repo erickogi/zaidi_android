@@ -41,8 +41,8 @@ public class CyclesRepo {
         new insertUnitsAsyncTask(cyclesDao).execute(cyclesModel);
     }
 
-    public LiveData<Cycles> getCycleByKeyID(int key) {
-        return db.cyclesDao().getCycleByKeyID(key);
+    public LiveData<Cycles> getCycleByKeyID(String key) {
+        return db.cyclesDao().getCycleByKeyCode(key);
     }
 
     public LiveData<Cycles> getCycleByKeyCode(String code, boolean b) {

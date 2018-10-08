@@ -11,6 +11,8 @@ import com.dev.lishabora.Utils.DateTimeUtils;
 public class FarmerBalance {
     @PrimaryKey(autoGenerate = true)
     private int id;
+
+    private String code;
     @Ignore
     private String traderCode;
 
@@ -24,6 +26,14 @@ public class FarmerBalance {
 
 
     private String lastUpdated;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public FarmerBalance() {
     }

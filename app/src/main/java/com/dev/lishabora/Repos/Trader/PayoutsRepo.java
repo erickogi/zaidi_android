@@ -34,8 +34,8 @@ public class PayoutsRepo {
         }
     }
 
-    public LiveData<Payouts> getPayoutById(int id) {
-        return dao.getPayoutsById(id);
+    public LiveData<Payouts> getPayoutByCode(String code) {
+        return dao.getPayoutsByCode(code);
     }
 
     public LiveData<List<Payouts>> getPayoutsByCycleCode(String code) {

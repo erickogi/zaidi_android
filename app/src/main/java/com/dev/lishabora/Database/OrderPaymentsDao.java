@@ -29,21 +29,21 @@ public interface OrderPaymentsDao {
     @Query("SELECT * FROM ORDERPAYMENTS")
     LiveData<List<OrderPayments>> fetchAllData();
 
-    @Query("SELECT * FROM ORDERPAYMENTS WHERE id =:keyid")
-    LiveData<OrderPayments> getOrderPaymentById(int keyid);
+    @Query("SELECT * FROM ORDERPAYMENTS WHERE code =:code")
+    LiveData<OrderPayments> getOrderPaymentByCode(String code);
 
-    @Query("SELECT * FROM ORDERPAYMENTS WHERE id =:keyid")
-    OrderPayments getOrderPaymentByIdOne(int keyid);
+    @Query("SELECT * FROM ORDERPAYMENTS WHERE code =:code")
+    OrderPayments getOrderPaymentByCodeOne(String code);
 
 
     @Query("SELECT * FROM ORDERPAYMENTS WHERE timestamp =:date")
     LiveData<List<OrderPayments>> getOrderPaymentByDate(String date);
 
-    @Query("SELECT * FROM ORDERPAYMENTS WHERE orderId =:loanId")
-    LiveData<List<OrderPayments>> getOrderPaymentByOrderId(String loanId);
+    @Query("SELECT * FROM ORDERPAYMENTS WHERE orderCode =:orderCode")
+    LiveData<List<OrderPayments>> getOrderPaymentByOrderCode(String orderCode);
 
-    @Query("SELECT * FROM ORDERPAYMENTS WHERE payoutNo =:payoutNo")
-    LiveData<List<OrderPayments>> getOrderPaymentByPaout(int payoutNo);
+    @Query("SELECT * FROM ORDERPAYMENTS WHERE payoutCode =:payoutCode")
+    LiveData<List<OrderPayments>> getOrderPaymentByPaout(String payoutCode);
 
 
     @Query("SELECT * FROM ORDERPAYMENTS WHERE  paymentMethod =:payment ")
@@ -53,8 +53,8 @@ public interface OrderPaymentsDao {
     LiveData<List<OrderPayments>> getOrderPaymentByRefNo(String refNo);
 
 
-    @Query("SELECT * FROM ORDERPAYMENTS WHERE refNo =:payoutnumber")
-    List<OrderPayments> getOrderPaymentByPayoutNumberListOne(String payoutnumber);
+    @Query("SELECT * FROM ORDERPAYMENTS WHERE refNo =:payoutCode")
+    List<OrderPayments> getOrderPaymentByPayoutNumberListOne(String payoutCode);
 
 
     @Update
@@ -63,16 +63,16 @@ public interface OrderPaymentsDao {
     @Delete
     void deleteRecord(OrderPayments loanPayment);
 
-    @Query("SELECT (SUM(amountPaid)) FROM ORDERPAYMENTS WHERE orderId =:orderId")
-    double getSumPaid(int orderId);
+    @Query("SELECT (SUM(amountPaid)) FROM ORDERPAYMENTS WHERE orderCode =:orderCode")
+    double getSumPaid(String orderCode);
 
 
-    @Query("SELECT (SUM(amountPaid)) FROM ORDERPAYMENTS WHERE payoutNo =:payoutid")
-    double getSumPaidByPayout(int payoutid);
+    @Query("SELECT (SUM(amountPaid)) FROM ORDERPAYMENTS WHERE payoutCode =:payoutCode")
+    double getSumPaidByPayout(String payoutCode);
 
 
-    @Query("SELECT * FROM ORDERPAYMENTS WHERE orderId = :orderId  AND timestamp LIKE :today")
-    OrderPayments getOrderPaymentByDateByFarmerByTimeSingle(int orderId, String today);
+    @Query("SELECT * FROM ORDERPAYMENTS WHERE orderCode = :orderCode  AND timestamp LIKE :today")
+    OrderPayments getOrderPaymentByDateByFarmerByTimeSingle(String orderCode, String today);
 
 
     @Query("SELECT * FROM ORDERPAYMENTS  ORDER BY id DESC LIMIT 1")
@@ -83,8 +83,8 @@ public interface OrderPaymentsDao {
     LiveData<List<OrderPayments>> getOrderPaymentsBetweenDates(Long date1, Long date2);
 
 
-    @Query("SELECT * FROM ORDERPAYMENTS WHERE orderId = :orderId AND  timestamp BETWEEN :date1 AND :date2")
-    LiveData<List<OrderPayments>> getOrderPaymentsBetweenDates(Long date1, Long date2, int orderId);
+    @Query("SELECT * FROM ORDERPAYMENTS WHERE orderCode = :orderCode AND  timestamp BETWEEN :date1 AND :date2")
+    LiveData<List<OrderPayments>> getOrderPaymentsBetweenDates(Long date1, Long date2, String orderCode);
 
 
 }

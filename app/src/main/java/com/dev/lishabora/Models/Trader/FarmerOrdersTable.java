@@ -10,12 +10,13 @@ public class FarmerOrdersTable {
 
     @PrimaryKey(autoGenerate = true)
 
+
     private int id;
     @Ignore
     private String traderCode;
 
-    private int collectionId;
-    private int payoutId;
+    private String collectionCode;
+    private String payoutCode;
     private String farmerCode;
 
     private String orderAmount;
@@ -26,10 +27,11 @@ public class FarmerOrdersTable {
     private int status;
     private String timestamp;
 
+    private String code;
 
-    public FarmerOrdersTable(int collectionId, int payoutId, String farmerCode, String orderAmount, String orderAmountPaid, String installmentAmount, String installmentNo, int status, String timestamp) {
-        this.collectionId = collectionId;
-        this.payoutId = payoutId;
+    public FarmerOrdersTable(String collectionId, String payoutId, String farmerCode, String orderAmount, String orderAmountPaid, String installmentAmount, String installmentNo, int status, String timestamp) {
+        this.collectionCode = collectionId;
+        this.collectionCode = payoutId;
         this.farmerCode = farmerCode;
         this.orderAmount = orderAmount;
         this.orderAmountPaid = orderAmountPaid;
@@ -37,6 +39,14 @@ public class FarmerOrdersTable {
         this.installmentNo = installmentNo;
         this.status = status;
         this.timestamp = timestamp;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
 //    public FarmerOrdersTable(int collectionId, int payoutId, String farmerCode, String orderAmount, String installmentAmount, String installmentNo, int status, String timestamp) {
@@ -75,20 +85,20 @@ public class FarmerOrdersTable {
         this.id = id;
     }
 
-    public int getCollectionId() {
-        return collectionId;
+    public String getCollectionCode() {
+        return collectionCode;
     }
 
-    public void setCollectionId(int collectionId) {
-        this.collectionId = collectionId;
+    public void setCollectionCode(String collectionCode) {
+        this.collectionCode = collectionCode;
     }
 
-    public int getPayoutId() {
-        return payoutId;
+    public String getPayoutCode() {
+        return payoutCode;
     }
 
-    public void setPayoutId(int payoutId) {
-        this.payoutId = payoutId;
+    public void setPayoutCode(String payoutCode) {
+        this.payoutCode = payoutCode;
     }
 
     public String getFarmerCode() {

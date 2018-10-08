@@ -34,8 +34,8 @@ public interface RoutesDao {
     @Query("SELECT * FROM ROUTES")
     LiveData<List<RoutesModel>> fetchAllData();
 
-    @Query("SELECT * FROM ROUTES WHERE id =:keyid")
-    LiveData<RoutesModel> getRouteByKeyID(int keyid);
+    @Query("SELECT * FROM ROUTES WHERE code =:code")
+    LiveData<RoutesModel> getRouteByKeyCode(String code);
 
   
     @Query("SELECT * FROM ROUTES WHERE status =:status")

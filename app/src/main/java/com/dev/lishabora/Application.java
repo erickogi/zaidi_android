@@ -200,7 +200,7 @@ public class Application extends MultiDexApplication {
                                     new OrdersTableRepo(mInstance).insertMultiple(responseModel.getOrderModels());
                                     new LoanPaymentsRepo(mInstance).insertMultiple(responseModel.getLoanPaymentModels());
                                     new OrderPaymentsRepo(mInstance).insertMultiple(responseModel.getOrderPaymentModels());
-                                    new BalanceRepo(mInstance).insert(responseModel.getBalanceModel());
+                                    new BalanceRepo(mInstance).insertMultiple(responseModel.getBalanceModel());
 
 
                                     try {
@@ -290,8 +290,6 @@ public class Application extends MultiDexApplication {
                     }
                 });
     }
-
-
 
 
 }

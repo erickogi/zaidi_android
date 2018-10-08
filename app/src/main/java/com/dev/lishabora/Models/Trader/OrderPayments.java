@@ -14,13 +14,23 @@ public class OrderPayments {
     @Ignore
     private String traderCode;
 
-    private int orderId;
+    private String orderCode;
     private String amountPaid;
     private String amountRemaining;
     private String paymentMethod;
     private String refNo;
-    private String payoutNo;
+    private String payoutCode;
     private String timestamp;
+
+    private String code;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public String getTraderCode() {
         return traderCode;
@@ -38,12 +48,12 @@ public class OrderPayments {
         this.id = id;
     }
 
-    public int getOrderId() {
-        return orderId;
+    public String getOrderCode() {
+        return orderCode;
     }
 
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
+    public void setOrderCode(String orderCode) {
+        this.orderCode = orderCode;
     }
 
     public String getAmountPaid() {
@@ -78,12 +88,12 @@ public class OrderPayments {
         this.refNo = refNo;
     }
 
-    public String getPayoutNo() {
-        return payoutNo;
+    public String getPayoutCode() {
+        return payoutCode;
     }
 
-    public void setPayoutNo(String payoutNo) {
-        this.payoutNo = payoutNo;
+    public void setPayoutCode(String payoutCode) {
+        this.payoutCode = payoutCode;
     }
 
     public String getTimestamp() {

@@ -39,8 +39,8 @@ public interface FarmersDao {
     LiveData<FamerModel> getLastFarmer();
 
 
-    @Query("SELECT * FROM FARMERS WHERE id =:keyid")
-    LiveData<FamerModel> getFramerByKeyID(int keyid);
+    @Query("SELECT * FROM FARMERS WHERE code =:code")
+    LiveData<FamerModel> getFramerByKeyCode(String code);
 
     @Query("SELECT * FROM FARMERS WHERE archived =:archived")
     LiveData<List<FamerModel>> getAllByArchivedStatus(int archived);

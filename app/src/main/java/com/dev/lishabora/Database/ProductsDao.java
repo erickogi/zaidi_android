@@ -30,8 +30,8 @@ public interface ProductsDao {
     @Query("SELECT * FROM PRODUCTS")
     LiveData<List<ProductsModel>> fetchAllData();
 
-    @Query("SELECT * FROM PRODUCTS WHERE id =:keyid")
-    LiveData<ProductsModel> getProductByKeyID(int keyid);
+    @Query("SELECT * FROM PRODUCTS WHERE code =:code")
+    LiveData<ProductsModel> getProductByKeyCode(String code);
 
 
     @Query("SELECT * FROM PRODUCTS WHERE subscribed =:status")
@@ -41,7 +41,7 @@ public interface ProductsDao {
     @Query("SELECT * FROM PRODUCTS WHERE code =:code")
     LiveData<ProductsModel> getProductByCode(String code);
 
-    @Query("SELECT * FROM PRODUCTS WHERE code LIKE :names")
+    @Query("SELECT * FROM PRODUCTS WHERE names LIKE :names")
     LiveData<List<ProductsModel>> searchByNames(String names);
 
 
