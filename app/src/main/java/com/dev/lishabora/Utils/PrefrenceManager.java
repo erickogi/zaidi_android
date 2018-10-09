@@ -67,6 +67,7 @@ public class PrefrenceManager {
     private static final String isUnitsListFirst = "isUnitListFirst";
     private static final String isCyclesListFirst = "isCycleListFirst";
     private static final String isProductsListFirst = "isProductListFirst";
+    private static final String isFirebaseUdated = "isFirebaseUpdated";
 
 
     private static final String isTraderFirstTime = "isTraderFirst";
@@ -306,5 +307,14 @@ public class PrefrenceManager {
     public void setFirebase(String refreshedToken) {
         editor.putString(firebasetoken, refreshedToken);
         editor.commit();
+    }
+
+    public void setIsFirebaseUdated(boolean b) {
+        editor.putBoolean(isFirebaseUdated, b);
+        editor.commit();
+    }
+
+    public boolean isFirebaseUpdated() {
+        return pref.getBoolean(isFirebaseUdated, false);
     }
 }

@@ -65,7 +65,7 @@ class CreateTraderAdapter(fm: FragmentManager, context: Context) : AbstractFragm
                     .setTitle("Basic Details ") //can be a CharSequence instead
                     .create()
             1 -> return StepViewModel.Builder(context)
-                    .setTitle("Cycle,s & Units ") //can be a CharSequence instead
+                    .setTitle("Cycles") //can be a CharSequence instead
                     .create()
 //            2 -> return StepViewModel.Builder(context)
 //                    .setTitle("Routes") //can be a CharSequence instead

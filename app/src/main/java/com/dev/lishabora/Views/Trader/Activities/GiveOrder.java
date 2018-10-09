@@ -167,17 +167,21 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
                 traderViewModel.createCollections(c, false).observe(this, responseModel -> {
                     if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
                         FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getCode());
-                        CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.ORDER, null, f);
 
+                        famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
+
+                        CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.ORDER, null, f);
+
+
+                        traderViewModel.updateFarmer(famerModel, false, false);
+                        finish();
                     } else {
 
                     }
 
 
                 });
-                famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-            traderViewModel.updateFarmer(famerModel, false, false);
-                finish();
+
 
             } else {
 
@@ -189,16 +193,18 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
             traderViewModel.updateCollection(CollModel).observe(this, responseModel -> {
                     if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
                         FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(CollModel.getCode());
-                        CommonFuncs.updateBalance(traderViewModel, balncesViewModel, CollModel, responseModel.getPayoutCode(), AppConstants.ORDER, null, f);
+                        famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
 
+                        CommonFuncs.updateBalance(famerModel, traderViewModel, balncesViewModel, CollModel, responseModel.getPayoutCode(), AppConstants.ORDER, null, f);
+
+                        traderViewModel.updateFarmer(famerModel, false, false);
+                        finish();
                     } else {
 
 
                     }
-                });
-                famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-            traderViewModel.updateFarmer(famerModel, false, false);
-                finish();
+            });
+
 
             }
 

@@ -96,8 +96,10 @@ class ApiConstants {
         //SYNC UP
         var Sync: String = baseUrl + "System/Sync.php"
 
+
         //SYNC DOWN
-        var SyncDown: String = baseUrl + "Traders/ViewInfo.php"
+        var viewInfo: String = baseUrl + "Traders/ViewInfo.php"
+        var syncDown: String = baseUrl + "System/SyncDown.php"
 
 
 

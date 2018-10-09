@@ -168,6 +168,11 @@ public class CollectionsRepo {
 
     }
 
+    public List<Collection> getCollectionsBetweenDatesOne(Long date1, Long date2, String code) {
+        return collectionsDao.getCollectionsBetweenDatesOne(date1, date2, code);
+
+    }
+
 
     private static class insertAsyncTask extends AsyncTask<Collection, Void, Boolean> {
 

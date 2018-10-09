@@ -444,11 +444,11 @@ public class PayoutsVewModel extends AndroidViewModel {
         return collectionsRepo.getCollectionByCodeOne(collectionCode);
     }
 
-    public LiveData<List<Collection>> getCollectionByDateByPayoutByFarmer(String payoutnumber, String farmer) {
+    public LiveData<List<Collection>> getCollectionByDateByPayoutByFarmer(String payoutCode, String farmer) {
         if (collections == null) {
             collections = new MutableLiveData<>();
         }
-        return collectionsRepo.getCollectionByPayoutByFarmer(payoutnumber, farmer);
+        return collectionsRepo.getCollectionByPayoutByFarmer(payoutCode, farmer);
     }
 
     public LiveData<List<Collection>> getCollectionByFarmer(String farmer) {

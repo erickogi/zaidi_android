@@ -1018,7 +1018,7 @@ public class CommonFuncs {
                             try {
                                 Double price = Double.valueOf(u.getUnitprice());
                                 Double unitCapacity = Double.valueOf(u.getUnitcapacity()) / 1000;
-                                Double total = (Double.valueOf(edtVL.getText().toString()) * unitCapacity) * price;
+                                Double total = (Double.valueOf(edtVL.getText().toString())) * price;
                                 unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
 
                             } catch (Exception nm) {
@@ -1636,6 +1636,8 @@ public class CommonFuncs {
 
 
         for (Collection coll : collections) {
+            Timber.tag("CreatePayout").e(coll.getFarmerName());
+
 
             milk = milk + (Double.valueOf(coll.getMilkCollectedAm()) + Double.valueOf(coll.getMilkCollectedPm()));
             milkLtrs = milkLtrs + (Double.valueOf(coll.getMilkCollectedValueLtrsAm()) + Double.valueOf(coll.getMilkCollectedValueLtrsPm()));
@@ -1692,7 +1694,7 @@ public class CommonFuncs {
         }
 
 
-        int status[] = getApprovedCards(collections, "" + p.getPayoutnumber(), payoutsVewModel);
+        int status[] = getApprovedCards(collections, p.getCycleCode(), payoutsVewModel);
         p.setMilkTotal(String.valueOf(milk));
 
         p.setMilkTotalKsh(String.valueOf(milkKsh));
@@ -1722,36 +1724,43 @@ public class CommonFuncs {
         return null;
     }
 
-    public static void addBalance(TraderViewModel traderViewModel, BalncesViewModel balncesViewModel, Collection c, String payoutCode, int type, FarmerLoansTable farmerLoansTable, FarmerOrdersTable farmerOrdersTable) {
+    public static void addBalance(FamerModel famerModel, TraderViewModel traderViewModel, BalncesViewModel balncesViewModel, Collection c, String payoutCode, int type, FarmerLoansTable farmerLoansTable, FarmerOrdersTable farmerOrdersTable) {
 
         Log.d("RecordAsd", "Called     ");
 
-        updateBalance(traderViewModel, balncesViewModel, c, payoutCode, type, farmerLoansTable, farmerOrdersTable);
+        updateBalance(famerModel, traderViewModel, balncesViewModel, c, payoutCode, type, farmerLoansTable, farmerOrdersTable);
 
 
 
     }
 
-    public static void updateBalance(TraderViewModel traderViewModel, BalncesViewModel balncesViewModel, Collection c, String payoutCode, int type, FarmerLoansTable farmerLoan, FarmerOrdersTable farmerOrder) {
+    public static void updateBalance(FamerModel famerModel, TraderViewModel traderViewModel, BalncesViewModel balncesViewModel, Collection c, String payoutCode, int type, FarmerLoansTable farmerLoan, FarmerOrdersTable farmerOrder) {
 
 
         Log.d("RecordAsd", "Called     ");
+        Log.d("DebugUpdate", "CommonFunc UpdateBalance Called ");
 
+        String timed = DateTimeUtils.Companion.getNow();
 
 
         if (type == AppConstants.MILK) {
 
+            Log.d("DebugUpdate", "CommonFunc UpdateBalance Called ---Milk");
 
-            refreshTotalBalances(balncesViewModel, traderViewModel, c);
+            refreshTotalBalances(0, null, null, balncesViewModel, traderViewModel, c, famerModel);
 
 
         } else if (type == AppConstants.LOAN) {
+            Log.d("DebugUpdate", "CommonFunc UpdateBalance Called --Loan");
+
             LoanModel loanModelm = new Gson().fromJson(c.getLoanDetails(), LoanModel.class);
 
 
             if (farmerLoan == null) {
+                Log.d("DebugUpdate", "CommonFunc UpdateBalance FarmerLoan---Null--So---New FarmerLoan ---New Loan");
+
                 farmerLoan = new FarmerLoansTable(
-                        GeneralUtills.Companion.createCode(farmerLoan.getFarmerCode()),
+                        GeneralUtills.Companion.createCode(c.getFarmerCode()),
                         c.getCode(),
                         payoutCode,
                         c.getFarmerCode(),
@@ -1760,29 +1769,33 @@ public class CommonFuncs {
                         loanModelm.getInstallmentAmount(),
                         loanModelm.getInstallmentsNo(),
                         0,
-                        DateTimeUtils.Companion.getNow());
+                        timed);
                 Log.d("RecordAsd", "Insert Loan" + farmerLoan.getLoanAmount() + "\n" + new Gson().toJson(loanModelm, LoanModel.class));
 
 
-                refreshLoanStatus(balncesViewModel, c.getCode(), 1, farmerLoan, traderViewModel, c);
+                refreshLoanStatus(balncesViewModel, c.getCode(), 1, farmerLoan, traderViewModel, c, famerModel);
 
 
             } else {
+                Log.d("DebugUpdate", "CommonFunc UpdateBalance FarmerLoan---IS--there---Old FarmerLoan ---Update Loan");
+
                 farmerLoan.setInstallmentAmount(loanModelm.getInstallmentAmount());
                 farmerLoan.setLoanAmount(c.getLoanAmountGivenOutPrice());
                 farmerLoan.setInstallmentNo(loanModelm.getInstallmentsNo());
-                farmerLoan.setTimestamp(DateTimeUtils.Companion.getNow());
+                farmerLoan.setTimestamp(timed);
 
 
+                Log.d("RecordAsd", "Update Loan" + new Gson().toJson(farmerLoan));
 
-                Log.d("RecordAsd", "Update Loan" + farmerLoan.getLoanAmount() + "\n" + new Gson().toJson(loanModelm, LoanModel.class));
-                refreshLoanStatus(balncesViewModel, c.getCode(), 2, farmerLoan, traderViewModel, c);
+                refreshLoanStatus(balncesViewModel, c.getCode(), 2, farmerLoan, traderViewModel, c, famerModel);
 
 
             }
 
 
         } else if (type == AppConstants.ORDER) {
+            Log.d("DebugUpdate", "CommonFunc UpdateBalance Called --Order");
+
             OrderModel orderModel = new Gson().fromJson(c.getOrderDetails(), OrderModel.class);
 
 
@@ -1796,11 +1809,11 @@ public class CommonFuncs {
                         orderModel.getInstallmentAmount(),
                         orderModel.getInstallmentNo(),
                         0,
-                        DateTimeUtils.Companion.getNow(),
-                        GeneralUtills.Companion.createCode());
+                        timed,
+                        GeneralUtills.Companion.createCode(c.getFarmerCode()));
                 balncesViewModel.insertOrder(farmerOrder);
 
-                refreshOrderStatus(balncesViewModel, c.getCode(), 2, farmerOrder, traderViewModel, c);
+                refreshOrderStatus(balncesViewModel, c.getCode(), 2, farmerOrder, traderViewModel, c, famerModel);
 
 
             } else {
@@ -1810,13 +1823,12 @@ public class CommonFuncs {
                 farmerOrder.setInstallmentAmount(orderModel.getInstallmentAmount());
                 farmerOrder.setOrderAmount(c.getOrderGivenOutPrice());
                 farmerOrder.setInstallmentNo(orderModel.getInstallmentNo());
-                farmerOrder.setTimestamp(DateTimeUtils.Companion.getNow());
+                farmerOrder.setTimestamp(timed);
 
 
 
                 Log.d("RecordAsd", "Update Order " + farmerOrder.getOrderAmount() + "\n" + new Gson().toJson(orderModel, OrderModel.class));
-
-                refreshOrderStatus(balncesViewModel, c.getCode(), 1, farmerOrder, traderViewModel, c);
+                refreshOrderStatus(balncesViewModel, c.getCode(), 1, farmerOrder, traderViewModel, c, famerModel);
 
 
             }
@@ -1831,7 +1843,7 @@ public class CommonFuncs {
 
     static Double orderTotalD = 0.0;
 
-    private static void refreshTotalBalances(BalncesViewModel balncesViewModel, TraderViewModel traderViewModel, Collection c) {
+    private static void refreshTotalBalances(int type, FarmerLoansTable lastLoan, FarmerOrdersTable lastOrder, BalncesViewModel balncesViewModel, TraderViewModel traderViewModel, Collection c, FamerModel famerModel) {
 
 
         try {
@@ -1850,7 +1862,37 @@ public class CommonFuncs {
             List<FarmerLoansTable> loansTables = balncesViewModel.getFarmerLoanByPayoutNumberByFarmerByStatus(c.getFarmerCode(), 0);
             List<FarmerOrdersTable> ordersTables = balncesViewModel.getFarmerOrderByPayoutNumberByFarmerByStatus(c.getFarmerCode(), 0);
 
+            if (type == 1) {
+                boolean isFound = false;
+                for (FarmerLoansTable fl : loansTables) {
+                    if (fl.getTimestamp().equals(lastLoan.getTimestamp())) {
+                        isFound = true;
+                        break;
+                    }
+                }
+                if (!isFound) {
+                    loansTables.add(lastLoan);
+                }
+            } else if (type == 2) {
+                boolean isFound = false;
+                for (FarmerOrdersTable fo : ordersTables) {
+                    if (fo.getTimestamp().equals(lastOrder.getTimestamp())) {
+                        isFound = true;
+                        break;
+                    }
+                }
+                if (!isFound) {
+                    ordersTables.add(lastOrder);
+                }
+            }
+
+
+
+
+
             for (FarmerLoansTable fl : loansTables) {
+                Log.d("DebugUpdateERROR", new Gson().toJson(fl));
+
                 loanTotalAmount = +(Double.valueOf(fl.getLoanAmount()));
                 loanInstalmentAmount = +(Double.valueOf(fl.getInstallmentAmount()));
                 loanPaid = +balncesViewModel.getSumPaidLoanPayment(fl.getCode());
@@ -1861,7 +1903,6 @@ public class CommonFuncs {
                 orderInstalmentAmount = +(Double.valueOf(fo.getInstallmentAmount()));
                 orderPaid = +balncesViewModel.getSumPaidOrderPayment(fo.getCode());
             }
-            //  Log.d("RecordAsd", "Alll Order " + loanInstalmentAmount + "\n" + ordersTables.size());
 
 
             double totalMilkForCurrentPayout = 0.0;
@@ -1873,7 +1914,8 @@ public class CommonFuncs {
             if (farmerBalance == null) {
 
 
-                farmerBalance = new FarmerBalance(GeneralUtills.Companion.createCode(c.getFarmerCode()), c.getFarmerCode(), "", "", "");
+                farmerBalance = new FarmerBalance(GeneralUtills.Companion.createCode(c.getFarmerCode()),
+                        c.getFarmerCode(), "", "", "");
 
                 farmerBalance.setBalanceOwed(String.valueOf((totalMilkForCurrentPayout - ((loanTotalAmount - loanPaid) + (orderTotalAmount - orderPaid)))));
                 farmerBalance.setBalanceToPay(String.valueOf((totalMilkForCurrentPayout - ((loanInstalmentAmount) + (orderInstalmentAmount)))));
@@ -1882,6 +1924,7 @@ public class CommonFuncs {
 
                 balncesViewModel.insert(farmerBalance);
 
+                traderViewModel.updateFarmer(famerModel, false, false);
 
 
             } else {
@@ -1895,19 +1938,22 @@ public class CommonFuncs {
 
                 balncesViewModel.updateRecord(farmerBalance);
 
+                traderViewModel.updateFarmer(famerModel, false, false);
+
             }
         } catch (Exception nm) {
             nm.printStackTrace();
+            Log.d("DebugUpdateERROR", nm.toString());
+
         }
 
     }
 
-    private static void refreshLoanStatus(BalncesViewModel balncesViewModel, String id, int type, FarmerLoansTable farmerLoansTable, TraderViewModel traderViewModel, Collection c) {
+    private static void refreshLoanStatus(BalncesViewModel balncesViewModel, String id, int type, FarmerLoansTable farmerLoansTable, TraderViewModel traderViewModel, Collection c, FamerModel famerModel) {
 
 
         if (type == 2) {//UPDATE LOAN
 
-            //FarmerLoansTable farmerLoansTable = balncesViewModel.getFarmerLoanByCollectionOne(id);
             double paid = 0.0;
             try {
                 paid = balncesViewModel.getSumPaidLoanPayment(farmerLoansTable.getCode());
@@ -1943,12 +1989,12 @@ public class CommonFuncs {
 
         }
 
-        refreshTotalBalances(balncesViewModel, traderViewModel, c);
+        refreshTotalBalances(1, farmerLoansTable, null, balncesViewModel, traderViewModel, c, famerModel);
 
 
     }
 
-    private static void refreshOrderStatus(BalncesViewModel balncesViewModel, String id, int type, FarmerOrdersTable farmerOrdersTable, TraderViewModel traderViewModel, Collection c) {
+    private static void refreshOrderStatus(BalncesViewModel balncesViewModel, String id, int type, FarmerOrdersTable farmerOrdersTable, TraderViewModel traderViewModel, Collection c, FamerModel famerModel) {
 
 
         if (type == 2) {//UPDATE
@@ -1989,7 +2035,7 @@ public class CommonFuncs {
             balncesViewModel.insertOrder(farmerOrdersTable);
         }
 
-        refreshTotalBalances(balncesViewModel, traderViewModel, c);
+        refreshTotalBalances(2, null, farmerOrdersTable, balncesViewModel, traderViewModel, c, famerModel);
 
 
     }

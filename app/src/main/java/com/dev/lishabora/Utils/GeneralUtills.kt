@@ -21,6 +21,8 @@ import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.text.DecimalFormat
+import java.text.NumberFormat
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.regex.Pattern
@@ -74,7 +76,36 @@ class GeneralUtills {
             return " E : " + PrefrenceManager(Application.context).traderModel.code + " T : " + DateTimeUtils.getNow()
         }
 
+        fun addCommify(no: String): String {
+            var commified = "0.0"
+            var number: Double? = 0.0
+            try {
+                number = java.lang.Double.valueOf(no)
+            } catch (nfe: Exception) {
 
+            }
+
+            val anotherFormatU = NumberFormat.getNumberInstance(Locale.US)
+            if (anotherFormatU is DecimalFormat) {
+                anotherFormatU.applyPattern("#.0")
+                anotherFormatU.isGroupingUsed = true
+                anotherFormatU.groupingSize = 3
+
+                commified = anotherFormatU.format(number)
+            }
+
+
+            return commified
+        }
+
+        fun removeCommify(no: String): String {
+            val regex = "(?<=[\\d])(,)(?=[\\d])"
+            val p = Pattern.compile(regex)
+            var str = no
+            val m = p.matcher(str)
+            str = m.replaceAll("")
+            return str
+        }
 
         fun changeCOlor(value: String, view: View, type: Int) {
             var value1 = 0.0
@@ -83,7 +114,7 @@ class GeneralUtills {
             if (type == 1) {
                 try {
                     txt = view
-                    value1 = java.lang.Double.valueOf(value)!!
+                    value1 = java.lang.Double.valueOf(removeCommify(value))!!
 
                 } catch (nm: Exception) {
 
@@ -91,7 +122,7 @@ class GeneralUtills {
             } else if (type == 2) {
                 try {
                     txt = view as TextInputEditText
-                    value1 = java.lang.Double.valueOf(value)!!
+                    value1 = java.lang.Double.valueOf(removeCommify(value))!!
 
                 } catch (nm: Exception) {
 

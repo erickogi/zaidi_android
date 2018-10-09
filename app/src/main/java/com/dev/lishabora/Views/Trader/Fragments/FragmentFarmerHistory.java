@@ -160,7 +160,7 @@ public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.
         PayoutesAdapter payoutesAdapter = initPayoutList();
 
         for (Payouts p : payouts) {
-            payoutsVewModel.getCollectionByDateByPayoutByFarmer("" + p.getPayoutnumber(), famerModel.getCode()).observe(this, new Observer<List<Collection>>() {
+            payoutsVewModel.getCollectionByDateByPayoutByFarmer(p.getCode(), famerModel.getCode()).observe(this, new Observer<List<Collection>>() {
                 @Override
                 public void onChanged(@Nullable List<Collection> collections) {
 

@@ -44,7 +44,7 @@ public class UpSyncJob extends Job {
     protected Result onRunJob(Params params) {
 
         Application.sync();
-        Application.syncDown();
+        //Application.syncDown();
 
 
 

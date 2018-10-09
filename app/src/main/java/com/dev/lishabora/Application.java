@@ -6,11 +6,23 @@ import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
+import com.dev.lishabora.COntrollers.LoginController;
 import com.dev.lishabora.Database.LMDatabase;
+import com.dev.lishabora.Models.Collection;
+import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.ProductsModel;
+import com.dev.lishabora.Models.ResponseModel;
+import com.dev.lishabora.Models.ResponseObject;
+import com.dev.lishabora.Models.RoutesModel;
 import com.dev.lishabora.Models.SyncHolderModel;
 import com.dev.lishabora.Models.SyncModel;
 import com.dev.lishabora.Models.SyncResponseModel;
 import com.dev.lishabora.Models.Trader.Data;
+import com.dev.lishabora.Models.Trader.FarmerBalance;
+import com.dev.lishabora.Models.Trader.FarmerLoansTable;
+import com.dev.lishabora.Models.Trader.FarmerOrdersTable;
+import com.dev.lishabora.Models.Trader.LoanPayments;
+import com.dev.lishabora.Models.Trader.OrderPayments;
 import com.dev.lishabora.Models.Trader.TraderModel;
 import com.dev.lishabora.Network.ApiConstants;
 import com.dev.lishabora.Network.Request;
@@ -25,10 +37,12 @@ import com.dev.lishabora.Repos.Trader.LoansTableRepo;
 import com.dev.lishabora.Repos.Trader.OrderPaymentsRepo;
 import com.dev.lishabora.Repos.Trader.OrdersTableRepo;
 import com.dev.lishabora.Repos.Trader.PayoutsRepo;
+import com.dev.lishabora.Repos.Trader.TraderRepo;
 import com.dev.lishabora.Repos.Trader.UnitsRepo;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.Jobs.Evernote.SyncJobCreator;
 import com.dev.lishabora.Utils.PrefrenceManager;
+import com.dev.lishabora.Utils.ResponseCallback;
 import com.dev.lishabora.Utils.SyncDownResponseCallback;
 import com.dev.lishabora.Utils.SyncResponseCallback;
 import com.dev.lishaboramobile.BuildConfig;
@@ -82,6 +96,7 @@ public class Application extends MultiDexApplication {
                 s.setEntityCode(p.getTraderModel().getCode());
                 s.setEntityType(AppConstants.ENTITY_TRADER);
                 s.setSyncModels(syncWorks1);
+                s.setSyncType(1);
                 s.setTime(DateTimeUtils.Companion.getNow());
 
 
@@ -174,7 +189,7 @@ public class Application extends MultiDexApplication {
             Timber.tag("Syncdownpref").d(gson.toJson(jb.toString()));
 
             DownsyncTag = 1;
-            Request.Companion.getResponseSyncDown(ApiConstants.Companion.getSyncDown(), jb, "",
+            Request.Companion.getResponseSyncDown(ApiConstants.Companion.getViewInfo(), jb, "",
                     new SyncDownResponseCallback() {
                         @Override
                         public void response(Data responseModel) {
@@ -277,6 +292,319 @@ public class Application extends MultiDexApplication {
 
     }
 
+    public static void updateTrader(JSONObject jsonObject) {
+        Request.Companion.getResponse(ApiConstants.Companion.getUpdateTrader(), jsonObject, "",
+                new ResponseCallback() {
+                    @Override
+                    public void response(ResponseModel responseModel) {
+                        if (responseModel.getResultCode() == 1) {
+                            new PrefrenceManager(context).setIsFirebaseUdated(true);
+                        }
+                        //  updateSuccess.setValue(responseModel);
+                    }
+
+                    @Override
+                    public void response(ResponseObject responseModel) {
+                        // traders.setValue(responseModel);
+                        if (responseModel.getResultCode() == 1) {
+                            new PrefrenceManager(context).setIsFirebaseUdated(true);
+                        }
+                    }
+                });
+
+    }
+
+    public static void farmer(SyncModel s) {
+        if (s.getActionType() == AppConstants.INSERT) {
+            if (s.getDataType() == 1) {
+                FamerModel famerModel = new Gson().fromJson(s.getObject(), FamerModel.class);
+                new FarmerRepo(mInstance).insert(famerModel);
+
+            } else {
+
+            }
+        } else if (s.getActionType() == AppConstants.UPDATE) {
+            if (s.getDataType() == 1) {
+                FamerModel famerModel = new Gson().fromJson(s.getObject(), FamerModel.class);
+                new FarmerRepo(mInstance).upDateRecord(famerModel);
+
+            } else {
+
+            }
+        }
+    }
+
+    public static void trader(SyncModel s) {
+        if (s.getActionType() == AppConstants.INSERT) {
+            if (s.getDataType() == 1) {
+                TraderModel model = new Gson().fromJson(s.getObject(), TraderModel.class);
+                new TraderRepo(mInstance).insert(model);
+                new PrefrenceManager(context).setLoggedUser(model);
+
+            } else {
+
+            }
+        } else if (s.getActionType() == AppConstants.UPDATE) {
+            if (s.getDataType() == 1) {
+                TraderModel model = new Gson().fromJson(s.getObject(), TraderModel.class);
+                new TraderRepo(mInstance).upDateRecord(model);
+                new PrefrenceManager(context).setLoggedUser(model);
+
+            } else {
+
+            }
+        }
+    }
+
+    public static void product(SyncModel s) {
+        if (s.getActionType() == AppConstants.INSERT) {
+            if (s.getDataType() == 1) {
+                ProductsModel productsModel = new Gson().fromJson(s.getObject(), ProductsModel.class);
+                new ProductsRepo(mInstance).insert(productsModel);
+
+            } else {
+
+            }
+        } else if (s.getActionType() == AppConstants.UPDATE) {
+            if (s.getDataType() == 1) {
+                ProductsModel productsModel = new Gson().fromJson(s.getObject(), ProductsModel.class);
+                new ProductsRepo(mInstance).upDateRecord(productsModel);
+
+            } else {
+
+            }
+        }
+    }
+
+    public static void route(SyncModel s) {
+        if (s.getActionType() == AppConstants.INSERT) {
+            if (s.getDataType() == 1) {
+                RoutesModel routesModel = new Gson().fromJson(s.getObject(), RoutesModel.class);
+                new RoutesRepo(mInstance).insert(routesModel);
+
+            } else {
+
+            }
+        } else if (s.getActionType() == AppConstants.UPDATE) {
+            if (s.getDataType() == 1) {
+                RoutesModel routesModel = new Gson().fromJson(s.getObject(), RoutesModel.class);
+                new RoutesRepo(mInstance).upDateRecord(routesModel);
+
+            } else {
+
+            }
+        }
+    }
+
+    public static void collection(SyncModel s) {
+        if (s.getActionType() == AppConstants.INSERT) {
+            if (s.getDataType() == 1) {
+                Collection collection = new Gson().fromJson(s.getObject(), Collection.class);
+                new CollectionsRepo(mInstance).insert(collection);
+
+            } else {
+
+            }
+        } else if (s.getActionType() == AppConstants.UPDATE) {
+            if (s.getDataType() == 1) {
+                Collection collection = new Gson().fromJson(s.getObject(), Collection.class);
+                new CollectionsRepo(mInstance).upDateRecord(collection);
+
+            } else {
+
+            }
+        }
+    }
+
+    public static void balance(SyncModel s) {
+        if (s.getActionType() == AppConstants.INSERT) {
+            if (s.getDataType() == 1) {
+                FarmerBalance balance = new Gson().fromJson(s.getObject(), FarmerBalance.class);
+                new BalanceRepo(mInstance).insert(balance);
+
+            } else {
+
+            }
+        } else if (s.getActionType() == AppConstants.UPDATE) {
+            if (s.getDataType() == 1) {
+                FarmerBalance balance = new Gson().fromJson(s.getObject(), FarmerBalance.class);
+                new BalanceRepo(mInstance).updateRecord(balance);
+
+            } else {
+
+            }
+        }
+    }
+
+    public static void loan(SyncModel s) {
+        if (s.getActionType() == AppConstants.INSERT) {
+            if (s.getDataType() == 1) {
+                FarmerLoansTable loansTable = new Gson().fromJson(s.getObject(), FarmerLoansTable.class);
+                new LoansTableRepo(mInstance).insert(loansTable);
+
+            } else {
+
+            }
+        } else if (s.getActionType() == AppConstants.UPDATE) {
+            if (s.getDataType() == 1) {
+                FarmerLoansTable loansTable = new Gson().fromJson(s.getObject(), FarmerLoansTable.class);
+                new LoansTableRepo(mInstance).updateRecord(loansTable);
+
+            } else {
+
+            }
+        }
+    }
+
+    public static void order(SyncModel s) {
+        if (s.getActionType() == AppConstants.INSERT) {
+            if (s.getDataType() == 1) {
+                FarmerOrdersTable farmerOrdersTable = new Gson().fromJson(s.getObject(), FarmerOrdersTable.class);
+                new OrdersTableRepo(mInstance).insert(farmerOrdersTable);
+
+            } else {
+
+            }
+        } else if (s.getActionType() == AppConstants.UPDATE) {
+            if (s.getDataType() == 1) {
+                FarmerOrdersTable farmerOrdersTable = new Gson().fromJson(s.getObject(), FarmerOrdersTable.class);
+                new OrdersTableRepo(mInstance).updateRecord(farmerOrdersTable);
+
+            } else {
+
+            }
+        }
+    }
+
+    public static void loanPayment(SyncModel s) {
+        if (s.getActionType() == AppConstants.INSERT) {
+            if (s.getDataType() == 1) {
+                LoanPayments loanPayments = new Gson().fromJson(s.getObject(), LoanPayments.class);
+                new LoanPaymentsRepo(mInstance).insertSingle(loanPayments);
+
+            } else {
+
+            }
+        } else if (s.getActionType() == AppConstants.UPDATE) {
+            if (s.getDataType() == 1) {
+                LoanPayments loanPayments = new Gson().fromJson(s.getObject(), LoanPayments.class);
+                new LoanPaymentsRepo(mInstance).updateRecord(loanPayments);
+
+            } else {
+
+            }
+        }
+    }
+
+    public static void orderPayment(SyncModel s) {
+        if (s.getActionType() == AppConstants.INSERT) {
+            if (s.getDataType() == 1) {
+                OrderPayments orderPayments = new Gson().fromJson(s.getObject(), OrderPayments.class);
+                new OrderPaymentsRepo(mInstance).insertSingle(orderPayments);
+
+            } else {
+
+            }
+        } else if (s.getActionType() == AppConstants.UPDATE) {
+            if (s.getDataType() == 1) {
+                OrderPayments orderPayments = new Gson().fromJson(s.getObject(), OrderPayments.class);
+                new OrderPaymentsRepo(mInstance).updateRecord(orderPayments);
+
+            } else {
+
+            }
+        }
+    }
+
+    static void syncChanges(SyncHolderModel syncHolderModel) {
+
+        List<SyncModel> syncModels = syncHolderModel.getSyncModels();
+        for (SyncModel s : syncModels) {
+
+            if (s.getEntityType() == AppConstants.ENTITY_FARMER) {
+
+
+                farmer(s);
+                Log.d("syncddoa", new Gson().toJson(s));
+
+            }
+            if (s.getEntityType() == AppConstants.ENTITY_TRADER) {
+                trader(s);
+            }
+            if (s.getEntityType() == AppConstants.ENTITY_PRODUCTS) {
+                product(s);
+            }
+            if (s.getEntityType() == AppConstants.ENTITY_ROUTES) {
+                route(s);
+            }
+            if (s.getEntityType() == AppConstants.ENTITY_COLLECTION) {
+                collection(s);
+            }
+            if (s.getEntityType() == AppConstants.ENTITY_BALANCES) {
+                balance(s);
+            }
+            if (s.getEntityType() == AppConstants.ENTITY_LOANS) {
+                loan(s);
+            }
+            if (s.getEntityType() == AppConstants.ENTITY_ORDERS) {
+                order(s);
+            }
+            if (s.getEntityType() == AppConstants.ENTITY_LOAN_PAYMNENTS) {
+                loanPayment(s);
+            }
+            if (s.getEntityType() == AppConstants.ENTITY_ORDER_PAYMENTS) {
+                orderPayment(s);
+            }
+
+        }
+
+    }
+
+    public static void syncChanges() {
+        PrefrenceManager prefrenceManager = new PrefrenceManager(context);
+        if (prefrenceManager.isLoggedIn() && prefrenceManager.getTraderModel() != null && prefrenceManager.getTypeLoggedIn() == LoginController.TRADER) {
+            TraderModel traderModel = prefrenceManager.getTraderModel();
+            JSONObject jsonObject = new JSONObject();
+
+            try {
+                jsonObject = new JSONObject(new Gson().toJson(traderModel));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Request.Companion.getResponseSingle(ApiConstants.Companion.getSyncDown(), jsonObject, "", new ResponseCallback() {
+                @Override
+                public void response(ResponseModel responseModel) {
+
+                }
+
+                @Override
+                public void response(ResponseObject responseModel) {
+                    //
+                    Log.d("syncddoa", "" + responseModel.getResultCode() + " " + responseModel.getResultDescription());
+
+
+                    if (responseModel.getResultCode() == 1) {
+
+                        String data = new Gson().toJson(responseModel.getData());
+                        SyncHolderModel syncHolderModel = new Gson().fromJson(data, SyncHolderModel.class);
+//
+                        Log.d("syncddoa", data);
+
+                        syncChanges(syncHolderModel);
+
+                        // Log.d("syncddoa", new Gson().toJson(syncHolderModel));
+
+
+                    } else {
+                        Log.d("syncddoa", "sdf");
+
+                    }
+                }
+            });
+
+        }
+    }
+
     void initConnectivityListener() {
         ReactiveNetwork.observeInternetConnectivity()
                 .subscribeOn(Schedulers.io())
@@ -287,13 +615,12 @@ public class Application extends MultiDexApplication {
 
                     if (isConnectedToInternet) {
                         sync();
-                        syncDown();
+                        //syncDown();
                     } else {
 
 
                     }
                 });
     }
-
 
 }

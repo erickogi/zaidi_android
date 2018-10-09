@@ -183,11 +183,9 @@ public class FragmentGiveLoan extends Fragment {
 
 
         collModel = null;
-        //PmCollModel = null;
 
 
         collModel = traderViewModel.getCollectionByDateByFarmerByTimeSngle(famerModel.getCode(), DateTimeUtils.Companion.getToday());
-        //PmCollModel = traderViewModel.getCollectionByDateByFarmerByTimeSngle(famerModel.getCode(), DateTimeUtils.Companion.getToday(), "PM");
 
 
         if (collModel != null) {
@@ -224,23 +222,36 @@ public class FragmentGiveLoan extends Fragment {
                 c.setApproved(0);
 
 
-                traderViewModel.createCollections(c, false).observe(FragmentGiveLoan.this, responseModel -> {
-                    if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-                        // balncesViewModel.getFarmerLoanByCollection(c.getId()).observe(FragmentGiveLoan.this, farmerLoansTable -> {
-                        FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getCode());
-                        CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.LOAN, f, null);
-                        // });
+            traderViewModel.createCollections(c, false).observe(FragmentGiveLoan.this, responseModel -> {
+                if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+                    Log.d("DebugUpdate", " \nLoan New collection   Resp  : " + responseModel.getResultDescription());
+                    Log.d("DebugUpdate", " \nLoan New collection  " + new Gson().toJson(c));
 
-                    } else {
+                    FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getCode());
+                    try {
+                        Log.d("DebugUpdate", " \nLoan New collection   fetch farmerlaonstable  " + new Gson().toJson(f));
 
+                    } catch (Exception nm) {
+                        Log.d("DebugUpdate", " \nLoan New collection   fetch farmerlaonstable  " + nm.toString());
 
                     }
+                    famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
+
+                    CommonFuncs.updateBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.LOAN, f, null);
+                    Log.d("DebugUpdate", " Loan New collection  Update Balance called ");
 
 
-                });
-                famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-            traderViewModel.updateFarmer(famerModel, false, false);
-                popOutFragments();
+                    //traderViewModel.updateFarmer(famerModel, false, false);
+                    Log.d("DebugUpdate", " Loan New collection farmer update Called  " + new Gson().toJson(famerModel));
+                    popOutFragments();
+
+                } else {
+
+
+                }
+
+
+            });
 
             } else {
 
@@ -250,22 +261,33 @@ public class FragmentGiveLoan extends Fragment {
                 collModel.setLoanDetails(loanDetails);
                 }
 
+            Log.d("DebugUpdate", " \nLoan Old collection   set  : " + new Gson().toJson(collModel));
 
             traderViewModel.updateCollection(collModel).observe(FragmentGiveLoan.this, responseModel -> {
-                    if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+                if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+                    Log.d("DebugUpdate", " \nLoan Old collection   Resp  : " + responseModel.getResultDescription());
+                    FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(collModel.getCode());
+                    try {
+                        Log.d("DebugUpdate", " \nLoan Old collection   fetch farmerlaonstable  " + new Gson().toJson(f));
+                    } catch (Exception nm) {
+                        Log.d("DebugUpdate", " \nLoan Old collection   fetch farmerlaonstable  " + nm.toString());
 
-                        FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(collModel.getCode());
-                        CommonFuncs.updateBalance(traderViewModel, balncesViewModel, collModel, responseModel.getPayoutCode(), AppConstants.LOAN, f, null);
-                        //});
-
-                    } else {
-
-
+                        nm.printStackTrace();
                     }
-                });
-            famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-            traderViewModel.updateFarmer(famerModel, false, false);
-                popOutFragments();
+                    famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
+                    CommonFuncs.updateBalance(famerModel, traderViewModel, balncesViewModel, collModel, responseModel.getPayoutCode(), AppConstants.LOAN, f, null);
+                    Log.d("DebugUpdate", " Loan Old collection  Update Balance called ");
+                    //traderViewModel.updateFarmer(famerModel, false, false);
+
+
+                    Log.d("DebugUpdate", " Loan Old collection farmer update Called  " + new Gson().toJson(famerModel));
+                    popOutFragments();
+
+                } else {
+
+
+                }
+            });
 
             }
 

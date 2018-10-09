@@ -430,11 +430,14 @@ public class FragmentRoutes extends Fragment {
 
         btnPositive.setOnClickListener(new EditCustomListener(alertDialogAndroid, routesModel));
         btnNeutral.setOnClickListener(view -> {
-            mViewModel.deleteRoute(routesModel, null, false).observe(FragmentRoutes.this, responseModel -> {
-                avi.smoothToHide();
-                MyToast.toast(responseModel.getResultDescription(), getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
-                alertDialogAndroid.dismiss();
-            });
+
+            if (routesModel.getFarmers() < 1) {
+                mViewModel.deleteRoute(routesModel, null, false).observe(FragmentRoutes.this, responseModel -> {
+                    avi.smoothToHide();
+                    MyToast.toast(responseModel.getResultDescription(), getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                    alertDialogAndroid.dismiss();
+                });
+            }
         });
         btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
 

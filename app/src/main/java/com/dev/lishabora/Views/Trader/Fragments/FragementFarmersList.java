@@ -20,6 +20,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,7 +42,6 @@ import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.RoutesModel;
-import com.dev.lishabora.Models.Trader.FarmerBalance;
 import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.Utils.CollectListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
@@ -130,9 +130,15 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             @Override
             public void onClickListener(int position) {
 
+
                 try {
                     if (FarmerConst.getSearchFamerModels().get(position).getDeleted() == 0 && FarmerConst.getSearchFamerModels().get(position).getArchived() == 0) {
-                        collectMilk.collectMilk(FarmerConst.getSearchFamerModels().get(position));
+                        //listenOnBalance(FarmerConst.getSearchFamerModels().get(position));
+
+                        List<Collection> collections = mViewModel.getCollectionsBetweenDatesOne(DateTimeUtils.Companion.getLongDate(DateTimeUtils.Companion.getDatePrevious(4)), DateTimeUtils.Companion.getLongDate(DateTimeUtils.Companion.getToday()), FarmerConst.getSearchFamerModels().get(position).getCode());
+                        collectMilk.collectMilk(FarmerConst.getSearchFamerModels().get(position), collections);
+
+
                     }
                 } catch (Exception nm) {
                     nm.printStackTrace();
@@ -190,9 +196,16 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
             try {
                 if (FarmerConst.getSearchFamerModels().get(position).getDeleted() == 0 && FarmerConst.getSearchFamerModels().get(position).getArchived() == 0) {
-                    listenOnBalance(FarmerConst.getSearchFamerModels().get(position));
+                    //listenOnBalance(FarmerConst.getSearchFamerModels().get(position));
 
-                    collectMilk.collectMilk(FarmerConst.getSearchFamerModels().get(position));
+                    List<Collection> collections = mViewModel.getCollectionsBetweenDatesOne(DateTimeUtils.Companion.getLongDate(DateTimeUtils.Companion.getDatePrevious(4)), DateTimeUtils.Companion.getLongDate(DateTimeUtils.Companion.getToday()), FarmerConst.getSearchFamerModels().get(position).getCode());
+                    collectMilk.collectMilk(FarmerConst.getSearchFamerModels().get(position), collections);
+
+
+
+
+
+
                 }
             } catch (Exception nm) {
                 nm.printStackTrace();
@@ -427,7 +440,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             isDraggable = false;
             btnDrag.setVisibility(View.GONE);
             setDraggale(false);
-            updateItems();
+            // updateItems();
         });
         setDraggale(false);
 
@@ -528,6 +541,15 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         } else return spinner2.getItems().get(spinner2.getSelectedIndex()).toString();
     }
 
+    public void observeBalance() {
+        balncesViewModel.fetchAll().observe(this, farmerBalances -> {
+            //fetchFarmers(0, "");
+            // Log.d("DebugUpdateballl"," FarmerList Farmerbalance on changed for ");
+            FragementFarmersList.this.fetchFarmers(FragementFarmersList.this.getSelectedAccountStatus(), FragementFarmersList.this.getSelectedRoute());//update(famerModel);
+
+
+        });
+    }
 
     private void fetchFarmers(int staus, String route) {
 
@@ -539,22 +561,35 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         }
 
         mViewModel.getFarmerByStatusRoute(staus, route).observe(FragementFarmersList.this, famerModels -> {
+            Log.d("DebugUpdateballl", " FarmerList On Changed ");
+
             avi.smoothToHide();
             prefrenceManager.setIsFarmerListFirst(false);
             if (famerModels != null) {
-                balncesViewModel.fetchAll().observe(this, farmerBalances -> {
-                    if (farmerBalances != null) {
+
+
+                //               balncesViewModel.fetchAll().observe(this, farmerBalances -> {
+                //                   if (farmerBalances != null) {
                         for (int a = 0; a < famerModels.size(); a++) {
-                            for (FarmerBalance farmerBalance : farmerBalances) {
-                                if (farmerBalance.getFarmerCode().equals(famerModels.get(a).getCode())) {
-                                    famerModels.get(a).setTotalbalance(farmerBalance.getBalanceToPay());
-                                }
+//                            for (FarmerBalance farmerBalance : farmerBalances) {
+//                                if (farmerBalance.getFarmerCode().equals(famerModels.get(a).getCode())) {
+//                                    famerModels.get(a).setTotalbalance(farmerBalance.getBalanceToPay());
+//                                }
+//                            }
+                            String bal = "0.0";
+                            try {
+                                bal = balncesViewModel.getByFarmerCodeOne(famerModels.get(a).getCode()).getBalanceToPay();
+                            } catch (Exception NM) {
+                                NM.printStackTrace();
                             }
+                            //  Log.d("DebugUpdateballl"," FarmerList Balance for  "+famerModels.get(a).getNames()+" Balance  "+bal);
+
+                            famerModels.get(a).setTotalbalance(bal);
 
                         }
                     }
-                });
-            }
+//                });
+            //           }
             update(famerModels);
         });
 
@@ -718,7 +753,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         initList();
         populateTraders();
         fetchFarmers(0, "");
-
+        observeBalance();
 
     }
 
@@ -932,11 +967,16 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
     @Override
     public void createCollection(Collection c, FamerModel famerModel) {
-        listenOnBalance(famerModel);
+        Log.d("Colllectionn", new Gson().toJson(c));
+
+        // listenOnBalance(famerModel);
         mViewModel.createCollections(c, false).observe(FragementFarmersList.this, responseModel -> {
+
+
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-                CommonFuncs.addBalance(mViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.MILK, null, null);
-                mViewModel.updateFarmer(famerModel, false, false);
+
+                CommonFuncs.updateBalance(famerModel, mViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.MILK, null, null);
+                //mViewModel.updateFarmer(famerModel, false, false);
 
             } else {
 
@@ -950,6 +990,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
     @Override
     public void createCollection(Collection cAm, Collection cPm) {
+
         mViewModel.createCollections(cAm, false).observe(FragementFarmersList.this, responseModel -> {
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
 
@@ -976,14 +1017,15 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     @Override
     public void updateCollection(Collection c, FamerModel famerModel) {
 
-        listenOnBalance(famerModel);
+        // listenOnBalance(famerModel);
 
+        Log.d("Colllectionn", new Gson().toJson(c));
         mViewModel.updateCollection(c).observe(FragementFarmersList.this, responseModel -> {
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
 
-                CommonFuncs.updateBalance(mViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.MILK, null, null);
+                CommonFuncs.updateBalance(famerModel, mViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.MILK, null, null);
 
-                mViewModel.updateFarmer(famerModel, false, false);
+                // mViewModel.updateFarmer(famerModel, false, false);
 
 
             } else {
@@ -993,14 +1035,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         });
     }
 
-    private void listenOnBalance(FamerModel famerModel) {
-        balncesViewModel.getByFarmerCode(famerModel.getCode()).observe(this, farmerBalance -> {
-            mViewModel.updateFarmer(famerModel, false, false);
-            fetchFarmers(0, "");
-        });
 
-
-    }
 
     @Override
     public void updateCollection(Collection cAm, Collection cPm) {

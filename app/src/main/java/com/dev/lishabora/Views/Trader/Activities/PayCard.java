@@ -453,17 +453,17 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
 
                         }
                         if (type == AppConstants.MILK) {
-                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, null);
+                            CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, null);
                         } else if (type == AppConstants.LOAN) {
                             FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getCode());
 
-                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, f, null);
+                            CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, f, null);
 
                         } else if (type == AppConstants.ORDER) {
 
                             FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getCode());
 
-                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, f);
+                            CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, f);
 
 
                         }
@@ -483,18 +483,18 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
                             a.dismiss();
                         }
                         if (type == AppConstants.MILK) {
-                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, null);
+                            CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, null);
                         } else if (type == AppConstants.LOAN) {
                             FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getCode());
 
-                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, f, null);
+                            CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, f, null);
 
 
                         } else if (type == AppConstants.ORDER) {
 
                             FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getCode());
 
-                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, f);
+                            CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, f);
 
 
 

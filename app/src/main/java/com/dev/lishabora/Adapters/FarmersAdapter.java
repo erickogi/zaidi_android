@@ -12,6 +12,7 @@ import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.Draggable.helper.OnStartDragListener;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
+import com.dev.lishabora.Utils.TextUtils;
 import com.dev.lishabora.Views.Trader.FarmerConst;
 import com.dev.lishaboramobile.R;
 
@@ -73,7 +74,7 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
         FamerModel farmer = modelList.get(position);
         String v = farmer.getTotalbalance();
         try {
-            v = String.valueOf(GeneralUtills.Companion.round(v, 0));
+            v = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(v, 0)));
         } catch (Exception nm) {
             nm.printStackTrace();
         }
@@ -86,8 +87,10 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
         holder.cycle.setText(farmer.getCyclename());
         holder.route.setText(farmer.getRoutename());
 
+        // String [] arr=DateTimeUtils.Companion.getDateAndTime(DateTimeUtils.Companion.getDisplayDate(farmer.getLastCollectionTime()));
+        String[] arr = DateTimeUtils.Companion.getDateAndTime(farmer.getLastCollectionTime());
 
-        holder.txtDate.setText(DateTimeUtils.Companion.getDisplayDate(farmer.getLastCollectionTime()));
+        holder.txtDate.setText(TextUtils.makeSectionOfTextBold(arr[0], arr[1]));
 //        String status = "";
 //        if (farmer.getArchived() == 0 && farmer.getDeleted() == 0 && farmer.getDummy() == 0) {
 //            status = "Active";

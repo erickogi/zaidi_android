@@ -17,6 +17,8 @@ import org.json.JSONObject;
 
 import java.util.Random;
 
+import static com.dev.lishabora.Application.syncChanges;
+
 //import com.erickogi14gmail.photozuri.Payments.Payments;
 
 /**
@@ -83,7 +85,7 @@ public class FirebaseService extends FirebaseMessagingService {
 
             //int code = data.getInt("code");// MPESA 1, NOTIFICATION
             //int status = data.getInt("status");
-
+            syncChanges();
 
             sendNotification(title, message, true, 0);
         } catch (Exception e) {

@@ -31,6 +31,7 @@ import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishaboramobile.R;
 import com.google.gson.Gson;
 
+import java.util.List;
 import java.util.Objects;
 
 //import com.fxn769.Numpad;
@@ -146,7 +147,9 @@ class CollectMilk implements NumberKeyboardListener {
 
 
         //       btnPositive.setBackgroundDrawable(Application.context.getResources().getDrawable(R.drawable.rectbackgroundyello));
-//        btnNegative.setBackgroundColor(Application.context.getResources().getColor(R.color.colorPrimary));
+        // btnNegative.setBackgroundColor(Application.context.getResources().getColor(R.color.red));
+        // btnPositive.setBackgroundColor(Application.context.getResources().getColor(R.color.colorPrimary));
+        //  btnNegative.setBackgroundColor(Application.context.getResources().getColor(R.color.colorPrimary));
 //
 //        btnNegative.setTextColor(Application.context.getResources().getColor(R.color.white));
 //        btnPositive.setTextColor(Application.context.getResources().getColor(R.color.white));
@@ -195,7 +198,7 @@ class CollectMilk implements NumberKeyboardListener {
     }
 
 
-    void collectMilk(FamerModel famerModel) {
+    void collectMilk(FamerModel famerModel, List<Collection> collections) {
 
 
         clearDialog();
@@ -214,7 +217,6 @@ class CollectMilk implements NumberKeyboardListener {
         unitsModel.setUnitprice(famerModel.getUnitprice());
         unitsModel.setUnit(famerModel.getUnitname());
 
-        Log.d("farmermoddel", "" + new Gson().toJson(famerModel));
 
         names.setText(famerModel.getNames());
         balance.setText(GeneralUtills.Companion.round(famerModel.getTotalbalance(), 1));
@@ -228,10 +230,51 @@ class CollectMilk implements NumberKeyboardListener {
         unitPrice.setText(unitsModel.getUnitprice());
 
 
-        getCollection(famerModel.getCode(), DateTimeUtils.Companion.getDatePrevious(3), day1am, day1pm);
-        getCollection(famerModel.getCode(), DateTimeUtils.Companion.getDatePrevious(2), day2am, day2pm);
-        getCollection(famerModel.getCode(), DateTimeUtils.Companion.getDatePrevious(1), day3am, day3pm);
-        getCollection(famerModel.getCode(), DateTimeUtils.Companion.getToday(), edtTodayAm, edtTodayPm);
+        for (Collection c : collections) {
+
+
+            Log.d("milkates", " Collecton Date " + c.getDayDate() + "\nSunday " + DateTimeUtils.Companion.getDatePrevious(2));
+
+
+            if (c.getDayDate().contains(DateTimeUtils.Companion.getDatePrevious(3))) {
+                if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
+                    day1am.setText(c.getMilkCollectedAm());
+
+                }
+                if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
+                    day1pm.setText(c.getMilkCollectedPm());
+
+                }
+            } else if (c.getDayDate().contains(DateTimeUtils.Companion.getDatePrevious(2))) {
+                if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
+                    day2am.setText(c.getMilkCollectedAm());
+
+                }
+                if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
+                    day2pm.setText(c.getMilkCollectedPm());
+
+                }
+            } else if (c.getDayDate().contains(DateTimeUtils.Companion.getDatePrevious(1))) {
+                if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
+                    day3am.setText(c.getMilkCollectedAm());
+
+                }
+                if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
+                    day3pm.setText(c.getMilkCollectedPm());
+
+                }
+            } else if (c.getDayDate().contains(DateTimeUtils.Companion.getToday())) {
+                if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
+                    edtTodayAm.setText(c.getMilkCollectedAm());
+
+                }
+                if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
+                    edtTodayPm.setText(c.getMilkCollectedPm());
+
+                }
+            }
+
+        }
 
 
         try {
@@ -270,7 +313,7 @@ class CollectMilk implements NumberKeyboardListener {
                         try {
 
                             Double price = Double.valueOf(unitsModel.getUnitprice());
-                            Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity()) / 1000;
+                            Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity());// / 1000;
                             Double total = (Double.valueOf(edtTodayAm.getText().toString()) * unitCapacity) * price;
 
 
@@ -307,7 +350,7 @@ class CollectMilk implements NumberKeyboardListener {
 
                         try {
                             Double price = Double.valueOf(unitsModel.getUnitprice());
-                            Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity()) / 1000;
+                            Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity());// / 1000;
                             Double total = (Double.valueOf(edtTodayPm.getText().toString()) * unitCapacity) * price;
                             unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
 
@@ -539,6 +582,8 @@ class CollectMilk implements NumberKeyboardListener {
 
         Collection c = mViewModel.getCollectionByDateByFarmerByTimeSngle(code, date);//.observe(FragementFarmersList.this, collections -> {
 
+
+        //   List<Collection> collections=mViewModel.getCol
         if (txtAm != null && txtPm != null) {
             if (c != null) {
                 if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {

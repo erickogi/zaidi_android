@@ -888,10 +888,10 @@ public class TraderViewModel extends AndroidViewModel
         synch(AppConstants.INSERT, AppConstants.ENTITY_COLLECTION, collection, null, 1);
 
 
-
         if (this.createCollectionSuccess == null) {
+            this.createCollectionSuccess = new MutableLiveData();
+
         }
-        this.createCollectionSuccess = new MutableLiveData();
 
 
         Payouts p = getLastPayout(collection.getCycleCode());
@@ -965,12 +965,12 @@ public class TraderViewModel extends AndroidViewModel
                 endAndStart = PayoutsCyclesDatesUtills.getPayoutStartEndDate(c.getCode(), new PayoutsCyclesDatesUtills.EndAndStart(tradersStartDay, tradersEndDay), new PayoutsCyclesDatesUtills.EndAndStart(p.getStartDate(), p.getEndDate()));
                 payouts.setStartDate(endAndStart.getStartDate());
                 payouts.setEndDate(endAndStart.getEndDate());
-
-
                 payouts.setPayoutnumber(plastIfOne.getPayoutnumber() + 1);
 
 
                 insertPayout(payouts);
+
+
                 collection.setCycleStartedOn(payouts.getStartDate());
                 collection.setPayoutnumber(payouts.getPayoutnumber());
                 collection.setPayoutCode(payouts.getCode());
@@ -989,7 +989,7 @@ public class TraderViewModel extends AndroidViewModel
             } else {
                 collection.setCycleStartedOn(p.getStartDate());
                 collection.setPayoutnumber(p.getPayoutnumber());
-                collection.setPayoutCode(payouts.getCode());
+                collection.setPayoutCode(p.getCode());
 
 
                 collectionsRepo.insert(collection);
@@ -1013,6 +1013,32 @@ public class TraderViewModel extends AndroidViewModel
 
         return createCollectionSuccess;
     }
+
+    public LiveData<ResponseModel> updateCollection(Collection c) {
+        if (c != null) {
+
+            c.setTraderCode(prefrenceManager.getTraderModel().getCode());
+            collectionsRepo.upDateRecord(c);
+            synch(AppConstants.UPDATE, AppConstants.ENTITY_COLLECTION, c, null, 1);
+
+            if (this.updateCollectionSuccess == null) {
+            }
+        }
+        this.updateCollectionSuccess = new MutableLiveData();
+
+        ResponseModel responseModel = new ResponseModel();
+        responseModel.setResultCode(1);
+        responseModel.setResultDescription("Farmer updated successfully");
+        responseModel.setData(null);
+        if (c != null) {
+            responseModel.setPayoutCode(c.getCode());
+        }
+
+        updateCollectionSuccess.setValue(responseModel);
+
+        return updateCollectionSuccess;
+    }
+
 
     private String getCycleName(String cycleCode) {
         if (cycleCode.equals("1")) {
@@ -1171,12 +1197,12 @@ public class TraderViewModel extends AndroidViewModel
         return deleteFarmerSuccess;
     }
 
-    public LiveData<ResponseModel> updateFarmer(FamerModel famerModel, boolean b, boolean isFarmerProfileUpdate) {
+    public LiveData<ResponseModel> updateFarmer(FamerModel famerModel, boolean isOnline, boolean isFarmerProfileUpdate) {
         if (this.updateFarmerSuccess == null) {
         }
         this.updateFarmerSuccess = new MutableLiveData();
 
-        if (b) {
+        if (isOnline) {
             Request.Companion.getResponse(ApiConstants.Companion.getCreateFarmer(), getFarmerJson(), "", new ResponseCallback() {
                 @Override
                 public void response(ResponseModel responseModel) {
@@ -1241,7 +1267,13 @@ public class TraderViewModel extends AndroidViewModel
         return collectionsRepo.getCollectionByDateByFarmerByTimeSingle(code, today);
     }
 
+    public LiveData<List<Collection>> getCollectionsBetweenDates(Long date1, Long date2, String code) {
+        return collectionsRepo.getCollectionsBetweenDates(date1, date2, code);
+    }
 
+    public List<Collection> getCollectionsBetweenDatesOne(Long date1, Long date2, String code) {
+        return collectionsRepo.getCollectionsBetweenDatesOne(date1, date2, code);
+    }
     public LiveData<List<Collection>> getCollectionByDateByPayout(String payoutnumber) {
         if (collections == null) {
             collections = new MutableLiveData<>();
@@ -1321,30 +1353,6 @@ public class TraderViewModel extends AndroidViewModel
     }
 
 
-    public LiveData<ResponseModel> updateCollection(Collection c) {
-        if (c != null) {
-
-            c.setTraderCode(prefrenceManager.getTraderModel().getCode());
-            collectionsRepo.upDateRecord(c);
-            synch(AppConstants.UPDATE, AppConstants.ENTITY_COLLECTION, c, null, 1);
-
-            if (this.updateCollectionSuccess == null) {
-            }
-        }
-        this.updateCollectionSuccess = new MutableLiveData();
-
-        ResponseModel responseModel = new ResponseModel();
-        responseModel.setResultCode(1);
-        responseModel.setResultDescription("Farmer updated successfully");
-        responseModel.setData(null);
-        if (c != null) {
-            responseModel.setPayoutCode(c.getCode());
-        }
-
-        updateCollectionSuccess.setValue(responseModel);
-
-        return updateCollectionSuccess;
-    }
 
     public Payouts createPayout(Cycles cycles, FamerModel famerModel) {
 

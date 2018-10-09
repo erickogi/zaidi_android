@@ -57,7 +57,7 @@ public class MilkModel implements Serializable {
     public String getValueKsh() {
 
         if (unitsModel != null && unitsModel.getUnitcapacity() != null && unitsModel.getUnitprice() != null) {
-            double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity()) / 1000;
+            double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity());/// 1000;
             double unitPricePer = Double.valueOf(unitsModel.getUnitprice());
             double unitQtyCollected = 0;
             if (unitQty != null) {
@@ -68,7 +68,7 @@ public class MilkModel implements Serializable {
                 }
             }
 
-            return String.valueOf((unitCapacity * unitQtyCollected) * unitPricePer);
+            return String.valueOf((unitQtyCollected) * unitPricePer);
         } else {
             return valueKsh;
         }

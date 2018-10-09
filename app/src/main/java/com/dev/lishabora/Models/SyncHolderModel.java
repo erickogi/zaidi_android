@@ -5,9 +5,17 @@ import java.util.List;
 public class SyncHolderModel {
     private String entityCode;
     private int entityType;
+    private int syncType;
     private String time;
     private List<SyncModel> syncModels;
 
+    public int getSyncType() {
+        return syncType;
+    }
+
+    public void setSyncType(int syncType) {
+        this.syncType = syncType;
+    }
 
     public String getEntityCode() {
         return entityCode;

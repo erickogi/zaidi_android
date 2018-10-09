@@ -20,8 +20,17 @@ public class ResponseModel extends LiveData<ResponseModel> implements Serializab
     private TraderModel traderModel;
     private List<TraderModel> traderModels;
     private List<ProductsModel> productsModels;
+    private List<SyncModel> syncModels;
 
     private String payoutCode;
+
+    public List<SyncModel> getSyncModels() {
+        return syncModels;
+    }
+
+    public void setSyncModels(List<SyncModel> syncModels) {
+        this.syncModels = syncModels;
+    }
 
     public List<ProductsModel> getProductsModels() {
         return productsModels;

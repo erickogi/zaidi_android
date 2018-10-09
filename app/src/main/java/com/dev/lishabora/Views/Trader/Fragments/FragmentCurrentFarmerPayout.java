@@ -195,7 +195,7 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
 
         this.payouts = traderViewModel.createPayout(c, famerModel);
         if (payouts != null) {
-            payoutsVewModel.getCollectionByDateByPayoutByFarmer("" + payouts.getPayoutnumber(), famerModel.getCode()).observe(this, (List<Collection> collections) -> {
+            payoutsVewModel.getCollectionByDateByPayoutByFarmer("" + payouts.getCode(), famerModel.getCode()).observe(this, (List<Collection> collections) -> {
 
 
                 FragmentCurrentFarmerPayout.this.collections = collections;
@@ -292,17 +292,17 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
                             a.dismiss();
                         }
                         if (type == AppConstants.MILK) {
-                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, null);
+                            CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, null);
                         } else if (type == AppConstants.LOAN) {
                             FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getCode());
 
-                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, f, null);
+                            CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, f, null);
 
 
                         } else if (type == AppConstants.ORDER) {
                             FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getCode());
 
-                            CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, f);
+                            CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, f);
 
 
                         }
@@ -324,11 +324,11 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
                                 a.dismiss();
                             }
                             if (type == AppConstants.MILK) {
-                                CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, null);
+                                CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, null);
                             } else if (type == AppConstants.LOAN) {
                                 FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getCode());
 
-                                CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, f, null);
+                                CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, f, null);
 
 
                             } else if (type == AppConstants.ORDER) {
@@ -336,7 +336,7 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
 
                                 FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getCode());
 
-                                CommonFuncs.addBalance(traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, f);
+                                CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, f);
 
 
                             }

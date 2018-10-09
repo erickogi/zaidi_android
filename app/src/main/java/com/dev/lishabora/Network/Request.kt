@@ -231,7 +231,7 @@ class Request {
                         dataresponseModelSingle.resultCode = responseModelSingle.code
                         dataresponseModelSingle.resultDescription = responseModelSingle.resultDescription
 
-                        Timber.tag("Syncdown").d(gson.toJson(dataresponseModelSingle))
+                        // Timber.tag("Syncdown").d(gson.toJson(dataresponseModelSingle))
                         responseCallback.response(dataresponseModelSingle)
 
 

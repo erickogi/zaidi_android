@@ -9,8 +9,10 @@ public class ResponseObject implements Serializable {
     private Object Data;
     private int ResultCode;
     private String ResultDescription;
-    private int Type;
+    private int Type = 0;
     private String Code;
+//    private List<SyncModel> syncModels;
+//
 
 
     private List<FamerModel> famerModels;
@@ -19,8 +21,20 @@ public class ResponseObject implements Serializable {
     private TraderModel traderModel;
     private List<TraderModel> traderModels;
 
+//    public List<SyncModel> getSyncModels() {
+//        return syncModels;
+//    }
+//
+//    public void setSyncModels(List<SyncModel> syncModels) {
+//        this.syncModels = syncModels;
+//    }
+
     public String getCode() {
-        return Code;
+        if (Code != null) {
+            return Code;
+        } else {
+            return "";
+        }
     }
 
     public void setCode(String code) {

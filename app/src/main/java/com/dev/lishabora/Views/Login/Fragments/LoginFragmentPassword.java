@@ -286,9 +286,21 @@ public class LoginFragmentPassword extends Fragment implements View.OnClickListe
         traderViewModel.createTrader(traderModel);
 
 
+        if (!prefrenceManager.isFirebaseUpdated()) {
+            traderModel.setFirebasetoken(prefrenceManager.getFirebase());
+            JSONObject jsonObject = new JSONObject();
 
+
+            try {
+                jsonObject = new JSONObject(new Gson().toJson(traderModel));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Application.updateTrader(jsonObject);
+        }
 
         Application.syncDown();
+
 
         startActivity(new Intent(getActivity(), TraderActivity.class));
         Objects.requireNonNull(getActivity()).finish();

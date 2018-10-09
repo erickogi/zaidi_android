@@ -20,6 +20,12 @@ class DateTimeUtils {
     companion object {
 
         var Format: String = "yyyy-MM-dd HH:mm:ss"
+
+
+        var FormatMinsYrSec: String = "MM-dd HH:mm"
+        var FormatTime: String = "HH:mm"
+
+
         var FormatSmall: String = "yyyy-MM-dd"
 
 
@@ -42,6 +48,24 @@ class DateTimeUtils {
             return milliseconds.toString()
         }
 
+        fun getDateAndTime(date1q: String): Array<String> {
+
+            val a = ""
+            val b = ""
+
+            val originalString = date1q
+            val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(originalString)
+            val newString = SimpleDateFormat("H:mm").format(date)
+
+            val originalStringd = date1q
+//            val dated = SimpleDateFormat("MM-dd HH:mm").parse(originalStringd)
+            val newStringd = SimpleDateFormat("dd-MMM HH:mm").format(date)
+
+
+
+
+            return arrayOf(newStringd, newString)
+        }
         fun parseDateTime(dateString: String, originalFormat: String, outputFromat: String): String {
 
             val formatter = SimpleDateFormat(originalFormat, Locale.US)

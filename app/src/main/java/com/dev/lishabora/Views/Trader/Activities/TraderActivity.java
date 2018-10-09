@@ -108,9 +108,7 @@ public class TraderActivity extends AppCompatActivity {
 
             @Override
             public void helpClicked() {
-                //fragment = new FragmentSyncs();
 
-                MyToast.toast("We are working on implementing this  \n sit tight", TraderActivity.this, R.drawable.ic_launcher, Toast.LENGTH_LONG);
 
             }
 
