@@ -109,7 +109,7 @@ public class TraderActivity extends AppCompatActivity {
             @Override
             public void helpClicked() {
 
-
+                Application.syncChanges();
             }
 
             @Override

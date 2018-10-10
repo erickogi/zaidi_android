@@ -314,7 +314,7 @@ class CollectMilk implements NumberKeyboardListener {
 
                             Double price = Double.valueOf(unitsModel.getUnitprice());
                             Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity());// / 1000;
-                            Double total = (Double.valueOf(edtTodayAm.getText().toString()) * unitCapacity) * price;
+                            Double total = (Double.valueOf(edtTodayAm.getText().toString())) * price;
 
 
                             unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
@@ -351,7 +351,7 @@ class CollectMilk implements NumberKeyboardListener {
                         try {
                             Double price = Double.valueOf(unitsModel.getUnitprice());
                             Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity());// / 1000;
-                            Double total = (Double.valueOf(edtTodayPm.getText().toString()) * unitCapacity) * price;
+                            Double total = (Double.valueOf(edtTodayPm.getText().toString())) * price;
                             unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
 
 

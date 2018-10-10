@@ -150,7 +150,7 @@ public class PayoutsVewModel extends AndroidViewModel {
         syncModel.setObjectData(o);
         //syncModel.setObject(new Gson().toJson(o));
         syncModel.setEntityType(entity);
-        syncModel.setSyncStatus(0);
+        syncModel.setSyncStatus("");
         syncModel.setTimeStamp(DateTimeUtils.Companion.getNow());
         syncModel.setSyncTime("");
         syncModel.setTraderCode(prefrenceManager.getTraderModel().getCode());

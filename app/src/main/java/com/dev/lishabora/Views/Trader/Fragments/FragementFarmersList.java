@@ -448,7 +448,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         fab.setOnClickListener(viehw -> {
 
             if (mViewModel.getUnits1(false).size() < 1) {
-                // getRoutes();
+                getUnit();
             } else {
                 if (isSetUp()) {
                     FragementFarmersList.this.createFarmers();
@@ -489,6 +489,18 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
         collectMilk = new CollectMilk(getContext(), mViewModel, balncesViewModel, this, true);
 
+    }
+
+    private void getUnit() {
+        mViewModel.getUnits(true).observe(FragementFarmersList.this, new Observer<List<UnitsModel>>() {
+            @Override
+            public void onChanged(@Nullable List<UnitsModel> unitsModels) {
+                if (unitsModels != null) {
+                    //  FragementFarmersList.this.createFarmers();
+
+                }
+            }
+        });
     }
 
 

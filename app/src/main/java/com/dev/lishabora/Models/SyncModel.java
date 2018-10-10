@@ -41,7 +41,8 @@ public class SyncModel {
 
     private String timeStamp;
     private String syncTime;
-    private int syncStatus;
+
+    private String syncStatus;
 
     @Ignore
     private String traderCode;
@@ -82,7 +83,7 @@ public class SyncModel {
     public SyncModel() {
     }
 
-    public SyncModel(int id, int actionType, int entityType, Object objectData, String object, String timeStamp, String syncTime, int syncStatus) {
+    public SyncModel(int id, int actionType, int entityType, Object objectData, String object, String timeStamp, String syncTime, String syncStatus) {
         this.id = id;
         this.actionType = actionType;
         this.entityType = entityType;
@@ -180,11 +181,11 @@ public class SyncModel {
         this.syncTime = syncTime;
     }
 
-    public int getSyncStatus() {
+    public String getSyncStatus() {
         return syncStatus;
     }
 
-    public void setSyncStatus(int syncStatus) {
+    public void setSyncStatus(String syncStatus) {
         this.syncStatus = syncStatus;
     }
 }

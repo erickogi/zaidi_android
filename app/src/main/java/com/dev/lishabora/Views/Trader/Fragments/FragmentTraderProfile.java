@@ -13,7 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.dev.lishabora.Application;
 import com.dev.lishabora.Models.Trader.TraderModel;
+import com.dev.lishabora.Repos.Trader.TraderRepo;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Trader.Activities.FirstTimeLaunch;
@@ -81,40 +83,49 @@ public class FragmentTraderProfile extends Fragment {
         //traderModel = prefrenceManager.getTraderModel();
 
 
-        traderViewModel.getTrader(prefrenceManager.getCode()).observe(this, new Observer<TraderModel>() {
-            @Override
-            public void onChanged(@Nullable TraderModel traderModel) {
+        traderViewModel.getTrader(prefrenceManager.getCode()).observe(this, traderModelf -> {
 
-                FragmentTraderProfile.this.traderModel = traderModel;
+            if (traderModel != null) {
+                FragmentTraderProfile.this.traderModel = traderModelf;
+            } else {
+                FragmentTraderProfile.this.traderModel = prefrenceManager.getTraderModel();
+                new TraderRepo(Application.application).insert(traderModel);
+
+            }
+            try {
+
                 txtName.setText(traderModel.getNames());
                 txtCode.setText(traderModel.getCode());
                 txtPhone.setText(traderModel.getMobile());
                 txtBussinesName.setText(traderModel.getBusinessname());
-
                 txtStartDate.setText(traderModel.getCycleStartDay());
                 txtEndDate.setText(traderModel.getCycleEndDay());
 
+            } catch (Exception nm) {
 
-                traderViewModel.getProductsCountLive().observe(FragmentTraderProfile.this, new Observer<Integer>() {
-                    @Override
-                    public void onChanged(@Nullable Integer integer) {
-                        txtProducts.setText("" + integer);
-                    }
-                });
-                traderViewModel.getRoutesCountLive().observe(FragmentTraderProfile.this, new Observer<Integer>() {
-                    @Override
-                    public void onChanged(@Nullable Integer integer) {
-                        txtRoutes.setText("" + integer);
-                    }
-                });
-
-                try {
-                    getActivity().setTitle(traderModel.getNames());
-                } catch (Exception nm) {
-                    nm.printStackTrace();
-                }
-
+                nm.printStackTrace();
             }
+
+
+            traderViewModel.getProductsCountLive().observe(FragmentTraderProfile.this, new Observer<Integer>() {
+                @Override
+                public void onChanged(@Nullable Integer integer) {
+                    txtProducts.setText("" + integer);
+                }
+            });
+            traderViewModel.getRoutesCountLive().observe(FragmentTraderProfile.this, new Observer<Integer>() {
+                @Override
+                public void onChanged(@Nullable Integer integer) {
+                    txtRoutes.setText("" + integer);
+                }
+            });
+
+            try {
+                getActivity().setTitle(traderModel.getNames());
+            } catch (Exception nm) {
+                nm.printStackTrace();
+            }
+
         });
 
     }

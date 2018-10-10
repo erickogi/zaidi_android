@@ -193,7 +193,7 @@ public class TraderViewModel extends AndroidViewModel
         //syncModel.setObject(new Gson().toJson(o));
         syncModel.setDataType(type);
         syncModel.setEntityType(entity);
-        syncModel.setSyncStatus(0);
+        syncModel.setSyncStatus("");
         syncModel.setTimeStamp(DateTimeUtils.Companion.getNow());
         syncModel.setSyncTime("");
         syncModel.setTraderCode(prefrenceManager.getTraderModel().getCode());
@@ -899,8 +899,8 @@ public class TraderViewModel extends AndroidViewModel
 
         Cycles c = getCycleO(collection.getCycleCode());
         if (c == null) {
-            insertCycles();
-            c = getCycleO(collection.getCycleCode());
+            c = insertCycles(collection.getCycleCode());
+            //c = getCycleO(collection.getCycleCode());
 
         }
         int farmerCountPerCycle = getFarmersCountByCycle(collection.getCycleCode());
@@ -1054,7 +1054,7 @@ public class TraderViewModel extends AndroidViewModel
         }
     }
 
-    private void insertCycles() {
+    private Cycles insertCycles(String cycleCode) {
         Cycles cycles = new Cycles();
         cycles.setCode(1);
         cycles.setCycle("Weekly");
@@ -1089,7 +1089,17 @@ public class TraderViewModel extends AndroidViewModel
 
         cyclesRepo.insert(cycles4);
 
-
+        if (cycleCode.equals("1")) {
+            return cycles;
+        } else if (cycleCode.equals("2")) {
+            return cycles1;
+        } else if (cycleCode.equals("3")) {
+            return cycles2;
+        } else if (cycleCode.equals("4")) {
+            return cycles3;
+        } else {
+            return null;
+        }
     }
 
     public LiveData<ResponseModel> updateProduct(ProductsModel productsModel, boolean b) {
@@ -1364,8 +1374,8 @@ public class TraderViewModel extends AndroidViewModel
 
         Cycles c = getCycleO("" + cycles.getCode());
         if (c == null) {
-            insertCycles();
-            c = getCycleO("" + cycles.getCode());
+            c = insertCycles("" + cycles.getCode());
+            // c = getCycleO("" + cycles.getCode());
 
         }
 

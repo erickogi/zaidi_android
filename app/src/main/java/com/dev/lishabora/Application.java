@@ -14,6 +14,7 @@ import com.dev.lishabora.Models.ProductsModel;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.ResponseObject;
 import com.dev.lishabora.Models.RoutesModel;
+import com.dev.lishabora.Models.SyncDownResponse;
 import com.dev.lishabora.Models.SyncHolderModel;
 import com.dev.lishabora.Models.SyncModel;
 import com.dev.lishabora.Models.SyncResponseModel;
@@ -43,6 +44,7 @@ import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.Jobs.Evernote.SyncJobCreator;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.Utils.ResponseCallback;
+import com.dev.lishabora.Utils.SyncChangesCallback;
 import com.dev.lishabora.Utils.SyncDownResponseCallback;
 import com.dev.lishabora.Utils.SyncResponseCallback;
 import com.dev.lishaboramobile.BuildConfig;
@@ -571,35 +573,21 @@ public class Application extends MultiDexApplication {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Request.Companion.getResponseSingle(ApiConstants.Companion.getSyncDown(), jsonObject, "", new ResponseCallback() {
+            Request.Companion.getResponseSyncChanges(ApiConstants.Companion.getSyncDown(), jsonObject, "", new SyncChangesCallback() {
                 @Override
-                public void response(ResponseModel responseModel) {
+                public void onSucces(SyncDownResponse response) {
+                    Log.d("syncddoa", new Gson().toJson(response));
+                    syncChanges(response.getData());
 
                 }
 
                 @Override
-                public void response(ResponseObject responseModel) {
-                    //
-                    Log.d("syncddoa", "" + responseModel.getResultCode() + " " + responseModel.getResultDescription());
+                public void onError(String error) {
+                    Log.d("syncddoa", error);
 
-
-                    if (responseModel.getResultCode() == 1) {
-
-                        String data = new Gson().toJson(responseModel.getData());
-                        SyncHolderModel syncHolderModel = new Gson().fromJson(data, SyncHolderModel.class);
-//
-                        Log.d("syncddoa", data);
-
-                        syncChanges(syncHolderModel);
-
-                        // Log.d("syncddoa", new Gson().toJson(syncHolderModel));
-
-
-                    } else {
-                        Log.d("syncddoa", "sdf");
-
-                    }
                 }
+
+
             });
 
         }

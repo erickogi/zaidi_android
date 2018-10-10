@@ -163,7 +163,7 @@ public class BalncesViewModel extends AndroidViewModel
         //syncModel.setObject(new Gson().toJson(o));
         syncModel.setDataType(type);
         syncModel.setEntityType(entity);
-        syncModel.setSyncStatus(0);
+        syncModel.setSyncStatus("");
         syncModel.setTimeStamp(DateTimeUtils.Companion.getNow());
         syncModel.setSyncTime("");
         syncModel.setTraderCode(prefrenceManager.getTraderModel().getCode());
