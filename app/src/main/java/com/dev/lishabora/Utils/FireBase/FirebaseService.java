@@ -87,7 +87,7 @@ public class FirebaseService extends FirebaseMessagingService {
             //int status = data.getInt("status");
             syncChanges();
 
-            sendNotification(title, message, true, 0);
+            //  sendNotification(title, message, true, 0);
         } catch (Exception e) {
         Log.e(TAG, "Exception: " + e.getMessage());
         }

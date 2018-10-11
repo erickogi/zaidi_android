@@ -82,7 +82,10 @@ public class Application extends MultiDexApplication {
     public static void sync() {
         try {
             LMDatabase lmDatabase = LMDatabase.getDatabase(context);
-            List<SyncModel> list = lmDatabase.syncDao().getAllByStatusRaw(0);
+            List<SyncModel> list = lmDatabase.syncDao().getAllByStatusRaw();
+            if (list != null) {
+                Log.d("testSyncUp", "SYNC ITEMS ARE +" + list.size());
+            }
 
 
             if (list != null && list.size() > 0) {
@@ -109,13 +112,15 @@ public class Application extends MultiDexApplication {
                     e.printStackTrace();
                 }
 
-                if (UpsyncTag == 0) {
+                // if (UpsyncTag == 0) {
                     sync(jsonObject, syncWorks1);
-                }
+                // }
             }
 
         } catch (Exception nm) {
             nm.printStackTrace();
+            Log.d("testSyncUp", "SYNC IError" + nm.toString());
+
         }
 
     }
@@ -129,13 +134,16 @@ public class Application extends MultiDexApplication {
                 public void response(SyncResponseModel responseModel) {
                     UpsyncTag = 0;
 
+                    Log.d("testSyncUp", "SYNC RESPONSE +" + responseModel.getResultDescription());
+
+
 
                     if (responseModel.getResultCode() == 2) {
                         int failureId = Integer.valueOf(responseModel.getFailureId());
                         for (int a = failureId; a > 0; a--) {
 
                             for (SyncModel d : syncWorks) {
-                                if (d.getId() == failureId) {
+                                if (d.getId() == a) {
                                     deleteSync(d);
                                 }
                             }
@@ -152,7 +160,9 @@ public class Application extends MultiDexApplication {
 
                 @Override
                 public void response(String error) {
-                    Log.d("datasend", error);
+                    // Log.d("datasend", error);
+                    Log.d("testSyncUp", "SYNC IError" + error);
+
                     UpsyncTag = 0;
 
                 }
@@ -161,6 +171,8 @@ public class Application extends MultiDexApplication {
             });
         } catch (Exception nm) {
             nm.printStackTrace();
+            Log.d("testSyncUp", "SYNC IError" + nm.toString());
+
             UpsyncTag = 0;
         }
 
@@ -195,6 +207,7 @@ public class Application extends MultiDexApplication {
                     new SyncDownResponseCallback() {
                         @Override
                         public void response(Data responseModel) {
+                            Timber.tag("Syncdownpref").d(gson.toJson(responseModel));
 
                             DownsyncTag = 0;
                             try {
@@ -207,8 +220,13 @@ public class Application extends MultiDexApplication {
                                     new ProductsRepo(mInstance).insert(responseModel.getProductModels());
                                     new CollectionsRepo(mInstance).insert(responseModel.getCollectionModels());
                                     new PayoutsRepo(mInstance).insert(responseModel.getPayoutModels());
+                                    new BalanceRepo(mInstance).insertMultiple(responseModel.getBalanceModels());
+                                    new CyclesRepo(mInstance).insert(responseModel.getCycleModels());
+                                    new UnitsRepo(mInstance).insert(responseModel.getUnitsModels());
 
                                 } catch (Exception nm) {
+                                    Timber.tag("Syncdownpref").d(gson.toJson(jb.toString()));
+
                                     nm.printStackTrace();
                                 }
 
@@ -219,14 +237,10 @@ public class Application extends MultiDexApplication {
                                     new OrdersTableRepo(mInstance).insertMultiple(responseModel.getOrderModels());
                                     new LoanPaymentsRepo(mInstance).insertMultiple(responseModel.getLoanPaymentModels());
                                     new OrderPaymentsRepo(mInstance).insertMultiple(responseModel.getOrderPaymentModels());
-                                    new BalanceRepo(mInstance).insertMultiple(responseModel.getBalanceModel());
-                                    new CyclesRepo(mInstance).insert(responseModel.getCycleModels());
-                                    new UnitsRepo(mInstance).insert(responseModel.getUnitsModels());
 
 
                                     try {
                                         if (responseModel.getTraderModel() != null) {
-
                                             new PrefrenceManager(context).setLoggedUser(responseModel.getTraderModel());
                                         }
                                     } catch (Exception nm) {
@@ -265,7 +279,9 @@ public class Application extends MultiDexApplication {
     public static boolean canLogOut() {
         LMDatabase lmDatabase = LMDatabase.getDatabase(context);
         int count = lmDatabase.syncDao().getCount();
-        return count <= 0;
+        Log.d("testSyncUp", "Can Log Out Count +" + count);
+
+        return count < 1;
 
     }
 
@@ -291,6 +307,11 @@ public class Application extends MultiDexApplication {
         new UCEHandler.Builder(this).setTrackActivitiesEnabled(true).addCommaSeparatedEmailAddresses("eric@lishabora.com").build();
 
         initConnectivityListener();
+        initHas7DaysData();
+
+    }
+
+    private void initHas7DaysData() {
 
     }
 
@@ -602,7 +623,7 @@ public class Application extends MultiDexApplication {
                     isConnected = isConnectedToInternet;
 
                     if (isConnectedToInternet) {
-                        sync();
+                        // sync();
                         //syncDown();
                     } else {
 

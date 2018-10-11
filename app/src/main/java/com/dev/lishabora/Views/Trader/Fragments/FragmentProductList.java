@@ -127,7 +127,8 @@ public class FragmentProductList extends Fragment {
             // subscribeProduct();
             launchDialog = true;
             if (productsModelAll == null || productsModelAll.size() < 1) {
-                getAllProducts();
+                //getAllProducts();
+                subscribeProduct(sort(productsModel, productsModelAll));
 
             } else {
 
@@ -510,14 +511,14 @@ public class FragmentProductList extends Fragment {
 
                         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
                         if (launchDialog) {
-                            subscribeProduct(responseModel);
+                            // subscribeProduct(responseModel);
                         } else {
                             getProducts();
                         }
                     } else {
                         if (launchDialog) {
                             LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
-                            subscribeProduct(sort(productsModel, productsModelAll));
+                            //  subscribeProduct(sort(productsModel, productsModelAll));
                         } else {
                             getProducts();
                         }

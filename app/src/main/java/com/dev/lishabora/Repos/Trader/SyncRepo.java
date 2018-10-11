@@ -3,6 +3,7 @@ package com.dev.lishabora.Repos.Trader;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.dev.lishabora.Database.LMDatabase;
 import com.dev.lishabora.Database.SyncDao;
@@ -34,7 +35,6 @@ public class SyncRepo {
 
     public void insert(SyncModel syncModel) {
         syncDao = db.syncDao();
-
         new insertSyncAsyncTask(syncDao).execute(syncModel);
     }
 
@@ -63,7 +63,7 @@ public class SyncRepo {
     }
 
     public LiveData<List<SyncModel>> getAllByStatus(int status) {
-        return db.syncDao().getAllByStatus(status);
+        return db.syncDao().getAllByStatus();
     }
 
     public LiveData<SyncModel> getSynce(int code) {
@@ -89,6 +89,8 @@ public class SyncRepo {
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
             com.dev.lishabora.Application.sync();
+
+            Log.d("testSyncUp", "DATA INSERTED SYNC CALLED");
 
 
         }

@@ -1846,6 +1846,7 @@ public class CommonFuncs {
     private static void refreshTotalBalances(int type, FarmerLoansTable lastLoan, FarmerOrdersTable lastOrder, BalncesViewModel balncesViewModel, TraderViewModel traderViewModel, Collection c, FamerModel famerModel) {
 
 
+        Log.d("RefreshBalanceeCa", " Called");
         try {
             FarmerBalance farmerBalance = balncesViewModel.getByFarmerCodeOne(c.getFarmerCode());
 

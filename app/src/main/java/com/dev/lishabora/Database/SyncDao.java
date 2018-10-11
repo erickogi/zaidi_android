@@ -31,11 +31,11 @@ public interface SyncDao {
     LiveData<SyncModel> getSyncByKeyID(int keyid);
 
 
-    @Query("SELECT * FROM SYNC WHERE syncStatus =:status")
-    LiveData<List<SyncModel>> getAllByStatus(int status);
+    @Query("SELECT * FROM SYNC ")
+    LiveData<List<SyncModel>> getAllByStatus();
 
-    @Query("SELECT * FROM SYNC WHERE syncStatus =:status")
-    List<SyncModel> getAllByStatusRaw(int status);
+    @Query("SELECT * FROM SYNC ")
+    List<SyncModel> getAllByStatusRaw();
 
 
 

@@ -61,6 +61,8 @@ public class TraderModel implements Serializable {
     private   int deleted ;
     private   int synced ;
     private   int dummy ;
+    @Ignore
+    private int isLoggedIn;
 
     @Ignore
     private List<ProductsModel> productModels;
@@ -68,6 +70,14 @@ public class TraderModel implements Serializable {
 
     public List<ProductsModel> getProductModels() {
         return productModels;
+    }
+
+    public int getIsLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public void setIsLoggedIn(int isLoggedIn) {
+        this.isLoggedIn = isLoggedIn;
     }
 
     public void setProductModels(List<ProductsModel> productModels) {

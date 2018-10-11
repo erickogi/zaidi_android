@@ -4,8 +4,9 @@ import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.support.v7.widget.Toolbar
+import com.dev.lishabora.Models.Trader.TraderModel
 import com.dev.lishaboramobile.R
-
+import com.mikepenz.materialdrawer.AccountHeader
 import com.mikepenz.materialdrawer.AccountHeaderBuilder
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.DrawerBuilder
@@ -15,7 +16,6 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 
 class DrawerClass {
-
     private fun getBitmap(activity: Activity, img: String): Bitmap {
 
 
@@ -33,9 +33,10 @@ class DrawerClass {
     }
 
     companion object {
-
+        internal lateinit var result: Drawer
+        internal lateinit var headerResult: AccountHeader
         fun getDrawer(email: String?, name: String?, activity: Activity, toolbar: Toolbar, itemListener: DrawerItemListener) {
-            lateinit var result: Drawer
+            // result: Drawer
             val drawerEmptyItem = PrimaryDrawerItem().withIdentifier(0).withName("")
             drawerEmptyItem.withEnabled(false)
 
@@ -86,23 +87,35 @@ class DrawerClass {
 
 
 
-            val headerResult = AccountHeaderBuilder()
+            headerResult = AccountHeaderBuilder()
                     .withActivity(activity)
                     .withOnProfileClickDrawerCloseDelay(2)
                     .withTextColorRes(R.color.white)
                     .withSelectionListEnabledForSingleProfile(false)
                     .withDividerBelowHeader(true)
+                    .withHeaderBackground(R.drawable.headermain)
+                    .withProfileImagesClickable(true)
+                    //.withOnAccountHeaderItemLongClickListener { view, profile, current ->  }
 
-                    //  .withHeaderBackground(R.drawable.dvf)
+
                     .addProfiles(
-                            ProfileDrawerItem().withName("0$name").withEmail(email)
+                            ProfileDrawerItem().withName(name).withEmail(email)
 
                                     //.withSelectedTextColorRes(R.color.colorPrimaryDark)
-                                    .withIcon(R.drawable.ic_launcher)
+                                    .withIcon(R.drawable.ic_launcher).withIdentifier(234)
 
 
                     )
-                    .withOnAccountHeaderListener { view, profile, currentProfile -> false }
+
+                    .withOnAccountHeaderListener { view, profile, currentProfile ->
+                        itemListener.profileSettingsClicked()
+                        result.closeDrawer()
+
+                        true
+
+
+                    }
+
                     .build()
 
 
@@ -214,6 +227,16 @@ class DrawerClass {
                     }
 
                     .build()
+        }
+
+        fun observeChangesInProfile(traderModel: TraderModel) {
+
+            try {
+                headerResult.updateProfile(ProfileDrawerItem().withIcon(R.drawable.ic_launcher).withName(traderModel.names).withEmail(traderModel.mobile).withIdentifier(234))
+            } catch (nm: Exception) {
+                nm.printStackTrace()
+            }
+
         }
     }
 }

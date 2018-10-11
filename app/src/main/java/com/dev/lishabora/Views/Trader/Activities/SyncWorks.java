@@ -202,4 +202,8 @@ public class SyncWorks extends AppCompatActivity {
         File file = new File(path);
         return file.exists();
     }
+
+    public void deleteNow(View view) {
+        delete(syncWorks);
+    }
 }

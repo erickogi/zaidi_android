@@ -30,9 +30,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.RoutesAdapter;
+import com.dev.lishabora.Application;
 import com.dev.lishabora.Models.RPFSearchModel;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.RoutesModel;
+import com.dev.lishabora.Repos.Trader.FarmerRepo;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.MyToast;
@@ -431,12 +433,16 @@ public class FragmentRoutes extends Fragment {
         btnPositive.setOnClickListener(new EditCustomListener(alertDialogAndroid, routesModel));
         btnNeutral.setOnClickListener(view -> {
 
-            if (routesModel.getFarmers() < 1) {
+            FarmerRepo f = new FarmerRepo(Application.context);
+            int count = f.getNoOfRows(routesModel.getCode());
+            if (routesModel.getFarmers() < 1 && count < 1) {
                 mViewModel.deleteRoute(routesModel, null, false).observe(FragmentRoutes.this, responseModel -> {
                     avi.smoothToHide();
                     MyToast.toast(responseModel.getResultDescription(), getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
                     alertDialogAndroid.dismiss();
                 });
+            } else {
+                MyToast.toast("Route has farmers,\n CANNOT BE DELETED", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
             }
         });
         btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());

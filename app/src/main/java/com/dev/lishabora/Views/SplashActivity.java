@@ -10,13 +10,14 @@ import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.Views.Admin.Activities.AdminsActivity;
 import com.dev.lishabora.Views.Login.Activities.LoginActivity;
 import com.dev.lishabora.Views.Trader.Activities.TraderActivity;
+import com.dev.lishaboramobile.R;
 
 public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_splash);
+        setContentView(R.layout.splash);
         UpSyncJob.schedulePeriodic();
 
     }

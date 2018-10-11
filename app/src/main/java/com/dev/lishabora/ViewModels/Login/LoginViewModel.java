@@ -32,9 +32,9 @@ public class LoginViewModel extends AndroidViewModel {
     public LiveData<ResponseObject> phoneAuth(JSONObject jsonObject) {
 
 
-        if (this.phoneAuth == null) {
+        //this.phoneAuth.setValue(null);
             this.phoneAuth = new MutableLiveData();
-        }
+
 
 
         Request.Companion.getResponseSingle(ApiConstants.Companion.getPhoneAuth(), jsonObject, "", new ResponseCallback() {
@@ -56,9 +56,9 @@ public class LoginViewModel extends AndroidViewModel {
 
     public LiveData<ResponseObject> passwordAuth(JSONObject jsonObject) {
 
-        if (this.passAuth == null) {
+        // if (this.passAuth == null) {
             this.passAuth = new MutableLiveData();
-        }
+        // }
         Request.Companion.getResponseSingle(ApiConstants.Companion.getPasswordAuth(), jsonObject, "", new ResponseCallback() {
             @Override
             public void response(ResponseModel responseModel) {
@@ -118,9 +118,9 @@ public class LoginViewModel extends AndroidViewModel {
 
     public LiveData<ResponseObject> newPassConfirm(JSONObject jsonObject) {
 
-        if (this.newPassConfirm == null) {
+        //  if (this.newPassConfirm == null) {
             this.newPassConfirm = new MutableLiveData();
-        }
+        //  }
         Request.Companion.getResponseSingle(ApiConstants.Companion.getNewPassordConfirm(), jsonObject, "", new ResponseCallback() {
             @Override
             public void response(ResponseModel responseModel) {

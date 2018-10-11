@@ -579,29 +579,20 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             prefrenceManager.setIsFarmerListFirst(false);
             if (famerModels != null) {
 
+                for (int a = 0; a < famerModels.size(); a++) {
 
-                //               balncesViewModel.fetchAll().observe(this, farmerBalances -> {
-                //                   if (farmerBalances != null) {
-                        for (int a = 0; a < famerModels.size(); a++) {
-//                            for (FarmerBalance farmerBalance : farmerBalances) {
-//                                if (farmerBalance.getFarmerCode().equals(famerModels.get(a).getCode())) {
-//                                    famerModels.get(a).setTotalbalance(farmerBalance.getBalanceToPay());
-//                                }
-//                            }
                             String bal = "0.0";
                             try {
                                 bal = balncesViewModel.getByFarmerCodeOne(famerModels.get(a).getCode()).getBalanceToPay();
                             } catch (Exception NM) {
                                 NM.printStackTrace();
                             }
-                            //  Log.d("DebugUpdateballl"," FarmerList Balance for  "+famerModels.get(a).getNames()+" Balance  "+bal);
 
                             famerModels.get(a).setTotalbalance(bal);
 
                         }
                     }
-//                });
-            //           }
+
             update(famerModels);
         });
 
@@ -664,11 +655,8 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
     private void emptyState(boolean listHasData, String text, LinearLayout empty_layout, ImageView empty_image, TextView emptyTxt) {
         if (listHasData) {
-            //  empty_layout.setVisibility(View.GONE);
         } else {
-            //  empty_layout.setVisibility(View.VISIBLE);
             if (text != null) {
-                //     emptyTxt.setText(text);
             }
         }
     }

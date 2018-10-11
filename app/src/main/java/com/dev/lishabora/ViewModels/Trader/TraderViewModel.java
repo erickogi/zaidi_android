@@ -5,6 +5,7 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.dev.lishabora.AppConstants;
 import com.dev.lishabora.Models.Collection;
@@ -885,7 +886,6 @@ public class TraderViewModel extends AndroidViewModel
 
 
         collection.setTraderCode(prefrenceManager.getTraderModel().getCode());
-        synch(AppConstants.INSERT, AppConstants.ENTITY_COLLECTION, collection, null, 1);
 
 
         if (this.createCollectionSuccess == null) {
@@ -895,6 +895,8 @@ public class TraderViewModel extends AndroidViewModel
 
 
         Payouts p = getLastPayout(collection.getCycleCode());
+
+
         Payouts plastIfOne = getLastPayout();
 
         Cycles c = getCycleO(collection.getCycleCode());
@@ -943,6 +945,9 @@ public class TraderViewModel extends AndroidViewModel
             collection.setCycleStartedOn(payouts.getStartDate());
             collection.setPayoutnumber(payouts.getPayoutnumber());
             collection.setPayoutCode(payouts.getCode());
+            synch(AppConstants.INSERT, AppConstants.ENTITY_COLLECTION, collection, null, 1);
+
+            Log.d("payoutCodeDebug", "Collection Inserted \nNew  payout \n(No other  payouts available) " + payouts.getCode());
 
 
             collectionsRepo.insert(collection);
@@ -974,7 +979,9 @@ public class TraderViewModel extends AndroidViewModel
                 collection.setCycleStartedOn(payouts.getStartDate());
                 collection.setPayoutnumber(payouts.getPayoutnumber());
                 collection.setPayoutCode(payouts.getCode());
+                Log.d("payoutCodeDebug", "Collection Inserted \nNew  payout \nOther cycles payouts available " + payouts.getCode());
 
+                synch(AppConstants.INSERT, AppConstants.ENTITY_COLLECTION, collection, null, 1);
 
                 collectionsRepo.insert(collection);
                 ResponseModel responseModel = new ResponseModel();
@@ -989,8 +996,10 @@ public class TraderViewModel extends AndroidViewModel
             } else {
                 collection.setCycleStartedOn(p.getStartDate());
                 collection.setPayoutnumber(p.getPayoutnumber());
+                Log.d("payoutCodeDebug", "Collection Inserted \nExisting payout  " + p.getCode());
                 collection.setPayoutCode(p.getCode());
 
+                synch(AppConstants.INSERT, AppConstants.ENTITY_COLLECTION, collection, null, 1);
 
                 collectionsRepo.insert(collection);
                 ResponseModel responseModel = new ResponseModel();

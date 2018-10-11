@@ -1,5 +1,6 @@
 package com.dev.lishabora.Views.Trader.Activities;
 
+import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,9 +22,16 @@ import android.widget.Toast;
 import com.dev.lishabora.Adapters.ViewPagerAdapter;
 import com.dev.lishabora.Application;
 import com.dev.lishabora.Database.LMDatabase;
+import com.dev.lishabora.Models.ResponseModel;
+import com.dev.lishabora.Models.ResponseObject;
+import com.dev.lishabora.Models.Trader.TraderModel;
+import com.dev.lishabora.Network.ApiConstants;
+import com.dev.lishabora.Network.Request;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.PrefrenceManager;
+import com.dev.lishabora.Utils.ResponseCallback;
 import com.dev.lishabora.ViewModels.Admin.AdminsViewModel;
+import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Login.Activities.LoginActivity;
 import com.dev.lishabora.Views.Login.ResetPassword;
 import com.dev.lishabora.Views.Reports.FragmentReports;
@@ -35,7 +43,11 @@ import com.dev.lishabora.Views.Trader.Fragments.FragmentProductList;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentRoutes;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentTraderProfile;
 import com.dev.lishaboramobile.R;
+import com.google.gson.Gson;
 import com.wang.avi.AVLoadingIndicatorView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,10 +60,13 @@ public class TraderActivity extends AppCompatActivity {
     private static Fragment fragment = null;
     PrefrenceManager traderPrefs;
     FloatingActionButton fab;
+    private ProgressDialog progressDialog;
+
     SearchView mSearchView;
     ViewPagerAdapter adapter;
     private AVLoadingIndicatorView avi;
     private AdminsViewModel adminsViewModel;
+    private TraderViewModel viewModel;
 
 
     private static final String SAMPLE_DB_NAME = "lm_database";
@@ -85,13 +100,20 @@ public class TraderActivity extends AppCompatActivity {
 
                     alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
                         dialogInterface.dismiss();
-                        LMDatabase lmDatabase = LMDatabase.getDatabase(TraderActivity.this);
-                        lmDatabase.clearAllTables();
-                        new PrefrenceManager(TraderActivity.this).setIsLoggedIn(false, 0);
 
 
-                        startActivity(new Intent(TraderActivity.this, LoginActivity.class));
-                        finish();
+                        JSONObject jsonObject = new JSONObject();
+                        TraderModel traderModel = new PrefrenceManager(TraderActivity.this).getTraderModel();
+                        traderModel.setIsLoggedIn(0);
+                        try {
+                            jsonObject = new JSONObject(new Gson().toJson(traderModel));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        updateTrader(jsonObject);
+
+
+
                     }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
 
                     AlertDialog alertDialogAndroid = alertDialog.create();
@@ -128,6 +150,7 @@ public class TraderActivity extends AppCompatActivity {
 
 
             }
+
 
             @Override
             public void notificationsClicked() {
@@ -189,8 +212,60 @@ public class TraderActivity extends AppCompatActivity {
             }
         });
 
+        viewModel.getTrader(traderPrefs.getCode()).observe(this, traderModel -> {
+            if (traderModel != null) {
+                DrawerClass.Companion.observeChangesInProfile(traderModel);
+            }
+
+
+        });
     }
 
+    public void updateTrader(JSONObject jsonObject) {
+        progressDialog = new ProgressDialog(TraderActivity.this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Logging you out");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+        progressDialog.show();
+
+        Request.Companion.getResponse(ApiConstants.Companion.getUpdateTrader(), jsonObject, "",
+                new ResponseCallback() {
+                    @Override
+                    public void response(ResponseModel responseModel) {
+                        progressDialog.dismiss();
+                        if (responseModel.getResultCode() == 1) {
+                            logOut();
+
+                        } else {
+                            MyToast.toast(responseModel.getResultDescription(), TraderActivity.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                        }
+                    }
+
+                    @Override
+                    public void response(ResponseObject responseModel) {
+                        progressDialog.dismiss();
+
+                        if (responseModel.getResultCode() == 1) {
+                            logOut();
+                        } else {
+                            MyToast.toast(responseModel.getResultDescription(), TraderActivity.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                        }
+                    }
+                });
+
+    }
+
+    public void logOut() {
+        LMDatabase lmDatabase = LMDatabase.getDatabase(TraderActivity.this);
+        lmDatabase.clearAllTables();
+        new PrefrenceManager(TraderActivity.this).setIsLoggedIn(false, 0);
+
+
+        startActivity(new Intent(TraderActivity.this, LoginActivity.class));
+        finish();
+
+    }
     void setUpView(String name) {
 
         if (fragment != null) {
@@ -230,6 +305,7 @@ public class TraderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_trader);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        viewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
         adminsViewModel = ViewModelProviders.of(this).get(AdminsViewModel.class);
         traderPrefs = new PrefrenceManager(this);
         setUpDrawer(toolbar, traderPrefs.getTraderModel().getMobile(), traderPrefs.getTraderModel().getNames());
