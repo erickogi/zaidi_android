@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 
 import com.dev.lishabora.Database.BalancesDao;
 import com.dev.lishabora.Database.LMDatabase;
-import com.dev.lishabora.Models.Trader.FarmerBalance;
+import com.dev.lishabora.Models.FarmerBalance;
 
 import java.util.List;
 

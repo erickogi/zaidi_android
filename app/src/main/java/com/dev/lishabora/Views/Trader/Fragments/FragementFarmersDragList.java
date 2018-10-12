@@ -37,6 +37,7 @@ import android.widget.Toast;
 import com.dev.lishabora.Adapters.FarmersDragAdapter;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.FarmerRouteBalance;
 import com.dev.lishabora.Models.RPFSearchModel;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.RoutesModel;
@@ -481,7 +482,35 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
         mViewModel.getFarmerByStatusRoute(staus, route).observe(FragementFarmersDragList.this, famerModels -> {
             avi.smoothToHide();
             prefrenceManager.setIsFarmerListFirst(false);
-            update(famerModels);
+            if (famerModels != null) {
+
+                List<FamerModel> famerModels1 = new LinkedList<>();
+                for (FarmerRouteBalance f : famerModels) {
+                    FamerModel famerModel = f.getFamerModel();
+                    famerModel.setTotalbalance(f.getFarmerBalance().getBalanceToPay());
+                    famerModel.setRoutename(f.getRoutesModel().getRoute());
+                    famerModel.setRoute(f.getRoutesModel().getRoute());
+
+                    famerModels1.add(famerModel);
+                }
+
+//                for (int a = 0; a < famerModels.size(); a++) {
+//
+//                            String bal = "0.0";
+//                            try {
+//                                bal = balncesViewModel.getByFarmerCodeOne(famerModels.get(a).getCode()).getBalanceToPay();
+//                            } catch (Exception NM) {
+//                                NM.printStackTrace();
+//                            }
+//
+//                            famerModels.get(a).setTotalbalance(bal);
+//
+//                        }
+                update(famerModels1);
+
+            }
+
+            // update(famerModels);
         });
     }
 
@@ -564,25 +593,25 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
         }
         return jsonObject;
     }
-
-    private void getFarmers() {
-        avi.smoothToShow();
-        avi.setVisibility(View.VISIBLE);
-
-        if (mViewModel == null) {
-            mViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
-
-        }
-
-        mViewModel.getFarmers(getTraderFarmeroductsObject(), prefrenceManager.isFarmerListFirstTime()).observe(FragementFarmersDragList.this, new Observer<List<FamerModel>>() {
-            @Override
-            public void onChanged(@Nullable List<FamerModel> famerModels) {
-                avi.smoothToHide();
-                prefrenceManager.setIsFarmerListFirst(false);
-                update(famerModels);
-            }
-        });
-    }
+//
+//    private void getFarmers() {
+//        avi.smoothToShow();
+//        avi.setVisibility(View.VISIBLE);
+//
+//        if (mViewModel == null) {
+//            mViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
+//
+//        }
+//
+//        mViewModel.getFarmers(getTraderFarmeroductsObject(), prefrenceManager.isFarmerListFirstTime()).observe(FragementFarmersDragList.this, new Observer<List<FamerModel>>() {
+//            @Override
+//            public void onChanged(@Nullable List<FamerModel> famerModels) {
+//                avi.smoothToHide();
+//                prefrenceManager.setIsFarmerListFirst(false);
+//                update(famerModels);
+//            }
+//        });
+//    }
 
 
     private void populateTraders() {

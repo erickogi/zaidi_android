@@ -40,6 +40,7 @@ import com.dev.lishabora.AppConstants;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.FarmerRouteBalance;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.RoutesModel;
 import com.dev.lishabora.Models.UnitsModel;
@@ -51,7 +52,9 @@ import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
+import com.dev.lishabora.Views.CollectMilkConstants;
 import com.dev.lishabora.Views.CommonFuncs;
+import com.dev.lishabora.Views.Trader.Activities.ActivityCollect;
 import com.dev.lishabora.Views.Trader.Activities.CreateFarmerActivity;
 import com.dev.lishabora.Views.Trader.Activities.FarmerProfile;
 import com.dev.lishabora.Views.Trader.Activities.FirstTimeLaunch;
@@ -199,10 +202,19 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                     //listenOnBalance(FarmerConst.getSearchFamerModels().get(position));
 
                     List<Collection> collections = mViewModel.getCollectionsBetweenDatesOne(DateTimeUtils.Companion.getLongDate(DateTimeUtils.Companion.getDatePrevious(4)), DateTimeUtils.Companion.getLongDate(DateTimeUtils.Companion.getToday()), FarmerConst.getSearchFamerModels().get(position).getCode());
-                    collectMilk.collectMilk(FarmerConst.getSearchFamerModels().get(position), collections);
+
+                    if (position == 1) {
+                        collectMilk.collectMilk(FarmerConst.getSearchFamerModels().get(position), collections);
+                    } else {
 
 
+                        CollectMilkConstants.setFamerModel(FarmerConst.getSearchFamerModels().get(position));
+                        CollectMilkConstants.setCollectionss(collections);
 
+                        // CollectMilkConstants milkConstants=new CollectMilkConstants(FarmerConst.getSearchFamerModels().get(position),collections);
+                        startActivity(new Intent(getActivity(), ActivityCollect.class));
+
+                    }
 
 
 
@@ -579,21 +591,32 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             prefrenceManager.setIsFarmerListFirst(false);
             if (famerModels != null) {
 
-                for (int a = 0; a < famerModels.size(); a++) {
+                List<FamerModel> famerModels1 = new LinkedList<>();
+                for (FarmerRouteBalance f : famerModels) {
+                    FamerModel famerModel = f.getFamerModel();
+                    famerModel.setTotalbalance(f.getFarmerBalance().getBalanceToPay());
+                    famerModel.setRoutename(f.getRoutesModel().getRoute());
+                    famerModel.setRoute(f.getRoutesModel().getRoute());
 
-                            String bal = "0.0";
-                            try {
-                                bal = balncesViewModel.getByFarmerCodeOne(famerModels.get(a).getCode()).getBalanceToPay();
-                            } catch (Exception NM) {
-                                NM.printStackTrace();
-                            }
+                    famerModels1.add(famerModel);
+                }
 
-                            famerModels.get(a).setTotalbalance(bal);
+//                for (int a = 0; a < famerModels.size(); a++) {
+//
+//                            String bal = "0.0";
+//                            try {
+//                                bal = balncesViewModel.getByFarmerCodeOne(famerModels.get(a).getCode()).getBalanceToPay();
+//                            } catch (Exception NM) {
+//                                NM.printStackTrace();
+//                            }
+//
+//                            famerModels.get(a).setTotalbalance(bal);
+//
+//                        }
+                update(famerModels1);
 
-                        }
-                    }
+            }
 
-            update(famerModels);
         });
 
     }

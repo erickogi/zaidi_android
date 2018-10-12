@@ -133,7 +133,9 @@
         <activity
             android:name="com.dev.lishabora.Views.Trader.Activities.EditOrder"
             android:theme="@style/NoTitleDialog" />
-        <activity android:name="com.dev.lishabora.Views.Trader.Activities.ActivityCollect" />
+        <activity
+            android:name="com.dev.lishabora.Views.Trader.Activities.ActivityCollect"
+            android:theme="@style/NoTitleDialog" />
         <activity
             android:name="com.dev.lishabora.Views.Trader.Activities.Reports"
             android:label="@string/title_activity_reports"

@@ -1,4 +1,4 @@
-package com.dev.lishabora.Models.Trader;
+package com.dev.lishabora.Models;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;

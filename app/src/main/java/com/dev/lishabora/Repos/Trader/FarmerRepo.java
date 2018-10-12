@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import com.dev.lishabora.Database.FarmersDao;
 import com.dev.lishabora.Database.LMDatabase;
 import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.FarmerRouteBalance;
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class FarmerRepo {
     }
 
 
-    public LiveData<List<FamerModel>> fetchAllData(boolean isOnline) {
+    public LiveData<List<FarmerRouteBalance>> fetchAllData(boolean isOnline) {
         if(isOnline){
             return null;
         }else {
@@ -44,7 +45,15 @@ public class FarmerRepo {
     }
 
 
-    public LiveData<List<FamerModel>> getFarmersByCycle(String code) {
+    public LiveData<List<FarmerRouteBalance>> fetchAllData() {
+
+        farmersDao = db.farmersDao();
+        return farmersDao.findAllBalRoute();
+
+    }
+
+
+    public LiveData<List<FarmerRouteBalance>> getFarmersByCycle(String code) {
 
         farmersDao = db.farmersDao();
         return farmersDao.getAllByCycleCode(code);
@@ -66,7 +75,7 @@ public class FarmerRepo {
 
     }
 
-    public LiveData<List<FamerModel>> fetchAllData(boolean isOnline, String route) {
+    public LiveData<List<FarmerRouteBalance>> fetchAllData(boolean isOnline, String route) {
         if (isOnline) {
             return null;
         } else {
@@ -194,7 +203,7 @@ public class FarmerRepo {
         }
     }
     private void insertSingleTrader(FamerModel farmerModel) {
-        
+
     }
 
 
@@ -247,7 +256,7 @@ public class FarmerRepo {
         return db.farmersDao().search( names, moile, dummy, deleted, archived);
     }
 
-    public LiveData<List<FamerModel>> getFarmersByStatusRoute(int deleted, int archived, int dummy, String route) {
+    public LiveData<List<FarmerRouteBalance>> getFarmersByStatusRoute(int deleted, int archived, int dummy, String route) {
 
         if (route.equals("") || route.toLowerCase().equals("all")) {
             return db.farmersDao().getFarmerByStatus(deleted, archived, dummy);
@@ -257,7 +266,7 @@ public class FarmerRepo {
 
     //DELETED
 
-    public LiveData<List<FamerModel>> getFarmersByStatusRouteDeleted(int deleted, String route) {
+    public LiveData<List<FarmerRouteBalance>> getFarmersByStatusRouteDeleted(int deleted, String route) {
 
         if (route.equals("") || route.toLowerCase().equals("all")) {
             return db.farmersDao().getFarmerByStatusDeleted(deleted);
@@ -267,7 +276,7 @@ public class FarmerRepo {
 
     //DUMMY
 
-    public LiveData<List<FamerModel>> getFarmersByStatusRouteDummy(int dummy, String route) {
+    public LiveData<List<FarmerRouteBalance>> getFarmersByStatusRouteDummy(int dummy, String route) {
 
         if (route.equals("") || route.toLowerCase().equals("all")) {
             return db.farmersDao().getFarmerByStatusDummy(dummy);
@@ -277,7 +286,7 @@ public class FarmerRepo {
 
     //ARCHIVED
 
-    public LiveData<List<FamerModel>> getFarmersByStatusRouteArchived(int archived, String route) {
+    public LiveData<List<FarmerRouteBalance>> getFarmersByStatusRouteArchived(int archived, String route) {
 
         if (route.equals("") || route.toLowerCase().equals("all")) {
             return db.farmersDao().getFarmerByStatusArchived(archived);

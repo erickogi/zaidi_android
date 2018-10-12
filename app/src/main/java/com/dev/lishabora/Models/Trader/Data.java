@@ -3,6 +3,7 @@ package com.dev.lishabora.Models.Trader;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.FarmerBalance;
 import com.dev.lishabora.Models.Notifications;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Models.ProductsModel;

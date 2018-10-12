@@ -24,6 +24,7 @@ import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.DayCollectionModel;
 import com.dev.lishabora.Models.DaysDates;
 import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.FarmerBalance;
 import com.dev.lishabora.Models.FarmerHistoryByDateModel;
 import com.dev.lishabora.Models.LoanModel;
 import com.dev.lishabora.Models.MilkModel;
@@ -33,7 +34,6 @@ import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Models.Reports.ReportLineChartModel;
 import com.dev.lishabora.Models.Reports.ReportListModel;
-import com.dev.lishabora.Models.Trader.FarmerBalance;
 import com.dev.lishabora.Models.Trader.FarmerLoansTable;
 import com.dev.lishabora.Models.Trader.FarmerOrdersTable;
 import com.dev.lishabora.Models.UnitsModel;
@@ -1745,7 +1745,7 @@ public class CommonFuncs {
 
         if (type == AppConstants.MILK) {
 
-            Log.d("DebugUpdate", "CommonFunc UpdateBalance Called ---Milk");
+            Log.d("DebugUpdate", "CommonFunc UpdateBalance Called ---Milk" + new Gson().toJson(c));
 
             refreshTotalBalances(0, null, null, balncesViewModel, traderViewModel, c, famerModel);
 
@@ -1907,11 +1907,17 @@ public class CommonFuncs {
 
 
             double totalMilkForCurrentPayout = 0.0;
-            if (traderViewModel.getSumOfMilkForPayoutKshD(c.getFarmerCode(), c.getPayoutCode()) != null) {
+            try {
+                // if (traderViewModel.getSumOfMilkForPayoutKshD(c.getFarmerCode(), c.getPayoutCode()) != null) {
                 totalMilkForCurrentPayout += traderViewModel.getSumOfMilkForPayoutKshD(c.getFarmerCode(), c.getPayoutCode());
+                // }
+
+
+            } catch (Exception nm) {
+                nm.printStackTrace();
+                Log.d("DebugUpdate", "Com  " + nm.toString());
+
             }
-
-
             if (farmerBalance == null) {
 
 
@@ -1922,6 +1928,7 @@ public class CommonFuncs {
                 farmerBalance.setBalanceToPay(String.valueOf((totalMilkForCurrentPayout - ((loanInstalmentAmount) + (orderInstalmentAmount)))));
 
                 Log.d("RecordAsd", " insert Balnce to pay \n Total milk current" + totalMilkForCurrentPayout + "" + farmerBalance.getBalanceToPay() + "\n" + farmerBalance.getBalanceOwed());
+
 
                 balncesViewModel.insert(farmerBalance);
 

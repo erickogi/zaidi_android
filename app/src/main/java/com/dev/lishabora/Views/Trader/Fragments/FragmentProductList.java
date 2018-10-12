@@ -126,14 +126,15 @@ public class FragmentProductList extends Fragment {
         fab.setOnClickListener(view1 -> {
             // subscribeProduct();
             launchDialog = true;
-            if (productsModelAll == null || productsModelAll.size() < 1) {
-                //getAllProducts();
-                subscribeProduct(sort(productsModel, productsModelAll));
+//            if (productsModelAll == null || productsModelAll.size() < 1) {
+            getAllProducts();
+//
+//                subscribeProduct(sort(productsModel, productsModelAll));
+//
+//            } else {
 
-            } else {
-
                 subscribeProduct(sort(productsModel, productsModelAll));
-            }
+            //   }
         });
 
 
@@ -142,8 +143,16 @@ public class FragmentProductList extends Fragment {
     LinkedList<ProductsModel> sort(LinkedList<ProductsModel> a, List<ProductsModel> b) {
         LinkedList<ProductsModel> sortedList = new LinkedList<>();
 
-        sortedList.addAll(a);
-        sortedList.addAll(b);
+        try {
+            sortedList.addAll(a);
+        } catch (Exception nm) {
+
+        }
+        try {
+            sortedList.addAll(b);
+        } catch (Exception nm) {
+
+        }
 
 
         HashMap<String, ProductsModel> myImageHashMap = new HashMap<>();
