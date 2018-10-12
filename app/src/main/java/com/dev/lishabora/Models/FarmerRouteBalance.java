@@ -4,13 +4,13 @@ import android.arch.persistence.room.Embedded;
 
 public class FarmerRouteBalance {
 
-    @Embedded
+    @Embedded(prefix = "farmer")
     FamerModel famerModel;
 
-    @Embedded
+    @Embedded(prefix = "route")
     RoutesModel routesModel;
 
-    @Embedded
+    @Embedded(prefix = "balance")
     FarmerBalance farmerBalance;
 
 

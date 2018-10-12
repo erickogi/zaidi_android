@@ -14,6 +14,7 @@ import java.util.Date;
 @Entity(tableName = "farmers", indices = {@Index(value = {"code"}, unique = true)})
 
 public class FamerModel implements Serializable {
+
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String route;

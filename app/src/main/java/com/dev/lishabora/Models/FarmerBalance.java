@@ -9,6 +9,7 @@ import com.dev.lishabora.Utils.DateTimeUtils;
 @Entity(tableName = "farmerBalance")
 
 public class FarmerBalance {
+
     @PrimaryKey(autoGenerate = true)
     private int id;
 

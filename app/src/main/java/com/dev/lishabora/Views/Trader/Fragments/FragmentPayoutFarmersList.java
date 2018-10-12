@@ -28,6 +28,7 @@ import android.widget.TextView;
 import com.dev.lishabora.Adapters.PayoutFarmersAdapter;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.FarmerRouteBalance;
 import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Utils.DateTimeUtils;
@@ -344,8 +345,12 @@ public class FragmentPayoutFarmersList extends Fragment {
             if (famerModels != null) {
                 log("LOAD FARMERS RESULT  " + famerModels.size());
 
-                FragmentPayoutFarmersList.this.famerModels = famerModels;
-                Timber.tag("farmersPayouts").d("Farmers found " + famerModels.size());
+                List<FamerModel> famerModels1 = new LinkedList<>();
+                for (FarmerRouteBalance f : famerModels) {
+                    famerModels1.add(f.getFamerModel());
+                }
+                FragmentPayoutFarmersList.this.famerModels = famerModels1;
+                Timber.tag("farmersPayouts").d("Farmers found " + famerModels1.size());
 
                 loadCollectionPayouts();
 

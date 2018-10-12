@@ -10,6 +10,7 @@ import java.io.Serializable;
 @Entity(tableName = "routes",indices = {@Index(value = {"code"}, unique = true)})
 
 public class RoutesModel implements Serializable {
+
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String code;

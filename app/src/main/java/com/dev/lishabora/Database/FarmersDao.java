@@ -94,10 +94,10 @@ public interface FarmersDao {
     void deleteRecord(FamerModel famerModel);
 
 
-    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.* FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code WHERE routename LIKE :route AND deleted= :deleted AND archived= :archived AND dummy= :dummy")
+    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.* FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code WHERE FARMERS.routename LIKE :route AND FARMERS.deleted= :deleted AND FARMERS.archived= :archived AND FARMERS.dummy= :dummy")
     LiveData<List<FarmerRouteBalance>> getFarmerByStatusByRoute(int deleted, int archived, int dummy, String route);
 
-    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.* FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code WHERE  deleted= :deleted AND archived= :archived AND dummy= :dummy")
+    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.* FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code WHERE  FARMERS.deleted= :deleted AND FARMERS.archived= :archived AND FARMERS.dummy= :dummy")
     LiveData<List<FarmerRouteBalance>> getFarmerByStatus(int deleted, int archived, int dummy);
 
 

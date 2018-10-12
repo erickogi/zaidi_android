@@ -585,7 +585,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         }
 
         mViewModel.getFarmerByStatusRoute(staus, route).observe(FragementFarmersList.this, famerModels -> {
-            Log.d("DebugUpdateballl", " FarmerList On Changed ");
 
             avi.smoothToHide();
             prefrenceManager.setIsFarmerListFirst(false);
@@ -593,10 +592,18 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
                 List<FamerModel> famerModels1 = new LinkedList<>();
                 for (FarmerRouteBalance f : famerModels) {
+                    Log.d("DebugUpdateballl", new Gson().toJson(f));
+
                     FamerModel famerModel = f.getFamerModel();
-                    famerModel.setTotalbalance(f.getFarmerBalance().getBalanceToPay());
-                    famerModel.setRoutename(f.getRoutesModel().getRoute());
-                    famerModel.setRoute(f.getRoutesModel().getRoute());
+                    try {
+                        famerModel.setTotalbalance(f.getFarmerBalance().getBalanceToPay());
+                        famerModel.setRoutename(f.getRoutesModel().getRoute());
+                        famerModel.setRoute(f.getRoutesModel().getRoute());
+
+                    } catch (Exception nm) {
+                        nm.printStackTrace();
+                    }
+                    Log.d("DebugUpdateballl", new Gson().toJson(famerModel));
 
                     famerModels1.add(famerModel);
                 }
@@ -613,6 +620,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 //                            famerModels.get(a).setTotalbalance(bal);
 //
 //                        }
+
                 update(famerModels1);
 
             }

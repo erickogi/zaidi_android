@@ -10,6 +10,7 @@ import com.dev.lishabora.AppConstants;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.FarmerRouteBalance;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Models.ProductsModel;
 import com.dev.lishabora.Models.ResponseModel;
@@ -70,7 +71,7 @@ public class PayoutsVewModel extends AndroidViewModel {
     private LiveData<Cycles> cycle;
     private Cycles cycleOne;
 
-    private LiveData<List<FamerModel>> farmers;
+    private LiveData<List<FarmerRouteBalance>> farmers;
     private List<FamerModel> farmersListOne;
     private LiveData<FamerModel> farmer;
     private FamerModel farmerOne;
@@ -276,7 +277,7 @@ public class PayoutsVewModel extends AndroidViewModel {
         payoutsRepo.insert(payouts);
     }
 
-    public LiveData<List<FamerModel>> getFarmersByCycle(String code) {
+    public LiveData<List<FarmerRouteBalance>> getFarmersByCycle(String code) {
         Timber.d("Db called ");
 
         if (farmers == null) {
@@ -290,7 +291,7 @@ public class PayoutsVewModel extends AndroidViewModel {
 
     LiveData<Double> loanTotal;
 
-    public LiveData<List<FamerModel>> getFarmers() {
+    public LiveData<List<FarmerRouteBalance>> getFarmers() {
         if (farmers == null) {
             farmers = new MutableLiveData();
 
@@ -318,7 +319,7 @@ public class PayoutsVewModel extends AndroidViewModel {
 
     }
 
-    public LiveData<List<FamerModel>> getFarmerByStatusRoute(int status, String route) {
+    public LiveData<List<FarmerRouteBalance>> getFarmerByStatusRoute(int status, String route) {
 
         Timber.tag("byRouteByStatus").d("Status " + status + "\n Route " + route);
 
