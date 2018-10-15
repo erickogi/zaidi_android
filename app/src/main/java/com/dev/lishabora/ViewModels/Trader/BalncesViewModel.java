@@ -288,6 +288,10 @@ public class BalncesViewModel extends AndroidViewModel
         return loansTableRepo.getFarmerLoanByPayoutCode(payoutcode);
     }
 
+    public List<FarmerLoansTable> getFarmerLoanByPayoutCodeOne(String payoutcode) {
+        return loansTableRepo.getFarmerLoanByPayoutCodeOne(payoutcode);
+    }
+
     public FarmerLoansTable getFarmerLoanByCollectionOne(String collCode) {
         return loansTableRepo.getFarmerLoanByCollectionOne(collCode);
     }
@@ -296,9 +300,14 @@ public class BalncesViewModel extends AndroidViewModel
         return loansTableRepo.getFarmerLoanByCollection(collCode);
     }
 
-    public LiveData<List<FarmerLoansTable>> getFarmerLoanByPayoutNumberByFarmer(String payoutNo, String farmer) {
-        return loansTableRepo.getFarmerLoanByPayoutCodeByFarmer(payoutNo, farmer);
+    public LiveData<List<FarmerLoansTable>> getFarmerLoanByPayoutCodeByFarmer(String payoutCode, String farmer) {
+        return loansTableRepo.getFarmerLoanByPayoutCodeByFarmer(payoutCode, farmer);
     }
+
+    public List<FarmerLoansTable> getFarmerLoanByPayoutCodeByFarmerOne(String payoutCode, String farmer) {
+        return loansTableRepo.getFarmerLoanByPayoutCodeByFarmerOne(payoutCode, farmer);
+    }
+
 
     public List<FarmerLoansTable> getFarmerLoanByPayoutNumberByFarmerByStatus(String payoutNo, String farmer, int status) {
         return loansTableRepo.getFarmerLoanByPayoutCodeByFarmerByStatus(payoutNo, farmer, status);
@@ -413,8 +422,12 @@ public class BalncesViewModel extends AndroidViewModel
         return getFarmerOrderByDate(date);
     }
 
-    public LiveData<List<FarmerOrdersTable>> getFarmerOrderByPayoutNumber(String payoutNo) {
-        return ordersTableRepo.getFarmerOrderByPayoutCode(payoutNo);
+    public LiveData<List<FarmerOrdersTable>> getFarmerOrderByPayoutCode(String payoutCode) {
+        return ordersTableRepo.getFarmerOrderByPayoutCode(payoutCode);
+    }
+
+    public List<FarmerOrdersTable> getFarmerOrderByPayoutCodeOne(String payoutCode) {
+        return ordersTableRepo.getFarmerOrderByPayoutCodeOne(payoutCode);
     }
 
     public FarmerOrdersTable getFarmerOrderByCollectionOne(String collCode) {
@@ -425,8 +438,12 @@ public class BalncesViewModel extends AndroidViewModel
         return ordersTableRepo.getFarmerOrderByCollectionLive(collCode);
     }
 
-    public LiveData<List<FarmerOrdersTable>> getFarmerOrderByPayoutNumberByFarmer(String payoutNo, String farmer) {
-        return ordersTableRepo.getFarmerOrderByPayoutCodeByFarmer(payoutNo, farmer);
+    public LiveData<List<FarmerOrdersTable>> getFarmerOrderByPayoutCodeByFarmer(String payoutCode, String farmer) {
+        return ordersTableRepo.getFarmerOrderByPayoutCodeByFarmer(payoutCode, farmer);
+    }
+
+    public List<FarmerOrdersTable> getFarmerOrderByPayoutCodeByFarmerOne(String payoutCode, String farmer) {
+        return ordersTableRepo.getFarmerOrderByPayoutCodeByFarmerOne(payoutCode, farmer);
     }
 
     public List<FarmerOrdersTable> getFarmerOrderByPayoutNumberByFarmerByStatus(String payoutNo, String farmer, int status) {

@@ -42,6 +42,10 @@ public interface FarmersOrdersDao {
     @Query("SELECT * FROM FAMERSORDERS WHERE payoutCode =:payoutCode")
     LiveData<List<FarmerOrdersTable>> getFarmerOrderByPayoutCode(String payoutCode);
 
+    @Query("SELECT * FROM FAMERSORDERS WHERE payoutCode =:payoutCode")
+    List<FarmerOrdersTable> getFarmerOrderByPayoutCodeOne(String payoutCode);
+
+
     @Query("SELECT * FROM FAMERSORDERS WHERE collectionCode =:colCode")
     LiveData<List<FarmerOrdersTable>> getFarmerOrderByCollectionCode(String colCode);
 
@@ -54,6 +58,9 @@ public interface FarmersOrdersDao {
 
     @Query("SELECT * FROM FAMERSORDERS WHERE payoutCode =:payoutCode AND farmerCode =:farmer")
     LiveData<List<FarmerOrdersTable>> getFarmerOrderByPayoutCodeByFarmer(String payoutCode, String farmer);
+
+    @Query("SELECT * FROM FAMERSORDERS WHERE payoutCode =:payoutCode AND farmerCode =:farmer")
+    List<FarmerOrdersTable> getFarmerOrderByPayoutCodeByFarmerOne(String payoutCode, String farmer);
 
 
     @Query("SELECT * FROM FAMERSORDERS WHERE payoutCode =:payoutCode AND farmerCode =:farmer AND status =:status")

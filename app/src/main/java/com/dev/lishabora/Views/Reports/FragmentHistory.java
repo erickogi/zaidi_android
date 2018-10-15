@@ -272,6 +272,11 @@ public class FragmentHistory extends Fragment implements DatePickerDialog.OnDate
         }
         FarmerHistoryCollAdapter listAdapter = new FarmerHistoryCollAdapter(getContext(), models, new OnclickRecyclerListener() {
             @Override
+            public void onMenuItem(int position, int menuItem) {
+
+            }
+
+            @Override
             public void onSwipe(int adapterPosition, int direction) {
 
 

@@ -43,7 +43,6 @@ import java.util.Objects;
 
 import timber.log.Timber;
 
-import static com.dev.lishabora.Views.CommonFuncs.createPayoutsByCollection;
 import static com.dev.lishabora.Views.CommonFuncs.getFarmersCollectionModel;
 
 public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.OnDateSetListener {
@@ -140,43 +139,82 @@ public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.
 
 
     private List<Payouts> listpayouts;
-    private void initByPayouts() {
 
-        payoutsVewModel.getPayoutsByCycleCode(famerModel.getCyclecode()).observe(this, payouts -> {
-            if (payouts != null && payouts.size() > 0) {
+    //    private void initByPayouts() {
+//
+//        payoutsVewModel.getPayoutsByCycleCode(famerModel.getCyclecode()).observe(this, payouts -> {
+//            if (payouts != null && payouts.size() > 0) {
+//
+//                getCollectionsPerPayout(payouts);
+//
+//            } else {
+//                initPayoutList();
+//
+//            }
+//        });
+//
+//    }
+//
+//    private void getCollectionsPerPayout(List<Payouts> payouts) {
+//
+//        List<Payouts> payoutsList = new LinkedList<>();
+//        PayoutesAdapter payoutesAdapter = initPayoutList();
+//
+//        for (Payouts p : payouts) {
+//            payoutsVewModel.getCollectionByDateByPayoutByFarmer(p.getCode(), famerModel.getCode()).observe(this, new Observer<List<Collection>>() {
+//                @Override
+//                public void onChanged(@Nullable List<Collection> collections) {
+//
+//                    if (collections != null) {
+//                        payoutsList.add(createPayoutsByCollection(collections, p, payoutsVewModel, balncesViewModel, famerModel.getCode(), true, null));
+//                        listpayouts = payoutsList;
+//                        payoutesAdapter.refresh(payoutsList);
+//
+//                    }
+//
+//                }
+//            });
+//
+//        }
+//
+//
+//    }
+    private void fetch() {
+        payoutsVewModel.getPayoutsByCycleCode(famerModel.getCyclecode()).observe(this, this::setData);
+    }
 
-                getCollectionsPerPayout(payouts);
 
-            } else {
-                initPayoutList();
+    private void setData(List<com.dev.lishabora.Models.Payouts> payouts) {
+        if (payouts != null) {
+
+            List<Payouts> payoutsList = new LinkedList<>();
+            PayoutesAdapter payoutesAdapter = initPayoutList();
+
+            LinkedList<Payouts> payouts1 = new LinkedList<>();
+            for (int a = 0; a < payouts.size(); a++) {
+                List<Collection> c = payoutsVewModel.getCollectionByDateByPayoutListOne(payouts.get(a).getCode());
+                payouts1.add(CommonFuncs.createPayoutsByCollection(c, payouts.get(a), payoutsVewModel, balncesViewModel, null, false, payoutsVewModel.getFarmersByCycleONe(payouts.get(a).getCycleCode())));
+
 
             }
-        });
+            listpayouts = payouts1;
+            payoutesAdapter.refresh(payouts1);
 
-    }
-    private void getCollectionsPerPayout(List<Payouts> payouts) {
+            //  payoutesAdapter.refresh(payoutsList);
 
-        List<Payouts> payoutsList = new LinkedList<>();
-        PayoutesAdapter payoutesAdapter = initPayoutList();
 
-        for (Payouts p : payouts) {
-            payoutsVewModel.getCollectionByDateByPayoutByFarmer(p.getCode(), famerModel.getCode()).observe(this, new Observer<List<Collection>>() {
-                @Override
-                public void onChanged(@Nullable List<Collection> collections) {
-
-                    if (collections != null) {
-                        payoutsList.add(createPayoutsByCollection(collections, p, payoutsVewModel, balncesViewModel, famerModel.getCode(), true, null));
-                        listpayouts = payoutsList;
-                        payoutesAdapter.refresh(payoutsList);
-
-                    }
-
-                }
-            });
-
+//            if (this.payouts == null) {
+//                this.payouts = new LinkedList<>();
+//                this.payouts.addAll(payouts1);falsefalse
+//                listAdapter.notifyDataSetChanged();
+//
+//            } else {
+//                this.payouts.clear();
+//                this.payouts.addAll(payouts1);
+//                listAdapter.notifyDataSetChanged();
+//            }
+//            initList();
         }
-
-
     }
     private PayoutesAdapter initPayoutList() {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
@@ -189,6 +227,11 @@ public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.
             listpayouts = new LinkedList<>();
         }
         PayoutesAdapter listAdapter = new PayoutesAdapter(getActivity(), listpayouts, new OnclickRecyclerListener() {
+            @Override
+            public void onMenuItem(int position, int menuItem) {
+
+            }
+
             @Override
             public void onSwipe(int adapterPosition, int direction) {
 
@@ -289,6 +332,11 @@ public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.
         }
         FarmerHistoryCollAdapter listAdapter = new FarmerHistoryCollAdapter(getContext(), models, new OnclickRecyclerListener() {
             @Override
+            public void onMenuItem(int position, int menuItem) {
+
+            }
+
+            @Override
             public void onSwipe(int adapterPosition, int direction) {
 
 
@@ -368,7 +416,8 @@ public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.
     private void reload() {
         int which = toolbar.getWhichCat();
         if (which == FarmerToolBarUI.CAT_PAYOUTS) {
-            initByPayouts();
+            //initByPayouts();
+            fetch();
         } else if (which == FarmerToolBarUI.CAT_YEAR) {
             initYearly();
         } else if (which == FarmerToolBarUI.CAT_MONTHS) {

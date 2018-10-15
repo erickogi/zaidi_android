@@ -489,6 +489,11 @@ public class EditOrder extends AppCompatActivity {
 
         listAdapterAll = new ProductsAdapter(this, productsModels, new OnclickRecyclerListener() {
             @Override
+            public void onMenuItem(int position, int menuItem) {
+
+            }
+
+            @Override
             public void onSwipe(int adapterPosition, int direction) {
 
             }
@@ -617,6 +622,11 @@ public class EditOrder extends AppCompatActivity {
             OrderConstants.setProductOrderModels(new LinkedList<>());
         }
         listAdapter = new ProductOrderAdapter(this, OrderConstants.getProductOrderModels(), new OnclickRecyclerListener() {
+            @Override
+            public void onMenuItem(int position, int menuItem) {
+
+            }
+
             @Override
             public void onSwipe(int adapterPosition, int direction) {
 

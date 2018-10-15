@@ -172,6 +172,11 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
 
         listAdapterAll = new ProductsAdapter(getActivity(), productsModels, new OnclickRecyclerListener() {
             @Override
+            public void onMenuItem(int position, int menuItem) {
+
+            }
+
+            @Override
             public void onSwipe(int adapterPosition, int direction) {
 
             }
@@ -395,6 +400,11 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
     public void initList() {
         recyclerView = view.findViewById(R.id.recyclerView);
         listAdapter = new ProductsAdapter(getActivity(), filteredProductsModel, new OnclickRecyclerListener() {
+            @Override
+            public void onMenuItem(int position, int menuItem) {
+
+            }
+
             @Override
             public void onSwipe(int adapterPosition, int direction) {
 

@@ -2,11 +2,12 @@ package com.dev.lishabora.Models;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
 import com.dev.lishabora.Utils.DateTimeUtils;
 
-@Entity(tableName = "farmerBalance")
+@Entity(tableName = "farmerBalance", indices = {@Index(value = {"id", "code", "farmerCode"}, unique = true)})
 
 public class FarmerBalance {
 

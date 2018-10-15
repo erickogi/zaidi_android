@@ -254,6 +254,11 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
 
         PayoutFarmersAdapter listAdapter = new PayoutFarmersAdapter(this, models, new OnclickRecyclerListener() {
             @Override
+            public void onMenuItem(int position, int menuItem) {
+
+            }
+
+            @Override
             public void onSwipe(int adapterPosition, int direction) {
 
 

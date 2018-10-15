@@ -154,7 +154,7 @@ class DrawerClass {
                             DividerDrawerItem(),
                             //logout,
                             //share
-                            sync,
+                            // sync,
                             help,
                             logout
                             // about

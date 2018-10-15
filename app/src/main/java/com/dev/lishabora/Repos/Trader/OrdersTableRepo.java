@@ -51,6 +51,10 @@ public class OrdersTableRepo {
         return dao.getFarmerOrderByPayoutCode(payoutCode);
     }
 
+    public List<FarmerOrdersTable> getFarmerOrderByPayoutCodeOne(String payoutCode) {
+        return dao.getFarmerOrderByPayoutCodeOne(payoutCode);
+    }
+
     public FarmerOrdersTable getFarmerOrderByCollection(String collId) {
         return dao.getFarmerOrderByCollection(collId);
     }
@@ -61,6 +65,10 @@ public class OrdersTableRepo {
 
     public LiveData<List<FarmerOrdersTable>> getFarmerOrderByPayoutCodeByFarmer(String payoutCode, String farmer) {
         return dao.getFarmerOrderByPayoutCodeByFarmer(payoutCode, farmer);
+    }
+
+    public List<FarmerOrdersTable> getFarmerOrderByPayoutCodeByFarmerOne(String payoutCode, String farmer) {
+        return dao.getFarmerOrderByPayoutCodeByFarmerOne(payoutCode, farmer);
     }
 
     public List<FarmerOrdersTable> getFarmerOrderByPayoutCodeByFarmerByStatus(String payoutCode, String farmer, int status) {

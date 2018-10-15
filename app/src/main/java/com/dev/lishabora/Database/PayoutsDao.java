@@ -59,5 +59,5 @@ public interface PayoutsDao {
     @Query("SELECT * FROM  PAYOUTS  ORDER BY id DESC LIMIT 1")
     Payouts getLast();
 
-
+//    DELETE FROM `tbl_payouts` WHERE code="E : 9252 T : 2018-10-16 02:05:31"
 }

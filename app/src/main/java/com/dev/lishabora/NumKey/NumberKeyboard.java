@@ -31,7 +31,7 @@ public class NumberKeyboard extends ConstraintLayout {
 
     private static final int DEFAULT_KEY_WIDTH_DP = -1; // match_parent
     private static final int DEFAULT_KEY_HEIGHT_DP = -1; // match_parent
-    private static final int DEFAULT_KEY_PADDING_DP = 16;
+    private static final int DEFAULT_KEY_PADDING_DP = 1;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -306,13 +306,13 @@ public class NumberKeyboard extends ConstraintLayout {
      * Set styles.
      */
     private void setStyles() {
-        setKeyWidth(keyWidth);
-        setKeyHeight(keyHeight);
+        //setKeyWidth(keyWidth);
+        //setKeyHeight(keyHeight);
         setKeyPadding(keyPadding);
-        setNumberKeyBackground(numberKeyBackground);
+        //setNumberKeyBackground(numberKeyBackground);
         setNumberKeyTextColor(numberKeyTextColor);
         setLeftAuxButtonIcon(leftAuxBtnIcon);
-        setLeftAuxButtonBackground(leftAuxBtnBackground);
+        //setLeftAuxButtonBackground(leftAuxBtnBackground);
         setRightAuxButtonIcon(rightAuxBtnIcon);
         setRightAuxButtonBackground(rightAuxBtnBackground);
     }
@@ -325,12 +325,9 @@ public class NumberKeyboard extends ConstraintLayout {
         for (int i = 0; i < numericKeys.size(); i++) {
             final TextView key = numericKeys.get(i);
             final int number = i;
-            key.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        listener.onNumberClicked(number);
-                    }
+            key.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onNumberClicked(number);
                 }
             });
         }

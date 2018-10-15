@@ -15,6 +15,8 @@ interface OnclickRecyclerListener {
 
     fun onMoreClickListener(position: Int)
 
+    fun onMenuItem(position: Int, menuItem: Int)
+
     fun onClickListener(adapterPosition: Int, view: View)
     fun onSwipe(adapterPosition: Int, direction: Int)
 

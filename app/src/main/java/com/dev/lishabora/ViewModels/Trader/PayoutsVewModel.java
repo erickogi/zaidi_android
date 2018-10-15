@@ -277,29 +277,27 @@ public class PayoutsVewModel extends AndroidViewModel {
         payoutsRepo.insert(payouts);
     }
 
-    public LiveData<List<FarmerRouteBalance>> getFarmersByCycle(String code) {
+    public LiveData<List<FamerModel>> getFarmersByCycle(String code) {
         Timber.d("Db called ");
 
         if (farmers == null) {
             farmers = new MutableLiveData();
 
         }
-        farmers = (farmerRepo.getFarmersByCycle(code));
+        return (farmerRepo.getFarmersByCycle(code));
 
-        return farmers;
     }
 
     LiveData<Double> loanTotal;
 
-    public LiveData<List<FarmerRouteBalance>> getFarmers() {
+    public LiveData<List<FamerModel>> getFarmers() {
         if (farmers == null) {
             farmers = new MutableLiveData();
 
 
         }
 
-        farmers = (farmerRepo.fetchAllData(false));
-        return farmers;
+        return (farmerRepo.fetchAllData(false));
     }
 
     public LiveData<FamerModel> getFarmerByCode(String code) {
@@ -319,7 +317,7 @@ public class PayoutsVewModel extends AndroidViewModel {
 
     }
 
-    public LiveData<List<FarmerRouteBalance>> getFarmerByStatusRoute(int status, String route) {
+    public LiveData<List<FamerModel>> getFarmerByStatusRoute(int status, String route) {
 
         Timber.tag("byRouteByStatus").d("Status " + status + "\n Route " + route);
 
@@ -330,28 +328,23 @@ public class PayoutsVewModel extends AndroidViewModel {
         switch (status) {
             case FarmerConst.ACTIVE:
 
-                farmers = (farmerRepo.getFarmersByStatusRoute(0, 0, 0, route));
-                break;
+                return (farmerRepo.getFarmersByStatusRoute(0, 0, 0, route));
             case FarmerConst.DELETED:
-                farmers = (farmerRepo.getFarmersByStatusRouteDeleted(1, route));
-                break;
+                return (farmerRepo.getFarmersByStatusRouteDeleted(1, route));
             case FarmerConst.DUMMY:
-                farmers = (farmerRepo.getFarmersByStatusRouteDummy(1, route));
-                break;
+                return (farmerRepo.getFarmersByStatusRouteDummy(1, route));
             case FarmerConst.ARCHIVED:
-                farmers = (farmerRepo.getFarmersByStatusRouteArchived(1, route));
-                break;
+                return (farmerRepo.getFarmersByStatusRouteArchived(1, route));
             case FarmerConst.ALL:
-                farmers = (farmerRepo.fetchAllData(false, route));
-                break;
+                return (farmerRepo.fetchAllData(false, route));
+
             default:
-                farmers = (farmerRepo.fetchAllData(false));
+                return (farmerRepo.fetchAllData(false));
 
 
         }
 
 
-        return farmers;
     }
 
     public LiveData<FamerModel> getLastFarmer() {
@@ -387,11 +380,11 @@ public class PayoutsVewModel extends AndroidViewModel {
 
     LiveData<Double> orderTotal;
 
-    public LiveData<List<Collection>> getCollectionByDateByPayout(String payoutnumber) {
+    public LiveData<List<Collection>> getCollectionByDateByPayout(String payoutCode) {
         if (collections == null) {
             collections = new MutableLiveData<>();
         }
-        return collectionsRepo.getCollectionByPayout(payoutnumber);
+        return collectionsRepo.getCollectionByPayout(payoutCode);
     }
 
     public LiveData<List<Collection>> getCollectionsBetweenDates(Long date1, Long date2) {

@@ -84,6 +84,11 @@ public class SyncWorks extends AppCompatActivity {
 
         listAdapter = new SyncSAdapter(this, syncModels, new OnclickRecyclerListener() {
             @Override
+            public void onMenuItem(int position, int menuItem) {
+
+            }
+
+            @Override
             public void onSwipe(int adapterPosition, int direction) {
 
 

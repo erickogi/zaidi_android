@@ -16,8 +16,12 @@ import java.util.List;
 @Dao
 public interface FarmersDao {
 
-    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.* FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code ")
-    LiveData<List<FarmerRouteBalance>> findAllBalRoute();
+    @Query("SELECT * FROM FARMERS  ")
+    LiveData<List<FamerModel>> findAllBalRoute();
+
+    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.balanceToPay,FARMERBALANCE.balanceOwed  FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code  ")
+    LiveData<List<FarmerRouteBalance>> findAllBalRouteJoined();
+
 
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -30,12 +34,21 @@ public interface FarmersDao {
     void insertSingleFramer(FamerModel famerModel);
 
 
-    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.* FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code")
-    LiveData<List<FarmerRouteBalance>> fetchAllData();
+    @Query("SELECT * FROM FARMERS ")
+    LiveData<List<FamerModel>> fetchAllData();
 
 
-    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.* FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code WHERE routename LIKE :route")
-    LiveData<List<FarmerRouteBalance>> fetchAllData(String route);
+    @Query("SELECT * FROM FARMERS  WHERE routename LIKE :route")
+    LiveData<List<FamerModel>> fetchAllData(String route);
+
+
+    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.balanceToPay,FARMERBALANCE.balanceOwed  FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code")
+    LiveData<List<FarmerRouteBalance>> fetchAllDataJoined();
+
+
+    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.balanceToPay,FARMERBALANCE.balanceOwed FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code WHERE routename LIKE :route")
+    LiveData<List<FarmerRouteBalance>> fetchAllDataJoined(String route);
+
 
     @Query("SELECT * FROM FARMERS ORDER BY id DESC LIMIT 1")
     LiveData<FamerModel> getLastFarmer();
@@ -94,42 +107,95 @@ public interface FarmersDao {
     void deleteRecord(FamerModel famerModel);
 
 
-    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.* FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code WHERE FARMERS.routename LIKE :route AND FARMERS.deleted= :deleted AND FARMERS.archived= :archived AND FARMERS.dummy= :dummy")
-    LiveData<List<FarmerRouteBalance>> getFarmerByStatusByRoute(int deleted, int archived, int dummy, String route);
+    @Query("SELECT * FROM FARMERS  WHERE FARMERS.routename LIKE :route AND FARMERS.deleted= :deleted AND FARMERS.archived= :archived AND FARMERS.dummy= :dummy")
+    LiveData<List<FamerModel>> getFarmerByStatusByRoute(int deleted, int archived, int dummy, String route);
 
-    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.* FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code WHERE  FARMERS.deleted= :deleted AND FARMERS.archived= :archived AND FARMERS.dummy= :dummy")
-    LiveData<List<FarmerRouteBalance>> getFarmerByStatus(int deleted, int archived, int dummy);
+    @Query("SELECT * FROM FARMERS  WHERE  FARMERS.deleted= :deleted AND FARMERS.archived= :archived AND FARMERS.dummy= :dummy")
+    LiveData<List<FamerModel>> getFarmerByStatus(int deleted, int archived, int dummy);
 
 
     //DELETED
 
-    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.* FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code WHERE routename LIKE :route AND deleted= :deleted ")
-    LiveData<List<FarmerRouteBalance>> getFarmerByStatusByRouteDeleted(int deleted, String route);
+    @Query("SELECT * FROM FARMERS  WHERE routename LIKE :route AND deleted= :deleted ")
+    LiveData<List<FamerModel>> getFarmerByStatusByRouteDeleted(int deleted, String route);
 
-    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.* FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code WHERE  deleted= :deleted ")
-    LiveData<List<FarmerRouteBalance>> getFarmerByStatusDeleted(int deleted);
+    @Query("SELECT * FROM FARMERS  WHERE  deleted= :deleted ")
+    LiveData<List<FamerModel>> getFarmerByStatusDeleted(int deleted);
 
 
     //ARCHIVED
 
-    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.* FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code WHERE routename LIKE :route AND archived= :archived ")
-    LiveData<List<FarmerRouteBalance>> getFarmerByStatusByRouteArchived(int archived, String route);
+    @Query("SELECT * FROM FARMERS  WHERE routename LIKE :route AND archived= :archived ")
+    LiveData<List<FamerModel>> getFarmerByStatusByRouteArchived(int archived, String route);
 
-    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.* FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code WHERE   archived= :archived ")
-    LiveData<List<FarmerRouteBalance>> getFarmerByStatusArchived(int archived);
+    @Query("SELECT * FROM FARMERS  WHERE   archived= :archived ")
+    LiveData<List<FamerModel>> getFarmerByStatusArchived(int archived);
 
     //DUMMY
 
 
-    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.* FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code WHERE routename LIKE :route AND dummy= :dummy")
-    LiveData<List<FarmerRouteBalance>> getFarmerByStatusByRouteDummy(int dummy, String route);
+    @Query("SELECT *FROM FARMERS  WHERE routename LIKE :route AND dummy= :dummy")
+    LiveData<List<FamerModel>> getFarmerByStatusByRouteDummy(int dummy, String route);
 
-    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.* FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code WHERE  dummy= :dummy")
-    LiveData<List<FarmerRouteBalance>> getFarmerByStatusDummy(int dummy);
+    @Query("SELECT * FROM FARMERS  WHERE  dummy= :dummy")
+    LiveData<List<FamerModel>> getFarmerByStatusDummy(int dummy);
 
 
-    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.* FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code WHERE  cyclecode= :code")
-    LiveData<List<FarmerRouteBalance>> getAllByCycleCode(String code);
+    @Query("SELECT * FROM FARMERS  WHERE  cyclecode= :code")
+    LiveData<List<FamerModel>> getAllByCycleCode(String code);
+
+
+    //ALL JOINED QUERIES
+
+
+    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.balanceToPay,FARMERBALANCE.balanceOwed FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code WHERE FARMERS.routename LIKE :route AND FARMERS.deleted= :deleted AND FARMERS.archived= :archived AND FARMERS.dummy= :dummy")
+    LiveData<List<FarmerRouteBalance>> getFarmerByStatusByRouteJoined(int deleted, int archived, int dummy, String route);
+
+    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.balanceToPay,FARMERBALANCE.balanceOwed FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code WHERE  FARMERS.deleted= :deleted AND FARMERS.archived= :archived AND FARMERS.dummy= :dummy")
+    LiveData<List<FarmerRouteBalance>> getFarmerByStatusJoined(int deleted, int archived, int dummy);
+
+
+    //DELETED
+
+    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.balanceToPay,FARMERBALANCE.balanceOwed FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code WHERE routename LIKE :route AND deleted= :deleted ")
+    LiveData<List<FarmerRouteBalance>> getFarmerByStatusByRouteDeletedJoined(int deleted, String route);
+
+    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.balanceToPay,FARMERBALANCE.balanceOwed FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code WHERE  deleted= :deleted ")
+    LiveData<List<FarmerRouteBalance>> getFarmerByStatusDeletedJoined(int deleted);
+
+
+    //ARCHIVED
+
+    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.balanceToPay,FARMERBALANCE.balanceOwed FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code WHERE routename LIKE :route AND archived= :archived ")
+    LiveData<List<FarmerRouteBalance>> getFarmerByStatusByRouteArchivedJoined(int archived, String route);
+
+    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.balanceToPay,FARMERBALANCE.balanceOwed FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code WHERE   archived= :archived ")
+    LiveData<List<FarmerRouteBalance>> getFarmerByStatusArchivedJoined(int archived);
+
+    //DUMMY
+
+
+    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.balanceToPay,FARMERBALANCE.balanceOwed FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code WHERE routename LIKE :route AND dummy= :dummy")
+    LiveData<List<FarmerRouteBalance>> getFarmerByStatusByRouteDummyJoined(int dummy, String route);
+
+    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.balanceToPay,FARMERBALANCE.balanceOwed FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code WHERE  dummy= :dummy")
+    LiveData<List<FarmerRouteBalance>> getFarmerByStatusDummyJoined(int dummy);
+
+
+    @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.balanceToPay,FARMERBALANCE.balanceOwed FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code WHERE  cyclecode= :code")
+    LiveData<List<FarmerRouteBalance>> getAllByCycleCodeJoined(String code);
+
+
+
+
+
+
+
+
+
+
+
+
 
     @Query("SELECT * FROM FARMERS WHERE  cyclecode= :code")
     List<FamerModel> getAllByCycleCodeOne(String code);

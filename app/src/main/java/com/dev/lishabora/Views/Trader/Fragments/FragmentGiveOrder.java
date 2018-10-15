@@ -321,6 +321,11 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
 
         listAdapterAll = new ProductsAdapter(getActivity(), productsModels, new OnclickRecyclerListener() {
             @Override
+            public void onMenuItem(int position, int menuItem) {
+
+            }
+
+            @Override
             public void onSwipe(int adapterPosition, int direction) {
 
             }
@@ -449,6 +454,11 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
             OrderConstants.setProductOrderModels(new LinkedList<>());
         }
         listAdapter = new ProductOrderAdapter(getActivity(), OrderConstants.getProductOrderModels(), new OnclickRecyclerListener() {
+            @Override
+            public void onMenuItem(int position, int menuItem) {
+
+            }
+
             @Override
             public void onSwipe(int adapterPosition, int direction) {
 

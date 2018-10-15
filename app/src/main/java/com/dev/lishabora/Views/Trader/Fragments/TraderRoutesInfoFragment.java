@@ -185,6 +185,11 @@ public class TraderRoutesInfoFragment extends Fragment implements BlockingStep {
         recyclerView = view.findViewById(R.id.recyclerView);
         listAdapter = new RoutesAdapter(getActivity(), filteredRoutesModels, new OnclickRecyclerListener() {
             @Override
+            public void onMenuItem(int position, int menuItem) {
+
+            }
+
+            @Override
             public void onSwipe(int adapterPosition, int direction) {
 
             }

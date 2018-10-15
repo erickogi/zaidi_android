@@ -49,6 +49,11 @@ public class FragmentTradersProducts extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         listAdapter = new ProductsAdapter(getActivity(), productsModels, new OnclickRecyclerListener() {
             @Override
+            public void onMenuItem(int position, int menuItem) {
+
+            }
+
+            @Override
             public void onSwipe(int adapterPosition, int direction) {
 
             }

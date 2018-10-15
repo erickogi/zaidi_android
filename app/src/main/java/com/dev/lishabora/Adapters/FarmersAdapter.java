@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.dev.lishabora.Adapters.ViewHolders.FarmerViewHolder;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Utils.DateTimeUtils;
@@ -30,6 +31,7 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
     private OnclickRecyclerListener listener;
     private OnStartDragListener mDragStartListener;
     private OnStartDragListener mmDragStartListener;
+    private final ViewBinderHelper binderHelper = new ViewBinderHelper();
 
     public FarmersAdapter(Context context, List<FamerModel> modelList, OnclickRecyclerListener listener, OnStartDragListener dragStartListener) {
         this.context = context;
@@ -79,6 +81,7 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
             nm.printStackTrace();
         }
 
+        binderHelper.bind(holder.swipeLayout, farmer.getCode());
 
         holder.balance.setText(String.format("%s%s", v, context.getString(R.string.ksh)));
         GeneralUtills.Companion.changeCOlor(v, holder.balance, 1);
@@ -127,7 +130,7 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
         return (null != modelList ? modelList.size() : 0);
     }
 
-
+//
 //    @Override
 //    public void onItemDismiss(int position) {
 //        modelList.remove(position);

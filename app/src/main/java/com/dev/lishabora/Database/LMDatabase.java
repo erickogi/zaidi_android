@@ -22,7 +22,7 @@ import com.dev.lishabora.Models.Trader.OrderPayments;
 import com.dev.lishabora.Models.Trader.TraderModel;
 import com.dev.lishabora.Models.UnitsModel;
 
-@Database(entities = {TraderModel.class, FamerModel.class, RoutesModel.class, UnitsModel.class, Cycles.class, ProductsModel.class, Collection.class, Payouts.class, SyncModel.class, FarmerLoansTable.class, FarmerOrdersTable.class, LoanPayments.class, OrderPayments.class, FarmerBalance.class}, version = 35)
+@Database(entities = {TraderModel.class, FamerModel.class, RoutesModel.class, UnitsModel.class, Cycles.class, ProductsModel.class, Collection.class, Payouts.class, SyncModel.class, FarmerLoansTable.class, FarmerOrdersTable.class, LoanPayments.class, OrderPayments.class, FarmerBalance.class}, version = 40)
 @TypeConverters(DateConverter.class)
 
 public abstract class LMDatabase extends RoomDatabase {

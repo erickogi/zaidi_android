@@ -328,50 +328,8 @@ public class TraderViewModel extends AndroidViewModel
 
     }
 
-    public LiveData<List<FarmerRouteBalance>> getFarmers(JSONObject jsonObject, boolean isOnline) {
-        if (farmers == null) {
-            farmers = new MutableLiveData();
 
-
-        }
-
-        if (isOnline) {
-            Request.Companion.getResponse(ApiConstants.Companion.getTraderFarmers(), jsonObject, "", new ResponseCallback() {
-                        @Override
-                        public void response(ResponseModel responseModel) {
-                            JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
-                            Type listType = new TypeToken<LinkedList<FamerModel>>() {
-                            }.getType();
-                            // famerModels = gson.fromJson(jsonArray, listType);
-
-
-                            Timber.d("farmers update called");
-                            farmerRepo.insert(gson.fromJson(jsonArray, listType));
-                        }
-
-                        @Override
-                        public void response(ResponseObject responseModel) {
-
-                            JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
-                            Type listType = new TypeToken<LinkedList<FamerModel>>() {
-                            }.getType();
-                            // famerModels = gson.fromJson(jsonArray, listType);
-
-
-                            Timber.d("farmers update called");
-                            farmerRepo.insert(gson.fromJson(jsonArray, listType));
-                        }
-                    }
-            );
-
-
-        }
-        farmers = (farmerRepo.fetchAllData(false));
-
-        return farmers;
-    }
-
-    public LiveData<List<FarmerRouteBalance>> getFarmerByStatusRoute(int status, String route) {
+    public LiveData<List<FarmerRouteBalance>> getFarmerByStatusRouteJoined(int status, String route) {
 
         Timber.d("Status " + status + "\n Route " + route);
 
@@ -382,29 +340,54 @@ public class TraderViewModel extends AndroidViewModel
         switch (status) {
             case FarmerConst.ACTIVE:
 
-                farmers = (farmerRepo.getFarmersByStatusRoute(0, 0, 0, route));
-                break;
+                return (farmerRepo.getFarmersByStatusRouteJoined(0, 0, 0, route));
             case FarmerConst.DELETED:
-                farmers = (farmerRepo.getFarmersByStatusRouteDeleted(1, route));
-                break;
+                return (farmerRepo.getFarmersByStatusRouteDeletedJoined(1, route));
             case FarmerConst.DUMMY:
-                farmers = (farmerRepo.getFarmersByStatusRouteDummy(1, route));
-                break;
+                return (farmerRepo.getFarmersByStatusRouteDummyJoined(1, route));
             case FarmerConst.ARCHIVED:
-                farmers = (farmerRepo.getFarmersByStatusRouteArchived(1, route));
-                break;
+                return (farmerRepo.getFarmersByStatusRouteArchivedJoined(1, route));
             case FarmerConst.ALL:
-                farmers = (farmerRepo.fetchAllData(false, route));
-                break;
+                return (farmerRepo.fetchAllDataJoined(false, route));
             default:
-                farmers = (farmerRepo.fetchAllData(false));
+                return (farmerRepo.fetchAllDataJoined(false));
 
 
         }
 
 
 
-        return farmers;
+    }
+
+    public LiveData<List<FamerModel>> getFarmerByStatusRoute(int status, String route) {
+
+        Timber.d("Status " + status + "\n Route " + route);
+
+        if (farmers == null) {
+            farmers = new MutableLiveData();
+        }
+
+        switch (status) {
+            case FarmerConst.ACTIVE:
+
+                return (farmerRepo.getFarmersByStatusRoute(0, 0, 0, route));
+            case FarmerConst.DELETED:
+                return (farmerRepo.getFarmersByStatusRouteDeleted(1, route));
+            case FarmerConst.DUMMY:
+                return (farmerRepo.getFarmersByStatusRouteDummy(1, route));
+            case FarmerConst.ARCHIVED:
+                return (farmerRepo.getFarmersByStatusRouteArchived(1, route));
+            case FarmerConst.ALL:
+                return (farmerRepo.fetchAllData(false, route));
+            default:
+                return (farmerRepo.fetchAllData(false));
+
+
+        }
+
+
+
+
     }
 
 
@@ -854,9 +837,8 @@ public class TraderViewModel extends AndroidViewModel
 
 
         Payouts p = getLastPayout(collection.getCycleCode());
-
-
         Payouts plastIfOne = getLastPayout();
+
 
         Cycles c = getCycleO(collection.getCycleCode());
         if (c == null) {
@@ -865,7 +847,6 @@ public class TraderViewModel extends AndroidViewModel
 
         }
         int farmerCountPerCycle = getFarmersCountByCycle(collection.getCycleCode());
-
         int tradersStartDay = prefrenceManager.getTraderModel().getCycleStartDayNumber();
         int tradersEndDay = prefrenceManager.getTraderModel().getCycleEndDayNumber();
 
@@ -899,6 +880,7 @@ public class TraderViewModel extends AndroidViewModel
 
             }
 
+            // Log.d("payoutCodeDebug", "Collection Inserted \nExisting payout  " + p.getCode());
 
             insertPayout(payouts);
             collection.setCycleStartedOn(payouts.getStartDate());
@@ -906,7 +888,7 @@ public class TraderViewModel extends AndroidViewModel
             collection.setPayoutCode(payouts.getCode());
             //  synch(AppConstants.INSERT, AppConstants.ENTITY_COLLECTION, collection, null, 1);
 
-            //  Log.d("payoutCodeDebug", "Collection Inserted \nNew  payout \n(No other  payouts available) " + payouts.getCode());
+            Log.d("payoutCodeDebug", "Collection Inserted \nNew  payout \n(No other  payouts available) " + payouts.getCode());
 
 
             //  collectionsRepo.insert(collection);
@@ -926,6 +908,7 @@ public class TraderViewModel extends AndroidViewModel
             if (DateTimeUtils.Companion.isPastLastDay(p.getEndDate())) {
 
 
+                Log.d("payoutCodeDebug", "" + p.getEndDate());
                 endAndStart = PayoutsCyclesDatesUtills.getPayoutStartEndDate(c.getCode(), new PayoutsCyclesDatesUtills.EndAndStart(tradersStartDay, tradersEndDay), new PayoutsCyclesDatesUtills.EndAndStart(p.getStartDate(), p.getEndDate()));
                 payouts.setStartDate(endAndStart.getStartDate());
                 payouts.setEndDate(endAndStart.getEndDate());
@@ -933,17 +916,14 @@ public class TraderViewModel extends AndroidViewModel
 
 
                 insertPayout(payouts);
+                Log.d("payoutCodeDebug", "Collection Inserted \nNew  payout \nOther cycles payouts available" + payouts.getCode());
+
 
 
                 collection.setCycleStartedOn(payouts.getStartDate());
                 collection.setPayoutnumber(payouts.getPayoutnumber());
                 collection.setPayoutCode(payouts.getCode());
-                //  Log.d("payoutCodeDebug", "Collection Inserted \nNew  payout \nOther cycles payouts available " + payouts.getCode());
 
-                //  synch(AppConstants.INSERT, AppConstants.ENTITY_COLLECTION, collection, null, 1);
-
-                //  collectionsRepo.insert(collection);
-                //  ResponseModel responseModel = new ResponseModel();
                 responseModel.setResultCode(1);
                 responseModel.setResultDescription("Collection Inserted \nNew  payout \nOther cycles payouts available");
                 responseModel.setData(null);
@@ -996,6 +976,9 @@ public class TraderViewModel extends AndroidViewModel
         if (c != null && c.getPayoutCode() != null) {
 
             c.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
+            Log.d("payoutCodeDebug", "UpdateCollection      " + new Gson().toJson(c));
+
             collectionsRepo.upDateRecord(c);
             synch(AppConstants.UPDATE, AppConstants.ENTITY_COLLECTION, c, null, 1);
 

@@ -67,6 +67,11 @@ public class FragmentSyncs extends Fragment {
 
         listAdapter = new SyncAdapter(getActivity(), syncModels, new OnclickRecyclerListener() {
             @Override
+            public void onMenuItem(int position, int menuItem) {
+
+            }
+
+            @Override
             public void onSwipe(int adapterPosition, int direction) {
 
 

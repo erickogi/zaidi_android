@@ -165,10 +165,10 @@ class CollectMilk implements NumberKeyboardListener {
         txtTitle.setText("Milk Collection");
 
         numberKeyboard = mView.findViewById(R.id.numberKeyboard);
-        numberKeyboard.setKeyHeight(90);
-        numberKeyboard.setKeyWidth(90);
-        numberKeyboard.setKeyPadding(0);
-        numberKeyboard.setKeyPadding(4);
+//        numberKeyboard.setKeyHeight(90);
+//        numberKeyboard.setKeyWidth(90);
+//        numberKeyboard.setKeyPadding(0);
+//        numberKeyboard.setKeyPadding(4);
         numberKeyboard.setNumberKeyTypeface(Typeface.DEFAULT);
         // numberKeyboard.se
         if (withCustomKeyboard) {

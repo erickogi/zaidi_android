@@ -125,22 +125,22 @@ public class FragmentFarmerProfile extends Fragment {
     void setUpData() {
         if (famerModel != null) {
 
-            traderViewModel.getFarmersByCode(famerModel.getCode()).observe(this, famerModel -> {
+            traderViewModel.getFarmersByCode(famerModel.getCode()).observe(this, farmerModel -> {
 
-                txtName.setText(famerModel.getNames());
-                txtCode.setText(famerModel.getCode());
-                txtPhone.setText(famerModel.getMobile());
-                txtRoute.setText(famerModel.getRoutename());
-                txtCycle.setText(famerModel.getCyclename());
-                txtUnit.setText(famerModel.getUnitname());
+                txtName.setText(farmerModel.getNames());
+                txtCode.setText(farmerModel.getCode());
+                txtPhone.setText(farmerModel.getMobile());
+                txtRoute.setText(farmerModel.getRoutename());
+                txtCycle.setText(farmerModel.getCyclename());
+                txtUnit.setText(farmerModel.getUnitname());
                 txtMilk.setText("");
                 txtLoan.setText("");
                 txtOrder.setText("");
-                txtBalance.setText(GeneralUtills.Companion.round(famerModel.getTotalbalance(), 1));
+                txtBalance.setText(GeneralUtills.Companion.round(farmerModel.getTotalbalance(), 1));
                 txtTime.setText(famerModel.getLastCollectionTime());
 
                 try {
-                    getActivity().setTitle(famerModel.getNames());
+                    getActivity().setTitle(farmerModel.getNames());
                 } catch (Exception nm) {
                     nm.printStackTrace();
                 }

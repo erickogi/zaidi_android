@@ -4,14 +4,16 @@ import android.arch.persistence.room.Embedded;
 
 public class FarmerRouteBalance {
 
-    @Embedded(prefix = "farmer")
+
+    @Embedded
     FamerModel famerModel;
 
-    @Embedded(prefix = "route")
+
+    @Embedded(prefix = "routee")
     RoutesModel routesModel;
 
-    @Embedded(prefix = "balance")
-    FarmerBalance farmerBalance;
+    String balanceToPay;
+    String balanceOwed;
 
 
     public FamerModel getFamerModel() {
@@ -30,11 +32,19 @@ public class FarmerRouteBalance {
         this.routesModel = routesModel;
     }
 
-    public FarmerBalance getFarmerBalance() {
-        return farmerBalance;
+    public String getBalanceToPay() {
+        return balanceToPay;
     }
 
-    public void setFarmerBalance(FarmerBalance farmerBalance) {
-        this.farmerBalance = farmerBalance;
+    public void setBalanceToPay(String balanceToPay) {
+        this.balanceToPay = balanceToPay;
+    }
+
+    public String getBalanceOwed() {
+        return balanceOwed;
+    }
+
+    public void setBalanceOwed(String balanceOwed) {
+        this.balanceOwed = balanceOwed;
     }
 }

@@ -2,9 +2,10 @@ package com.dev.lishabora.Models.Trader;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
-@Entity(tableName = "famersOrders")
+@Entity(tableName = "famersOrders", indices = {@Index(value = {"id", "code"}, unique = true)})
 
 public class FarmerOrdersTable {
 

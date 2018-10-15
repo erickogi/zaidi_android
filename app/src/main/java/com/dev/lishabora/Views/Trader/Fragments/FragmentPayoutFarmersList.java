@@ -28,11 +28,9 @@ import android.widget.TextView;
 import com.dev.lishabora.Adapters.PayoutFarmersAdapter;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.FamerModel;
-import com.dev.lishabora.Models.FarmerRouteBalance;
 import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Utils.DateTimeUtils;
-import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
@@ -59,9 +57,9 @@ import timber.log.Timber;
 import static com.dev.lishabora.Views.CommonFuncs.setPayoutActionStatus;
 
 public class FragmentPayoutFarmersList extends Fragment {
-    public TextView status, startDate, cycleName, endDate, milkTotal, loanTotal, orderTotal, balance, approvedCount, unApprovedCount;
-    public RelativeLayout background;
-    public View statusview;
+    //    public TextView status, startDate, cycleName, endDate, milkTotal, loanTotal, orderTotal, balance, approvedCount, unApprovedCount;
+//    public RelativeLayout background;
+//    public View statusview;
     private View view;
 
     private PayoutFarmersAdapter listAdapter;
@@ -95,6 +93,11 @@ public class FragmentPayoutFarmersList extends Fragment {
             dayCollectionModels = new LinkedList<>();
         }
         listAdapter = new PayoutFarmersAdapter(getActivity(), dayCollectionModels, new OnclickRecyclerListener() {
+            @Override
+            public void onMenuItem(int position, int menuItem) {
+
+            }
+
             @Override
             public void onSwipe(int adapterPosition, int direction) {
 
@@ -233,28 +236,7 @@ public class FragmentPayoutFarmersList extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    public void initCardHeader() {
-        background = view.findViewById(R.id.background);
-        startDate = view.findViewById(R.id.txt_date_start);
-        endDate = view.findViewById(R.id.txt_date_end);
 
-
-        cycleName = view.findViewById(R.id.txt_cycle);
-
-        milkTotal = view.findViewById(R.id.txt_milk_totals);
-        loanTotal = view.findViewById(R.id.txt_loans_total);
-        orderTotal = view.findViewById(R.id.txt_orders_total);
-
-        approvedCount = view.findViewById(R.id.txt_approved_farmers);
-        unApprovedCount = view.findViewById(R.id.txt_pending_farmers);
-        balance = view.findViewById(R.id.txt_Bal_out);
-
-        if (payouts != null) {
-            setCardHeaderData(payouts);
-        }
-        setSpinner();
-
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -272,15 +254,15 @@ public class FragmentPayoutFarmersList extends Fragment {
         }
 
 
-        if (payouts != null) {
-            payoutsVewModel.getPayoutsByPayoutCode("" + payouts.getCode()).observe(this, payouts -> {
-                this.payouts = CommonFuncs.createPayout(payouts, payoutsVewModel, balncesViewModel, null, false, payoutsVewModel.getFarmersByCycleONe(payouts.getCycleCode()));
-
-                log("GET PAYOUTS BY PAYOUT NUMBER AS PAYOUT FROM CONSTANT OR ");
-                // starterPack();
-
-            });
-        }
+//        if (payouts == null) {
+//            payoutsVewModel.getPayoutsByPayoutCode("" + payouts.getCode()).observe(this, payouts -> {
+//                this.payouts = CommonFuncs.createPayout(payouts, payoutsVewModel, balncesViewModel, null, false, payoutsVewModel.getFarmersByCycleONe(payouts.getCycleCode()));
+//
+//                log("GET PAYOUTS BY PAYOUT NUMBER AS PAYOUT FROM CONSTANT OR ");
+//                // starterPack();
+//
+//            });
+//        }
 
     }
 
@@ -294,82 +276,35 @@ public class FragmentPayoutFarmersList extends Fragment {
         initList();
 
 
-        LinearLayout linearLayoutAmPm = view.findViewById(R.id.linear_collection_titles);
-        linearLayoutAmPm.setVisibility(View.GONE);
 
 
     }
 
-    public void setCardHeaderData(Payouts model) {
-        startDate.setText(model.getStartDate());
-        endDate.setText(model.getEndDate());
-        cycleName.setText(model.getCyclename());
-
-
-
-        milkTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getMilkTotalLtrs(), 1), getActivity().getString(R.string.ltrs)));
-        loanTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getLoanTotal(), 1), getActivity().getString(R.string.ksh)));
-        orderTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getOrderTotal(), 1), getActivity().getString(R.string.ksh)));
-        balance.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getBalance(), 1), getActivity().getString(R.string.ksh)));
-        GeneralUtills.Companion.changeCOlor(model.getBalance(), balance, 1);
-
-
-
-
-
-        approvedCount.setText(model.getApprovedCards());
-        unApprovedCount.setText(model.getPendingCards());
-
-
-        if (model.getStatus() == 1) {
-            // status.setText("Active");
-            background.setBackgroundColor(getContext().getResources().getColor(R.color.green_color_picker));
-
-
-        } else if (model.getStatus() == 0) {
-            background.setBackgroundColor(getContext().getResources().getColor(R.color.red));
-
-        } else {
-            background.setBackgroundColor(getContext().getResources().getColor(R.color.blue_color_picker));
-
-        }
-
-    }
 
     private void loadFarmers() {
 
 
-        log("LOAD FARMERS STARTED ");
 
         payoutsVewModel.getFarmersByCycle("" + payouts.getCycleCode()).observe(this, famerModels -> {
             if (famerModels != null) {
                 log("LOAD FARMERS RESULT  " + famerModels.size());
 
-                List<FamerModel> famerModels1 = new LinkedList<>();
-                for (FarmerRouteBalance f : famerModels) {
-                    famerModels1.add(f.getFamerModel());
-                }
-                FragmentPayoutFarmersList.this.famerModels = famerModels1;
-                Timber.tag("farmersPayouts").d("Farmers found " + famerModels1.size());
+
+                FragmentPayoutFarmersList.this.famerModels = famerModels;
 
                 loadCollectionPayouts();
 
             } else {
-                Timber.tag("farmersPayouts").d("Farmers found null ");
 
             }
         });
     }
 
     private void loadCollectionPayouts() {
-        log("LOAD COLLECTIONS STARTED  ");
 
         payoutsVewModel.getCollectionByDateByPayout("" + payouts.getCode()).observe(this, collections -> {
             if (collections != null) {
 
-                log("LOAD COLLECTIONS RESULT  " + collections.size());
-
-                Timber.tag("farmersPayouts").d("Collections found " + collections.size());
 
                 FragmentPayoutFarmersList.this.collections = collections;
                 setUpFarmerCollectionList();
@@ -389,7 +324,6 @@ public class FragmentPayoutFarmersList extends Fragment {
 
 
             collectionModels.add(CommonFuncs.getFarmersCollectionModel(famerModel, collections, payouts));
-            log("LOAD COLLECTIONS DONE FOR   " + famerModel.getNames());
 
 
         }
@@ -435,7 +369,7 @@ public class FragmentPayoutFarmersList extends Fragment {
     }
 
     private void starterPack() {
-        initCardHeader();
+        // initCardHeader();
         initList();
         loadFarmers();
     }

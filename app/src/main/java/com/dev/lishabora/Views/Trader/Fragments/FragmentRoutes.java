@@ -276,6 +276,11 @@ public class FragmentRoutes extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         listAdapter = new RoutesAdapter(getActivity(), filteredRoutesModels, new OnclickRecyclerListener() {
             @Override
+            public void onMenuItem(int position, int menuItem) {
+
+            }
+
+            @Override
             public void onSwipe(int adapterPosition, int direction) {
 
             }
@@ -644,6 +649,8 @@ public class FragmentRoutes extends Fragment {
                     dialog.dismiss();
                 }
             });
+
+            // mViewModel.updateFarmerRoute(routesModel.getCode())
 
 
         }

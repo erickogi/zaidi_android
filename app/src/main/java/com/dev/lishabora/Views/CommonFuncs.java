@@ -156,11 +156,15 @@ public class CommonFuncs {
 
         if (collections != null) {
             for (Collection c : collections) {
+                // Log.d("loanTotsl",""+c.getLoanAmountGivenOutPrice()+"  "+c.getFarmerName());
+
                 if (c.getDayDate().contains(date)) {
                     try {
                         loanTotal = Double.valueOf(c.getLoanAmountGivenOutPrice());
+                        Log.d("loanTotsl", "" + c.getLoanAmountGivenOutPrice() + "  " + c.getFarmerName());
 
                     } catch (Exception nm) {
+                        //   Log.d("loanTotsl",""+loanTotal+"  "+nm.toString());
                         nm.printStackTrace();
                     }
                     LoanModel loanModelm = new Gson().fromJson(c.getLoanDetails(), LoanModel.class);
@@ -775,7 +779,10 @@ public class CommonFuncs {
             String milkPm = milkModelPm.getUnitQty();
 
             LoanModel loanModel = CommonFuncs.getLoanForDay(d.getDate(), collections);
+            Log.d("loanTotsl", "" + new Gson().toJson(loanModel));
+
             String loan = loanModel.getLoanAmount();
+
 
             OrderModel orderModel = CommonFuncs.getOrderForDay(d.getDate(), collections);
             String order = orderModel.getOrderAmount();
@@ -905,23 +912,19 @@ public class CommonFuncs {
     public static PayoutFarmersCollectionModel getFarmersCollectionModel(FamerModel famerModel, List<Collection> collections, Payouts payouts) {
 
         MilkModel m;
-        //log("GET MILK STARTED ");
+
         m = CommonFuncs.getMilk(famerModel.getCode(), collections);
         String milkTotal = m.getUnitQty();
         String milkTotalKsh = m.getValueKsh();
         String milkTotalLtrs = m.getValueLtrs();
 
 
-        //log("GET LOAN STARTED ");
-
         String loanTotal = CommonFuncs.getLoan(famerModel.getCode(), collections);
 
-        //log("GET ORDER STARTED ");
 
         String orderTotal = CommonFuncs.getOrder(famerModel.getCode(), collections);
 
 
-        //log("GET STATUS STARTED ");
 
         int cardstatus = getFarmerStatus(famerModel.getCode(), collections);
         String statusText;
@@ -1635,46 +1638,71 @@ public class CommonFuncs {
         double orderPaid = 0.0;
 
 
-        for (Collection coll : collections) {
-            Timber.tag("CreatePayout").e(coll.getFarmerName());
+        List<FarmerLoansTable> farmerLoansTables;
+        List<FarmerOrdersTable> farmerOrdersTables;
+        if (!isFarmer) {
+            farmerLoansTables = balncesViewModel.getFarmerLoanByPayoutCodeOne(p.getCode());
+            farmerOrdersTables = balncesViewModel.getFarmerOrderByPayoutCodeOne(p.getCode());
+        } else {
+            farmerLoansTables = balncesViewModel.getFarmerLoanByPayoutCodeByFarmerOne(p.getCode(), farmerId);
+            farmerOrdersTables = balncesViewModel.getFarmerOrderByPayoutCodeByFarmerOne(p.getCode(), farmerId);
+        }
 
 
-            milk = milk + (Double.valueOf(coll.getMilkCollectedAm()) + Double.valueOf(coll.getMilkCollectedPm()));
-            milkLtrs = milkLtrs + (Double.valueOf(coll.getMilkCollectedValueLtrsAm()) + Double.valueOf(coll.getMilkCollectedValueLtrsPm()));
-            milkKsh = milkKsh + (Double.valueOf(coll.getMilkCollectedValueKshAm()) + Double.valueOf(coll.getMilkCollectedValueKshPm()));
+        if (farmerLoansTables != null) {
+            for (FarmerLoansTable farmerLoansTable : farmerLoansTables) {
+                try {
+                    if (farmerLoansTable != null) {
+                        loans = +Double.valueOf(farmerLoansTable.getLoanAmount());
+                        loansInstallments = +Double.valueOf(farmerLoansTable.getInstallmentAmount());
+                        loansPaid = +balncesViewModel.getSumPaidLoanPayment(farmerLoansTable.getCode());
+                    }
 
-            if (coll.getLoanAmountGivenOutPrice() != null) {
-                loans = loans + Double.valueOf(coll.getLoanAmountGivenOutPrice());
+                } catch (Exception nm) {
+                    Timber.tag("CreatePayout").e(nm.toString());
+                }
             }
-            if (coll.getOrderGivenOutPrice() != null) {
-                orders = orders + Double.valueOf(coll.getOrderGivenOutPrice());
+        }
+
+
+        if (farmerOrdersTables != null) {
+            for (FarmerOrdersTable farmerOrdersTable : farmerOrdersTables) {
+                try {
+                    if (farmerOrdersTable != null) {
+                        orders = +Double.valueOf(farmerOrdersTable.getOrderAmount());
+                        orderInstallments = +Double.valueOf(farmerOrdersTable.getInstallmentAmount());
+                        orderPaid = +balncesViewModel.getSumPaidOrderPayment(farmerOrdersTable.getCode());
+
+                    }
+
+                } catch (Exception nm) {
+                    Timber.tag("CreatePayout").e(nm.toString());
+
+                }
             }
+        }
 
 
-            FarmerLoansTable farmerLoansTable = balncesViewModel.getFarmerLoanByCollectionOne(coll.getCode());
-            FarmerOrdersTable farmerOrdersTable = balncesViewModel.getFarmerOrderByCollectionOne(coll.getCode());
+        if (collections != null) {
+            for (Collection coll : collections) {
+                Timber.tag("CreatePayout").e(coll.getFarmerName());
 
-            try {
-                if (farmerLoansTable != null) {
-                    loans = +Double.valueOf(farmerLoansTable.getLoanAmount());
-                    loansInstallments = +Double.valueOf(farmerLoansTable.getInstallmentAmount());
-                    loansPaid = +balncesViewModel.getSumPaidLoanPayment(farmerLoansTable.getCode());
+
+                try {
+                    milk = milk + (Double.valueOf(coll.getMilkCollectedAm()) + Double.valueOf(coll.getMilkCollectedPm()));
+                    milkLtrs = milkLtrs + (Double.valueOf(coll.getMilkCollectedValueLtrsAm()) + Double.valueOf(coll.getMilkCollectedValueLtrsPm()));
+                    milkKsh = milkKsh + (Double.valueOf(coll.getMilkCollectedValueKshAm()) + Double.valueOf(coll.getMilkCollectedValueKshPm()));
+
+                    if (coll.getLoanAmountGivenOutPrice() != null) {
+                        loans = loans + Double.valueOf(coll.getLoanAmountGivenOutPrice());
+                    }
+                    if (coll.getOrderGivenOutPrice() != null) {
+                        orders = orders + Double.valueOf(coll.getOrderGivenOutPrice());
+                    }
+                } catch (Exception nm) {
+                    nm.printStackTrace();
                 }
 
-            } catch (Exception nm) {
-                Timber.tag("CreatePayout").e(nm.toString());
-            }
-
-            try {
-                if (farmerOrdersTable != null) {
-                    orders = +Double.valueOf(farmerOrdersTable.getOrderAmount());
-                    orderInstallments = +Double.valueOf(farmerOrdersTable.getInstallmentAmount());
-                    orderPaid = +balncesViewModel.getSumPaidOrderPayment(farmerOrdersTable.getCode());
-
-                }
-
-            } catch (Exception nm) {
-                Timber.tag("CreatePayout").e(nm.toString());
 
             }
         }

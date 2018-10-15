@@ -134,6 +134,11 @@ public class FragmentList extends Fragment implements DatePickerDialog.OnDateSet
         recyclerView = view.findViewById(R.id.recyclerView);
         listAdapter = new ReportListAdapter(getActivity(), models, new OnclickRecyclerListener() {
             @Override
+            public void onMenuItem(int position, int menuItem) {
+
+            }
+
+            @Override
             public void onClickListener(int position) {
 
             }

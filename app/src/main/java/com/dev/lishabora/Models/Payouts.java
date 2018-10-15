@@ -7,7 +7,7 @@ import android.arch.persistence.room.PrimaryKey;
 
 import java.io.Serializable;
 
-@Entity(tableName = "payouts", indices = {@Index(value = {"payoutnumber"}, unique = true)})
+@Entity(tableName = "payouts", indices = {@Index("code"), @Index(value = {"startDate", "endDate"}),})
 
 public class Payouts implements Serializable {
     @PrimaryKey(autoGenerate = true)

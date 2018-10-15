@@ -38,6 +38,13 @@ class DateTimeUtils {
             return Date()
         }
 
+        fun getDateNowMill(): Date {
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS")
+
+            return Date()
+        }
+
+
         fun getNowslong(): String {
             SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             val date = Date()

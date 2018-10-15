@@ -1,10 +1,12 @@
 package com.dev.lishabora.Adapters.ViewHolders;
 
+import android.support.design.card.MaterialCardView;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemViewHolder;
@@ -14,6 +16,12 @@ import java.lang.ref.WeakReference;
 public class FarmerViewHolder extends AbstractDraggableItemViewHolder implements View.OnClickListener, View.OnLongClickListener {
     //  public RelativeLayout engineer_background;
 
+    public View frontLayout;
+    public View deleteLayout;
+    public TextView deleteLayoutTxtName, deleteLayoutTxtLoan, deleteLayoutTxtOrder, deleteTxtProfile, deleteLayoutTxtDelete;
+
+
+
     public TextView status, id, name, cycle, balance, famerscount, route, txtDate;
     private WeakReference<OnclickRecyclerListener> listenerWeakReference;
     public RelativeLayout background;
@@ -21,20 +29,22 @@ public class FarmerViewHolder extends AbstractDraggableItemViewHolder implements
     public View itemVew;
     public LinearLayout lBig;
     public View dragHandle;
-
+    public SwipeRevealLayout swipeLayout;
+    private MaterialCardView card;
 
     public FarmerViewHolder(View itemView, OnclickRecyclerListener onclickRecyclerListener) {
         super(itemView);
         this.itemVew = itemView;
         listenerWeakReference = new WeakReference<>(onclickRecyclerListener);
-        itemView.setOnClickListener(this);
-        itemView.setOnLongClickListener(this);
+        //itemView.setOnClickListener(this);
+        //itemView.setOnLongClickListener(this);
         lBig = itemView.findViewById(R.id.l_big);
         lBig.setOnLongClickListener(this);
         statusview = itemView.findViewById(R.id.status_view);
         background = itemView.findViewById(R.id.background);
         background.setOnLongClickListener(this);
 
+        card = itemView.findViewById(R.id.card);
         txtDate = itemView.findViewById(R.id.txt_date);
 
         status = itemView.findViewById(R.id.txt_status);
@@ -43,6 +53,27 @@ public class FarmerViewHolder extends AbstractDraggableItemViewHolder implements
         cycle = itemView.findViewById(R.id.txt_cycle);
         route = itemView.findViewById(R.id.txt_route);
         balance = itemView.findViewById(R.id.txt_balance);
+
+        swipeLayout = itemView.findViewById(R.id.swipe_layout);
+
+        frontLayout = itemView.findViewById(R.id.front_layout);
+        deleteLayout = itemView.findViewById(R.id.delete_layout);
+
+        deleteLayoutTxtName = itemView.findViewById(R.id.txt_farmer);
+        deleteLayoutTxtLoan = itemView.findViewById(R.id.txt_loan);
+        deleteLayoutTxtOrder = itemView.findViewById(R.id.txt_order);
+        deleteTxtProfile = itemView.findViewById(R.id.txt_profile);
+        deleteLayoutTxtDelete = itemView.findViewById(R.id.txt_delete);
+
+        deleteLayoutTxtLoan.setOnClickListener(this);
+        deleteLayoutTxtOrder.setOnClickListener(this);
+        deleteTxtProfile.setOnClickListener(this);
+        deleteLayoutTxtDelete.setOnClickListener(this);
+
+        card.setOnClickListener(this);
+        background.setOnClickListener(this);
+
+        frontLayout.setOnClickListener(this);
 
     }
 
@@ -63,13 +94,35 @@ public class FarmerViewHolder extends AbstractDraggableItemViewHolder implements
         route = itemView.findViewById(R.id.txt_route);
         balance = itemView.findViewById(R.id.txt_balance);
 
+        itemView.setOnClickListener(this);
+        itemView.setOnLongClickListener(this);
+
         //lBig.setVisibility(View.GONE);
 
     }
 
     @Override
     public void onClick(View v) {
-        listenerWeakReference.get().onClickListener(getAdapterPosition());
+        if (v.getId() == R.id.front_layout || v.getId() == R.id.card || v.getId() == R.id.background) {
+            listenerWeakReference.get().onClickListener(getAdapterPosition());
+        } else {
+            switch (v.getId()) {
+
+                case R.id.txt_loan:
+                    listenerWeakReference.get().onMenuItem(getAdapterPosition(), 1);
+                    break;
+                case R.id.txt_order:
+                    listenerWeakReference.get().onMenuItem(getAdapterPosition(), 2);
+                    break;
+                case R.id.txt_profile:
+                    listenerWeakReference.get().onMenuItem(getAdapterPosition(), 3);
+                    break;
+                case R.id.txt_delete:
+                    listenerWeakReference.get().onMenuItem(getAdapterPosition(), 4);
+                    break;
+                default:
+            }
+        }
     }
 
     @Override

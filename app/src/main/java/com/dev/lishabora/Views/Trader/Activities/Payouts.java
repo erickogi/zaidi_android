@@ -11,8 +11,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentPayoutColloectionsList;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentPayoutFarmersList;
 import com.dev.lishabora.Views.Trader.PayoutConstants;
@@ -27,6 +30,10 @@ public class Payouts extends AppCompatActivity {
     SearchView mSearchView;
 
 
+    public TextView status, startDate, cycleName, endDate, milkTotal, loanTotal, orderTotal, balance, approvedCount, unApprovedCount;
+    public RelativeLayout background;
+    public View statusview;
+
     //    public static void setSpinner(int v) {
 //        try {
 //            spinner.setVisibility(v);
@@ -34,6 +41,10 @@ public class Payouts extends AppCompatActivity {
 //        } catch (Exception nm) {
 //            nm.printStackTrace();
 //        }
+////    }
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//
+//
 //    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -54,9 +65,14 @@ public class Payouts extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
 
-
-        return super.onOptionsItemSelected(item);
     }
 
 
@@ -93,6 +109,8 @@ public class Payouts extends AppCompatActivity {
         setTitle("Payouts");
         setSpinner();
 
+        initCardHeader();
+
 
 
     }
@@ -111,6 +129,12 @@ public class Payouts extends AppCompatActivity {
                     args.putSerializable("data", payouts);
                     fragment.setArguments(args);
 
+                    LinearLayout linearLayoutAmPm = findViewById(R.id.linear_farmers_titles);
+                    linearLayoutAmPm.setVisibility(View.GONE);
+
+                    LinearLayout linearLayout = findViewById(R.id.linear_collection_titles);
+                    linearLayout.setVisibility(View.VISIBLE);
+
                     popOutFragments();
                     setUpView(fragment);
 
@@ -125,7 +149,11 @@ public class Payouts extends AppCompatActivity {
                     args.putSerializable("data", payouts);
                     fragment.setArguments(args);
 
-                    //mSearchView.setVisibility(View.VISIBLE);
+                    LinearLayout linearLayoutAmPm = findViewById(R.id.linear_farmers_titles);
+                    linearLayoutAmPm.setVisibility(View.VISIBLE);
+
+                    LinearLayout linearLayout = findViewById(R.id.linear_collection_titles);
+                    linearLayout.setVisibility(View.GONE);
 
 
                     popOutFragments();
@@ -179,6 +207,62 @@ public class Payouts extends AppCompatActivity {
         fragmentManager.beginTransaction().replace(R.id.frame_layout, fragment, "fragmentMain").commit();
 
     }
+
+    public void initCardHeader() {
+        background = findViewById(R.id.background);
+        startDate = findViewById(R.id.txt_date_start);
+        endDate = findViewById(R.id.txt_date_end);
+
+
+        cycleName = findViewById(R.id.txt_cycle);
+
+        milkTotal = findViewById(R.id.txt_milk_totals);
+        loanTotal = findViewById(R.id.txt_loans_total);
+        orderTotal = findViewById(R.id.txt_orders_total);
+
+        approvedCount = findViewById(R.id.txt_approved_farmers);
+        unApprovedCount = findViewById(R.id.txt_pending_farmers);
+        balance = findViewById(R.id.txt_Bal_out);
+
+        if (payouts != null) {
+            setCardHeaderData(payouts);
+        }
+        //setSpinner();
+
+    }
+
+    public void setCardHeaderData(com.dev.lishabora.Models.Payouts model) {
+        startDate.setText(model.getStartDate());
+        endDate.setText(model.getEndDate());
+        cycleName.setText(model.getCyclename());
+
+
+        milkTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getMilkTotalLtrs(), 1), this.getString(R.string.ltrs)));
+        loanTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getLoanTotal(), 1), this.getString(R.string.ksh)));
+        orderTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getOrderTotal(), 1), this.getString(R.string.ksh)));
+        balance.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getBalance(), 1), this.getString(R.string.ksh)));
+        GeneralUtills.Companion.changeCOlor(model.getBalance(), balance, 1);
+
+
+        approvedCount.setText(model.getApprovedCards());
+        unApprovedCount.setText(model.getPendingCards());
+
+
+        if (model.getStatus() == 1) {
+            // status.setText("Active");
+            background.setBackgroundColor(this.getResources().getColor(R.color.green_color_picker));
+
+
+        } else if (model.getStatus() == 0) {
+            background.setBackgroundColor(this.getResources().getColor(R.color.red));
+
+        } else {
+            background.setBackgroundColor(this.getResources().getColor(R.color.blue_color_picker));
+
+        }
+
+    }
+
 
 
 }

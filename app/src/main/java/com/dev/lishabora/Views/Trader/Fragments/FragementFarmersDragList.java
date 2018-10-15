@@ -37,7 +37,6 @@ import android.widget.Toast;
 import com.dev.lishabora.Adapters.FarmersDragAdapter;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
-import com.dev.lishabora.Models.FarmerRouteBalance;
 import com.dev.lishabora.Models.RPFSearchModel;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.RoutesModel;
@@ -207,6 +206,11 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
     public void initList() {
         recyclerView = view.findViewById(R.id.recyclerView);
         listAdapter = new FarmersDragAdapter(getActivity(), FarmerConst.getSearchFamerModels(), new OnclickRecyclerListener() {
+            @Override
+            public void onMenuItem(int position, int menuItem) {
+
+            }
+
             @Override
             public void onSwipe(int adapterPosition, int direction) {
 
@@ -482,36 +486,55 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
         mViewModel.getFarmerByStatusRoute(staus, route).observe(FragementFarmersDragList.this, famerModels -> {
             avi.smoothToHide();
             prefrenceManager.setIsFarmerListFirst(false);
+//            if (famerModels != null) {
+//
+//                List<FamerModel> famerModels1 = new LinkedList<>();
+//                for (FarmerRouteBalance f : famerModels) {
+//                    FamerModel famerModel = f.getFamerModel();
+//                    famerModel.setTotalbalance(f.getBalanceToPay());
+//                    famerModel.setRoutename(f.getRoutesModel().getRoute());
+//                    famerModel.setRoute(f.getRoutesModel().getRoute());
+//
+//                    famerModels1.add(famerModel);
+//                }
+//
+////                for (int a = 0; a < famerModels.size(); a++) {
+////
+////                            String bal = "0.0";
+////                            try {
+////                                bal = balncesViewModel.getByFarmerCodeOne(famerModels.get(a).getCode()).getBalanceToPay();
+////                            } catch (Exception NM) {
+////                                NM.printStackTrace();
+////                            }
+////
+////                            famerModels.get(a).setTotalbalance(bal);
+////
+////                        }
+//                update(famerModels1);
+//
+//            }
+//
+//            // update(famerModels);
+//        });
             if (famerModels != null) {
 
-                List<FamerModel> famerModels1 = new LinkedList<>();
-                for (FarmerRouteBalance f : famerModels) {
-                    FamerModel famerModel = f.getFamerModel();
-                    famerModel.setTotalbalance(f.getFarmerBalance().getBalanceToPay());
-                    famerModel.setRoutename(f.getRoutesModel().getRoute());
-                    famerModel.setRoute(f.getRoutesModel().getRoute());
+                for (int a = 0; a < famerModels.size(); a++) {
 
-                    famerModels1.add(famerModel);
+                    String bal = "0.0";
+                    try {
+                        //   bal = b.getByFarmerCodeOne(famerModels.get(a).getCode()).getBalanceToPay();
+                    } catch (Exception NM) {
+                        NM.printStackTrace();
+                    }
+
+                    famerModels.get(a).setTotalbalance(bal);
+
                 }
-
-//                for (int a = 0; a < famerModels.size(); a++) {
-//
-//                            String bal = "0.0";
-//                            try {
-//                                bal = balncesViewModel.getByFarmerCodeOne(famerModels.get(a).getCode()).getBalanceToPay();
-//                            } catch (Exception NM) {
-//                                NM.printStackTrace();
-//                            }
-//
-//                            famerModels.get(a).setTotalbalance(bal);
-//
-//                        }
-                update(famerModels1);
-
             }
 
-            // update(famerModels);
+            update(famerModels);
         });
+
     }
 
     private boolean isSetUp() {

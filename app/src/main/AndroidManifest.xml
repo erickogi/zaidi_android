@@ -117,7 +117,6 @@
         <activity
             android:name="com.dev.lishabora.Views.Trader.Activities.Payouts"
             android:label="@string/title_activity_payouts"
-            android:parentActivityName="com.dev.lishabora.Views.Trader.Activities.TraderActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
