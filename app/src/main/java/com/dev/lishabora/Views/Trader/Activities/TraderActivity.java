@@ -313,7 +313,7 @@ public class TraderActivity extends AppCompatActivity {
         fab = findViewById(R.id.fab);
         fab.hide();
         if (traderPrefs.isTraderFirstTime()) {
-            alertDialogFirstTime();
+            //alertDialogFirstTime();
         }
 
         setUpMainFragment();

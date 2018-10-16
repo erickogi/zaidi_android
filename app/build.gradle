@@ -117,14 +117,11 @@ dependencies {
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
-        exclude group: 'com.android.support', module: 'support-v4'
+        exclude group: 'com.android.supporty', module: 'support-v4'
         exclude group: 'com.android.support', module: 'design'
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
-    //compile 'com.applandeo:material-calendar-view:1.4.0'
-    //implementation 'com.fxn769:numpad:1.0'
-    //implementation 'com.github.davidmigloz:number-keyboard:2.0.1'
-    implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

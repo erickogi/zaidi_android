@@ -70,6 +70,9 @@ public interface CollectionsDao {
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE farmerCode = :code AND dayDate LIKE :date")
     List<Collection> getCollectionByFarmerByDate(String code, String date);
 
+    @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE farmerCode = :code AND payoutCode != :paycode AND approved = :status")
+    List<Collection> getCollectionByFarmerPreviousPayoutUnApproved(String code, String paycode, String status);
+
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE farmerCode = :code AND  timeOfDay =:ampm AND dayDate LIKE :today")
     List<Collection> getCollectionByDateByFarmerByTime(String code, String today, String ampm);
 

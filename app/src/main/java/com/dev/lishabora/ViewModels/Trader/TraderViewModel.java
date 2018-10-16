@@ -1421,5 +1421,11 @@ public class TraderViewModel extends AndroidViewModel
         return collectionsRepo.getFarmerBalance(code);
     }
 
+    public boolean getCollectionByFarmerPreviousPayoutUnApproved(String code, String today, String status) {
+        List<Collection> collections = collectionsRepo.getCollectionByFarmerPreviousPayoutUnApproved(code, today, status);
+        return collections != null && collections.size() > 0;
+
+    }
+
 
 }

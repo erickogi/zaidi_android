@@ -48,6 +48,11 @@ public class CollectionsRepo {
 
     }
 
+    public List<Collection> getCollectionByFarmerPreviousPayoutUnApproved(String farmercode, String payoutcode, String status) {
+        return collectionsDao.getCollectionByFarmerPreviousPayoutUnApproved(farmercode, payoutcode, status);
+
+    }
+
     public Collection getCollectionByDateByFarmerByTimeSingle(String code, String today, String ampm) {
         return collectionsDao.getCollectionByDateByFarmerByTimeSingle(code, today, ampm);
 

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.dev.lishabora.Adapters.ViewHolders.FarmerViewHolder;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Utils.DateTimeUtils;
@@ -24,14 +23,19 @@ import java.util.List;
 
 import github.nisrulz.recyclerviewhelper.RVHAdapter;
 
-public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> implements RVHAdapter {
+//import com.chauthai.swipereveallayout.ViewBinderHelper;
+//import com.daimajia.swipe.SimpleSwipeListener;
+//import com.daimajia.swipe.SwipeLayout;
+//import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
+// RecyclerView.Adapter<FarmerViewHolder> implements RVHAdapter {
+public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> implements RVHAdapter {
     private Context context;
     private List<FamerModel> modelList;
     private OnclickRecyclerListener listener;
     private OnStartDragListener mDragStartListener;
     private OnStartDragListener mmDragStartListener;
-    private final ViewBinderHelper binderHelper = new ViewBinderHelper();
+    // private final ViewBinderHelper binderHelper = new ViewBinderHelper();
 
     public FarmersAdapter(Context context, List<FamerModel> modelList, OnclickRecyclerListener listener, OnStartDragListener dragStartListener) {
         this.context = context;
@@ -81,11 +85,23 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
             nm.printStackTrace();
         }
 
-        binderHelper.bind(holder.swipeLayout, farmer.getCode());
+        // binderHelper.bind(holder.swipeLayout, farmer.getCode());
 
         holder.balance.setText(String.format("%s%s", v, context.getString(R.string.ksh)));
         GeneralUtills.Companion.changeCOlor(v, holder.balance, 1);
-        holder.id.setText(farmer.getCode());
+
+
+        if (farmer.isHasPreviousPayout()) {
+            holder.id.setText("1 Other Payout Bal ");
+            holder.id.setTextColor(context.getResources().getColor(R.color.red));
+            holder.codeLbl.setVisibility(View.GONE);
+        } else {
+            holder.id.setTextColor(context.getResources().getColor(R.color.textblack));
+
+            holder.id.setText(farmer.getCode());
+            holder.codeLbl.setVisibility(View.VISIBLE);
+        }
+
         holder.name.setText(GeneralUtills.Companion.capitalize(farmer.getNames()));
         holder.cycle.setText(farmer.getCyclename());
         holder.route.setText(farmer.getRoutename());
@@ -96,9 +112,9 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
         holder.txtDate.setText(TextUtils.makeSectionOfTextBold(arr[0], arr[1]));
 //        String status = "";
 //        if (farmer.getArchived() == 0 && farmer.getDeleted() == 0 && farmer.getDummy() == 0) {
-//            status = "Active";
-//            holder.status.setText(status);
-//            holder.status.setTextColor(context.getResources().getColor(R.color.green_color_picker));
+//           // status = "Active";
+//           // holder.status.setText(status);
+//           // holder.status.setTextColor(context.getResources().getColor(R.color.green_color_picker));
 //            holder.background.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
 //            holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
 //        } else {
@@ -114,12 +130,16 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
 //                stringBuilder.append("|Dummy");
 //
 //            }
-//            holder.status.setText(stringBuilder.toString());
-//            holder.status.setTextColor(context.getResources().getColor(R.color.red));
+//           // holder.status.setText(stringBuilder.toString());
+//           // holder.status.setTextColor(context.getResources().getColor(R.color.red));
 //            holder.background.setBackgroundColor(context.getResources().getColor(R.color.red));
 //            holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.red));
 //
 //        }
+
+        // mItemManger.bindView(holder.itemView, position);
+//
+
 
 
     }
@@ -169,4 +189,8 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
         return true;
     }
 
+//    @Override
+//    public int getSwipeLayoutResourceId(int position) {
+//        return R.id.swipe;
+//    }
 }

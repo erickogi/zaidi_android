@@ -65,7 +65,16 @@ public class FamerModel implements Serializable {
     private String loanbalance, milkbalance, orderbalance;
     @Ignore
     private boolean show;
+    @Ignore
+    private boolean hasPreviousPayout;
 
+    public boolean isHasPreviousPayout() {
+        return hasPreviousPayout;
+    }
+
+    public void setHasPreviousPayout(boolean hasPreviousPayout) {
+        this.hasPreviousPayout = hasPreviousPayout;
+    }
 
     public String getTraderCode() {
         return traderCode;

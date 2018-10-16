@@ -146,6 +146,14 @@ public class FragmentFarmerProfile extends Fragment {
                 }
 
             });
+            try {
+                Double bal = traderViewModel.getBalance(famerModel.getCode());
+                txtBalance.setText(GeneralUtills.Companion.round(String.valueOf(bal), 1));
+
+            } catch (Exception nm) {
+                nm.printStackTrace();
+            }
+
 
         }
     }
