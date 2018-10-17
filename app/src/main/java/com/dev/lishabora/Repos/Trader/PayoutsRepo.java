@@ -47,6 +47,12 @@ public class PayoutsRepo {
         return dao.getPayoutsByStatus(status);
     }
 
+    public List<Payouts> getPayoutsByStatusD(String status) {
+
+        return dao.getPayoutsByStatusD(status);
+    }
+
+
 
     public LiveData<List<Payouts>> getPayoutsByPayoutsByDate(String start, String end) {
         return dao.getPayoutsByByDate(start, end);

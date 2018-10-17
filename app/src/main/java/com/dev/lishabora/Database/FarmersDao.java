@@ -19,6 +19,10 @@ public interface FarmersDao {
     @Query("SELECT * FROM FARMERS  ")
     LiveData<List<FamerModel>> findAllBalRoute();
 
+    @Query("SELECT * FROM FARMERS  WHERE routecode =:route")
+    LiveData<List<FamerModel>> findAllByRoute(String route);
+
+
     @Query("SELECT FARMERS.*,  ROUTES.*, FARMERBALANCE.balanceToPay,FARMERBALANCE.balanceOwed  FROM FARMERS INNER JOIN ROUTES ON ROUTES.code = FARMERS.routecode INNER JOIN FARMERBALANCE ON FARMERBALANCE.farmerCode = FARMERS.code  ")
     LiveData<List<FarmerRouteBalance>> findAllBalRouteJoined();
 

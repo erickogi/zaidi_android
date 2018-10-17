@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.RoutesAdapter;
 import com.dev.lishabora.Application;
+import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.RPFSearchModel;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.RoutesModel;
@@ -646,7 +647,23 @@ public class FragmentRoutes extends Fragment {
                 @Override
                 public void onChanged(@Nullable ResponseModel responseModel) {
                     avi.smoothToHide();
-                    dialog.dismiss();
+
+                    mViewModel.getAllByRouteCode(routesModel.getCode()).observe(FragmentRoutes.this, new Observer<List<FamerModel>>() {
+                        @Override
+                        public void onChanged(@Nullable List<FamerModel> famerModels) {
+                            if (famerModels != null) {
+                                for (FamerModel famerModel : famerModels) {
+                                    famerModel.setRoutename(routesModel.getRoute());
+                                    mViewModel.updateFarmer(famerModel, false, true);
+                                }
+                                dialog.dismiss();
+
+                            } else {
+                                dialog.dismiss();
+
+                            }
+                        }
+                    });
                 }
             });
 

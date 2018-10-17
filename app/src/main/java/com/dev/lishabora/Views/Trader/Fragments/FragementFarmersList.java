@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.card.MaterialCardView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -40,6 +41,9 @@ import com.dev.lishabora.AppConstants;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.FarmerBalance;
+import com.dev.lishabora.Models.Notifications;
+import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.RoutesModel;
 import com.dev.lishabora.Models.UnitsModel;
@@ -52,6 +56,7 @@ import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.Utils.RecyclerTouchListener;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
+import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.CommonFuncs;
 import com.dev.lishabora.Views.Trader.Activities.CreateFarmerActivity;
@@ -60,6 +65,7 @@ import com.dev.lishabora.Views.Trader.Activities.FirstTimeLaunch;
 import com.dev.lishabora.Views.Trader.Activities.GiveOrder;
 import com.dev.lishabora.Views.Trader.FarmerConst;
 import com.dev.lishabora.Views.Trader.OrderConstants;
+import com.dev.lishabora.Views.Trader.PayoutConstants;
 import com.dev.lishaboramobile.R;
 import com.google.gson.Gson;
 import com.jaredrummler.materialspinner.MaterialSpinner;
@@ -109,6 +115,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     List<RoutesModel> getRoutess = new LinkedList<>();
     List<Cycles> getCycles = new LinkedList<>();
     private TraderViewModel mViewModel;
+    int selectedInt = 0;
     private BalncesViewModel balncesViewModel;
     private PrefrenceManager prefrenceManager;
     private List<RoutesModel> routesModels;
@@ -118,6 +125,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     private int SORTTYPE = 0;
     private CollectMilk collectMilk;
     private FamerModel selectedFarmer;
+    private PayoutsVewModel payoutsVewModel;
 
 
     public void deleteFarmer(FamerModel famerModel) {
@@ -144,10 +152,17 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         try {
             if (FarmerConst.getSearchFamerModels().get(position).getDeleted() == 0 && FarmerConst.getSearchFamerModels().get(position).getArchived() == 0) {
                 //listenOnBalance(FarmerConst.getSearchFamerModels().get(position));
-
+                selectedInt = position;
                 selectedFarmer = FarmerConst.getSearchFamerModels().get(position);
+
+                //  balncesViewModel.getByFarmerCode(selectedFarmer.getCode()).observe(this, farmerBalance -> {
+
+                FarmerBalance farmerBalance = balncesViewModel.getByFarmerCodeOne(selectedFarmer.getCode());
+
                 List<Collection> collections = mViewModel.getCollectionsBetweenDatesOne(DateTimeUtils.Companion.getLongDate(DateTimeUtils.Companion.getDatePrevious(4)), DateTimeUtils.Companion.getLongDate(DateTimeUtils.Companion.getToday()), FarmerConst.getSearchFamerModels().get(position).getCode());
-                collectMilk.collectMilk(FarmerConst.getSearchFamerModels().get(position), collections);
+                collectMilk.collectMilk(FarmerConst.getSearchFamerModels().get(position), collections, farmerBalance);
+
+                //  });
 
 
             }
@@ -486,12 +501,15 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             case R.id.action_automatically:
                 // Do Fragment menu item stuff here
                 SORTTYPE = AUTOMATICALLY;
+                prefrenceManager.setSortType(SORTTYPE);
                 filterFarmers();
                 setDraggale(false);
                 return true;
             case R.id.action_manually:
-                //SORTTYPE = MANUALLY;
+                SORTTYPE = MANUALLY;
                 //startDrag();
+                prefrenceManager.setSortType(SORTTYPE);
+
                 fragment = new FragementFarmersDragList();
                 setUpView();
 
@@ -499,18 +517,24 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                 return true;
             case R.id.action_chronologically:
                 SORTTYPE = CHRONOLOGICAL;
+                prefrenceManager.setSortType(SORTTYPE);
+
                 filterFarmers();
                 setDraggale(false);
                 // Do Fragment menu item stuff here
                 return true;
             case R.id.action_alphabetically:
                 SORTTYPE = ALPHABETICAL;
+                prefrenceManager.setSortType(SORTTYPE);
+
                 filterFarmers();
                 setDraggale(false);
                 // Do Fragment menu item stuff here
                 return true;
             case R.id.action_smanually:
                 SORTTYPE = MANUALLY;
+                prefrenceManager.setSortType(SORTTYPE);
+
                 filterFarmers();
                 setDraggale(false);
                 // Do Fragment menu item stuff here
@@ -596,6 +620,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         super.onViewCreated(view, savedInstanceState);
         this.view = view;
         mViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
+        payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
         balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
 
         prefrenceManager = new PrefrenceManager(getContext());
@@ -638,7 +663,8 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         lspinner2.setVisibility(View.VISIBLE);
 
 
-        spinner1.setItems("Active", "Archived", "Deleted", "Dummy", "All(Status)");
+        // spinner1.setItems("Active", "Archived", "Deleted", "Dummy", "All(Status)");
+        spinner1.setItems("Active");
         getRoutes();
 
         spinner1.setOnItemSelectedListener((MaterialSpinner.OnItemSelectedListener<String>) (view1, position, id, item) -> fetchFarmers(getSelectedAccountStatus(), getSelectedRoute()));
@@ -737,7 +763,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
     public void updateSelectedFarmer() {
         selectedFarmer.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-
         mViewModel.updateFarmer(selectedFarmer, false, false);
     }
 
@@ -909,7 +934,8 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         }
 
 
-        switch (SORTTYPE) {
+        int sort = prefrenceManager.getSortType();
+        switch (sort) {
             case AUTOMATICALLY:
                 listAdapter.notifyDataSetChanged();
                 break;
@@ -920,7 +946,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                 filterFarmersChronologically();
                 break;
             case MANUALLY:
-
                 filterFarmersManually();
                 break;
             default:
@@ -977,6 +1002,77 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         populateTraders();
         fetchFarmers(0, "");
         observeBalance();
+//        CommonFuncs.updateBalance(Application.application,balncesViewModel);
+
+        observePayouts();
+
+    }
+
+    private void observePayouts() {
+        MaterialCardView cardView = view.findViewById(R.id.card_header);
+        cardView.setVisibility(View.GONE);
+        TextView txtTitle = view.findViewById(R.id.txt_title);
+        TextView txtMsg = view.findViewById(R.id.txt_message);
+        ImageView imgRemove = view.findViewById(R.id.cancel_icon);
+
+        imgRemove.setOnClickListener(view -> cardView.setVisibility(View.GONE));
+        mViewModel.getPayoutsByStatus("0").observe(this, payouts -> {
+            if (payouts != null) {
+                cardView.setVisibility(View.VISIBLE);
+
+                List<Notifications> notifications = CommonFuncs.getPendingPayouts(payouts);
+                if (notifications != null && notifications.size() > 0) {
+
+                    if (notifications.size() > 1) {
+
+                        cardView.setVisibility(View.VISIBLE);
+                        txtTitle.setText("Hi . " + prefrenceManager.getTraderModel().getNames());
+                        txtMsg.setText("You have " + notifications.size() + " Pending payouts that require approval");
+                        cardView.setOnClickListener(view -> {
+                            fragment = new FragmentPayouts();
+                            popOutFragments();
+                            setUpView();
+                        });
+
+
+                    } else {
+
+
+                        cardView.setVisibility(View.VISIBLE);
+                        txtTitle.setText("Hi . " + prefrenceManager.getTraderModel().getNames() + " You have 1 " + notifications.get(0).getTitle());
+                        txtMsg.setText(notifications.get(0).getMessage());
+                        cardView.setOnClickListener(view -> {
+                            mViewModel.getPayoutByCode(notifications.get(0).getPayoutCode()).observe(FragementFarmersList.this, new Observer<Payouts>() {
+                                @Override
+                                public void onChanged(@Nullable Payouts payouts) {
+                                    if (payouts != null) {
+                                        List<Collection> c = payoutsVewModel.getCollectionByDateByPayoutListOne(payouts.getCode());
+                                        Payouts p = CommonFuncs.createPayoutsByCollection(c, payouts, payoutsVewModel, balncesViewModel, null, false, payoutsVewModel.getFarmersByCycleONe(payouts.getCycleCode()));
+
+
+                                        Intent intent = new Intent(getActivity(), com.dev.lishabora.Views.Trader.Activities.Payouts.class);
+                                        intent.putExtra("data", p);
+                                        PayoutConstants.setPayouts(p);
+                                        startActivity(intent);
+
+                                    }
+                                }
+                            });
+
+                        });
+
+
+                    }
+                } else {
+                    cardView.setVisibility(View.GONE);
+                }
+
+            } else {
+                cardView.setVisibility(View.GONE);
+            }
+
+
+        });
 
     }
 
@@ -988,6 +1084,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         fetchFarmers(0, "");
         filterFarmers();
         recyclerView.addOnItemTouchListener(onTouchListener);
+        // observePayouts();
 
     }
 
@@ -1195,13 +1292,19 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         Log.d("Colllectionn", new Gson().toJson(c));
 
         // listenOnBalance(famerModel);
+
+
+        listAdapter.updateFarmer(famerModel, selectedInt);
+
+
         mViewModel.createCollections(c, false).observe(FragementFarmersList.this, responseModel -> {
 
-
+//
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
 
+
                 CommonFuncs.updateBalance(famerModel, mViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.MILK, null, null);
-                //mViewModel.updateFarmer(famerModel, false, false);
+                mViewModel.updateFarmer(famerModel, false, false);
 
             } else {
 
@@ -1241,6 +1344,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
     @Override
     public void updateCollection(Collection c, FamerModel famerModel) {
+        listAdapter.updateFarmer(famerModel, selectedInt);
 
         // listenOnBalance(famerModel);
 

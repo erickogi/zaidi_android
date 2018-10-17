@@ -12,6 +12,7 @@ import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.FarmerRouteBalance;
+import com.dev.lishabora.Models.Notifications;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Models.ProductsModel;
 import com.dev.lishabora.Models.RPFSearchModel;
@@ -23,6 +24,7 @@ import com.dev.lishabora.Models.Trader.TraderModel;
 import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.Network.ApiConstants;
 import com.dev.lishabora.Network.Request;
+import com.dev.lishabora.Repos.NotificationRepo;
 import com.dev.lishabora.Repos.ProductsRepo;
 import com.dev.lishabora.Repos.RoutesRepo;
 import com.dev.lishabora.Repos.Trader.CollectionsRepo;
@@ -63,6 +65,7 @@ public class TraderViewModel extends AndroidViewModel
     PayoutsRepo payoutsRepo;
     SyncRepo syncRepo;
     TraderRepo traderRepo;
+    NotificationRepo notificationRepo;
 
 
     Gson gson = new Gson();
@@ -134,6 +137,7 @@ public class TraderViewModel extends AndroidViewModel
         prefrenceManager = new PrefrenceManager(application);
         syncRepo = new SyncRepo(application);
         traderRepo = new TraderRepo(application);
+        notificationRepo = new NotificationRepo(application);
 
 
 
@@ -146,6 +150,21 @@ public class TraderViewModel extends AndroidViewModel
 //
     }
 
+    public LiveData<List<Notifications>> getNotifications(int viewd) {
+        return notificationRepo.fetchAllData(viewd);
+    }
+
+    public LiveData<List<Notifications>> getNotifications() {
+        return notificationRepo.fetchAllData();
+    }
+
+    public void insertNotification(Notifications notifications) {
+        notificationRepo.insert(notifications);
+    }
+
+    public void updateNotification(Notifications notifications) {
+        notificationRepo.upDateRecord(notifications);
+    }
     public LiveData<TraderModel> getTrader(String traderCode) {
         return traderRepo.getTraderByCode(traderCode);
     }
@@ -713,6 +732,9 @@ public class TraderViewModel extends AndroidViewModel
         return createRouteSuccess;
     }
 
+    public LiveData<List<FamerModel>> getAllByRouteCode(String routeCode) {
+        return farmerRepo.getFramersByRoute(routeCode);
+    }
     public LiveData<ResponseModel> updateRoute(RoutesModel routesModel, JSONObject jsonObject, boolean b) {
         if (this.updateRouteSuccess == null) {
         }
@@ -740,6 +762,8 @@ public class TraderViewModel extends AndroidViewModel
             routesModel.setTraderCode(prefrenceManager.getTraderModel().getCode());
 
             routesRepo.upDateRecord(routesModel);
+
+
             synch(AppConstants.UPDATE, AppConstants.ENTITY_ROUTES, routesModel, null, 1);
 
             ResponseModel responseModel = new ResponseModel();

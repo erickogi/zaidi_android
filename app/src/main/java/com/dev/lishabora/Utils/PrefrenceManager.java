@@ -70,6 +70,7 @@ public class PrefrenceManager {
     private static final String isFirebaseUdated = "isFirebaseUpdated";
 
 
+    private static final String sortType = "sortyfd";
     private static final String isTraderFirstTime = "isTraderFirst";
     // Shared Preferences
 
@@ -316,5 +317,14 @@ public class PrefrenceManager {
 
     public boolean isFirebaseUpdated() {
         return pref.getBoolean(isFirebaseUdated, false);
+    }
+
+    public int getSortType() {
+        return pref.getInt(sortType, 0);
+    }
+
+    public void setSortType(int sort) {
+        editor.putInt(sortType, sort);
+        editor.commit();
     }
 }

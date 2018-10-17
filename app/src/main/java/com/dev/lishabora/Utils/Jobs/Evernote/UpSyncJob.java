@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 public class UpSyncJob extends Job {
 
-    static final String TAG = "sync_job";
+    static final String TAG = "sync_job_up";
 
     public static void schedulePeriodic() {
         Log.d("jobadd", "job shedule periodic");

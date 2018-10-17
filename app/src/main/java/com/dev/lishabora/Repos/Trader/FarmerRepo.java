@@ -69,6 +69,14 @@ public class FarmerRepo {
 
     }
 
+    public LiveData<List<FamerModel>> fetchAllDataByRoute(String route) {
+
+        farmersDao = db.farmersDao();
+        return farmersDao.findAllByRoute(route);
+
+    }
+
+
     public LiveData<List<FamerModel>> getFarmersByCycle(String code) {
 
         farmersDao = db.farmersDao();
@@ -126,6 +134,10 @@ public class FarmerRepo {
     public void deleteRecord(FamerModel farmerModel){
         new deleteTradersAsyncTask(db.farmersDao()).execute(farmerModel);
     }
+
+//    public void updateFarmerByRouteCode(String code) {
+//        farmersDao.updateFarmerByCode(code);
+//    }
 
 
     private static class insertTraderAsyncTask extends AsyncTask<FamerModel, Void, Boolean> {

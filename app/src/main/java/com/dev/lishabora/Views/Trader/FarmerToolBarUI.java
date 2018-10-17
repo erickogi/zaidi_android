@@ -129,8 +129,8 @@ public class FarmerToolBarUI extends LinearLayout {
         materialSpinnerCat.setSelectedIndex(0);
 
 
-        txtTo.setText("..To .." + DateTimeUtils.Companion.getToday());
-        txtFrom.setText("..From .." + DateTimeUtils.Companion.getToday());
+        txtTo.setText("..To .." + DateTimeUtils.Companion.getDisplayDate(DateTimeUtils.Companion.getToday(), DateTimeUtils.Companion.getDisplayDatePattern1()));
+        txtFrom.setText("..From .." + DateTimeUtils.Companion.getDisplayDate(DateTimeUtils.Companion.getToday(), DateTimeUtils.Companion.getDisplayDatePattern1()));
 
 
         monthsDates = DateTimeUtils.Companion.getMonthsInYear(12);
@@ -251,12 +251,12 @@ public class FarmerToolBarUI extends LinearLayout {
 
     public void setFrom(String date) {
         setDateFrom(date);
-        txtFrom.setText("..From .." + date);
+        txtFrom.setText("..From .." + DateTimeUtils.Companion.getDisplayDate(date, DateTimeUtils.Companion.getDisplayDatePattern1()));
     }
 
     public void setTo(String date) {
         setDateTo(date);
-        txtTo.setText("..To " + date);
+        txtTo.setText("..To " + DateTimeUtils.Companion.getDisplayDate(date, DateTimeUtils.Companion.getDisplayDatePattern1()));
     }
 
 

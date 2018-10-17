@@ -75,7 +75,6 @@ public class FragmentPayouts extends Fragment {
                 Intent intent = new Intent(getActivity(), com.dev.lishabora.Views.Trader.Activities.Payouts.class);
                 intent.putExtra("data", payouts.get(position));
                 PayoutConstants.setPayouts(payouts.get(position));
-
                 startActivity(intent);
 
 

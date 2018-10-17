@@ -10,10 +10,12 @@ import com.mikepenz.materialdrawer.AccountHeader
 import com.mikepenz.materialdrawer.AccountHeaderBuilder
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.DrawerBuilder
+import com.mikepenz.materialdrawer.holder.StringHolder
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
+
 
 class DrawerClass {
     private fun getBitmap(activity: Activity, img: String): Bitmap {
@@ -35,7 +37,7 @@ class DrawerClass {
     companion object {
         internal lateinit var result: Drawer
         internal lateinit var headerResult: AccountHeader
-        fun getDrawer(email: String?, name: String?, activity: Activity, toolbar: Toolbar, itemListener: DrawerItemListener) {
+        fun getDrawer(noti: String, email: String?, name: String?, activity: Activity, toolbar: Toolbar, itemListener: DrawerItemListener) {
             // result: Drawer
             val drawerEmptyItem = PrimaryDrawerItem().withIdentifier(0).withName("")
             drawerEmptyItem.withEnabled(false)
@@ -56,12 +58,12 @@ class DrawerClass {
 
 
             val payout = PrimaryDrawerItem().withIdentifier(21)
-                    .withName("Payouts").withTextColorRes(R.color.white).withIcon(R.drawable.ic_route)
+                    .withName("Payouts").withTextColorRes(R.color.white).withIcon(R.drawable.ic_attach_money_black_24dp)
 
 
             val notifications = PrimaryDrawerItem().withIdentifier(5)
                     .withName("Notifications").withTextColorRes(R.color.white)
-                    .withIcon(R.drawable.ic_notifications_black_24dp).withBadge("3")
+                    .withIcon(R.drawable.ic_notifications_black_24dp).withBadge(noti)
 
 
             val transactions = PrimaryDrawerItem().withIdentifier(6)
@@ -237,6 +239,19 @@ class DrawerClass {
                 nm.printStackTrace()
             }
 
+        }
+
+        fun observeChangesInNotifications(no: Int) {
+            try {
+                var badge = StringHolder("" + no.toString())
+                if (no == 0) {
+                    badge = StringHolder("")
+                }
+                result.updateBadge(5, badge)
+
+            } catch (nm: Exception) {
+                nm.printStackTrace()
+            }
         }
     }
 }

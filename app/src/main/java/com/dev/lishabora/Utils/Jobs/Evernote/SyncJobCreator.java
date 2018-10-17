@@ -24,8 +24,12 @@ public class SyncJobCreator implements JobCreator {
                 Log.d("jobadd", "job added downSync");
                 return new DownSyncJob();
             case SyncNotifierJob.TAG:
-                Log.d("jobadd", "job added downSync");
+                Log.d("jobadd", "job added syncnotifire");
                 return new SyncNotifierJob();
+
+            case PayoutCheckerJob.TAG:
+                Log.d("jobadd", "job added paychecker");
+                return new PayoutCheckerJob();
             default:
                 return null;
         }

@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.FarmerBalance;
 import com.dev.lishabora.Models.MilkModel;
 import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.NumKey.NumberKeyboard;
@@ -198,7 +199,7 @@ class CollectMilk implements NumberKeyboardListener {
     }
 
 
-    void collectMilk(FamerModel famerModel, List<Collection> collections) {
+    void collectMilk(FamerModel famerModel, List<Collection> collections, FarmerBalance farmerBalance) {
 
 
         clearDialog();
@@ -402,7 +403,7 @@ class CollectMilk implements NumberKeyboardListener {
 
             }
 
-            doCollect(famerModel, unitsModel, milkAm, milkPm);
+            doCollect(famerModel, unitsModel, milkAm, milkPm, farmerBalance);
             alertDialogAndroid.dismiss();
 
 
@@ -414,7 +415,7 @@ class CollectMilk implements NumberKeyboardListener {
 
     }
 
-    private void doCollect(FamerModel famerModel, UnitsModel unitsModel, String milkAm, String milkPm) {
+    private void doCollect(FamerModel famerModel, UnitsModel unitsModel, String milkAm, String milkPm, FarmerBalance farmerBalance) {
         Collection c = null;
 
         if (collModel == null) {
@@ -457,6 +458,23 @@ class CollectMilk implements NumberKeyboardListener {
                 c.setMilkDetailsAm(new Gson().toJson(milkModel));
 
 
+                Double bal = 0.0;
+
+                String newBalance = milkModel.getValueKsh();
+                if (farmerBalance != null) {
+                    if (farmerBalance.getBalanceToPay() != null) {
+                        String previosBalance = farmerBalance.getBalanceToPay();
+
+                        try {
+                            newBalance = String.valueOf(Double.valueOf(previosBalance) + Double.valueOf(milkModel.getValueKsh()));
+
+                        } catch (Exception nm) {
+                            nm.printStackTrace();
+                        }
+                    }
+                }
+
+                famerModel.setTotalbalance(newBalance);
 
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
                 listener.createCollection(c, famerModel);
@@ -469,6 +487,25 @@ class CollectMilk implements NumberKeyboardListener {
                 collModel.setMilkCollectedValueKshAm(milkModel.getValueKsh());
                 collModel.setMilkCollectedValueLtrsAm(milkModel.getValueLtrs());
                 collModel.setMilkDetailsAm(new Gson().toJson(milkModel));
+
+
+                String newBalance = milkModel.getValueKsh();
+                if (farmerBalance != null) {
+                    if (farmerBalance.getBalanceToPay() != null) {
+                        String previosBalance = farmerBalance.getBalanceToPay();
+
+                        try {
+                            newBalance = String.valueOf(Double.valueOf(previosBalance) + Double.valueOf(milkModel.getValueKsh()));
+
+                        } catch (Exception nm) {
+                            nm.printStackTrace();
+                        }
+                    }
+                }
+
+                famerModel.setTotalbalance(newBalance);
+
+
 
 
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
@@ -500,6 +537,22 @@ class CollectMilk implements NumberKeyboardListener {
                 c.setMilkDetailsAm(new Gson().toJson(milkModel));
 
 
+                String newBalance = milkModel.getValueKsh();
+                if (farmerBalance != null) {
+                    if (farmerBalance.getBalanceToPay() != null) {
+                        String previosBalance = farmerBalance.getBalanceToPay();
+
+                        try {
+                            newBalance = String.valueOf(Double.valueOf(previosBalance) + Double.valueOf(milkModel.getValueKsh()));
+
+                        } catch (Exception nm) {
+                            nm.printStackTrace();
+                        }
+                    }
+                }
+
+                famerModel.setTotalbalance(newBalance);
+
 
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
 
@@ -513,6 +566,27 @@ class CollectMilk implements NumberKeyboardListener {
                 collModel.setMilkCollectedValueLtrsPm(milkModel.getValueLtrs());
                 collModel.setMilkDetailsPm(new Gson().toJson(milkModel));
 
+
+                try {
+                    String newBalance = milkModel.getValueKsh();
+                    if (farmerBalance != null) {
+                        if (farmerBalance.getBalanceToPay() != null) {
+                            String previosBalance = farmerBalance.getBalanceToPay();
+
+                            try {
+                                newBalance = String.valueOf(Double.valueOf(previosBalance) + Double.valueOf(milkModel.getValueKsh()));
+
+                            } catch (Exception nm) {
+                                nm.printStackTrace();
+                            }
+                        }
+                    }
+
+                    famerModel.setTotalbalance(newBalance);
+
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
 
                 listener.updateCollection(collModel, famerModel);
@@ -548,6 +622,26 @@ class CollectMilk implements NumberKeyboardListener {
                 c.setMilkDetailsPm(new Gson().toJson(milkModelPm));
 
 
+                try {
+                    String newBalance = String.valueOf(Double.valueOf(milkModelAm.getValueKsh()) + Double.valueOf(milkModelPm.getValueKsh()));
+                    if (farmerBalance != null) {
+                        if (farmerBalance.getBalanceToPay() != null) {
+                            String previosBalance = farmerBalance.getBalanceToPay();
+
+                            try {
+                                newBalance = String.valueOf(Double.valueOf(previosBalance) + (Double.valueOf(milkModelAm.getValueKsh()) + Double.valueOf(milkModelPm.getValueKsh())));
+
+                            } catch (Exception nm) {
+                                nm.printStackTrace();
+                            }
+                        }
+                    }
+
+                    famerModel.setTotalbalance(newBalance);
+
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
 
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
                 listener.createCollection(c, famerModel);
@@ -565,6 +659,30 @@ class CollectMilk implements NumberKeyboardListener {
                 collModel.setMilkCollectedValueKshPm(milkModelPm.getValueKsh());
                 collModel.setMilkCollectedValueLtrsPm(milkModelPm.getValueLtrs());
                 collModel.setMilkDetailsPm(new Gson().toJson(milkModelPm));
+
+
+                try {
+                    String newBalance = String.valueOf(Double.valueOf(milkModelAm.getValueKsh()) + Double.valueOf(milkModelPm.getValueKsh()));
+                    if (farmerBalance != null) {
+                        if (farmerBalance.getBalanceToPay() != null) {
+                            String previosBalance = farmerBalance.getBalanceToPay();
+
+                            try {
+                                newBalance = String.valueOf(Double.valueOf(previosBalance) + (Double.valueOf(milkModelAm.getValueKsh()) + Double.valueOf(milkModelPm.getValueKsh())));
+
+                            } catch (Exception nm) {
+                                nm.printStackTrace();
+                            }
+                        }
+                    }
+
+                    famerModel.setTotalbalance(newBalance);
+
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
+
+
 
 
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());

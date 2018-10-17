@@ -1,12 +1,14 @@
 package com.dev.lishabora.Views.Trader.Fragments;
 
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,11 +18,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.FarmerBalance;
 import com.dev.lishabora.Utils.GeneralUtills;
+import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Trader.Activities.CreateFarmerActivity;
 import com.dev.lishabora.Views.Trader.FarmerConst;
 import com.dev.lishaboramobile.R;
+import com.google.gson.Gson;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -31,6 +36,7 @@ public class FragmentFarmerProfile extends Fragment {
 
     private View mView;
     private TraderViewModel traderViewModel;
+    private BalncesViewModel balncesViewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,6 +96,7 @@ public class FragmentFarmerProfile extends Fragment {
         this.mView = view;
         famerModel = (FamerModel) getArguments().getSerializable("farmer");
         traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
+        balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
 
     }
 
@@ -136,7 +143,7 @@ public class FragmentFarmerProfile extends Fragment {
                 txtMilk.setText("");
                 txtLoan.setText("");
                 txtOrder.setText("");
-                txtBalance.setText(GeneralUtills.Companion.round(farmerModel.getTotalbalance(), 1));
+                // txtBalance.setText(GeneralUtills.Companion.round(farmerModel.getTotalbalance(), 1));
                 txtTime.setText(famerModel.getLastCollectionTime());
 
                 try {
@@ -147,8 +154,22 @@ public class FragmentFarmerProfile extends Fragment {
 
             });
             try {
-                Double bal = traderViewModel.getBalance(famerModel.getCode());
-                txtBalance.setText(GeneralUtills.Companion.round(String.valueOf(bal), 1));
+                String bal = "0.0";
+                try {
+                    balncesViewModel.getByFarmerCode(famerModel.getCode()).observe(this, new Observer<FarmerBalance>() {
+                        @Override
+                        public void onChanged(@Nullable FarmerBalance farmerBalance) {
+                            txtBalance.setText(GeneralUtills.Companion.round(String.valueOf(farmerBalance.getBalanceToPay()), 1));
+                            Log.d("balls", new Gson().toJson(farmerBalance));
+
+                        }
+                    });
+                } catch (Exception NM) {
+                    NM.printStackTrace();
+                    Log.d("balls", NM.toString());
+
+                }
+
 
             } catch (Exception nm) {
                 nm.printStackTrace();

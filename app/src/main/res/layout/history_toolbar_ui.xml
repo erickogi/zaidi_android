@@ -77,6 +77,8 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
 
+            app:ms_dropdown_height="wrap_content"
+            app:ms_dropdown_max_height="500dp"
             android:layout_margin="2dp"
             app:ms_arrow_tint="@color/green_color_picker"
 

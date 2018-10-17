@@ -763,9 +763,18 @@ public class BalncesViewModel extends AndroidViewModel
         return balanceRepo.getByFarmerCode(code);
     }
 
+    public LiveData<FarmerBalance> getByFarmerCodeByPayout(String code, String payoutCode) {
+        return balanceRepo.getByFarmerCodeByPayout(code, payoutCode);
+    }
+
+
 
     public FarmerBalance getByFarmerCodeOne(String code) {
         return balanceRepo.getByFarmerCodeOne(code);
+    }
+
+    public FarmerBalance getByFarmerCodeByPayoutOne(String code, String payoutCode) {
+        return balanceRepo.getByFarmerCodeByPayoutOne(code, payoutCode);
     }
 
     public void updateRecord(FarmerBalance farmerBalance) {

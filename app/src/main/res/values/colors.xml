@@ -34,4 +34,20 @@
     <color name="colorBottomNavigationPrimaryDark">#303F9F</color>
     <color name="colorBottomNavigationSelectedBackground">#17000000</color>
 
+
+    <!-- Green -->
+    <color name="material_green_500">#4cae4e</color>
+    <color name="material_green_50">#e9f4e9</color>
+    <color name="material_green_100">#c8e4c9</color>
+    <color name="material_green_200">#a4d5a6</color>
+    <color name="material_green_300">#81c784</color>
+    <color name="material_green_400">#66bb6a</color>
+    <color name="material_green_600">#42a046</color>
+    <color name="material_green_700">#378e43</color>
+    <color name="material_green_800">#307d3d</color>
+    <color name="material_green_900">#1e5e2f</color>
+    <color name="material_green_A100">#bee0c2</color>
+    <color name="material_green_A200">#84caa0</color>
+    <color name="material_green_A400">#5bbc6b</color>
+    <color name="material_green_A700">#40b654</color>
 </resources>

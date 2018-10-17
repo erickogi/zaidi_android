@@ -52,4 +52,5 @@ public interface SyncDao {
     @Query("SELECT COUNT(id) FROM sync ")
     int getCount();
 
+
 }

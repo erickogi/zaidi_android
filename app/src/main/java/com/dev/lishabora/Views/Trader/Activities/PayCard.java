@@ -269,6 +269,7 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
                 if (sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
                     sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 }
+
                 payoutsVewModel.getFarmerByCode(models.get(position).getFarmercode()).observe(PayCard.this, famerModel -> {
                     if (famerModel != null) {
                         PayCard.this.famerModel = famerModel;
@@ -279,8 +280,6 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
                     }
 
                 });
-
-
 
 
             }

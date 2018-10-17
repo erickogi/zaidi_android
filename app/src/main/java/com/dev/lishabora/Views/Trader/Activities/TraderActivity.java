@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -27,6 +26,7 @@ import com.dev.lishabora.Models.ResponseObject;
 import com.dev.lishabora.Models.Trader.TraderModel;
 import com.dev.lishabora.Network.ApiConstants;
 import com.dev.lishabora.Network.Request;
+import com.dev.lishabora.Utils.Jobs.Evernote.PayoutCheckerJob;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.Utils.ResponseCallback;
@@ -38,6 +38,7 @@ import com.dev.lishabora.Views.Reports.FragmentReports;
 import com.dev.lishabora.Views.Reports.HistoryToolBarUI;
 import com.dev.lishabora.Views.Reports.Reports;
 import com.dev.lishabora.Views.Trader.Fragments.FragementFarmersList;
+import com.dev.lishabora.Views.Trader.Fragments.FragmentNotifications;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentPayouts;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentProductList;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentRoutes;
@@ -49,11 +50,6 @@ import com.wang.avi.AVLoadingIndicatorView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.util.Objects;
 
 public class TraderActivity extends AppCompatActivity {
@@ -76,7 +72,7 @@ public class TraderActivity extends AppCompatActivity {
 
 
     void setUpDrawer(Toolbar toolbar, String name, String email) {
-        DrawerClass.Companion.getDrawer(email, name, this, toolbar, new DrawerItemListener() {
+        DrawerClass.Companion.getDrawer("0", email, name, this, toolbar, new DrawerItemListener() {
             @Override
             public void syncWorksClicked() {
                 startActivity(new Intent(TraderActivity.this, SyncWorks.class));
@@ -154,29 +150,32 @@ public class TraderActivity extends AppCompatActivity {
 
             @Override
             public void notificationsClicked() {
+                fragment = new FragmentNotifications();
+                popOutFragments();
+                setUpView("Notifications");
                 // MyToast.toast("We are working on implementing this  \n sit tight", TraderActivity.this, R.drawable.ic_launcher, Toast.LENGTH_LONG);
 //
 //                private void exportDB(){
-                File sd = Environment.getExternalStorageDirectory();
-                File data = Environment.getDataDirectory();
-                FileChannel source = null;
-                FileChannel destination = null;
-                String currentDBPath = "/data/" + "com.dev.lishaboramobile" + "/databases/" + SAMPLE_DB_NAME;
-                String backupDBPath = SAMPLE_DB_NAME + ".db";
-                File currentDB = new File(data, currentDBPath);
-                File backupDB = new File(sd, backupDBPath);
-                try {
-                    source = new FileInputStream(currentDB).getChannel();
-                    destination = new FileOutputStream(backupDB).getChannel();
-                    destination.transferFrom(source, 0, source.size());
-                    source.close();
-                    destination.close();
-                    Toast.makeText(TraderActivity.this, "DB Exported!", Toast.LENGTH_LONG).show();
-                } catch (IOException e) {
-                    Toast.makeText(TraderActivity.this, "DB  not Exported!" + e.toString(), Toast.LENGTH_LONG).show();
-
-                    e.printStackTrace();
-                }
+//                File sd = Environment.getExternalStorageDirectory();
+//                File data = Environment.getDataDirectory();
+//                FileChannel source = null;
+//                FileChannel destination = null;
+//                String currentDBPath = "/data/" + "com.dev.lishaboramobile" + "/databases/" + SAMPLE_DB_NAME;
+//                String backupDBPath = SAMPLE_DB_NAME + ".db";
+//                File currentDB = new File(data, currentDBPath);
+//                File backupDB = new File(sd, backupDBPath);
+//                try {
+//                    source = new FileInputStream(currentDB).getChannel();
+//                    destination = new FileOutputStream(backupDB).getChannel();
+//                    destination.transferFrom(source, 0, source.size());
+//                    source.close();
+//                    destination.close();
+//                    Toast.makeText(TraderActivity.this, "DB Exported!", Toast.LENGTH_LONG).show();
+//                } catch (IOException e) {
+//                    Toast.makeText(TraderActivity.this, "DB  not Exported!" + e.toString(), Toast.LENGTH_LONG).show();
+//
+//                    e.printStackTrace();
+//                }
             }
 
 
@@ -218,6 +217,14 @@ public class TraderActivity extends AppCompatActivity {
             }
 
 
+        });
+        viewModel.getNotifications(0).observe(this, notifications -> {
+            if (notifications != null) {
+                DrawerClass.Companion.observeChangesInNotifications(notifications.size());
+
+            } else {
+                DrawerClass.Companion.observeChangesInNotifications(0);
+            }
         });
     }
 
@@ -299,6 +306,23 @@ public class TraderActivity extends AppCompatActivity {
     }
 
 
+    public void intNoti() {
+        Intent i = getIntent();
+        try {
+            if (i != null && i.getStringExtra("type").equals("notification_fragment")) {
+                fragment = new FragmentNotifications();
+                popOutFragments();
+                setUpView("Notifications");
+            }
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+        try {
+            PayoutCheckerJob.schedulePeriodic();
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -328,6 +352,7 @@ public class TraderActivity extends AppCompatActivity {
         }
 
 
+        intNoti();
     }
 
     private void alertDialogFirstTime() {

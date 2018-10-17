@@ -1,14 +1,15 @@
 package com.dev.lishabora.Utils.FireBase;
 
-import android.app.NotificationManager;
+import android.app.Notification;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.media.RingtoneManager;
-import android.net.Uri;
+import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
+import com.dev.lishabora.Application;
+import com.dev.lishabora.Views.Trader.Activities.TraderActivity;
 import com.dev.lishaboramobile.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -92,51 +93,32 @@ public class FirebaseService extends FirebaseMessagingService {
         Log.e(TAG, "Exception: " + e.getMessage());
         }
     }
-    private void sendNotification(String title, String message, boolean isloggedIn, int code) {
+
+    private void sendNotification(String title, String message, boolean isloggedIn) {
+
         if (isloggedIn) {
-            Intent intent = null;
+            Intent intent = new Intent(Application.context, TraderActivity.class);
+            intent.putExtra("type", "notification_cart");
 
 
-            try {
+            PendingIntent pi = PendingIntent.getActivity(Application.context, 0,
+                    intent, 0);
 
-                Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                NotificationCompat.Builder notificationBuilder;
-                if (intent != null) {
-                    PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                            PendingIntent.FLAG_ONE_SHOT);
+            Notification notification = new NotificationCompat.Builder(Application.context)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setAutoCancel(true)
+                    .setContentIntent(pi)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setShowWhen(true)
+                    .setColor(Color.RED)
+                    .setLocalOnly(true)
+                    .build();
 
+            NotificationManagerCompat.from(Application.context)
+                    .notify(new Random().nextInt(), notification);
 
-                    notificationBuilder =
-                            new NotificationCompat.Builder(this)
-                                    .setSmallIcon(R.drawable.ic_launcher_background)
-                                    .setContentTitle(title)
-                                    .setContentText(message)
-                                    .setAutoCancel(true)
-                                    .setSound(defaultSoundUri)
-                                    .setContentIntent(pendingIntent);
-                } else {
-                    notificationBuilder =
-                            new NotificationCompat.Builder(this)
-                                    .setSmallIcon(R.drawable.ic_launcher_background)
-                                    .setContentTitle(title)
-                                    .setContentText(message)
-                                    .setAutoCancel(true)
-                                    .setSound(defaultSoundUri);
-                }
-
-                NotificationManager notificationManager =
-                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-                if (notificationManager != null) {
-                    notificationManager.notify(new Random().nextInt() /* ID of notification */, notificationBuilder.build());
-                }
-            } catch (Exception nm) {
-                Log.e(TAG, "Exception: " + nm.getMessage());
-
-                nm.printStackTrace();
-            }
         }
-
     }
 
 

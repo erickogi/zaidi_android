@@ -20,12 +20,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.CollectionsAdapter;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.DayCollectionModel;
 import com.dev.lishabora.Models.Payouts;
-import com.dev.lishabora.Utils.DateTimeUtils;
+import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
@@ -209,23 +210,26 @@ public class FragmentPayoutColloectionsList extends Fragment {
         if (payouts != null) {
             setCardHeaderData(payouts);
         }
-        if (payouts.getStatus() == 1) {
-            btnApprove.setVisibility(View.GONE);
+
+
+        if (CommonFuncs.canApprovePayout(payouts)) {
+            btnApprove.setVisibility(View.VISIBLE);
         } else {
-            if (payouts.getEndDate().equals(DateTimeUtils.Companion.getToday()) || DateTimeUtils.Companion.isPastLastDay(payouts.getEndDate())) {
-                btnApprove.setVisibility(View.VISIBLE);
-            } else {
-                btnApprove.setVisibility(View.GONE);
-            }
+            btnApprove.setVisibility(View.GONE);
         }
 
-        btnApprove.setOnClickListener(view -> {
-            payouts.setStatus(1);
-            payouts.setStatusName("Approved");
-            payoutsVewModel.updatePayout(payouts);
 
-            //   CommonFuncs.doPayout(payouts,balncesViewModel,payoutsVewModel);
-            starterPack();
+
+        btnApprove.setOnClickListener(view -> {
+
+            if (CommonFuncs.allCollectionsAreApproved(payoutsVewModel, payouts)) {
+                payouts.setStatus(1);
+                payouts.setStatusName("Approved");
+                payoutsVewModel.updatePayout(payouts);
+                starterPack();
+            } else {
+                MyToast.toast("Some farmer cards in this payout are not approved yet", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+            }
 
         });
         setPayoutActionStatus(payouts, getContext(), btnApprove, txtApprovalStatus);

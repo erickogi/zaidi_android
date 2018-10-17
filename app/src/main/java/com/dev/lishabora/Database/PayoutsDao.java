@@ -40,6 +40,9 @@ public interface PayoutsDao {
     @Query("SELECT * FROM PAYOUTS WHERE status =:status")
     LiveData<List<Payouts>> getPayoutsByStatus(String status);
 
+    @Query("SELECT * FROM PAYOUTS WHERE status =:status")
+    List<Payouts> getPayoutsByStatusD(String status);
+
 
     @Update
     void updateRecord(Payouts collection);

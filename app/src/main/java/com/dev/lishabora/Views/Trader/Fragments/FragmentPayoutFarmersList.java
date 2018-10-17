@@ -19,11 +19,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.PayoutFarmersAdapter;
 import com.dev.lishabora.Models.Collection;
@@ -31,6 +29,7 @@ import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Utils.DateTimeUtils;
+import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
@@ -50,7 +49,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 import timber.log.Timber;
 
@@ -160,21 +158,25 @@ public class FragmentPayoutFarmersList extends Fragment {
 
         listAdapter.notifyDataSetChanged();
 
-        if (payouts.getStatus() == 1) {
-            btnApprove.setVisibility(View.GONE);
+
+        if (CommonFuncs.canApprovePayout(payouts)) {
+            btnApprove.setVisibility(View.VISIBLE);
         } else {
-            if (payouts.getEndDate().equals(DateTimeUtils.Companion.getToday()) || DateTimeUtils.Companion.isPastLastDay(payouts.getEndDate())) {
-                btnApprove.setVisibility(View.VISIBLE);
-            } else {
-                btnApprove.setVisibility(View.GONE);
-            }
+            btnApprove.setVisibility(View.GONE);
         }
 
+
+
         btnApprove.setOnClickListener(view -> {
-            payouts.setStatus(1);
-            payouts.setStatusName("Approved");
-            payoutsVewModel.updatePayout(payouts);
-            starterPack();
+
+            if (CommonFuncs.allCollectionsAreApproved(payoutsVewModel, payouts)) {
+                payouts.setStatus(1);
+                payouts.setStatusName("Approved");
+                payoutsVewModel.updatePayout(payouts);
+                starterPack();
+            } else {
+                MyToast.toast("Some farmer cards in this payout are not approved yet", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+            }
 
         });
         setPayoutActionStatus(payouts, getContext(), btnApprove, txtApprovalStatus);
@@ -194,41 +196,6 @@ public class FragmentPayoutFarmersList extends Fragment {
     }
 
 
-    private void setSpinner() {
-        try {
-            RelativeLayout rspinner = Objects.requireNonNull(getActivity()).findViewById(R.id.linear_spinner);
-            rspinner.setVisibility(View.VISIBLE);
-
-            Spinner spinner = Objects.requireNonNull(getActivity()).findViewById(R.id.spinner);
-            spinner.setVisibility(View.VISIBLE);
-            spinner.setSelection(1);
-
-
-            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-                    if (i == 0) {
-                        Fragment fragment = new FragmentPayoutColloectionsList();
-                        ((com.dev.lishabora.Views.Trader.Activities.Payouts) getActivity()).popOutFragments();
-                        ((com.dev.lishabora.Views.Trader.Activities.Payouts) getActivity()).setUpView(fragment);
-
-
-                    } else {
-
-
-                    }
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {
-
-                }
-            });
-        } catch (Exception nm) {
-            nm.printStackTrace();
-        }
-    }
 
 
     @Override
@@ -253,16 +220,6 @@ public class FragmentPayoutFarmersList extends Fragment {
             payouts = PayoutConstants.getPayouts();
         }
 
-
-//        if (payouts == null) {
-//            payoutsVewModel.getPayoutsByPayoutCode("" + payouts.getCode()).observe(this, payouts -> {
-//                this.payouts = CommonFuncs.createPayout(payouts, payoutsVewModel, balncesViewModel, null, false, payoutsVewModel.getFarmersByCycleONe(payouts.getCycleCode()));
-//
-//                log("GET PAYOUTS BY PAYOUT NUMBER AS PAYOUT FROM CONSTANT OR ");
-//                // starterPack();
-//
-//            });
-//        }
 
     }
 

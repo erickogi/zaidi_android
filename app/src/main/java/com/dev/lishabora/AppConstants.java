@@ -36,10 +36,12 @@ public class AppConstants {
     public static final int ORDER = 3;
 
 
-
-
-
-
+    public static final int NOTIFICATION_TYPE_INDIVIDUAL_PAYOUT_PENDING = 11;
+    public static final int NOTIFICATION_TYPE_MULTIPLE_PAYOUT_PENDING = 12;
+    public static final int NOTIFICATION_TYPE_SYNC_OVERSTAYED = 13;
+    public static final int NOTIFICATION_TYPE_SYNC_FAILED_ = 14;
+    public static final int NOTIFICATION_TYPE_SERVER_MESSAGE = 15;
+    public static final int NOTIFICATION_TYPE_EMPTY = 15;
 
 
 

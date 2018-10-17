@@ -7,7 +7,7 @@ import android.arch.persistence.room.PrimaryKey;
 
 import com.dev.lishabora.Utils.DateTimeUtils;
 
-@Entity(tableName = "farmerBalance", indices = {@Index(value = {"id", "code", "farmerCode"}, unique = true)})
+@Entity(tableName = "farmerBalance", indices = {@Index(value = {"id", "farmerCode", "code"}, unique = true)})
 
 public class FarmerBalance {
 
@@ -26,8 +26,23 @@ public class FarmerBalance {
 
     private String balanceOwed;
 
+    private String payoutCode;
+
 
     private String lastUpdated;
+
+    public FarmerBalance(String code, String farmerCode, String payoutCode, String balanceToPay, String balanceOwed, String lastUpdated) {
+        this.code = code;
+        this.farmerCode = farmerCode;
+        this.payoutCode = payoutCode;
+        this.balanceToPay = balanceToPay;
+        this.balanceOwed = balanceOwed;
+        this.lastUpdated = lastUpdated;
+    }
+
+    public String getPayoutCode() {
+        return payoutCode;
+    }
 
     public String getCode() {
         return code;
@@ -40,12 +55,8 @@ public class FarmerBalance {
     public FarmerBalance() {
     }
 
-    public FarmerBalance(String code, String farmerCode, String balanceToPay, String balanceOwed, String lastUpdated) {
-        this.code = code;
-        this.farmerCode = farmerCode;
-        this.balanceToPay = balanceToPay;
-        this.balanceOwed = balanceOwed;
-        this.lastUpdated = lastUpdated;
+    public void setPayoutCode(String payoutCode) {
+        this.payoutCode = payoutCode;
     }
 
     public String getTraderCode() {

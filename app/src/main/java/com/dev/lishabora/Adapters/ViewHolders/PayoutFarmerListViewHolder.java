@@ -1,5 +1,6 @@
 package com.dev.lishabora.Adapters.ViewHolders;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -7,11 +8,12 @@ import android.widget.TextView;
 
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
-import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemViewHolder;
 
 import java.lang.ref.WeakReference;
 
-public class PayoutFarmerListViewHolder extends AbstractDraggableItemViewHolder implements View.OnClickListener, View.OnLongClickListener {
+//import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemViewHolder;
+
+public class PayoutFarmerListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
     //  public RelativeLayout engineer_background;
 
     public TextView status, id, name, balance, milk, loan, order;

@@ -36,6 +36,10 @@ public class BalanceRepo {
         return dao.fetchAllData();
     }
 
+    public List<FarmerBalance> fetchAllOne() {
+        return dao.fetchAllDataOne();
+    }
+
     public LiveData<FarmerBalance> getByKeyCode(String code) {
         return dao.getByKeyCode(code);
     }
@@ -49,6 +53,18 @@ public class BalanceRepo {
     public FarmerBalance getByFarmerCodeOne(String code) {
         return dao.getByFarmerCodeOne(code);
     }
+
+
+    public LiveData<FarmerBalance> getByFarmerCodeByPayout(String code, String payoutCode) {
+        return dao.getByFarmerCodeByPayout(code, payoutCode);
+    }
+
+
+    public FarmerBalance getByFarmerCodeByPayoutOne(String code, String payoutCode) {
+        return dao.getByFarmerCodeByPayoutOne(code, payoutCode);
+    }
+
+
 
     public void updateRecord(FarmerBalance farmerBalance) {
         new updateAsyncTask(dao).execute(farmerBalance);

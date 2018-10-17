@@ -23,13 +23,17 @@ import java.util.List;
 
 import github.nisrulz.recyclerviewhelper.RVHAdapter;
 
+//import github.nisrulz.recyclerviewhelper.RVHAdapter;
+
 //import com.chauthai.swipereveallayout.ViewBinderHelper;
 //import com.daimajia.swipe.SimpleSwipeListener;
 //import com.daimajia.swipe.SwipeLayout;
 //import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
 // RecyclerView.Adapter<FarmerViewHolder> implements RVHAdapter {
-public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> implements RVHAdapter {
+public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> implements RVHAdapter
+
+{
     private Context context;
     private List<FamerModel> modelList;
     private OnclickRecyclerListener listener;
@@ -37,6 +41,9 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
     private OnStartDragListener mmDragStartListener;
     // private final ViewBinderHelper binderHelper = new ViewBinderHelper();
 
+    public void updateFarmer(FamerModel famerModel, int position) {
+        notifyItemChanged(position, famerModel);
+    }
     public FarmersAdapter(Context context, List<FamerModel> modelList, OnclickRecyclerListener listener, OnStartDragListener dragStartListener) {
         this.context = context;
         mmDragStartListener = dragStartListener;

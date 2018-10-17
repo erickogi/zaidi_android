@@ -1,11 +1,15 @@
 package com.dev.lishabora.Views;
 
 
+import android.app.Application;
 import android.content.Context;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -29,6 +33,7 @@ import com.dev.lishabora.Models.FarmerHistoryByDateModel;
 import com.dev.lishabora.Models.LoanModel;
 import com.dev.lishabora.Models.MilkModel;
 import com.dev.lishabora.Models.MonthsDates;
+import com.dev.lishabora.Models.Notifications;
 import com.dev.lishabora.Models.OrderModel;
 import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
 import com.dev.lishabora.Models.Payouts;
@@ -37,6 +42,13 @@ import com.dev.lishabora.Models.Reports.ReportListModel;
 import com.dev.lishabora.Models.Trader.FarmerLoansTable;
 import com.dev.lishabora.Models.Trader.FarmerOrdersTable;
 import com.dev.lishabora.Models.UnitsModel;
+import com.dev.lishabora.Repos.NotificationRepo;
+import com.dev.lishabora.Repos.Trader.BalanceRepo;
+import com.dev.lishabora.Repos.Trader.CollectionsRepo;
+import com.dev.lishabora.Repos.Trader.LoanPaymentsRepo;
+import com.dev.lishabora.Repos.Trader.LoansTableRepo;
+import com.dev.lishabora.Repos.Trader.OrderPaymentsRepo;
+import com.dev.lishabora.Repos.Trader.OrdersTableRepo;
 import com.dev.lishabora.Utils.ApproveFarmerPayCardListener;
 import com.dev.lishabora.Utils.CollectionCreateUpdateListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
@@ -564,7 +576,7 @@ public class CommonFuncs {
                 if (DateTimeUtils.Companion.isInMonth(c.getDayDate(), monthsDatesa.getMonthName())) {
 
 
-                    fmh.add(new FarmerHistoryByDateModel(c.getDayDate(),
+                    fmh.add(new FarmerHistoryByDateModel(DateTimeUtils.Companion.getDisplayDate(c.getDayDate(), DateTimeUtils.Companion.getDisplayDatePattern1()),
                             getTotal(c.getMilkCollectedValueLtrsAm(), c.getMilkCollectedValueLtrsPm()),
                             c.getLoanAmountGivenOutPrice(),
                             c.getOrderGivenOutPrice(),
@@ -582,7 +594,7 @@ public class CommonFuncs {
 
             for (Collection c : collections) {
 
-                fmh.add(new FarmerHistoryByDateModel(c.getDayDate(),
+                fmh.add(new FarmerHistoryByDateModel(DateTimeUtils.Companion.getDisplayDate(c.getDayDate(), DateTimeUtils.Companion.getDisplayDatePattern1()),
                         getTotal(c.getMilkCollectedValueLtrsAm(), c.getMilkCollectedValueLtrsPm()),
                         c.getLoanAmountGivenOutPrice(), c.getOrderGivenOutPrice(), c.getMilkCollectedValueLtrsAm(), c.getMilkCollectedValueLtrsPm()));
 
@@ -1762,7 +1774,10 @@ public class CommonFuncs {
 
     }
 
-    public static void updateBalance(FamerModel famerModel, TraderViewModel traderViewModel, BalncesViewModel balncesViewModel, Collection c, String payoutCode, int type, FarmerLoansTable farmerLoan, FarmerOrdersTable farmerOrder) {
+    public static void updateBalance(FamerModel famerModel,
+                                     TraderViewModel traderViewModel,
+                                     BalncesViewModel balncesViewModel,
+                                     Collection c, String payoutCode, int type, FarmerLoansTable farmerLoan, FarmerOrdersTable farmerOrder) {
 
 
         Log.d("RecordAsd", "Called     ");
@@ -1871,7 +1886,13 @@ public class CommonFuncs {
 
     static Double orderTotalD = 0.0;
 
-    private static void refreshTotalBalances(int type, FarmerLoansTable lastLoan, FarmerOrdersTable lastOrder, BalncesViewModel balncesViewModel, TraderViewModel traderViewModel, Collection c, FamerModel famerModel) {
+    private static void refreshTotalBalances(int type,
+                                             FarmerLoansTable lastLoan,
+                                             FarmerOrdersTable lastOrder,
+                                             BalncesViewModel balncesViewModel,
+                                             TraderViewModel traderViewModel,
+                                             Collection c,
+                                             FamerModel famerModel) {
 
 
         Log.d("RefreshBalanceeCa", " Called");
@@ -1943,24 +1964,22 @@ public class CommonFuncs {
 
             } catch (Exception nm) {
                 nm.printStackTrace();
-                Log.d("DebugUpdate", "Com  " + nm.toString());
 
             }
             if (farmerBalance == null) {
 
 
                 farmerBalance = new FarmerBalance(GeneralUtills.Companion.createCode(c.getFarmerCode()),
-                        c.getFarmerCode(), "", "", "");
+                        c.getFarmerCode(), c.getPayoutCode(), "", "", "");
 
                 farmerBalance.setBalanceOwed(String.valueOf((totalMilkForCurrentPayout - ((loanTotalAmount - loanPaid) + (orderTotalAmount - orderPaid)))));
                 farmerBalance.setBalanceToPay(String.valueOf((totalMilkForCurrentPayout - ((loanInstalmentAmount) + (orderInstalmentAmount)))));
 
-                Log.d("RecordAsd", " insert Balnce to pay \n Total milk current" + totalMilkForCurrentPayout + "" + farmerBalance.getBalanceToPay() + "\n" + farmerBalance.getBalanceOwed());
 
 
                 balncesViewModel.insert(farmerBalance);
-
                 traderViewModel.updateFarmer(famerModel, false, false);
+                handler(traderViewModel, famerModel);
 
 
             } else {
@@ -1969,21 +1988,27 @@ public class CommonFuncs {
                 farmerBalance.setBalanceOwed(String.valueOf((totalMilkForCurrentPayout - ((loanTotalAmount - loanPaid) + (orderTotalAmount - orderPaid)))));
                 farmerBalance.setBalanceToPay(String.valueOf((totalMilkForCurrentPayout - ((loanInstalmentAmount) + (orderInstalmentAmount)))));
 
-                Log.d("RecordAsd", "update Balnce to pay \n Total milk current" + totalMilkForCurrentPayout + " Balance to pay " + farmerBalance.getBalanceToPay() + "\n" + farmerBalance.getBalanceOwed());
 
 
                 balncesViewModel.updateRecord(farmerBalance);
 
                 traderViewModel.updateFarmer(famerModel, false, false);
 
+                handler(traderViewModel, famerModel);
             }
         } catch (Exception nm) {
             nm.printStackTrace();
-            Log.d("DebugUpdateERROR", nm.toString());
 
         }
 
     }
+
+    private static void handler(TraderViewModel traderViewModel, FamerModel famerModel) {
+        int spalsh_time_out = 500;
+        new Handler().postDelayed(() -> traderViewModel.updateFarmer(famerModel, false, false), spalsh_time_out);
+
+    }
+
 
     private static void refreshLoanStatus(BalncesViewModel balncesViewModel, String id, int type, FarmerLoansTable farmerLoansTable, TraderViewModel traderViewModel, Collection c, FamerModel famerModel) {
 
@@ -2552,6 +2577,260 @@ public class CommonFuncs {
 
 
     }
+
+    public static void updateBalance(Application mInstance, BalncesViewModel balncesViewModel) {
+        BalanceRepo balanceRepo = new BalanceRepo(mInstance);
+        LoansTableRepo loansTableRepo = new LoansTableRepo(mInstance);
+        OrdersTableRepo ordersTableRepo = new OrdersTableRepo(mInstance);
+        LoanPaymentsRepo loanPaymentsRepo = new LoanPaymentsRepo(mInstance);
+        OrderPaymentsRepo orderPaymentsRepo = new OrderPaymentsRepo(mInstance);
+        CollectionsRepo collectionsRepo = new CollectionsRepo(mInstance);
+        //PayoutsRepo payoutsRepo=new PayoutsRepo(mInstance);
+
+
+        List<FarmerBalance> farmerBalances = balanceRepo.fetchAllOne();
+
+        if (farmerBalances != null) {
+            String farmerCode = "";
+            String payoutCode = "";
+
+
+            for (FarmerBalance f : farmerBalances) {
+
+                if (f.getPayoutCode() != null) {
+                    farmerCode = f.getFarmerCode();
+                    payoutCode = f.getPayoutCode();
+                    updateBalances(0, null, null, balanceRepo,
+                            loansTableRepo, ordersTableRepo, loanPaymentsRepo, orderPaymentsRepo,
+                            collectionsRepo, farmerCode, payoutCode, balncesViewModel);
+
+                }
+            }
+        }
+
+    }
+
+    private static void updateBalances(int type,
+                                       FarmerLoansTable lastLoan,
+                                       FarmerOrdersTable lastOrder,
+                                       BalanceRepo balanceRepo, LoansTableRepo loansTableRepo, OrdersTableRepo ordersTableRepo,
+                                       LoanPaymentsRepo loanPaymentsRepo, OrderPaymentsRepo orderPaymentsRepo,
+                                       CollectionsRepo collectionsRepo, String farmerCode, String payoutCode, BalncesViewModel balncesViewModel
+    ) {
+
+
+        try {
+            FarmerBalance farmerBalance = null;
+            if (payoutCode == null) {
+                farmerBalance = balanceRepo.getByFarmerCodeOne(farmerCode);
+            } else {
+                farmerBalance = balanceRepo.getByFarmerCodeByPayoutOne(farmerCode, payoutCode);
+            }
+
+
+            double loanTotalAmount = 0.0;
+            double loanInstalmentAmount = 0.0;
+            double loanPaid = 0.0;
+
+            double orderTotalAmount = 0.0;
+            double orderInstalmentAmount = 0.0;
+            double orderPaid = 0.0;
+
+
+            List<FarmerLoansTable> loansTables = loansTableRepo.getFarmerLoanByPayoutCodeByFarmerByStatus(farmerCode, 0);
+            List<FarmerOrdersTable> ordersTables = ordersTableRepo.getFarmerOrderByPayoutCodeByFarmerByStatus(farmerCode, 0);
+
+            if (type == 1) {
+                boolean isFound = false;
+                for (FarmerLoansTable fl : loansTables) {
+                    if (fl.getTimestamp().equals(lastLoan.getTimestamp())) {
+                        isFound = true;
+                        break;
+                    }
+                }
+                if (!isFound) {
+                    loansTables.add(lastLoan);
+                }
+            } else if (type == 2) {
+                boolean isFound = false;
+                for (FarmerOrdersTable fo : ordersTables) {
+                    if (fo.getTimestamp().equals(lastOrder.getTimestamp())) {
+                        isFound = true;
+                        break;
+                    }
+                }
+                if (!isFound) {
+                    ordersTables.add(lastOrder);
+                }
+            }
+
+
+            for (FarmerLoansTable fl : loansTables) {
+                Log.d("DebugUpdateERROR", new Gson().toJson(fl));
+
+                loanTotalAmount = +(Double.valueOf(fl.getLoanAmount()));
+                loanInstalmentAmount = +(Double.valueOf(fl.getInstallmentAmount()));
+                loanPaid = +loanPaymentsRepo.getSumPaid(fl.getCode());
+            }
+
+            for (FarmerOrdersTable fo : ordersTables) {
+                orderTotalAmount = +(Double.valueOf(fo.getOrderAmount()));
+                orderInstalmentAmount = +(Double.valueOf(fo.getInstallmentAmount()));
+                orderPaid = +orderPaymentsRepo.getSumPaid(fo.getCode());
+            }
+
+
+            double totalMilkForCurrentPayout = 0.0;
+            try {
+                // if (traderViewModel.getSumOfMilkForPayoutKshD(c.getFarmerCode(), c.getPayoutCode()) != null) {
+                totalMilkForCurrentPayout += collectionsRepo.getSumOfMilkFarmerPayoutKshD(farmerCode, payoutCode);
+                // }
+
+
+            } catch (Exception nm) {
+                nm.printStackTrace();
+
+            }
+            if (farmerBalance == null) {
+
+
+                farmerBalance = new FarmerBalance(GeneralUtills.Companion.createCode(farmerCode),
+                        farmerCode, payoutCode, "", "", "");
+
+                farmerBalance.setBalanceOwed(String.valueOf((totalMilkForCurrentPayout - ((loanTotalAmount - loanPaid) + (orderTotalAmount - orderPaid)))));
+                farmerBalance.setBalanceToPay(String.valueOf((totalMilkForCurrentPayout - ((loanInstalmentAmount) + (orderInstalmentAmount)))));
+
+                balncesViewModel.insert(farmerBalance);
+
+                //  traderViewModel.updateFarmer(famerModel, false, false);
+
+
+            } else {
+
+                String balanceOwed = String.valueOf((totalMilkForCurrentPayout - ((loanTotalAmount - loanPaid) + (orderTotalAmount - orderPaid))));
+                String balanceToPay = String.valueOf((totalMilkForCurrentPayout - ((loanInstalmentAmount) + (orderInstalmentAmount))));
+
+                if (!farmerBalance.getBalanceOwed().equals(balanceOwed) && !farmerBalance.getBalanceToPay().equals(balanceToPay)) {
+
+
+                    farmerBalance.setBalanceOwed(balanceOwed);
+                    farmerBalance.setBalanceToPay(balanceToPay);
+
+
+                    balncesViewModel.updateRecord(farmerBalance);
+
+                }
+
+                //  traderViewModel.updateFarmer(famerModel, false, false);
+
+            }
+        } catch (Exception nm) {
+            nm.printStackTrace();
+
+        }
+
+
+    }
+
+    //
+//    public static List<Notifications> getPendingPayouts(List<Payouts> payoutss){
+//        List<Notifications> notifications=new LinkedList<>();
+//        for(Payouts payouts:payoutss)
+//            if (payouts.getStatus() == 0 &&(payouts.getEndDate().equals(DateTimeUtils.Companion.getToday()) ||
+//                        DateTimeUtils.Companion.isPastLastDay(payouts.getEndDate()))) {
+//                        notifications.add(new Notifications(0,DateTimeUtils.Companion.getToday(),payouts.getCyclename()+"  Payout Due ",
+//                    "This payout was due on  "+payouts.getEndDate(),payouts.getCode(),0,11,11));
+//        }
+//
+//
+//        return notifications;
+//    }
+    public static List<Notifications> getPendingPayouts(List<Payouts> payoutss) {
+        List<Notifications> notifications = new LinkedList<>();
+        for (Payouts payouts : payoutss)
+            if (payouts.getStatus() == 0 && (payouts.getEndDate().equals(DateTimeUtils.Companion.getToday()) ||
+                    DateTimeUtils.Companion.isPastLastDay(payouts.getEndDate()))) {
+                notifications.add(new Notifications(0, DateTimeUtils.Companion.getNow(), payouts.getCyclename() + "  Payout Due ",
+                        "This payout was due on  " + payouts.getEndDate(), "PGHTSE", 0, AppConstants.NOTIFICATION_TYPE_INDIVIDUAL_PAYOUT_PENDING, 11, payouts.getCode()));
+            }
+
+
+        try {
+            if (notifications != null) {
+                if (notifications.size() == 1) {
+                    //  List<Notifications> notificati = CommonFuncs.getPendingPayout(new PayoutsRepo(com.dev.lishabora.Application.application).getPayoutsByStatusD("0"));
+                    new NotificationRepo(com.dev.lishabora.Application.application).insert(notifications.get(0));
+
+                } else if (notifications.size() > 1) {
+                    String txtTitle = "Un-Approved Payouts ";
+                    String mes = "You have " + notifications.size() + " Pending payouts that require approval";
+
+                    Notifications n = notifications.get(0);
+                    n.setTitle(txtTitle);
+                    n.setMessage(mes);
+                    n.setType(AppConstants.NOTIFICATION_TYPE_MULTIPLE_PAYOUT_PENDING);
+
+
+                    new NotificationRepo(com.dev.lishabora.Application.application).insert(n);
+
+                }
+            }
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+
+        return notifications;
+    }
+//    public static List<Notifications> getPendingPayout(List<Payouts> payoutss){
+//        List<Notifications> notifications=new LinkedList<>();
+//        for(Payouts payouts:payoutss)
+//            if (payouts.getStatus() == 0 &&(payouts.getEndDate().equals(DateTimeUtils.Companion.getToday()) ||
+//                    DateTimeUtils.Companion.isPastLastDay(payouts.getEndDate()))) {
+//                notifications.add(new Notifications(0,DateTimeUtils.Companion.getNow(),payouts.getCyclename()+"  Payout Due ",
+//                        "This payout was due on  "+payouts.getEndDate(),payouts.getCode(),0,AppConstants.NOTIFICATION_TYPE_INDIVIDUAL_PAYOUT_PENDING,11));
+//            }
+//
+//
+//        return notifications;
+//    }
+
+    public static boolean canApprovePayout(Payouts payouts) {
+        if (payouts.getStatus() == 1) {
+            return false;
+            //btnApprove.setVisibility(View.GONE);
+        } else {
+            //btnApprove.setVisibility(View.VISIBLE);
+// btnApprove.setVisibility(View.GONE);
+            return payouts.getEndDate().equals(DateTimeUtils.Companion.getToday()) ||
+                    DateTimeUtils.Companion.isPastLastDay(payouts.getEndDate());
+        }
+
+    }
+
+    public static void setUpView(Fragment fragment, FragmentManager manager) {
+        if (fragment != null) {
+            manager.beginTransaction().replace(R.id.frame_layout, fragment)
+                    .addToBackStack(null).commit();
+        }
+
+    }
+
+    public static void popOutFragments(FragmentManager manager) {
+        for (int i = 0; i < manager.getBackStackEntryCount(); i++) {
+            manager.popBackStack();
+        }
+    }
+
+    public static boolean allCollectionsAreApproved(PayoutsVewModel payoutsVewModel, Payouts payouts) {
+        List<Collection> collections = payoutsVewModel.getCollectionByDateByPayoutListOne(payouts.getCode());
+        for (Collection c : collections) {
+            if (c.getApproved() == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
 
 
