@@ -244,10 +244,12 @@ class DrawerClass {
         fun observeChangesInNotifications(no: Int) {
             try {
                 var badge = StringHolder("" + no.toString())
+                var name = StringHolder("Notifications")
                 if (no == 0) {
                     badge = StringHolder("")
                 }
                 result.updateBadge(5, badge)
+                result.updateName(5, name)
 
             } catch (nm: Exception) {
                 nm.printStackTrace()

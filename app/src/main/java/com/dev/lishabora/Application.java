@@ -623,7 +623,7 @@ public class Application extends MultiDexApplication {
                     isConnected = isConnectedToInternet;
 
                     if (isConnectedToInternet) {
-                        // sync();
+                        sync();
                         //syncDown();
                     } else {
 

@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:keyboard="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--android:layout_width="match_parent"-->
 
-    android:layout_height="wrap_content"
-    app:cardCornerRadius="4dp"
+<!--android:layout_height="wrap_content"--><!--app:cardCornerRadius="4dp"-->
 
 
-    app:cardUseCompatPadding="true">
+<!--app:cardUseCompatPadding="true">-->
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-
+        xmlns:keyboard="http://schemas.android.com/apk/res-auto"
         android:layout_height="match_parent">
 
         <com.wang.avi.AVLoadingIndicatorView
@@ -27,9 +23,8 @@
             app:indicatorColor="@color/colorPrimaryDark"
             app:indicatorName="BallSpinFadeLoaderIndicator" />
 
-        <include layout="@layout/layout_custom_alert_button" />
-
         <LinearLayout
+            android:background="@color/primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -46,7 +41,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:src="@drawable/ic_person_black_24dp" />
+
+                    android:src="@drawable/ic_account_box_black_24dp" />
 
                 <TextView
                     android:id="@+id/txt_name"
@@ -57,13 +53,14 @@
                     android:singleLine="true"
                     android:text="Names"
 
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="15sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
 
             <TextView
+                android:textColor="@color/white"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.2"
@@ -78,6 +75,7 @@
                 android:background="@color/colorAccent" />
 
             <TextView
+                android:textColor="@color/white"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.2"
@@ -120,6 +118,7 @@
 
         <ScrollView
 
+            android:id="@+id/scroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -128,6 +127,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
 
+                android:background="@color/white"
                 android:layout_height="wrap_content"
                 android:layout_margin="1dp"
                 android:orientation="vertical"
@@ -135,10 +135,11 @@
 
 
                 <View
+
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@color/black"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
 
                 <LinearLayout
@@ -552,7 +553,7 @@
                 <com.dev.lishabora.NumKey.NumberKeyboard
                     android:id="@+id/numberKeyboard"
                     android:layout_width="match_parent"
-                    android:layout_height="240dp"
+                    android:layout_height="200dp"
                     keyboard:keyboardType="decimal" />
 
 
@@ -573,41 +574,123 @@
                 <!--numpad:numpad_text_limit="10"-->
                 <!--numpad:numpad_text_size="18sp" />-->
 
-                <android.support.design.widget.TextInputLayout
+                <!--<android.support.design.widget.TextInputLayout-->
 
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
+                <!--style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+                <!--android:layout_width="match_parent"-->
 
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.2"
-                    android:textColorHint="@color/black"
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1.2"-->
+                <!--android:textColorHint="@color/black"-->
 
-                    android:visibility="gone">
+                <!--android:visibility="gone">-->
 
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/edt_loan"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:enabled="false"
-                        android:gravity="center"
-                        android:hint="Loan given"
-                        android:inputType="number"
-
-
-                        android:maxLength="4" />
-
-                </android.support.design.widget.TextInputLayout>
+                <!--<android.support.design.widget.TextInputEditText-->
+                <!--android:id="@+id/edt_loan"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:enabled="false"-->
+                <!--android:gravity="center"-->
+                <!--android:hint="Loan given"-->
+                <!--android:inputType="number"-->
 
 
-                <com.jaredrummler.materialspinner.MaterialSpinner
-                    android:id="@+id/products"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                <!--android:maxLength="4" />-->
 
-                    android:visibility="gone" />
+                <!--</android.support.design.widget.TextInputLayout>-->
+
+
+                <!--<com.jaredrummler.materialspinner.MaterialSpinner-->
+                <!--android:id="@+id/products"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+
+                <!--android:visibility="gone" />-->
 
             </LinearLayout>
         </ScrollView>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/layout_custom_alert_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/scroll"
+            android:background="@color/white"
+
+            android:orientation="vertical">
+
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <android.support.design.button.MaterialButton
+                    android:id="@+id/btn_neutral"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:gravity="start|center"
+
+                    android:text="Edit"
+                    android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:visibility="gone" />
+
+                <android.support.design.button.MaterialButton
+                    android:id="@+id/btn_negative"
+
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center"
+                    android:layout_weight="1"
+
+                    android:background="@color/white"
+
+                    android:text="Dismiss"
+                    android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:visibility="visible" />
+
+                <android.support.design.button.MaterialButton
+                    android:id="@+id/btn_positive"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/primary"
+                    android:text="Save"
+                    android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
     </RelativeLayout>
-</LinearLayout>
+
+
+    <!--</LinearLayout>-->

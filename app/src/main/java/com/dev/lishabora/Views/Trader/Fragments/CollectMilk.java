@@ -1,5 +1,6 @@
 package com.dev.lishabora.Views.Trader.Fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.design.button.MaterialButton;
@@ -8,12 +9,9 @@ import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dev.lishabora.Models.Collection;
@@ -32,8 +30,15 @@ import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishaboramobile.R;
 import com.google.gson.Gson;
 
+import org.joda.time.Period;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+
+import timber.log.Timber;
 
 //import com.fxn769.Numpad;
 
@@ -64,7 +69,9 @@ class CollectMilk implements NumberKeyboardListener {
     private boolean withCustomKeyboard;
     private BalncesViewModel balncesViewModel;
 
-
+    String day1Ams = "";
+    String day1pms = "";
+    String day2Ams = "";
     CollectMilk(Context context, TraderViewModel traderViewModel, BalncesViewModel balncesViewModel, CollectListener listener, boolean withCustomKeyboard) {
         this.mViewModel = traderViewModel;
         this.balncesViewModel = balncesViewModel;
@@ -77,30 +84,30 @@ class CollectMilk implements NumberKeyboardListener {
         setUpCollDialog();
     }
 
-    private void clearDialog() {
-        day1.setText("");
-        day1am.setText("");
-        day1pm.setText("");
+    String day2pms = "";
+    String day3Ams = "";
+    String day3pms = "";
+    String day4Ams = "";
+    String day4pms = "";
+    UnitsModel unitsModel = null;
+    private PeriodFormatter mPeriodFormat;
+    private Date previousdate;
 
-        day2.setText("");
-        day2am.setText("");
-        day2pm.setText("");
+    private void log(String msg) {
 
-        day3.setText("");
-        day3am.setText("");
-        day3pm.setText("");
+        mPeriodFormat = new PeriodFormatterBuilder().appendYears()
+                .appendMinutes().appendSuffix(" Mins")
+                .appendSeconds().appendSuffix(" Secs")
+                .appendMillis().appendSuffix("Mil")
+                .toFormatter();
+        if (previousdate == null) {
+            previousdate = DateTimeUtils.Companion.getDateNow();
+        }
 
-        today.setText("");
+        Period length = DateTimeUtils.Companion.calcDiff(previousdate, new Date());
 
-        unitName.setText("");
-        unitPrice.setText("");
-        unitTotal.setText("");
-
-        edtTodayAm.setText("");
-        edtTodayPm.setText("");
-
-
-
+        previousdate = new Date();
+        Timber.tag("debugfarmersclist").d("  Length " + mPeriodFormat.print(length) + "    " + msg);
 
     }
 
@@ -142,28 +149,20 @@ class CollectMilk implements NumberKeyboardListener {
         btnPositive = mView.findViewById(R.id.btn_positive);
         btnNegative = mView.findViewById(R.id.btn_negative);
         btnNeutral = mView.findViewById(R.id.btn_neutral);
-        TextView txtTitle = mView.findViewById(R.id.txt_title);
-        LinearLayout lTitle = mView.findViewById(R.id.linear_title);
-        ImageView imgIcon = mView.findViewById(R.id.img_icon);
+        btnNegative.setOnClickListener(view -> {
+            alertDialogAndroid.hide();
+
+        });
 
 
-        //       btnPositive.setBackgroundDrawable(Application.context.getResources().getDrawable(R.drawable.rectbackgroundyello));
-        // btnNegative.setBackgroundColor(Application.context.getResources().getColor(R.color.red));
-        // btnPositive.setBackgroundColor(Application.context.getResources().getColor(R.color.colorPrimary));
-        //  btnNegative.setBackgroundColor(Application.context.getResources().getColor(R.color.colorPrimary));
-//
-//        btnNegative.setTextColor(Application.context.getResources().getColor(R.color.white));
-//        btnPositive.setTextColor(Application.context.getResources().getColor(R.color.white));
-//
-//        btnNegative.set
 
 
         btnNeutral.setVisibility(View.GONE);
-        lTitle.setVisibility(View.GONE);
-        txtTitle.setVisibility(View.VISIBLE);
-        imgIcon.setVisibility(View.GONE);
-        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
-        txtTitle.setText("Milk Collection");
+//        lTitle.setVisibility(View.GONE);
+        //       txtTitle.setVisibility(View.VISIBLE);
+        //       imgIcon.setVisibility(View.GONE);
+        //       imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
+        //       txtTitle.setText("Milk Collection");
 
         numberKeyboard = mView.findViewById(R.id.numberKeyboard);
 //        numberKeyboard.setKeyHeight(90);
@@ -193,202 +192,226 @@ class CollectMilk implements NumberKeyboardListener {
 
 
         }
-
-
-
-    }
-
-
-    void collectMilk(FamerModel famerModel, List<Collection> collections, FarmerBalance farmerBalance) {
-
-
-        clearDialog();
-
-
-        collModel = null;
-        collModel = mViewModel.getCollectionByDateByFarmerByTimeSngle(famerModel.getCode(), DateTimeUtils.Companion.getToday());
-
-
-
-        alertDialogAndroid.show();
-
-
-        UnitsModel unitsModel = new UnitsModel();
-        unitsModel.setUnitcapacity(famerModel.getUnitcapacity());
-        unitsModel.setUnitprice(famerModel.getUnitprice());
-        unitsModel.setUnit(famerModel.getUnitname());
-
-
-        names.setText(famerModel.getNames());
-        balance.setText(GeneralUtills.Companion.round(famerModel.getTotalbalance(), 1));
-
         today.setText(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "E"));
         day3.setText(DateTimeUtils.Companion.getDayPrevious(1, "E"));
         day2.setText(DateTimeUtils.Companion.getDayPrevious(2, "E"));
         day1.setText(DateTimeUtils.Companion.getDayPrevious(3, "E"));
 
-        unitName.setText(unitsModel.getUnit());
-        unitPrice.setText(unitsModel.getUnitprice());
+
+        numberKeyboard.setListener(this);
+        alertDialogAndroid.show();
+        alertDialogAndroid.hide();
 
 
-        for (Collection c : collections) {
+    }
+
+    void collectMilk(Activity activity, FamerModel famerModel, List<Collection> collections, FarmerBalance farmerBalance) {
 
 
-            Log.d("milkates", " Collecton Date " + c.getDayDate() + "\nSunday " + DateTimeUtils.Companion.getDatePrevious(2));
+        new Thread(() -> {
 
+            unitsModel = new UnitsModel();
+            unitsModel.setUnitcapacity(famerModel.getUnitcapacity());
+            unitsModel.setUnitprice(famerModel.getUnitprice());
+            unitsModel.setUnit(famerModel.getUnitname());
 
-            if (c.getDayDate().contains(DateTimeUtils.Companion.getDatePrevious(3))) {
-                if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
-                    day1am.setText(c.getMilkCollectedAm());
+            day1Ams = "";
+            day1pms = "";
+            day2Ams = "";
+            day2pms = "";
+            day3Ams = "";
+            day3pms = "";
+            day4Ams = "";
+            day4pms = "";
+            collModel = null;
 
-                }
-                if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
-                    day1pm.setText(c.getMilkCollectedPm());
+            for (Collection c : collections) {
+                if (c.getDayDate().contains(DateTimeUtils.Companion.getDatePrevious(3))) {
+                    if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
+                        //day1am.setText(c.getMilkCollectedAm());
 
-                }
-            } else if (c.getDayDate().contains(DateTimeUtils.Companion.getDatePrevious(2))) {
-                if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
-                    day2am.setText(c.getMilkCollectedAm());
-
-                }
-                if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
-                    day2pm.setText(c.getMilkCollectedPm());
-
-                }
-            } else if (c.getDayDate().contains(DateTimeUtils.Companion.getDatePrevious(1))) {
-                if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
-                    day3am.setText(c.getMilkCollectedAm());
-
-                }
-                if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
-                    day3pm.setText(c.getMilkCollectedPm());
-
-                }
-            } else if (c.getDayDate().contains(DateTimeUtils.Companion.getToday())) {
-                if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
-                    edtTodayAm.setText(c.getMilkCollectedAm());
-
-                }
-                if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
-                    edtTodayPm.setText(c.getMilkCollectedPm());
-
-                }
-            }
-
-        }
-
-
-        try {
-            if (!TextUtils.isEmpty(edtTodayAm.getText())) {
-                edtTodayAm.setSelection(edtTodayAm.getText().length());
-            }
-            if (!TextUtils.isEmpty(edtTodayPm.getText())) {
-                edtTodayPm.setSelection(edtTodayPm.getText().length());
-            }
-        } catch (Exception nm) {
-            nm.printStackTrace();
-        }
-
-
-
-
-        edtTodayAm.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                hasAmChanged = true;
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                hasAmChanged = true;
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-                hasAmChanged = true;
-                if (editable != null && editable.length() > 0) {
-                    if (unitsModel.getUnitprice() != null) {
-                        try {
-
-                            Double price = Double.valueOf(unitsModel.getUnitprice());
-                            Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity());// / 1000;
-                            Double total = (Double.valueOf(edtTodayAm.getText().toString())) * price;
-
-
-                            unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
-
-                        } catch (Exception nm) {
-                            nm.printStackTrace();
-                        }
+                        day1Ams = c.getMilkCollectedAm();
                     }
-                } else {
-                    unitTotal.setText("");
-                }
-            }
-        });
-        edtTodayPm.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                hasPmChanged = true;
+                    if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
+                        //day1pm.setText(c.getMilkCollectedPm());
+                        day1pms = c.getMilkCollectedPm();
 
-            }
+                    }
+                } else if (c.getDayDate().contains(DateTimeUtils.Companion.getDatePrevious(2))) {
+                    if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
+                        // day2am.setText(c.getMilkCollectedAm());
+                        day2Ams = c.getMilkCollectedAm();
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                hasPmChanged = true;
+                    }
+                    if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
+                        // day2pm.setText(c.getMilkCollectedPm());
+                        day2pms = c.getMilkCollectedPm();
 
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-                hasPmChanged = true;
-                if (editable != null && editable.length() > 0) {
-                    if (unitsModel.getUnitprice() != null) {
-
-                        try {
-                            Double price = Double.valueOf(unitsModel.getUnitprice());
-                            Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity());// / 1000;
-                            Double total = (Double.valueOf(edtTodayPm.getText().toString())) * price;
-                            unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
-
-
-                        } catch (Exception nm) {
-                            nm.printStackTrace();
-                        }
+                    }
+                } else if (c.getDayDate().contains(DateTimeUtils.Companion.getDatePrevious(1))) {
+                    if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
+                        // day3am.setText(c.getMilkCollectedAm());
+                        day3Ams = c.getMilkCollectedAm();
 
 
                     }
-                } else {
-                    unitTotal.setText("");
+                    if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
+                        // day3pm.setText(c.getMilkCollectedPm());
+                        day3pms = c.getMilkCollectedPm();
+
+
+                    }
+                } else if (c.getDayDate().contains(DateTimeUtils.Companion.getToday())) {
+                    collModel = c;
+                    if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
+                        // edtTodayAm.setText(c.getMilkCollectedAm());
+                        day4Ams = c.getMilkCollectedAm();
+
+                    }
+                    if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
+                        //  edtTodayPm.setText(c.getMilkCollectedPm());
+                        day4pms = c.getMilkCollectedPm();
+
+                    }
                 }
-            }
-        });
 
-
-        if (withCustomKeyboard) {
-            edtTodayAm.setOnClickListener(view -> edtSet(EDTAM, unitsModel));
-            edtTodayPm.setOnClickListener(view -> edtSet(EDTPM, unitsModel));
-            numberKeyboard.setListener(this);
-
-
-            if (DateTimeUtils.Companion.isAM(DateTimeUtils.Companion.getTodayDate())) {
-                edtSet(EDTAM, unitsModel);
-                edtTodayPm.setEnabled(false);
-            } else {
-                edtSet(EDTPM, unitsModel);
-                edtTodayPm.setEnabled(true);
             }
 
-        }
+            activity.runOnUiThread(() -> {
+
+                names.setText(famerModel.getNames());
+                balance.setText(GeneralUtills.Companion.round(famerModel.getTotalbalance(), 1));
+                unitName.setText(unitsModel.getUnit());
+                unitPrice.setText(unitsModel.getUnitprice());
+
+                day1am.setText(day1Ams);
+                day1pm.setText(day1pms);
+
+                day2am.setText(day2Ams);
+                day2pm.setText(day3pms);
+
+                day3am.setText(day3Ams);
+                day3pm.setText(day3pms);
+
+                edtTodayAm.setText(day4Ams);
+                edtTodayPm.setText(day4pms);
 
 
+                try {
+                    if (!TextUtils.isEmpty(edtTodayAm.getText())) {
+                        edtTodayAm.setSelection(edtTodayAm.getText().length());
+                    }
+                    if (!TextUtils.isEmpty(edtTodayPm.getText())) {
+                        edtTodayPm.setSelection(edtTodayPm.getText().length());
+                    }
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
 
 
+                edtTodayAm.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        hasAmChanged = true;
 
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        hasAmChanged = true;
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+
+                        hasAmChanged = true;
+                        if (editable != null && editable.length() > 0) {
+                            if (unitsModel.getUnitprice() != null) {
+                                try {
+
+                                    Double price = Double.valueOf(unitsModel.getUnitprice());
+                                    // Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity());// / 1000;
+                                    Double total = (Double.valueOf(edtTodayAm.getText().toString())) * price;
+
+
+                                    unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
+
+                                } catch (Exception nm) {
+                                    nm.printStackTrace();
+                                }
+                            }
+                        } else {
+                            unitTotal.setText("");
+                        }
+                    }
+                });
+                edtTodayPm.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        hasPmChanged = true;
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        hasPmChanged = true;
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+
+                        hasPmChanged = true;
+                        if (editable != null && editable.length() > 0) {
+                            if (unitsModel.getUnitprice() != null) {
+
+                                try {
+                                    Double price = Double.valueOf(unitsModel.getUnitprice());
+                                    // Double unitCapacity = Double.valueOf(unitsModel.getUnitcapacity());// / 1000;
+                                    Double total = (Double.valueOf(edtTodayPm.getText().toString())) * price;
+                                    unitTotal.setText(String.valueOf(GeneralUtills.Companion.round(total, 2)));
+
+
+                                } catch (Exception nm) {
+                                    nm.printStackTrace();
+                                }
+
+
+                            }
+                        } else {
+                            unitTotal.setText("");
+                        }
+                    }
+                });
+
+
+                if (withCustomKeyboard) {
+                    edtTodayAm.setOnClickListener(view -> edtSet(EDTAM, unitsModel));
+                    edtTodayPm.setOnClickListener(view -> edtSet(EDTPM, unitsModel));
+
+
+                    if (DateTimeUtils.Companion.isAM(DateTimeUtils.Companion.getTodayDate())) {
+                        edtSet(EDTAM, unitsModel);
+                        edtTodayPm.setEnabled(false);
+                    } else {
+                        edtSet(EDTPM, unitsModel);
+                        edtTodayPm.setEnabled(true);
+                    }
+
+                }
+
+                alertDialogAndroid.show();
+
+
+                btnNeutral.setOnClickListener(view -> {
+
+                });
+
+
+            });
+
+        }).start();
 
         btnPositive.setOnClickListener(view -> {
             String milkAm = "0";
@@ -403,19 +426,19 @@ class CollectMilk implements NumberKeyboardListener {
 
             }
 
-            doCollect(famerModel, unitsModel, milkAm, milkPm, farmerBalance);
-            alertDialogAndroid.dismiss();
+
+            if (unitsModel != null) {
+                alertDialogAndroid.hide();
+                doCollect(famerModel, unitsModel, milkAm, milkPm);
+            }
 
 
         });
-        btnNeutral.setOnClickListener(view -> {
 
-        });
-        btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
 
     }
 
-    private void doCollect(FamerModel famerModel, UnitsModel unitsModel, String milkAm, String milkPm, FarmerBalance farmerBalance) {
+    private void doCollect(FamerModel famerModel, UnitsModel unitsModel, String milkAm, String milkPm) {
         Collection c = null;
 
         if (collModel == null) {
@@ -457,24 +480,24 @@ class CollectMilk implements NumberKeyboardListener {
                 c.setMilkCollectedValueLtrsAm(milkModel.getValueLtrs());
                 c.setMilkDetailsAm(new Gson().toJson(milkModel));
 
-
-                Double bal = 0.0;
-
-                String newBalance = milkModel.getValueKsh();
-                if (farmerBalance != null) {
-                    if (farmerBalance.getBalanceToPay() != null) {
-                        String previosBalance = farmerBalance.getBalanceToPay();
-
-                        try {
-                            newBalance = String.valueOf(Double.valueOf(previosBalance) + Double.valueOf(milkModel.getValueKsh()));
-
-                        } catch (Exception nm) {
-                            nm.printStackTrace();
-                        }
-                    }
-                }
-
-                famerModel.setTotalbalance(newBalance);
+//
+//                Double bal = 0.0;
+//
+//                String newBalance = milkModel.getValueKsh();
+//                if (farmerBalance != null) {
+//                    if (farmerBalance.getBalanceToPay() != null) {
+//                        String previosBalance = farmerBalance.getBalanceToPay();
+//
+//                        try {
+//                            newBalance = String.valueOf(Double.valueOf(previosBalance) + Double.valueOf(milkModel.getValueKsh()));
+//
+//                        } catch (Exception nm) {
+//                            nm.printStackTrace();
+//                        }
+//                    }
+//                }
+//
+//                famerModel.setTotalbalance(newBalance);
 
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
                 listener.createCollection(c, famerModel);
@@ -489,21 +512,21 @@ class CollectMilk implements NumberKeyboardListener {
                 collModel.setMilkDetailsAm(new Gson().toJson(milkModel));
 
 
-                String newBalance = milkModel.getValueKsh();
-                if (farmerBalance != null) {
-                    if (farmerBalance.getBalanceToPay() != null) {
-                        String previosBalance = farmerBalance.getBalanceToPay();
-
-                        try {
-                            newBalance = String.valueOf(Double.valueOf(previosBalance) + Double.valueOf(milkModel.getValueKsh()));
-
-                        } catch (Exception nm) {
-                            nm.printStackTrace();
-                        }
-                    }
-                }
-
-                famerModel.setTotalbalance(newBalance);
+//                String newBalance = milkModel.getValueKsh();
+//                if (farmerBalance != null) {
+//                    if (farmerBalance.getBalanceToPay() != null) {
+//                        String previosBalance = farmerBalance.getBalanceToPay();
+//
+//                        try {
+//                            newBalance = String.valueOf(Double.valueOf(previosBalance) + Double.valueOf(milkModel.getValueKsh()));
+//
+//                        } catch (Exception nm) {
+//                            nm.printStackTrace();
+//                        }
+//                    }
+//                }
+//
+//                famerModel.setTotalbalance(newBalance);
 
 
 
@@ -536,22 +559,22 @@ class CollectMilk implements NumberKeyboardListener {
                 c.setMilkCollectedValueLtrsPm(milkModel.getValueLtrs());
                 c.setMilkDetailsAm(new Gson().toJson(milkModel));
 
-
-                String newBalance = milkModel.getValueKsh();
-                if (farmerBalance != null) {
-                    if (farmerBalance.getBalanceToPay() != null) {
-                        String previosBalance = farmerBalance.getBalanceToPay();
-
-                        try {
-                            newBalance = String.valueOf(Double.valueOf(previosBalance) + Double.valueOf(milkModel.getValueKsh()));
-
-                        } catch (Exception nm) {
-                            nm.printStackTrace();
-                        }
-                    }
-                }
-
-                famerModel.setTotalbalance(newBalance);
+//
+//                String newBalance = milkModel.getValueKsh();
+//                if (farmerBalance != null) {
+//                    if (farmerBalance.getBalanceToPay() != null) {
+//                        String previosBalance = farmerBalance.getBalanceToPay();
+//
+//                        try {
+//                            newBalance = String.valueOf(Double.valueOf(previosBalance) + Double.valueOf(milkModel.getValueKsh()));
+//
+//                        } catch (Exception nm) {
+//                            nm.printStackTrace();
+//                        }
+//                    }
+//                }
+//
+//                famerModel.setTotalbalance(newBalance);
 
 
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
@@ -567,26 +590,26 @@ class CollectMilk implements NumberKeyboardListener {
                 collModel.setMilkDetailsPm(new Gson().toJson(milkModel));
 
 
-                try {
-                    String newBalance = milkModel.getValueKsh();
-                    if (farmerBalance != null) {
-                        if (farmerBalance.getBalanceToPay() != null) {
-                            String previosBalance = farmerBalance.getBalanceToPay();
-
-                            try {
-                                newBalance = String.valueOf(Double.valueOf(previosBalance) + Double.valueOf(milkModel.getValueKsh()));
-
-                            } catch (Exception nm) {
-                                nm.printStackTrace();
-                            }
-                        }
-                    }
-
-                    famerModel.setTotalbalance(newBalance);
-
-                } catch (Exception nm) {
-                    nm.printStackTrace();
-                }
+//                try {
+//                    String newBalance = milkModel.getValueKsh();
+//                    if (farmerBalance != null) {
+//                        if (farmerBalance.getBalanceToPay() != null) {
+//                            String previosBalance = farmerBalance.getBalanceToPay();
+//
+//                            try {
+//                                newBalance = String.valueOf(Double.valueOf(previosBalance) + Double.valueOf(milkModel.getValueKsh()));
+//
+//                            } catch (Exception nm) {
+//                                nm.printStackTrace();
+//                            }
+//                        }
+//                    }
+//
+//                    famerModel.setTotalbalance(newBalance);
+//
+//                } catch (Exception nm) {
+//                    nm.printStackTrace();
+//                }
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
 
                 listener.updateCollection(collModel, famerModel);
@@ -622,26 +645,26 @@ class CollectMilk implements NumberKeyboardListener {
                 c.setMilkDetailsPm(new Gson().toJson(milkModelPm));
 
 
-                try {
-                    String newBalance = String.valueOf(Double.valueOf(milkModelAm.getValueKsh()) + Double.valueOf(milkModelPm.getValueKsh()));
-                    if (farmerBalance != null) {
-                        if (farmerBalance.getBalanceToPay() != null) {
-                            String previosBalance = farmerBalance.getBalanceToPay();
-
-                            try {
-                                newBalance = String.valueOf(Double.valueOf(previosBalance) + (Double.valueOf(milkModelAm.getValueKsh()) + Double.valueOf(milkModelPm.getValueKsh())));
-
-                            } catch (Exception nm) {
-                                nm.printStackTrace();
-                            }
-                        }
-                    }
-
-                    famerModel.setTotalbalance(newBalance);
-
-                } catch (Exception nm) {
-                    nm.printStackTrace();
-                }
+//                try {
+//                    String newBalance = String.valueOf(Double.valueOf(milkModelAm.getValueKsh()) + Double.valueOf(milkModelPm.getValueKsh()));
+//                    if (farmerBalance != null) {
+//                        if (farmerBalance.getBalanceToPay() != null) {
+//                            String previosBalance = farmerBalance.getBalanceToPay();
+//
+//                            try {
+//                                newBalance = String.valueOf(Double.valueOf(previosBalance) + (Double.valueOf(milkModelAm.getValueKsh()) + Double.valueOf(milkModelPm.getValueKsh())));
+//
+//                            } catch (Exception nm) {
+//                                nm.printStackTrace();
+//                            }
+//                        }
+//                    }
+//
+//                    famerModel.setTotalbalance(newBalance);
+//
+//                } catch (Exception nm) {
+//                    nm.printStackTrace();
+//                }
 
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
                 listener.createCollection(c, famerModel);
@@ -661,26 +684,26 @@ class CollectMilk implements NumberKeyboardListener {
                 collModel.setMilkDetailsPm(new Gson().toJson(milkModelPm));
 
 
-                try {
-                    String newBalance = String.valueOf(Double.valueOf(milkModelAm.getValueKsh()) + Double.valueOf(milkModelPm.getValueKsh()));
-                    if (farmerBalance != null) {
-                        if (farmerBalance.getBalanceToPay() != null) {
-                            String previosBalance = farmerBalance.getBalanceToPay();
-
-                            try {
-                                newBalance = String.valueOf(Double.valueOf(previosBalance) + (Double.valueOf(milkModelAm.getValueKsh()) + Double.valueOf(milkModelPm.getValueKsh())));
-
-                            } catch (Exception nm) {
-                                nm.printStackTrace();
-                            }
-                        }
-                    }
-
-                    famerModel.setTotalbalance(newBalance);
-
-                } catch (Exception nm) {
-                    nm.printStackTrace();
-                }
+//                try {
+//                    String newBalance = String.valueOf(Double.valueOf(milkModelAm.getValueKsh()) + Double.valueOf(milkModelPm.getValueKsh()));
+//                    if (farmerBalance != null) {
+//                        if (farmerBalance.getBalanceToPay() != null) {
+//                            String previosBalance = farmerBalance.getBalanceToPay();
+//
+//                            try {
+//                                newBalance = String.valueOf(Double.valueOf(previosBalance) + (Double.valueOf(milkModelAm.getValueKsh()) + Double.valueOf(milkModelPm.getValueKsh())));
+//
+//                            } catch (Exception nm) {
+//                                nm.printStackTrace();
+//                            }
+//                        }
+//                    }
+//
+//                    famerModel.setTotalbalance(newBalance);
+//
+//                } catch (Exception nm) {
+//                    nm.printStackTrace();
+//                }
 
 
 
@@ -696,29 +719,6 @@ class CollectMilk implements NumberKeyboardListener {
         }
     }
 
-    private void getCollection(String code, String date, TextView txtAm, TextView txtPm) {
-
-        Collection c = mViewModel.getCollectionByDateByFarmerByTimeSngle(code, date);//.observe(FragementFarmersList.this, collections -> {
-
-
-        //   List<Collection> collections=mViewModel.getCol
-        if (txtAm != null && txtPm != null) {
-            if (c != null) {
-                if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
-                    txtAm.setText(c.getMilkCollectedAm());
-
-                }
-                if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
-                    txtPm.setText(c.getMilkCollectedPm());
-
-                }
-
-
-            }
-        }
-
-
-    }
 
     @Override
     public void onNumberClicked(int number) {
@@ -791,7 +791,6 @@ class CollectMilk implements NumberKeyboardListener {
                 edtTodayPm.setText(amount);
                 break;
         }
-        // amountEditText.setText("€" + (amount.isEmpty() ? "0" : addThousandSeparator(amount)));
     }
 
     void edtSet(int edtClicked, UnitsModel unitsModel) {

@@ -1061,7 +1061,7 @@ public class CommonFuncs {
         }
 
 
-        edtVL.setFilters(new InputFilter[]{new InputFilterMinMax(1, 1000)});
+        // edtVL.setFilters(new InputFilter[]{new InputFilterMinMax(1, 1000)});
 
         alertDialogBuilderUserInput
                 .setCancelable(false);
@@ -1979,7 +1979,7 @@ public class CommonFuncs {
 
                 balncesViewModel.insert(farmerBalance);
                 traderViewModel.updateFarmer(famerModel, false, false);
-                handler(traderViewModel, famerModel);
+                //handler(traderViewModel, famerModel);
 
 
             } else {
@@ -1991,10 +1991,9 @@ public class CommonFuncs {
 
 
                 balncesViewModel.updateRecord(farmerBalance);
-
                 traderViewModel.updateFarmer(famerModel, false, false);
 
-                handler(traderViewModel, famerModel);
+                // handler(traderViewModel, famerModel);
             }
         } catch (Exception nm) {
             nm.printStackTrace();
