@@ -38,10 +38,10 @@ public interface BalancesDao {
     LiveData<FarmerBalance> getByKeyCode(String code);
 
     @Query("SELECT * FROM FARMERBALANCE WHERE farmerCode =:code")
-    LiveData<FarmerBalance> getByFarmerCode(String code);
+    LiveData<List<FarmerBalance>> getByFarmerCode(String code);
 
     @Query("SELECT * FROM FARMERBALANCE WHERE farmerCode =:code")
-    FarmerBalance getByFarmerCodeOne(String code);
+    List<FarmerBalance> getByFarmerCodeOne(String code);
 
 
     @Query("SELECT * FROM FARMERBALANCE WHERE farmerCode =:code AND payoutCode =:payoutCode")
@@ -49,7 +49,6 @@ public interface BalancesDao {
 
     @Query("SELECT * FROM FARMERBALANCE WHERE farmerCode =:code AND payoutCode =:payoutCode")
     FarmerBalance getByFarmerCodeByPayoutOne(String code, String payoutCode);
-
 
 
     @Update

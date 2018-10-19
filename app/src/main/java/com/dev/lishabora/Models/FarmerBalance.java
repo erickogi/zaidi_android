@@ -28,6 +28,8 @@ public class FarmerBalance {
 
     private String payoutCode;
 
+    private int payoutStatus;
+
 
     private String lastUpdated;
 
@@ -38,6 +40,14 @@ public class FarmerBalance {
         this.balanceToPay = balanceToPay;
         this.balanceOwed = balanceOwed;
         this.lastUpdated = lastUpdated;
+    }
+
+    public int getPayoutStatus() {
+        return payoutStatus;
+    }
+
+    public void setPayoutStatus(int payoutStatus) {
+        this.payoutStatus = payoutStatus;
     }
 
     public String getPayoutCode() {

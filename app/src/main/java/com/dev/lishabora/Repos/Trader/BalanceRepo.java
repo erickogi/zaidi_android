@@ -45,12 +45,12 @@ public class BalanceRepo {
     }
 
 
-    public LiveData<FarmerBalance> getByFarmerCode(String code) {
+    public LiveData<List<FarmerBalance>> getByFarmerCode(String code) {
         return dao.getByFarmerCode(code);
     }
 
 
-    public FarmerBalance getByFarmerCodeOne(String code) {
+    public List<FarmerBalance> getByFarmerCodeOne(String code) {
         return dao.getByFarmerCodeOne(code);
     }
 

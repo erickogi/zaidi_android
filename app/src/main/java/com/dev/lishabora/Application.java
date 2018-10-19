@@ -47,6 +47,7 @@ import com.dev.lishabora.Utils.ResponseCallback;
 import com.dev.lishabora.Utils.SyncChangesCallback;
 import com.dev.lishabora.Utils.SyncDownResponseCallback;
 import com.dev.lishabora.Utils.SyncResponseCallback;
+import com.dev.lishabora.Views.Trader.Fragments.CollectMilk;
 import com.dev.lishaboramobile.BuildConfig;
 import com.evernote.android.job.JobManager;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
@@ -77,6 +78,8 @@ public class Application extends MultiDexApplication {
 
     public static volatile int UpsyncTag = 0;
     public static volatile int DownsyncTag = 0;
+
+    public static CollectMilk collectMilk = null;
 
 
     public static void sync() {

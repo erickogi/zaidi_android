@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
-import com.dev.lishabora.Models.FarmerBalance;
 import com.dev.lishabora.Models.MilkModel;
 import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.NumKey.NumberKeyboard;
@@ -25,11 +24,10 @@ import com.dev.lishabora.NumKey.NumberKeyboardListener;
 import com.dev.lishabora.Utils.CollectListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
-import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
-import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishaboramobile.R;
 import com.google.gson.Gson;
 
+import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
@@ -40,19 +38,17 @@ import java.util.Objects;
 
 import timber.log.Timber;
 
-//import com.fxn769.Numpad;
 
-class CollectMilk implements NumberKeyboardListener {
+public class CollectMilk implements NumberKeyboardListener {
     private static final double MAX_ALLOWED_AMOUNT = 9999.99;
     private static final int MAX_ALLOWED_DECIMALS = 1;
     private int EDIT_CLICKED = 0;
-    private int EDTAM = 1;
+    private final int EDTAM = 1;
     private int EDTPM = 2;
     private boolean isKeypadVisible;
     private CollectListener listener;
     private boolean isAm = false;
     private Cycles c;
-    private TraderViewModel mViewModel;
     private Context context;
     private Collection collModel = null;
     private boolean hasAmChanged = false;
@@ -61,22 +57,31 @@ class CollectMilk implements NumberKeyboardListener {
     private MaterialButton btnPositive, btnNegative, btnNeutral;
     private TextView names, balance, day1, day2, day3, day1am, day1pm, day2am, day2pm, day3am, day3pm, today, unitName, unitPrice, unitTotal;
     private TextInputEditText edtTodayAm, edtTodayPm;
-    //private Numpad numpad;
+
     private NumberKeyboard numberKeyboard;
-    //private TextView amountEditText;
+
     private String amountText;
     private double amount;
     private boolean withCustomKeyboard;
-    private BalncesViewModel balncesViewModel;
 
-    String day1Ams = "";
-    String day1pms = "";
-    String day2Ams = "";
-    CollectMilk(Context context, TraderViewModel traderViewModel, BalncesViewModel balncesViewModel, CollectListener listener, boolean withCustomKeyboard) {
-        this.mViewModel = traderViewModel;
-        this.balncesViewModel = balncesViewModel;
+    private DateTime dateTime;
+    private Date date;
+
+    private String day1Ams = "";
+    private String day1pms = "";
+    private String day2Ams = "";
+
+    private String day2pms = "";
+    private String day3Ams = "";
+    private String day3pms = "";
+    private String day4Ams = "";
+    private String day4pms = "";
+    private UnitsModel unitsModel = null;
+    private Date previousdate;
+
+    public CollectMilk(Context context, boolean withCustomKeyboard) {
+
         this.context = context;
-        this.listener = listener;
         this.amountText = "";
         this.amount = 0.0;
         this.withCustomKeyboard = withCustomKeyboard;
@@ -84,18 +89,24 @@ class CollectMilk implements NumberKeyboardListener {
         setUpCollDialog();
     }
 
-    String day2pms = "";
-    String day3Ams = "";
-    String day3pms = "";
-    String day4Ams = "";
-    String day4pms = "";
-    UnitsModel unitsModel = null;
-    private PeriodFormatter mPeriodFormat;
-    private Date previousdate;
+    public void onDestroy() {
+        if (alertDialogAndroid != null) {
+            if (alertDialogAndroid.isShowing()) {
+                alertDialogAndroid.dismiss();
+            } else {
+                try {
+                    alertDialogAndroid.dismiss();
+
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
+            }
+        }
+    }
 
     private void log(String msg) {
 
-        mPeriodFormat = new PeriodFormatterBuilder().appendYears()
+        PeriodFormatter mPeriodFormat = new PeriodFormatterBuilder().appendYears()
                 .appendMinutes().appendSuffix(" Mins")
                 .appendSeconds().appendSuffix(" Secs")
                 .appendMillis().appendSuffix("Mil")
@@ -158,17 +169,7 @@ class CollectMilk implements NumberKeyboardListener {
 
 
         btnNeutral.setVisibility(View.GONE);
-//        lTitle.setVisibility(View.GONE);
-        //       txtTitle.setVisibility(View.VISIBLE);
-        //       imgIcon.setVisibility(View.GONE);
-        //       imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
-        //       txtTitle.setText("Milk Collection");
-
         numberKeyboard = mView.findViewById(R.id.numberKeyboard);
-//        numberKeyboard.setKeyHeight(90);
-//        numberKeyboard.setKeyWidth(90);
-//        numberKeyboard.setKeyPadding(0);
-//        numberKeyboard.setKeyPadding(4);
         numberKeyboard.setNumberKeyTypeface(Typeface.DEFAULT);
         // numberKeyboard.se
         if (withCustomKeyboard) {
@@ -192,11 +193,7 @@ class CollectMilk implements NumberKeyboardListener {
 
 
         }
-        today.setText(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "E"));
-        day3.setText(DateTimeUtils.Companion.getDayPrevious(1, "E"));
-        day2.setText(DateTimeUtils.Companion.getDayPrevious(2, "E"));
-        day1.setText(DateTimeUtils.Companion.getDayPrevious(3, "E"));
-
+        setUpdDays();
 
         numberKeyboard.setListener(this);
         alertDialogAndroid.show();
@@ -205,10 +202,30 @@ class CollectMilk implements NumberKeyboardListener {
 
     }
 
-    void collectMilk(Activity activity, FamerModel famerModel, List<Collection> collections, FarmerBalance farmerBalance) {
+    public void setUpdDays() {
+        dateTime = DateTimeUtils.Companion.getTodayDate();
+        date = DateTimeUtils.Companion.getDateNow();
+
+        today.setText(DateTimeUtils.Companion.getDayOfWeek(dateTime, "E"));
+        day3.setText(DateTimeUtils.Companion.getDayPrevious(1, "E"));
+        day2.setText(DateTimeUtils.Companion.getDayPrevious(2, "E"));
+        day1.setText(DateTimeUtils.Companion.getDayPrevious(3, "E"));
 
 
+    }
+
+
+    void collectMilk(Activity activity, FamerModel famerModel, List<Collection> collections, CollectListener listener) {
+
+
+        if (DateTimeUtils.Companion.getTodayDate() != dateTime) {
+            // setUpdDays();
+            // DateTimeUtils.Companion.is
+        }
+
+        this.listener = listener;
         new Thread(() -> {
+
 
             unitsModel = new UnitsModel();
             unitsModel.setUnitcapacity(famerModel.getUnitcapacity());
@@ -288,7 +305,7 @@ class CollectMilk implements NumberKeyboardListener {
                 day1pm.setText(day1pms);
 
                 day2am.setText(day2Ams);
-                day2pm.setText(day3pms);
+                day2pm.setText(day2pms);
 
                 day3am.setText(day3Ams);
                 day3pm.setText(day3pms);
@@ -427,9 +444,11 @@ class CollectMilk implements NumberKeyboardListener {
             }
 
 
+            alertDialogAndroid.hide();
             if (unitsModel != null) {
-                alertDialogAndroid.hide();
                 doCollect(famerModel, unitsModel, milkAm, milkPm);
+            } else {
+                listener.error("Unit model is null");
             }
 
 
@@ -461,6 +480,7 @@ class CollectMilk implements NumberKeyboardListener {
             c.setSynced(0);
             c.setSynced(false);
             c.setApproved(0);
+
         }
 
 
@@ -480,24 +500,6 @@ class CollectMilk implements NumberKeyboardListener {
                 c.setMilkCollectedValueLtrsAm(milkModel.getValueLtrs());
                 c.setMilkDetailsAm(new Gson().toJson(milkModel));
 
-//
-//                Double bal = 0.0;
-//
-//                String newBalance = milkModel.getValueKsh();
-//                if (farmerBalance != null) {
-//                    if (farmerBalance.getBalanceToPay() != null) {
-//                        String previosBalance = farmerBalance.getBalanceToPay();
-//
-//                        try {
-//                            newBalance = String.valueOf(Double.valueOf(previosBalance) + Double.valueOf(milkModel.getValueKsh()));
-//
-//                        } catch (Exception nm) {
-//                            nm.printStackTrace();
-//                        }
-//                    }
-//                }
-//
-//                famerModel.setTotalbalance(newBalance);
 
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
                 listener.createCollection(c, famerModel);
@@ -511,22 +513,6 @@ class CollectMilk implements NumberKeyboardListener {
                 collModel.setMilkCollectedValueLtrsAm(milkModel.getValueLtrs());
                 collModel.setMilkDetailsAm(new Gson().toJson(milkModel));
 
-
-//                String newBalance = milkModel.getValueKsh();
-//                if (farmerBalance != null) {
-//                    if (farmerBalance.getBalanceToPay() != null) {
-//                        String previosBalance = farmerBalance.getBalanceToPay();
-//
-//                        try {
-//                            newBalance = String.valueOf(Double.valueOf(previosBalance) + Double.valueOf(milkModel.getValueKsh()));
-//
-//                        } catch (Exception nm) {
-//                            nm.printStackTrace();
-//                        }
-//                    }
-//                }
-//
-//                famerModel.setTotalbalance(newBalance);
 
 
 
@@ -559,22 +545,6 @@ class CollectMilk implements NumberKeyboardListener {
                 c.setMilkCollectedValueLtrsPm(milkModel.getValueLtrs());
                 c.setMilkDetailsAm(new Gson().toJson(milkModel));
 
-//
-//                String newBalance = milkModel.getValueKsh();
-//                if (farmerBalance != null) {
-//                    if (farmerBalance.getBalanceToPay() != null) {
-//                        String previosBalance = farmerBalance.getBalanceToPay();
-//
-//                        try {
-//                            newBalance = String.valueOf(Double.valueOf(previosBalance) + Double.valueOf(milkModel.getValueKsh()));
-//
-//                        } catch (Exception nm) {
-//                            nm.printStackTrace();
-//                        }
-//                    }
-//                }
-//
-//                famerModel.setTotalbalance(newBalance);
 
 
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
@@ -590,26 +560,6 @@ class CollectMilk implements NumberKeyboardListener {
                 collModel.setMilkDetailsPm(new Gson().toJson(milkModel));
 
 
-//                try {
-//                    String newBalance = milkModel.getValueKsh();
-//                    if (farmerBalance != null) {
-//                        if (farmerBalance.getBalanceToPay() != null) {
-//                            String previosBalance = farmerBalance.getBalanceToPay();
-//
-//                            try {
-//                                newBalance = String.valueOf(Double.valueOf(previosBalance) + Double.valueOf(milkModel.getValueKsh()));
-//
-//                            } catch (Exception nm) {
-//                                nm.printStackTrace();
-//                            }
-//                        }
-//                    }
-//
-//                    famerModel.setTotalbalance(newBalance);
-//
-//                } catch (Exception nm) {
-//                    nm.printStackTrace();
-//                }
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
 
                 listener.updateCollection(collModel, famerModel);
@@ -645,27 +595,6 @@ class CollectMilk implements NumberKeyboardListener {
                 c.setMilkDetailsPm(new Gson().toJson(milkModelPm));
 
 
-//                try {
-//                    String newBalance = String.valueOf(Double.valueOf(milkModelAm.getValueKsh()) + Double.valueOf(milkModelPm.getValueKsh()));
-//                    if (farmerBalance != null) {
-//                        if (farmerBalance.getBalanceToPay() != null) {
-//                            String previosBalance = farmerBalance.getBalanceToPay();
-//
-//                            try {
-//                                newBalance = String.valueOf(Double.valueOf(previosBalance) + (Double.valueOf(milkModelAm.getValueKsh()) + Double.valueOf(milkModelPm.getValueKsh())));
-//
-//                            } catch (Exception nm) {
-//                                nm.printStackTrace();
-//                            }
-//                        }
-//                    }
-//
-//                    famerModel.setTotalbalance(newBalance);
-//
-//                } catch (Exception nm) {
-//                    nm.printStackTrace();
-//                }
-
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
                 listener.createCollection(c, famerModel);
 
@@ -684,26 +613,6 @@ class CollectMilk implements NumberKeyboardListener {
                 collModel.setMilkDetailsPm(new Gson().toJson(milkModelPm));
 
 
-//                try {
-//                    String newBalance = String.valueOf(Double.valueOf(milkModelAm.getValueKsh()) + Double.valueOf(milkModelPm.getValueKsh()));
-//                    if (farmerBalance != null) {
-//                        if (farmerBalance.getBalanceToPay() != null) {
-//                            String previosBalance = farmerBalance.getBalanceToPay();
-//
-//                            try {
-//                                newBalance = String.valueOf(Double.valueOf(previosBalance) + (Double.valueOf(milkModelAm.getValueKsh()) + Double.valueOf(milkModelPm.getValueKsh())));
-//
-//                            } catch (Exception nm) {
-//                                nm.printStackTrace();
-//                            }
-//                        }
-//                    }
-//
-//                    famerModel.setTotalbalance(newBalance);
-//
-//                } catch (Exception nm) {
-//                    nm.printStackTrace();
-//                }
 
 
 

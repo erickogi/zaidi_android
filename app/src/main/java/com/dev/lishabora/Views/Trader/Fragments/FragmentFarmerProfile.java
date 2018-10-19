@@ -1,7 +1,6 @@
 package com.dev.lishabora.Views.Trader.Fragments;
 
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,7 +24,6 @@ import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Trader.Activities.CreateFarmerActivity;
 import com.dev.lishabora.Views.Trader.FarmerConst;
 import com.dev.lishaboramobile.R;
-import com.google.gson.Gson;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -156,13 +154,20 @@ public class FragmentFarmerProfile extends Fragment {
             try {
                 String bal = "0.0";
                 try {
-                    balncesViewModel.getByFarmerCode(famerModel.getCode()).observe(this, new Observer<FarmerBalance>() {
-                        @Override
-                        public void onChanged(@Nullable FarmerBalance farmerBalance) {
-                            txtBalance.setText(GeneralUtills.Companion.round(String.valueOf(farmerBalance.getBalanceToPay()), 1));
-                            Log.d("balls", new Gson().toJson(farmerBalance));
+                    balncesViewModel.getByFarmerCode(famerModel.getCode()).observe(this, farmerBalances -> {
 
+                        Double total = 0.0;
+                        for (FarmerBalance f : farmerBalances) {
+                            try {
+                                if (f.getPayoutStatus() == 1) {
+                                    total = total + (Double.valueOf(f.getBalanceToPay()));
+                                }
+                            } catch (Exception nm) {
+                                nm.printStackTrace();
+                            }
                         }
+                        txtBalance.setText(GeneralUtills.Companion.round(String.valueOf(total), 1));
+
                     });
                 } catch (Exception NM) {
                     NM.printStackTrace();

@@ -784,20 +784,12 @@ public class ActivityCollect extends AppCompatActivity implements NumberKeyboard
 
     }
 
-    @Override
-    public void createCollection(Collection cAm, Collection cPm) {
-
-    }
 
     @Override
     public void updateCollection(Collection c, FamerModel famerModel) {
 
     }
 
-    @Override
-    public void updateCollection(Collection cAm, Collection cPm) {
-
-    }
 
     @Override
     public void error(String error) {

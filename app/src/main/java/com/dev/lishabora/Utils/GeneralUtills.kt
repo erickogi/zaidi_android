@@ -73,7 +73,7 @@ class GeneralUtills {
         }
 
         fun createCode(): String {
-            return " E : " + PrefrenceManager(Application.context).traderModel.code + " T : " + DateTimeUtils.getNow()
+            return "E : " + PrefrenceManager(Application.context).traderModel.code + " T : " + DateTimeUtils.getNow()
         }
 
         fun addCommify(no: String): String {

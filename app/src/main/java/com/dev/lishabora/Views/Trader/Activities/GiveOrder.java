@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -20,8 +21,8 @@ import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.OrderModel;
 import com.dev.lishabora.Models.Trader.FarmerOrdersTable;
+import com.dev.lishabora.Utils.CollectListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
-import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
@@ -33,7 +34,7 @@ import com.stepstone.stepper.VerificationError;
 
 import java.util.Objects;
 
-public class GiveOrder extends AppCompatActivity implements StepperLayout.StepperListener {
+public class GiveOrder extends AppCompatActivity implements StepperLayout.StepperListener, CollectListener {
     private StepperLayout mStepperLayout;
     private GiveOrderAdapter mStepperAdapter;
     private PrefrenceManager prefrenceManager;
@@ -112,101 +113,7 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
 
     private void giveOrder(String o, String orderDetails) {
 
-        if (DateTimeUtils.Companion.isAM(DateTimeUtils.Companion.getTodayDate())) {
-
-            ampm = "AM";
-
-        } else {
-
-            ampm = "PM";
-        }
-
-
-        StringValue = null;
-        DoubleValue = 0.0;
-
-
-        CollModel = null;
-
-
-        CollModel = traderViewModel.getCollectionByDateByFarmerByTimeSngle(famerModel.getCode(), DateTimeUtils.Companion.getToday());
-
-
-        if (CollModel != null) {
-            DoubleValue = DoubleValue + Double.valueOf(CollModel.getOrderGivenOutPrice());
-            StringValue = String.valueOf(DoubleValue);
-        }
-
-
-        if (CollModel == null) {
-                Collection c = new Collection();
-                c.setCycleCode(famerModel.getCyclecode());
-                c.setFarmerCode(famerModel.getCode());
-                c.setFarmerName(famerModel.getNames());
-                c.setCycleId(famerModel.getCode());
-                c.setDayName(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "E"));
-                c.setLoanAmountGivenOutPrice("0");
-            c.setCode(GeneralUtills.Companion.createCode(famerModel.getCode()));
-                c.setDayDate(DateTimeUtils.Companion.getToday());
-            c.setDayDateLog(DateTimeUtils.Companion.getLongDate(c.getDayDate()));
-
-            c.setTimeOfDay(ampm);
-            c.setMilkCollectedAm("0");
-                c.setLoanAmountGivenOutPrice("0");
-                c.setLoanDetails("");
-                c.setOrderGivenOutPrice(o);
-                c.setOrderDetails(orderDetails);
-
-                c.setLoanId("");
-                c.setOrderId("");
-                c.setSynced(0);
-                c.setSynced(false);
-                c.setApproved(0);
-
-
-                traderViewModel.createCollections(c, false).observe(this, responseModel -> {
-                    if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-                        FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getCode());
-
-                        famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-
-                        CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.ORDER, null, f);
-
-
-                        traderViewModel.updateFarmer(famerModel, false, false);
-                        finish();
-                    } else {
-
-                    }
-
-
-                });
-
-
-            } else {
-
-
-            if (CollModel != null) {
-                CollModel.setOrderGivenOutPrice(o);
-                CollModel.setOrderDetails(orderDetails);
-            }
-            traderViewModel.updateCollection(CollModel).observe(this, responseModel -> {
-                    if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-                        FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(CollModel.getCode());
-                        famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-
-                        CommonFuncs.updateBalance(famerModel, traderViewModel, balncesViewModel, CollModel, responseModel.getPayoutCode(), AppConstants.ORDER, null, f);
-
-                        traderViewModel.updateFarmer(famerModel, false, false);
-                        finish();
-                    } else {
-
-
-                    }
-            });
-
-
-            }
+        CommonFuncs.giveOrder(o, orderDetails, this, traderViewModel, famerModel);
 
 
     }
@@ -237,5 +144,77 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
     public void onStop() {
         super.onStop();
         Objects.requireNonNull(this.getSupportActionBar()).show();
+    }
+
+    @Override
+    public void createCollection(Collection c, FamerModel famerModel) {
+        traderViewModel.createCollections(c).observe(this, responseModel -> {
+            if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+                FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getCode());
+
+                famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
+
+                boolean hasToSyncFarmer = false;
+                if (!famerModel.getCurrentPayoutCode().equals(responseModel.getPayoutCode())) {
+                    hasToSyncFarmer = true;
+                }
+                famerModel.setCurrentPayoutCode(responseModel.getPayoutCode());
+
+                CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.ORDER, null, f);
+
+                traderViewModel.updateFarmer(famerModel, false, hasToSyncFarmer);
+                finish();
+            } else {
+                snack(responseModel.getResultDescription());
+
+            }
+
+
+        });
+    }
+
+    @Override
+    public void updateCollection(Collection c, FamerModel famerModel) {
+        traderViewModel.updateCollection(c).observe(this, responseModel -> {
+            if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+
+                FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getCode());
+
+                famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
+                boolean hasToSyncFarmer = false;
+                if (!famerModel.getCurrentPayoutCode().equals(responseModel.getPayoutCode())) {
+                    hasToSyncFarmer = true;
+                }
+                famerModel.setCurrentPayoutCode(responseModel.getPayoutCode());
+
+                CommonFuncs.updateBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.ORDER, null, f);
+
+                traderViewModel.updateFarmer(famerModel, false, hasToSyncFarmer);
+                finish();
+            } else {
+
+
+                snack(responseModel.getResultDescription());
+            }
+        });
+    }
+
+    @Override
+    public void error(String error) {
+        snack(error);
+
+    }
+
+
+    private void snack(String msg) {
+        if (mStepperLayout != null) {
+
+            AlertDialog.Builder d = new AlertDialog.Builder(this);
+            d.setMessage(msg);
+            d.setCancelable(true);
+            d.setPositiveButton("Okay", (dialogInterface, i) -> dialogInterface.dismiss());
+            d.show();
+
+        }
     }
 }

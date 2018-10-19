@@ -30,13 +30,13 @@ import com.dev.lishabora.Utils.Jobs.Evernote.PayoutCheckerJob;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.Utils.ResponseCallback;
-import com.dev.lishabora.ViewModels.Admin.AdminsViewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Login.Activities.LoginActivity;
 import com.dev.lishabora.Views.Login.ResetPassword;
 import com.dev.lishabora.Views.Reports.FragmentReports;
 import com.dev.lishabora.Views.Reports.HistoryToolBarUI;
 import com.dev.lishabora.Views.Reports.Reports;
+import com.dev.lishabora.Views.Trader.Fragments.CollectMilk;
 import com.dev.lishabora.Views.Trader.Fragments.FragementFarmersList;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentNotifications;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentPayouts;
@@ -52,6 +52,8 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 
+import static com.dev.lishabora.Application.collectMilk;
+
 public class TraderActivity extends AppCompatActivity {
     private static Fragment fragment = null;
     PrefrenceManager traderPrefs;
@@ -61,7 +63,7 @@ public class TraderActivity extends AppCompatActivity {
     SearchView mSearchView;
     ViewPagerAdapter adapter;
     private AVLoadingIndicatorView avi;
-    private AdminsViewModel adminsViewModel;
+
     private TraderViewModel viewModel;
 
 
@@ -323,6 +325,29 @@ public class TraderActivity extends AppCompatActivity {
             nm.printStackTrace();
         }
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (collectMilk == null) {
+            collectMilk = new CollectMilk(this, true);
+
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (collectMilk != null) {
+            collectMilk.onDestroy();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -330,7 +355,12 @@ public class TraderActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         viewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
-        adminsViewModel = ViewModelProviders.of(this).get(AdminsViewModel.class);
+
+        collectMilk = new CollectMilk(this, true);
+
+
+
+
         traderPrefs = new PrefrenceManager(this);
         setUpDrawer(toolbar, traderPrefs.getTraderModel().getMobile(), traderPrefs.getTraderModel().getNames());
 

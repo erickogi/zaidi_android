@@ -135,15 +135,6 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
 
 
         status = view.findViewById(R.id.txt_status);
-//        id = view.findViewById(R.id.txt_id);
-//        name = view.findViewById(R.id.txt_name);
-//        balance = view.findViewById(R.id.txt_balance);
-//
-//
-//        milk = view.findViewById(R.id.txt_milk);
-//        loan = view.findViewById(R.id.txt_loans);
-//        order = view.findViewById(R.id.txt_orders);
-
 
     }
 

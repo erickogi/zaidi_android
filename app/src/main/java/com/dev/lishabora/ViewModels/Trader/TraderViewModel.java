@@ -847,7 +847,7 @@ public class TraderViewModel extends AndroidViewModel
         return createProductSuccess;
     }
 
-    public LiveData<ResponseModel> createCollections(Collection collection, boolean b) {
+    public LiveData<ResponseModel> createCollections(Collection collection) {
 
         ResponseModel responseModel = new ResponseModel();
 
@@ -907,6 +907,8 @@ public class TraderViewModel extends AndroidViewModel
             // Log.d("payoutCodeDebug", "Collection Inserted \nExisting payout  " + p.getCode());
 
             insertPayout(payouts);
+
+
             collection.setCycleStartedOn(payouts.getStartDate());
             collection.setPayoutnumber(payouts.getPayoutnumber());
             collection.setPayoutCode(payouts.getCode());
@@ -938,7 +940,6 @@ public class TraderViewModel extends AndroidViewModel
                 payouts.setEndDate(endAndStart.getEndDate());
                 payouts.setPayoutnumber(plastIfOne.getPayoutnumber() + 1);
 
-
                 insertPayout(payouts);
                 Log.d("payoutCodeDebug", "Collection Inserted \nNew  payout \nOther cycles payouts available" + payouts.getCode());
 
@@ -962,10 +963,6 @@ public class TraderViewModel extends AndroidViewModel
                 Log.d("payoutCodeDebug", "Collection Inserted \nExisting payout  " + p.getCode());
                 collection.setPayoutCode(p.getCode());
 
-                //  synch(AppConstants.INSERT, AppConstants.ENTITY_COLLECTION, collection, null, 1);
-
-                //  collectionsRepo.insert(collection);
-                //  ResponseModel responseModel = new ResponseModel();
                 responseModel.setResultCode(1);
                 responseModel.setResultDescription("Collection Inserted \nExisting payout");
                 responseModel.setData(null);
@@ -979,11 +976,12 @@ public class TraderViewModel extends AndroidViewModel
         }
 
         if (collection.getPayoutCode() != null) {
-
+            responseModel.setPayoutCode(collection.getPayoutCode());
+            collectionsRepo.insert(collection);
 
             synch(AppConstants.INSERT, AppConstants.ENTITY_COLLECTION, collection, null, 1);
 
-            collectionsRepo.insert(collection);
+
         } else {
             responseModel.setResultCode(0);
             responseModel.setResultDescription("Collection not updated");
@@ -1001,16 +999,13 @@ public class TraderViewModel extends AndroidViewModel
 
             c.setTraderCode(prefrenceManager.getTraderModel().getCode());
 
-            Log.d("payoutCodeDebug", "UpdateCollection      " + new Gson().toJson(c));
-
             collectionsRepo.upDateRecord(c);
             synch(AppConstants.UPDATE, AppConstants.ENTITY_COLLECTION, c, null, 1);
 
-            if (this.updateCollectionSuccess == null) {
-            }
 
-        this.updateCollectionSuccess = new MutableLiveData();
+            this.updateCollectionSuccess = new MutableLiveData();
             responseModel.setResultCode(1);
+            responseModel.setPayoutCode(c.getPayoutCode());
             responseModel.setResultDescription("Farmer updated successfully");
 
         } else {
@@ -1021,9 +1016,7 @@ public class TraderViewModel extends AndroidViewModel
 
 
         responseModel.setData(null);
-        if (c != null) {
-            responseModel.setPayoutCode(c.getCode());
-        }
+
 
         updateCollectionSuccess.setValue(responseModel);
 
@@ -1331,9 +1324,6 @@ public class TraderViewModel extends AndroidViewModel
         synch(AppConstants.INSERT, AppConstants.ENTITY_PAYOUTS, payouts, null, 1);
     }
 
-    public void insertPayout(List<Payouts> payouts) {
-        payoutsRepo.insert(payouts);
-    }
 
     public LiveData<Cycles> getCycle(String cycleCode) {
         if (cycle == null) {

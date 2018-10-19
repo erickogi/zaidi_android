@@ -114,7 +114,7 @@ public interface FarmersDao {
     @Query("SELECT * FROM FARMERS  WHERE FARMERS.routename LIKE :route AND FARMERS.deleted= :deleted AND FARMERS.archived= :archived AND FARMERS.dummy= :dummy")
     LiveData<List<FamerModel>> getFarmerByStatusByRoute(int deleted, int archived, int dummy, String route);
 
-    @Query("SELECT * FROM FARMERS  WHERE  FARMERS.deleted= :deleted AND FARMERS.archived= :archived AND FARMERS.dummy= :dummy")
+    @Query("SELECT * FROM FARMERS   WHERE  FARMERS.deleted= :deleted AND FARMERS.archived= :archived AND FARMERS.dummy= :dummy")
     LiveData<List<FamerModel>> getFarmerByStatus(int deleted, int archived, int dummy);
 
 

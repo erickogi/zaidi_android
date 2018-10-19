@@ -27,6 +27,7 @@ public class FamerModel implements Serializable {
     private String apikey;
     private String firebasetoken;
     private String cyclecode;
+    private String currentPayoutCode;
     private String cyclename;
     private String cycleStartDay;
     private String cycleStartEndDay;
@@ -66,7 +67,31 @@ public class FamerModel implements Serializable {
     @Ignore
     private boolean show;
     @Ignore
+
     private boolean hasPreviousPayout;
+
+    @Ignore
+    private String previousBalance;
+
+    public String getPreviousBalance() {
+        return previousBalance;
+    }
+
+    public void setPreviousBalance(String previousBalance) {
+        this.previousBalance = previousBalance;
+    }
+
+    public String getCurrentPayoutCode() {
+        if (currentPayoutCode != null) {
+            return currentPayoutCode;
+        } else {
+            return "";
+        }
+    }
+
+    public void setCurrentPayoutCode(String currentPayoutCode) {
+        this.currentPayoutCode = currentPayoutCode;
+    }
 
     public boolean isHasPreviousPayout() {
         return hasPreviousPayout;

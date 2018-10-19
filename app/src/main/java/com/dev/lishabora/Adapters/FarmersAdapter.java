@@ -85,69 +85,56 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
     @Override
     public void onBindViewHolder(FarmerViewHolder holder, int position) {
         FamerModel farmer = modelList.get(position);
+
+
+        Double pre = 0.0;
+        try {
+            Double b = Double.valueOf(farmer.getPreviousBalance());
+            Double c = Double.valueOf(farmer.getTotalbalance());
+
+            pre = (b);
+
+
+        } catch (Exception nm) {
+
+        }
+
+        if (pre > 0) {
+
+
+            holder.id.setText("Previous Bal : " + String.valueOf(pre));
+            holder.id.setTextColor(context.getResources().getColor(R.color.red));
+            holder.codeLbl.setVisibility(View.GONE);
+
+        } else {
+
+
+            holder.id.setTextColor(context.getResources().getColor(R.color.textblack));
+            holder.id.setText(farmer.getCode());
+            holder.codeLbl.setVisibility(View.VISIBLE);
+        }
+
         String v = farmer.getTotalbalance();
+
+
         try {
             v = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(v, 0)));
         } catch (Exception nm) {
             nm.printStackTrace();
         }
 
-        // binderHelper.bind(holder.swipeLayout, farmer.getCode());
 
         holder.balance.setText(String.format("%s%s", v, context.getString(R.string.ksh)));
         GeneralUtills.Companion.changeCOlor(v, holder.balance, 1);
 
 
-        if (farmer.isHasPreviousPayout()) {
-            holder.id.setText("1 Other Payout Bal ");
-            holder.id.setTextColor(context.getResources().getColor(R.color.red));
-            holder.codeLbl.setVisibility(View.GONE);
-        } else {
-            holder.id.setTextColor(context.getResources().getColor(R.color.textblack));
-
-            holder.id.setText(farmer.getCode());
-            holder.codeLbl.setVisibility(View.VISIBLE);
-        }
 
         holder.name.setText(GeneralUtills.Companion.capitalize(farmer.getNames()));
         holder.cycle.setText(farmer.getCyclename());
         holder.route.setText(farmer.getRoutename());
-
-        // String [] arr=DateTimeUtils.Companion.getDateAndTime(DateTimeUtils.Companion.getDisplayDate(farmer.getLastCollectionTime()));
         String[] arr = DateTimeUtils.Companion.getDateAndTime(farmer.getLastCollectionTime());
-
         holder.txtDate.setText(TextUtils.makeSectionOfTextBold(arr[0], arr[1]));
-//        String status = "";
-//        if (farmer.getArchived() == 0 && farmer.getDeleted() == 0 && farmer.getDummy() == 0) {
-//           // status = "Active";
-//           // holder.status.setText(status);
-//           // holder.status.setTextColor(context.getResources().getColor(R.color.green_color_picker));
-//            holder.background.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
-//            holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
-//        } else {
-//            StringBuilder stringBuilder = new StringBuilder(status);
-//            if (farmer.getDeleted() == 1) {
-//                //stringBuilder.setLength(0);
-//                stringBuilder.append("|Deleted");
-//            }
-//            if (farmer.getArchived() == 1) {
-//                stringBuilder.append("|Archived");
-//            }
-//            if (farmer.getDummy() == 1) {
-//                stringBuilder.append("|Dummy");
 //
-//            }
-//           // holder.status.setText(stringBuilder.toString());
-//           // holder.status.setTextColor(context.getResources().getColor(R.color.red));
-//            holder.background.setBackgroundColor(context.getResources().getColor(R.color.red));
-//            holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.red));
-//
-//        }
-
-        // mItemManger.bindView(holder.itemView, position);
-//
-
-
 
     }
 

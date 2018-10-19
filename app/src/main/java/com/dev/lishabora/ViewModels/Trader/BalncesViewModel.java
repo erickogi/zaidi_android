@@ -759,7 +759,7 @@ public class BalncesViewModel extends AndroidViewModel
     }
 
 
-    public LiveData<FarmerBalance> getByFarmerCode(String code) {
+    public LiveData<List<FarmerBalance>> getByFarmerCode(String code) {
         return balanceRepo.getByFarmerCode(code);
     }
 
@@ -768,8 +768,7 @@ public class BalncesViewModel extends AndroidViewModel
     }
 
 
-
-    public FarmerBalance getByFarmerCodeOne(String code) {
+    public List<FarmerBalance> getByFarmerCodeOne(String code) {
         return balanceRepo.getByFarmerCodeOne(code);
     }
 
