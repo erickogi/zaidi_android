@@ -11,6 +11,8 @@ import com.dev.lishabora.Models.Collection;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 public class CollectionsRepo {
     private CollectionsDao collectionsDao;
 
@@ -63,6 +65,10 @@ public class CollectionsRepo {
 
     }
 
+    public LiveData<Collection> getCollectionByDateByFarmerByTime(String code, String today) {
+        return collectionsDao.getCollectionByDateByFarmerByTime(code, today);
+
+    }
     public LiveData<List<Collection>> getCollectionByPayout(String payoutCode) {
         return collectionsDao.getCollectionByPayoutCode(payoutCode);
     }
@@ -115,7 +121,8 @@ public class CollectionsRepo {
 
     public void insert(Collection collection) {
 
-        new insertAsyncTask(collectionsDao).execute(collection);
+        collectionsDao.insertSingleCollection(collection);
+        //new insertAsyncTask(collectionsDao).execute(collection);
     }
 
     public boolean insert(List<Collection> collections) {
@@ -127,7 +134,8 @@ public class CollectionsRepo {
     }
 
     public void upDateRecord(Collection collection) {
-        new updateAsyncTask(collectionsDao).execute(collection);
+        // new updateAsyncTask(collectionsDao).execute(collection);
+        collectionsDao.updateRecord(collection);
     }
 
     public void deleteRecord(Collection collection) {
@@ -190,6 +198,8 @@ public class CollectionsRepo {
         @Override
         protected Boolean doInBackground(final Collection... params) {
             try {
+                Timber.tag("ColSdebug1").d(" CollectionInsertDoInBackground");
+
                 mAsyncTaskDao.insertSingleCollection(params[0]);
             } catch (Exception nm) {
 
@@ -200,6 +210,7 @@ public class CollectionsRepo {
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
+            Timber.tag("ColSdebug1").d(" CollectionInsertPostAsync");
             super.onPostExecute(aBoolean);
 
 
@@ -242,6 +253,8 @@ public class CollectionsRepo {
         @Override
         protected Boolean doInBackground(final Collection... params) {
             mAsyncTaskDao.updateRecord(params[0]);
+            Timber.tag("ColSdebug1").d(" CollectionUpdateDoInBackground");
+
             return true;
 
         }
@@ -249,6 +262,8 @@ public class CollectionsRepo {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
+            Timber.tag("ColSdebug1").d(" CollectionUpdatePostAsync");
+
 
 
         }

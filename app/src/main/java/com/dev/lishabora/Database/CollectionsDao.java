@@ -82,6 +82,9 @@ public interface CollectionsDao {
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE farmerCode = :code  AND dayDate LIKE :today")
     Collection getCollectionByDateByFarmerByTimeSingle(String code, String today);
 
+    @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE farmerCode = :code  AND dayDate LIKE :today")
+    LiveData<Collection> getCollectionByDateByFarmerByTime(String code, String today);
+
 
 
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE cycleCode = :cycleCode ORDER BY id DESC LIMIT 1")

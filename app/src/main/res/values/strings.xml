@@ -11,23 +11,6 @@
     </string-array>
     <bool name="isTablet">false</bool>
 
-    <string-array name="months">
-        <item>Choose Month</item>
-        <item>January</item>
-        <item>February</item>
-        <item>March</item>
-        <item>April</item>
-        <item>May</item>
-        <item>June</item>
-        <item>July</item>
-        <item>August</item>
-        <item>September</item>
-        <item>Oct</item>
-        <item>November</item>
-        <item>December</item>
-
-
-    </string-array>
     <string name="zero">0</string>
     <string name="one">1</string>
     <string name="two">2</string>
@@ -39,13 +22,6 @@
     <string name="eight">8</string>
     <string name="nine">9</string>
 
-
-    <string-array name="payoutsview">
-        <item>Collections View</item>
-        <item>Farmers View</item>
-
-
-    </string-array>
 
     <string name="app_name">LishaBora</string>
     <string name="title_activity_trader">TraderActivity</string>
@@ -72,4 +48,5 @@
     <string name="ltrs">L</string>
     <string name="title_activity_reports">Reports</string>
     <string name="title_activity_milk_reports">MilkReports</string>
+    <string name="title_activity_loans_and_orders">Loans And Orders</string>
 </resources>

@@ -1,7 +1,9 @@
 package com.dev.lishabora;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
@@ -184,6 +186,8 @@ public class Application extends MultiDexApplication {
     public static void deleteSync(SyncModel s) {
         LMDatabase lmDatabase = LMDatabase.getDatabase(context);
         lmDatabase.syncDao().deleteRecord(s);
+
+        new PrefrenceManager(Application.context).setLastTransaction(DateTimeUtils.Companion.getNow());
 
     }
 
@@ -635,4 +639,11 @@ public class Application extends MultiDexApplication {
                 });
     }
 
+    public static boolean isTimeAutomatic() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            return Settings.Global.getInt(context.getContentResolver(), Settings.Global.AUTO_TIME, 0) == 1;
+        } else {
+            return android.provider.Settings.System.getInt(context.getContentResolver(), android.provider.Settings.System.AUTO_TIME, 0) == 1;
+        }
+    }
 }

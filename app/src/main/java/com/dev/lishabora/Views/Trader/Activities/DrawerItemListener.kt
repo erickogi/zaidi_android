@@ -24,8 +24,8 @@ interface DrawerItemListener {
     fun payoutsClicked()
     fun productsClicked()
     fun syncWorksClicked()
-
-
+    fun loansAndOrders()
+    fun wrongTime()
 
 
 }

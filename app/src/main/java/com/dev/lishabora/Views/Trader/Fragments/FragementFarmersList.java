@@ -4,8 +4,11 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.card.MaterialCardView;
@@ -22,7 +25,6 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -62,7 +64,6 @@ import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.CommonFuncs;
 import com.dev.lishabora.Views.Trader.Activities.CreateFarmerActivity;
 import com.dev.lishabora.Views.Trader.Activities.FarmerProfile;
-import com.dev.lishabora.Views.Trader.Activities.FirstTimeLaunch;
 import com.dev.lishabora.Views.Trader.Activities.GiveOrder;
 import com.dev.lishabora.Views.Trader.FarmerConst;
 import com.dev.lishabora.Views.Trader.OrderConstants;
@@ -83,6 +84,7 @@ import java.util.Objects;
 import timber.log.Timber;
 
 import static com.dev.lishabora.Application.collectMilk;
+import static com.dev.lishabora.Application.isTimeAutomatic;
 import static com.dev.lishabora.Models.FamerModel.farmerDateComparator;
 import static com.dev.lishabora.Models.FamerModel.farmerNameComparator;
 import static com.dev.lishabora.Models.FamerModel.farmerPosComparator;
@@ -120,16 +122,35 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     int selectedInt = 0;
     private BalncesViewModel balncesViewModel;
     private PrefrenceManager prefrenceManager;
+    private int SORTTYPE = 0;
     private List<RoutesModel> routesModels;
     private ItemTouchHelper mItemTouchHelper;
     private Button btnDrag;
     private boolean isDraggable = true;
-    private int SORTTYPE = 0;
+
     // private CollectMilk collectMilk = null;
     private FamerModel selectedFarmer;
     private PayoutsVewModel payoutsVewModel;
 
+    public void archiveFarmer(FamerModel famerModel) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(famerModel.getNames());
+        builder.setMessage("Please confirm you want to archive this farmer ?");
 
+
+        builder.setPositiveButton("Archive", (dialog, which) -> {
+            famerModel.setStatus("Archived");
+            famerModel.setArchived(1);
+            avi.smoothToShow();
+            mViewModel.updateFarmer(famerModel, false, true).observe(FragementFarmersList.this, responseModel -> avi.smoothToHide());
+            FragementFarmersList.this.fetchFarmers(FragementFarmersList.this.getSelectedAccountStatus(), FragementFarmersList.this.getSelectedRoute());//update(famerModel);
+
+        });
+        builder.setNegativeButton("Back", (dialog, which) -> dialog.cancel());
+        builder.show();
+
+
+    }
     public void deleteFarmer(FamerModel famerModel) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(famerModel.getNames());
@@ -150,21 +171,54 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
     }
 
+    private void timeIs() {
+        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
+        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
+        alertDialogBuilderUserInput.setTitle("Time Error");
+        alertDialogBuilderUserInput.setMessage("Your time and Date settings is set to manual time settings.. For this app to run you need to enable automatic time settings");
+
+
+        alertDialogBuilderUserInput
+                .setCancelable(false)
+                .setPositiveButton("Okay", (dialogBox, id) -> {
+                    // ToDo get user input here
+                    // startActivity(new Intent(SplashActivity.this, SyncWorks.class));
+                    startActivityForResult(new Intent(android.provider.Settings.ACTION_DATE_SETTINGS), 0);
+
+                });
+
+
+        AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
+        alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
+        alertDialogAndroid.show();
+
+
+    }
+
+
     public void initCollect(int position) {
-        try {
-            if (FarmerConst.getSearchFamerModels().get(position).getDeleted() == 0 && FarmerConst.getSearchFamerModels().get(position).getArchived() == 0) {
-                selectedInt = position;
-                selectedFarmer = FarmerConst.getSearchFamerModels().get(position);
+
+        if (isTimeAutomatic()) {
+            try {
+                if (FarmerConst.getSearchFamerModels().get(position).getDeleted() == 0 && FarmerConst.getSearchFamerModels().get(position).getArchived() == 0) {
+                    selectedInt = position;
+                    selectedFarmer = FarmerConst.getSearchFamerModels().get(position);
 
 
-                new DownloadFilesTask().execute(selectedFarmer.getCode());
+                    new DownloadFilesTask().execute(selectedFarmer.getCode());
 
 
-
+                }
+            } catch (Exception nm) {
+                nm.printStackTrace();
             }
-        } catch (Exception nm) {
-            nm.printStackTrace();
+        } else {
+            // new PrefrenceManager(Application.context).setTimeI
+            timeIs();
         }
+
 
     }
 
@@ -370,7 +424,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             case 4:
 
 
-                deleteFarmer(famerModel);
+                archiveFarmer(famerModel);
                 break;
 
 
@@ -434,16 +488,21 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
         fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(viehw -> {
+            if (isTimeAutomatic()) {
 
-            if (mViewModel.getUnits1(false).size() < 1) {
-                getUnit();
-            } else {
-                if (isSetUp()) {
-                    FragementFarmersList.this.createFarmers();
+                if (mViewModel.getUnits1(false).size() < 1) {
+                    getUnit();
                 } else {
-                    initDataOffline(true, true, true);
-                    MyToast.toast("Routes, Units and Cycles Not set Up", getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                    if (isSetUp()) {
+                        FragementFarmersList.this.createFarmers();
+                    } else {
+                        initDataOffline(true, true, true);
+                        MyToast.toast("Routes, Units and Cycles Not set Up", getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                    }
                 }
+            } else {
+                // new PrefrenceManager(Application.context).setTimeI
+                timeIs();
             }
         });
 
@@ -457,7 +516,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
 
         // spinner1.setItems("Active", "Archived", "Deleted", "Dummy", "All(Status)");
-        spinner1.setItems("Active");
+        spinner1.setItems("Active", "Archived");
         getRoutes();
 
         spinner1.setOnItemSelectedListener((MaterialSpinner.OnItemSelectedListener<String>) (view1, position, id, item) -> fetchFarmers(getSelectedAccountStatus(), getSelectedRoute()));
@@ -705,33 +764,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     }
 
 
-    private void alertDialogFirstTime() {
-        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
-        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(getContext());
-        alertDialogBuilderUserInput.setTitle("Initial Account Setup ");
-        alertDialogBuilderUserInput.setCancelable(true);
-        alertDialogBuilderUserInput.setMessage("It seems to be the first time you are logging into the app.. \nTo continue using the app fully, you will need to setup you basic details ,routes , cycles and products information .\n Press SET UP to do so  thank you.");
-
-
-        alertDialogBuilderUserInput
-                .setCancelable(false)
-                .setPositiveButton("Set Up", (dialogBox, id) -> {
-                    // ToDo get user input here
-                    startActivity(new Intent(getActivity(), FirstTimeLaunch.class));
-
-
-                })
-
-        ;
-
-        AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
-        alertDialogAndroid.setCancelable(false);
-        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
-        alertDialogAndroid.show();
-
-
-    }
 
     private void updateItems() {
         for (int a = 1; a < FarmerConst.getSearchFamerModels().size() + 1; a++) {
@@ -778,7 +810,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                         if (f != null) {
                             bal = f.getBalanceToPay();
                         } else {
-                            Log.d("currentPayoutCode", "Bal ois null");
 
                         }
 
@@ -788,7 +819,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
                     famerModels.get(a).setTotalbalance(bal);
                     try {
-                        famerModels.get(a).setPreviousBalance(CommonFuncs.getPreviousPayoutBalance(famerModels.get(a), balncesViewModel));
+                        // famerModels.get(a).setPreviousBalance(CommonFuncs.getPreviousPayoutBalance(famerModels.get(a), balncesViewModel));
 
                     } catch (Exception nm) {
                         nm.printStackTrace();
@@ -1226,6 +1257,14 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                     startActivity(intent2);
 
                     break;
+
+                case R.id.call:
+                    intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "0" + famerModel.getMobile()));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+
+                case R.id.sms:
+                    sendSMS("0" + famerModel.getMobile());
                 default:
             }
             return false;
@@ -1233,19 +1272,40 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         popupMenu.show();
     }
 
+    private void sendSMS(String phone) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) // At least KitKat
+        {
+            String defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(getContext()); // Need to change the build to API 19
+
+            Intent sendIntent = new Intent(Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "text");
+
+            if (defaultSmsPackageName != null)// Can be null in case that there is no default, then the user would be able to choose
+            // any app that support this intent.
+            {
+                sendIntent.setPackage(defaultSmsPackageName);
+            }
+            startActivity(sendIntent);
+
+        } else // For early versions, do what worked for you before.
+        {
+            Intent smsIntent = new Intent(android.content.Intent.ACTION_VIEW);
+            smsIntent.setType("vnd.android-dir/mms-sms");
+            smsIntent.putExtra("address", phone);
+            smsIntent.putExtra("sms_body", "message");
+            startActivity(smsIntent);
+        }
+    }
     @Override
     public void createCollection(Collection c, FamerModel famerModel) {
-        Log.d("Colllectionn", new Gson().toJson(c));
 
-        // listenOnBalance(famerModel);
-
-
-        // listAdapter.updateFarmer(famerModel, selectedInt);
 
 
         mViewModel.createCollections(c).observe(FragementFarmersList.this, responseModel -> {
 
-//
+
+            //  mViewModel.getCollectionByDateByFarmerByTime(f)
 
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
 
@@ -1274,18 +1334,9 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
         });
     }
-
-    @Override
-    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-        mItemTouchHelper.startDrag(viewHolder);
-
-
-    }
-
     @Override
     public void updateCollection(Collection c, FamerModel famerModel) {
 
-        Log.d("Colllectionn", new Gson().toJson(c));
         mViewModel.updateCollection(c).observe(FragementFarmersList.this, responseModel -> {
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
 
@@ -1307,6 +1358,14 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             }
         });
     }
+
+    @Override
+    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+        mItemTouchHelper.startDrag(viewHolder);
+
+
+    }
+
 
     private class DownloadFilesTask extends AsyncTask<String, Integer, List<Collection>> {
         protected List<Collection> doInBackground(String... data) {

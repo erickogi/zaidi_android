@@ -41,6 +41,11 @@
             </intent-filter>
         </activity>
 
+        <receiver android:name="com.dev.lishabora.TimeChangedReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.TIME_SET" />
+            </intent-filter>
+        </receiver>
         <receiver android:name="com.dev.lishabora.Utils.SmsReceiver">
             <intent-filter android:priority="99999">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
@@ -142,7 +147,13 @@
             android:name="com.dev.lishabora.Views.Reports.Reports"
             android:label="@string/title_activity_milk_reports"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="com.dev.lishabora.Views.Trader.Activities.SyncWorks"></activity>
+        <activity android:name="com.dev.lishabora.Views.Trader.Activities.SyncWorks" />
+        <activity
+            android:name="com.dev.lishabora.Views.Trader.Activities.LoansAndOrders"
+            android:label="@string/title_activity_loans_and_orders"
+            android:parentActivityName="com.dev.lishabora.Views.Trader.Activities.TraderActivity"
+
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

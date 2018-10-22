@@ -1,8 +1,10 @@
 package com.dev.lishabora.Views;
 
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -76,6 +78,31 @@ import java.util.Objects;
 import timber.log.Timber;
 
 public class CommonFuncs {
+    public static void timeIs(Activity activity) {
+        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(activity);
+        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(activity));
+        alertDialogBuilderUserInput.setTitle("Time Error");
+        alertDialogBuilderUserInput.setMessage("Your time and Date settings is set to manual time settings.. For this app to run you need to enable automatic time settings");
+
+
+        alertDialogBuilderUserInput
+                .setCancelable(false)
+                .setPositiveButton("Okay", (dialogBox, id) -> {
+                    // ToDo get user input here
+                    // startActivity(new Intent(SplashActivity.this, SyncWorks.class));
+                    activity.startActivityForResult(new Intent(android.provider.Settings.ACTION_DATE_SETTINGS), 0);
+
+                });
+
+
+        AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
+        alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
+        alertDialogAndroid.show();
+
+
+    }
 
 
     public static OrderModel getOrder(String date, String ampm, List<Collection> collections) {
@@ -1887,15 +1914,16 @@ public class CommonFuncs {
         Double totalMilkForCurrentPayout = 0.0;
         try {
             totalMilkForCurrentPayout = traderViewModel.getSumOfMilkForPayoutKshD(c.getFarmerCode(), c.getPayoutCode());
-            Log.d("FarmerBalance", String.valueOf(totalMilkForCurrentPayout));
+            Timber.tag("ColSdebug1").d(" GET TOTAL OF PREVIOUS COLLECTIONS  " + totalMilkForCurrentPayout);
 
         } catch (Exception nm) {
             nm.printStackTrace();
-            Log.d("FarmerBalance", "Error " + nm.toString());
+            Timber.tag("ColSdebug1").d(" GET TOTAL OF PREVIOUS COLLECTIONS  Error " + nm.toString());
 
         }
         try {
             FarmerBalance farmerBalance = balncesViewModel.getByFarmerCodeByPayoutOne(c.getFarmerCode(), c.getPayoutCode());
+
 
 
             double loanTotalAmount = 0.0;
@@ -1956,6 +1984,7 @@ public class CommonFuncs {
 
             if (farmerBalance == null) {
 
+                Timber.tag("ColSdebug1").d("PREVIOUS  FARMER BALANCE  IS NULL ");
 
                 farmerBalance = new FarmerBalance(GeneralUtills.Companion.createCode(c.getFarmerCode()),
                         c.getFarmerCode(), c.getPayoutCode(), "", "", "");
@@ -1963,24 +1992,29 @@ public class CommonFuncs {
                 farmerBalance.setBalanceOwed(String.valueOf((totalMilkForCurrentPayout - ((loanTotalAmount - loanPaid) + (orderTotalAmount - orderPaid)))));
                 farmerBalance.setBalanceToPay(String.valueOf((totalMilkForCurrentPayout - ((loanInstalmentAmount) + (orderInstalmentAmount)))));
 
-                Log.d("FarmerBalance", new Gson().toJson(farmerBalance));
 
 
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
+
+                Timber.tag("ColSdebug1").d("UPDATED  FARMER BALANCE  IS  " + new Gson().toJson(farmerBalance));
+
                 balncesViewModel.insert(farmerBalance);
                 traderViewModel.updateFarmer(famerModel, false, false);
-                //handler(traderViewModel, famerModel);
 
 
             } else {
+                Timber.tag("ColSdebug1").d("PREVIOUS  FARMER BALANCE  IS  " + new Gson().toJson(farmerBalance));
 
 
                 farmerBalance.setBalanceOwed(String.valueOf((totalMilkForCurrentPayout - ((loanTotalAmount - loanPaid) + (orderTotalAmount - orderPaid)))));
                 farmerBalance.setBalanceToPay(String.valueOf((totalMilkForCurrentPayout - ((loanInstalmentAmount) + (orderInstalmentAmount)))));
-                Log.d("FarmerBalance", new Gson().toJson(farmerBalance));
 
 
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
+
+
+                Timber.tag("ColSdebug1").d("UPDATED  FARMER BALANCE  IS  " + new Gson().toJson(farmerBalance));
+
                 balncesViewModel.updateRecord(farmerBalance);
                 traderViewModel.updateFarmer(famerModel, false, false);
 

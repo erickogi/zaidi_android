@@ -3,18 +3,21 @@ package com.dev.lishabora.Views.Trader.Activities;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentPayoutColloectionsList;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentPayoutFarmersList;
@@ -22,13 +25,18 @@ import com.dev.lishabora.Views.Trader.PayoutConstants;
 import com.dev.lishaboramobile.R;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Payouts extends AppCompatActivity {
     private MaterialSpinner spinner;
     private RelativeLayout lspinner;
     private static Fragment fragment = null;
     private com.dev.lishabora.Models.Payouts payouts;
     SearchView mSearchView;
-
+    static Fragment page;
+    private static ViewPager viewPager;
+    private TabLayout tabLayout;
 
     public TextView status, startDate, cycleName, endDate, milkTotal, loanTotal, orderTotal, balance, approvedCount, unApprovedCount;
     public RelativeLayout background;
@@ -46,10 +54,22 @@ public class Payouts extends AppCompatActivity {
 //
 //
 //    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        MenuItem mSearch = menu.findItem(R.id.action_search);
+//        mSearchView = (SearchView) mSearch.getActionView();
+//
+//        mSearchView.setVisibility(View.GONE);
+//
+//        return true;
+//    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_payout, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         MenuItem mSearch = menu.findItem(R.id.action_search);
         mSearchView = (SearchView) mSearch.getActionView();
 
@@ -76,6 +96,36 @@ public class Payouts extends AppCompatActivity {
     }
 
 
+    private void setupViewPager(ViewPager viewPager) {
+
+
+        Fragment fragment = new FragmentPayoutFarmersList();
+        Bundle args = new Bundle();
+        args.putSerializable("data", payouts);
+        fragment.setArguments(args);
+
+        Fragment fragment1 = new FragmentPayoutColloectionsList();
+        args.putSerializable("data", payouts);
+
+        fragment.setArguments(args);
+
+
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(fragment1, "all");
+        adapter.addFragment(fragment, "add");
+
+        viewPager.setOffscreenPageLimit(1);
+        viewPager.setAdapter(adapter);
+    }
+
+    private void setupTabIcons() {
+
+        tabLayout.getTabAt(0).setText("Collections");
+        tabLayout.getTabAt(1).setText("Farmers");
+
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +141,15 @@ public class Payouts extends AppCompatActivity {
         } else {
             payouts = PayoutConstants.getPayouts();
         }
+        viewPager = findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
+
+        tabLayout = findViewById(R.id.tabs);
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.setupWithViewPager(viewPager);
+        setupTabIcons();
+
+
 
 
 
@@ -102,10 +161,10 @@ public class Payouts extends AppCompatActivity {
         fab.hide();
 
 
-        lspinner = findViewById(R.id.linear_spinner);
+        //lspinner = findViewById(R.id.linear_spinner);
         spinner = findViewById(R.id.spinner);
 
-        setUpMainFragment();
+        //setUpMainFragment();
         setTitle("Payouts");
         setSpinner();
 
@@ -116,55 +175,88 @@ public class Payouts extends AppCompatActivity {
     }
 
     private void setSpinner() {
-        try {
-            String items[] = {"Payout Collections List", "Farmers List"};
-            spinner.setItems(items);
-            spinner.setSelectedIndex(0);
+//        spinner.setVisibility(View.GONE);
+//        try {
+//            String items[] = {"Payout Collections List", "Farmers List"};
+//            spinner.setItems(items);
+//            spinner.setSelectedIndex(0);
+//
+//
+//            spinner.setOnItemSelectedListener((view, position, id, item) -> {
+//                if (position == 0) {
+//                    Fragment fragment = new FragmentPayoutColloectionsList();
+//                    Bundle args = new Bundle();
+//                    args.putSerializable("data", payouts);
+//                    fragment.setArguments(args);
+//
+//                    LinearLayout linearLayoutAmPm = findViewById(R.id.linear_farmers_titles);
+//                    linearLayoutAmPm.setVisibility(View.GONE);
+//
+//                    LinearLayout linearLayout = findViewById(R.id.linear_collection_titles);
+//                    linearLayout.setVisibility(View.VISIBLE);
+//
+//                    popOutFragments();
+//                    setUpView(fragment);
+//
+//                    //mSearchView.setVisibility(View.GONE);
+//
+//
+//
+//                } else {
+//
+//                    Fragment fragment = new FragmentPayoutFarmersList();
+//                    Bundle args = new Bundle();
+//                    args.putSerializable("data", payouts);
+//                    fragment.setArguments(args);
+//
+//                    LinearLayout linearLayoutAmPm = findViewById(R.id.linear_farmers_titles);
+//                    linearLayoutAmPm.setVisibility(View.VISIBLE);
+//
+//                    LinearLayout linearLayout = findViewById(R.id.linear_collection_titles);
+//                    linearLayout.setVisibility(View.GONE);
+//
+//
+//                    popOutFragments();
+//                    setUpView(fragment);
+//
+//                }
+//            });
+//
+//        } catch (Exception nm) {
+//            nm.printStackTrace();
+//        }
+    }
+
+    public void setCardHeaderData(com.dev.lishabora.Models.Payouts model) {
+        startDate.setText(DateTimeUtils.Companion.getDisplayDate(model.getStartDate(), DateTimeUtils.Companion.getDisplayDatePattern1()));
+        endDate.setText(DateTimeUtils.Companion.getDisplayDate(model.getEndDate(), DateTimeUtils.Companion.getDisplayDatePattern1()));
+        cycleName.setText(model.getCyclename());
 
 
-            spinner.setOnItemSelectedListener((view, position, id, item) -> {
-                if (position == 0) {
-                    Fragment fragment = new FragmentPayoutColloectionsList();
-                    Bundle args = new Bundle();
-                    args.putSerializable("data", payouts);
-                    fragment.setArguments(args);
-
-                    LinearLayout linearLayoutAmPm = findViewById(R.id.linear_farmers_titles);
-                    linearLayoutAmPm.setVisibility(View.GONE);
-
-                    LinearLayout linearLayout = findViewById(R.id.linear_collection_titles);
-                    linearLayout.setVisibility(View.VISIBLE);
-
-                    popOutFragments();
-                    setUpView(fragment);
-
-                    //mSearchView.setVisibility(View.GONE);
+        milkTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getMilkTotalLtrs(), 1), this.getString(R.string.ltrs)));
+        loanTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getLoanTotal(), 1), this.getString(R.string.ksh)));
+        orderTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getOrderTotal(), 1), this.getString(R.string.ksh)));
+        balance.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getBalance(), 1), this.getString(R.string.ksh)));
+        GeneralUtills.Companion.changeCOlor(model.getBalance(), balance, 1);
 
 
-
-                } else {
-
-                    Fragment fragment = new FragmentPayoutFarmersList();
-                    Bundle args = new Bundle();
-                    args.putSerializable("data", payouts);
-                    fragment.setArguments(args);
-
-                    LinearLayout linearLayoutAmPm = findViewById(R.id.linear_farmers_titles);
-                    linearLayoutAmPm.setVisibility(View.VISIBLE);
-
-                    LinearLayout linearLayout = findViewById(R.id.linear_collection_titles);
-                    linearLayout.setVisibility(View.GONE);
+        approvedCount.setText(model.getApprovedCards());
+        unApprovedCount.setText(model.getPendingCards());
 
 
-                    popOutFragments();
-                    setUpView(fragment);
+        if (model.getStatus() == 1) {
+            // status.setText("Active");
+            background.setBackgroundColor(this.getResources().getColor(R.color.green_color_picker));
 
-                }
-            });
 
-        } catch (Exception nm) {
-            nm.printStackTrace();
+        } else if (model.getStatus() == 0) {
+            background.setBackgroundColor(this.getResources().getColor(R.color.red));
+
+        } else {
+            background.setBackgroundColor(this.getResources().getColor(R.color.blue_color_picker));
+
         }
+
     }
 
 
@@ -231,36 +323,33 @@ public class Payouts extends AppCompatActivity {
 
     }
 
-    public void setCardHeaderData(com.dev.lishabora.Models.Payouts model) {
-        startDate.setText(model.getStartDate());
-        endDate.setText(model.getEndDate());
-        cycleName.setText(model.getCyclename());
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
 
-
-        milkTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getMilkTotalLtrs(), 1), this.getString(R.string.ltrs)));
-        loanTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getLoanTotal(), 1), this.getString(R.string.ksh)));
-        orderTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getOrderTotal(), 1), this.getString(R.string.ksh)));
-        balance.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getBalance(), 1), this.getString(R.string.ksh)));
-        GeneralUtills.Companion.changeCOlor(model.getBalance(), balance, 1);
-
-
-        approvedCount.setText(model.getApprovedCards());
-        unApprovedCount.setText(model.getPendingCards());
-
-
-        if (model.getStatus() == 1) {
-            // status.setText("Active");
-            background.setBackgroundColor(this.getResources().getColor(R.color.green_color_picker));
-
-
-        } else if (model.getStatus() == 0) {
-            background.setBackgroundColor(this.getResources().getColor(R.color.red));
-
-        } else {
-            background.setBackgroundColor(this.getResources().getColor(R.color.blue_color_picker));
-
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
         }
 
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return null;
+        }
     }
 
 

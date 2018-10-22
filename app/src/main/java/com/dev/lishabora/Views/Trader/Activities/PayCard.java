@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.dev.lishabora.Adapters.FarmerCollectionsAdapter;
 import com.dev.lishabora.Adapters.PayoutFarmersAdapter;
 import com.dev.lishabora.AppConstants;
+import com.dev.lishabora.Application;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.DayCollectionModel;
 import com.dev.lishabora.Models.FamerModel;
@@ -567,26 +568,31 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
 
             @Override
             public void onEditTextChanged(int adapterPosition, int time, int type, View editable) {
-                if (dayCollectionModels.get(adapterPosition).getPayoutStatus() == 0) {
-                    if (DateTimeUtils.Companion.isPastLastDay(dayCollectionModels.get(adapterPosition).getDate(), 1)) {
+                if (Application.isTimeAutomatic()) {
+                    if (dayCollectionModels.get(adapterPosition).getPayoutStatus() == 0) {
+                        if (DateTimeUtils.Companion.isPastLastDay(dayCollectionModels.get(adapterPosition).getDate(), 1)) {
 
 
-                        CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
-                        editValue(true, adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
+                            CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
+                            editValue(true, adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
 
 
+                        } else {
+                            MyToast.toast("Future collections cannot be edited", PayCard.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+
+                            // CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
+                            // editValue(false,adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
+
+                        }
                     } else {
-                        MyToast.toast("Future collections cannot be edited", PayCard.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                        CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
+                        editValue(false, adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
 
-                        // CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
-                        // editValue(false,adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
+                        MyToast.toast("Cards in an approved payout cannot be edited", PayCard.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
 
                     }
                 } else {
-                    CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
-                    editValue(false, adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
-
-                    MyToast.toast("Cards in an approved payout cannot be edited", PayCard.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                    CommonFuncs.timeIs(PayCard.this);
 
                 }
             }

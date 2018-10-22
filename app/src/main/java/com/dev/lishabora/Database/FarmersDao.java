@@ -78,6 +78,10 @@ public interface FarmersDao {
     @Query("SELECT * FROM FARMERS WHERE code =:code")
     LiveData<FamerModel> getFramerByCode(String code);
 
+    @Query("SELECT * FROM FARMERS WHERE code =:code")
+    FamerModel getFramerByCodeOne(String code);
+
+
     @Query("SELECT * FROM FARMERS WHERE names =:names")
     LiveData<FamerModel> getFramersByNames(String names);
 

@@ -15,8 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
 
 import com.dev.lishabora.Adapters.PayoutesAdapter;
 import com.dev.lishabora.Models.Collection;
@@ -160,14 +158,6 @@ public class FragmentPayouts extends Fragment {
             nm.printStackTrace();
         }
 
-        try {
-            Spinner spinner = getActivity().findViewById(R.id.spinner);
-            RelativeLayout rspinner = getActivity().findViewById(R.id.linear_spinner);
-            rspinner.setVisibility(View.GONE);
-            spinner.setVisibility(View.GONE);
-        } catch (Exception nm) {
-            nm.printStackTrace();
-        }
 
     }
 

@@ -28,6 +28,18 @@
         android:title="Profile "
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/call"
+        android:orderInCategory="100"
+        android:title="Call "
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/sms"
+        android:orderInCategory="100"
+        android:title="Sms "
+        app:showAsAction="never" />
+
 
     <item
         android:actionLayout="@layout/farmer_delete_action_layout"

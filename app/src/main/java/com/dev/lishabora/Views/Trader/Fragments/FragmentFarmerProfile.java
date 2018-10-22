@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.dev.lishabora.Models.FamerModel;
-import com.dev.lishabora.Models.FarmerBalance;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
@@ -154,18 +153,17 @@ public class FragmentFarmerProfile extends Fragment {
             try {
                 String bal = "0.0";
                 try {
-                    balncesViewModel.getByFarmerCode(famerModel.getCode()).observe(this, farmerBalances -> {
+                    balncesViewModel.getByFarmerCodeByPayout(famerModel.getCode(), famerModel.getCurrentPayoutCode()).observe(this, farmerBalances -> {
 
                         Double total = 0.0;
-                        for (FarmerBalance f : farmerBalances) {
-                            try {
-                                if (f.getPayoutStatus() == 1) {
-                                    total = total + (Double.valueOf(f.getBalanceToPay()));
+                        try {
+                            if (farmerBalances.getPayoutStatus() == 0) {
+                                total = total + (Double.valueOf(farmerBalances.getBalanceToPay()));
                                 }
                             } catch (Exception nm) {
                                 nm.printStackTrace();
                             }
-                        }
+
                         txtBalance.setText(GeneralUtills.Companion.round(String.valueOf(total), 1));
 
                     });

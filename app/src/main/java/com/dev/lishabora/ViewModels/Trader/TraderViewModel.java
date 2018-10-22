@@ -1257,10 +1257,21 @@ public class TraderViewModel extends AndroidViewModel
         return collectionsRepo.getCollectionByDateByFarmerByTimeSingle(code, today, ampm);
     }
 
+    public LiveData<Collection> getCollectionByCode(String collectionCode) {
+
+        return collectionsRepo.getCollectionByCode(collectionCode);
+    }
+
     public Collection getCollectionByDateByFarmerByTimeSngle(String code, String today) {
 
         return collectionsRepo.getCollectionByDateByFarmerByTimeSingle(code, today);
     }
+
+    public LiveData<Collection> getCollectionByDateByFarmerByTime(String code, String today) {
+
+        return collectionsRepo.getCollectionByDateByFarmerByTime(code, today);
+    }
+
 
     public LiveData<List<Collection>> getCollectionsBetweenDates(Long date1, Long date2, String code) {
         return collectionsRepo.getCollectionsBetweenDates(date1, date2, code);
@@ -1442,4 +1453,7 @@ public class TraderViewModel extends AndroidViewModel
     }
 
 
+    public void setOpened() {
+
+    }
 }

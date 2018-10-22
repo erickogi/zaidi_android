@@ -12,6 +12,8 @@ import com.dev.lishabora.Models.FarmerRouteBalance;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 public class FarmerRepo {
     private FarmersDao farmersDao;
     private LiveData<List<FamerModel>> farmers;
@@ -184,27 +186,9 @@ public class FarmerRepo {
 
         }
     }
-    private static class updateTradersAsyncTask extends AsyncTask<FamerModel, Void, Boolean> {
 
-        private FarmersDao mAsyncTaskDao;
-
-        updateTradersAsyncTask(FarmersDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Boolean doInBackground(final FamerModel... params) {
-            mAsyncTaskDao.updateRecord(params[0]);
-            return true;
-
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-
-
-        }
+    public FamerModel getFramerByCodeOne(String code) {
+        return db.farmersDao().getFramerByCodeOne(code);
     }
     private static class deleteTradersAsyncTask extends AsyncTask<FamerModel, Void, Boolean> {
 
@@ -271,6 +255,33 @@ public class FarmerRepo {
     }
     public LiveData<FamerModel> getFramerByCode(String code) {
         return db.farmersDao().getFramerByCode(code);
+    }
+
+    private static class updateTradersAsyncTask extends AsyncTask<FamerModel, Void, Boolean> {
+
+        private FarmersDao mAsyncTaskDao;
+
+        updateTradersAsyncTask(FarmersDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Boolean doInBackground(final FamerModel... params) {
+            Timber.tag("ColSdebug1").d(" FarmerUpdateBackground");
+
+            mAsyncTaskDao.updateRecord(params[0]);
+            return true;
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            Timber.tag("ColSdebug1").d(" FarmerUpdatePost");
+
+            super.onPostExecute(aBoolean);
+
+
+        }
     }
     public LiveData<FamerModel> getFramersByNames(String name) {
         return db.farmersDao().getFramersByNames(name);

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.support.v7.widget.Toolbar
+import com.dev.lishabora.Application.isTimeAutomatic
 import com.dev.lishabora.Models.Trader.TraderModel
 import com.dev.lishaboramobile.R
 import com.mikepenz.materialdrawer.AccountHeader
@@ -56,6 +57,9 @@ class DrawerClass {
             val products = PrimaryDrawerItem().withIdentifier(20)
                     .withName("Products").withTextColorRes(R.color.white).withIcon(R.drawable.ic_add_white_24dp)
 
+
+            val loansAndorders = PrimaryDrawerItem().withIdentifier(23)
+                    .withName("Loans/Orders").withTextColorRes(R.color.white).withIcon(R.drawable.ic_attach_money_black_24dp)
 
             val payout = PrimaryDrawerItem().withIdentifier(21)
                     .withName("Payouts").withTextColorRes(R.color.white).withIcon(R.drawable.ic_attach_money_black_24dp)
@@ -146,7 +150,7 @@ class DrawerClass {
                     //.withSelectedItem(-1)
                     .addDrawerItems(
                             home,
-                            routes, products, payout, notifications, transactions,
+                            routes, loansAndorders, products, payout, notifications, transactions,
                             DividerDrawerItem(),
                             account,
                             // settings,
@@ -169,61 +173,72 @@ class DrawerClass {
 
                     .withOnDrawerItemClickListener { view, position, drawerItem ->
 
-                        when (drawerItem.identifier.toInt()) {
-                            1 -> {
-                                itemListener.homeClicked()
-                                result.closeDrawer()
-                            }
+                        if (isTimeAutomatic()) {
 
-                            2 -> {
+                            when (drawerItem.identifier.toInt()) {
+                                1 -> {
+                                    itemListener.homeClicked()
+                                    result.closeDrawer()
+                                }
+
+                                2 -> {
+
+                                }
+
+                                3 -> {
+                                    itemListener.routesSettingsClicked()
+                                    result.closeDrawer()
+                                }
+                                4 -> {
+                                    itemListener.notificationsClicked()
+                                    result.closeDrawer()
+                                }
+                                5 -> {
+                                    itemListener.notificationsClicked()
+                                    result.closeDrawer()
+                                }
+                                6 -> {
+                                    itemListener.analyticsReportsTransactionsClicked()
+                                    result.closeDrawer()
+                                }
+
+                                7 -> {
+                                    itemListener.logOutClicked()
+                                    result.closeDrawer()
+                                }
+
+                                10 -> {
+                                    itemListener.helpClicked()
+                                    result.closeDrawer()
+                                }
+                                11 -> {
+                                    itemListener.syncWorksClicked()
+                                    result.closeDrawer()
+                                }
+                                9 -> {
+                                    itemListener.profileSettingsClicked()
+                                    result.closeDrawer()
+                                }
+
+
+                                20 -> {
+                                    itemListener.productsClicked()
+                                    result.closeDrawer()
+                                }
+                                21 -> {
+                                    itemListener.payoutsClicked()
+                                    result.closeDrawer()
+                                }
+
+                                23 -> {
+                                    itemListener.loansAndOrders()
+                                    result.closeDrawer()
+                                }
 
                             }
-
-                            3 -> {
-                                itemListener.routesSettingsClicked()
-                                result.closeDrawer()
-                            }
-                            4 -> {
-                                itemListener.notificationsClicked()
-                                result.closeDrawer()
-                            }
-                            5 -> {
-                                itemListener.notificationsClicked()
-                                result.closeDrawer()
-                            }
-                            6 -> {
-                                itemListener.analyticsReportsTransactionsClicked()
-                                result.closeDrawer()
-                            }
-
-                            7 -> {
-                                itemListener.logOutClicked()
-                                result.closeDrawer()
-                            }
-
-                            10 -> {
-                                itemListener.helpClicked()
-                                result.closeDrawer()
-                            }
-                            11 -> {
-                                itemListener.syncWorksClicked()
-                                result.closeDrawer()
-                            }
-                            9 -> {
-                                itemListener.profileSettingsClicked()
-                                result.closeDrawer()
-                            }
-
-
-                            20 -> {
-                                itemListener.productsClicked()
-                                result.closeDrawer()
-                            }
-                            21 -> {
-                                itemListener.payoutsClicked()
-                                result.closeDrawer()
-                            }
-
+                        } else {
+                            itemListener.wrongTime()
+                            result.closeDrawer()
                         }
                         true
                     }
@@ -254,6 +269,11 @@ class DrawerClass {
             } catch (nm: Exception) {
                 nm.printStackTrace()
             }
+        }
+
+        fun setOpened(b: Boolean) {
+            result.openDrawer()
+
         }
     }
 }

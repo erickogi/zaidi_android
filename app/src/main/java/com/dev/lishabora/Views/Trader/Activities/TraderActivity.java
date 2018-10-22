@@ -2,6 +2,7 @@ package com.dev.lishabora.Views.Trader.Activities;
 
 import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -31,6 +32,7 @@ import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.Utils.ResponseCallback;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
+import com.dev.lishabora.Views.CommonFuncs;
 import com.dev.lishabora.Views.Login.Activities.LoginActivity;
 import com.dev.lishabora.Views.Login.ResetPassword;
 import com.dev.lishabora.Views.Reports.FragmentReports;
@@ -73,8 +75,20 @@ public class TraderActivity extends AppCompatActivity {
 
 
 
+
     void setUpDrawer(Toolbar toolbar, String name, String email) {
         DrawerClass.Companion.getDrawer("0", email, name, this, toolbar, new DrawerItemListener() {
+            @Override
+            public void wrongTime() {
+                CommonFuncs.timeIs(TraderActivity.this);
+            }
+
+            @Override
+            public void loansAndOrders() {
+                startActivity(new Intent(TraderActivity.this, LoansAndOrders.class));
+
+            }
+
             @Override
             public void syncWorksClicked() {
                 startActivity(new Intent(TraderActivity.this, SyncWorks.class));
@@ -228,6 +242,8 @@ public class TraderActivity extends AppCompatActivity {
                 DrawerClass.Companion.observeChangesInNotifications(0);
             }
         });
+
+        DrawerClass.Companion.setOpened(true);
     }
 
     public void updateTrader(JSONObject jsonObject) {
@@ -476,5 +492,27 @@ public class TraderActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Exit");
+        builder.setMessage("Are You Sure?");
 
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                TraderActivity.super.onBackPressed();
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
 }

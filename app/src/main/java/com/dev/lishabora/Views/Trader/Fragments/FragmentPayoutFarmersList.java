@@ -31,6 +31,7 @@ import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
+import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.Views.CommonFuncs;
@@ -46,12 +47,16 @@ import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import timber.log.Timber;
 
+import static com.dev.lishabora.Models.FamerModel.farmerDateComparator;
+import static com.dev.lishabora.Models.FamerModel.farmerNameComparator;
+import static com.dev.lishabora.Models.FamerModel.farmerPosComparator;
 import static com.dev.lishabora.Views.CommonFuncs.setPayoutActionStatus;
 
 public class FragmentPayoutFarmersList extends Fragment {
@@ -74,11 +79,11 @@ public class FragmentPayoutFarmersList extends Fragment {
     private List<Collection> collections;
     TextView txtApprovalStatus;
     private MaterialButton btnApprove;
-
+    private final int CHRONOLOGICAL = 1, ALPHABETICAL = 2, AUTOMATICALLY = 0, MANUALLY = 3;
+    private PrefrenceManager prefrenceManager;
     private SearchView searchView;
     private String filterText = "";
-
-
+    private int SORTTYPE = 0;
 
     public void initList() {
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -187,6 +192,56 @@ public class FragmentPayoutFarmersList extends Fragment {
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                // Not implemented here
+                return false;
+            case R.id.action_search:
+                // Do Fragment menu item stuff here
+
+                return true;
+            case R.id.action_automatically:
+                // Do Fragment menu item stuff here
+                SORTTYPE = AUTOMATICALLY;
+                prefrenceManager.setSortType(SORTTYPE);
+                setUpFarmerCollectionList();
+
+                return true;
+
+            case R.id.action_chronologically:
+                SORTTYPE = CHRONOLOGICAL;
+                prefrenceManager.setSortType(SORTTYPE);
+
+                setUpFarmerCollectionList();
+
+                return true;
+            case R.id.action_alphabetically:
+                SORTTYPE = ALPHABETICAL;
+                prefrenceManager.setSortType(SORTTYPE);
+
+                setUpFarmerCollectionList();
+
+                // Do Fragment menu item stuff here
+                return true;
+            case R.id.action_smanually:
+                SORTTYPE = MANUALLY;
+                prefrenceManager.setSortType(SORTTYPE);
+
+                setUpFarmerCollectionList();
+
+                // Do Fragment menu item stuff here
+                return true;
+
+
+            default:
+                break;
+        }
+
+        return false;
+    }
+
 
 
     @Nullable
@@ -209,6 +264,7 @@ public class FragmentPayoutFarmersList extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        prefrenceManager = new PrefrenceManager(getContext());
 
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
         balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
@@ -244,8 +300,6 @@ public class FragmentPayoutFarmersList extends Fragment {
 
         payoutsVewModel.getFarmersByCycle("" + payouts.getCycleCode()).observe(this, famerModels -> {
             if (famerModels != null) {
-                log("LOAD FARMERS RESULT  " + famerModels.size());
-
 
                 FragmentPayoutFarmersList.this.famerModels = famerModels;
 
@@ -276,6 +330,27 @@ public class FragmentPayoutFarmersList extends Fragment {
 
         List<PayoutFarmersCollectionModel> collectionModels = new LinkedList<>();
 
+        int sort = new PrefrenceManager(getContext()).getSortType();
+        switch (sort) {
+            case AUTOMATICALLY:
+                listAdapter.notifyDataSetChanged();
+                break;
+            case ALPHABETICAL:
+                filterFarmersAlpahbetically();
+                break;
+            case CHRONOLOGICAL:
+                filterFarmersChronologically();
+                break;
+            case MANUALLY:
+                filterFarmersManually();
+                break;
+            default:
+                listAdapter.notifyDataSetChanged();
+        }
+
+
+
+
         for (FamerModel famerModel : famerModels) {
 
 
@@ -290,6 +365,32 @@ public class FragmentPayoutFarmersList extends Fragment {
 
     }
 
+    private void filterFarmersAlpahbetically() {
+
+
+        Collections.sort(famerModels, farmerNameComparator);
+        listAdapter.notifyDataSetChanged();
+
+
+    }
+
+    private void filterFarmersChronologically() {
+
+
+        Collections.sort(famerModels, farmerDateComparator);
+        listAdapter.notifyDataSetChanged();
+
+
+    }
+
+    private void filterFarmersManually() {
+
+
+        Collections.sort(famerModels, farmerPosComparator);
+        listAdapter.notifyDataSetChanged();
+
+
+    }
     private void setUpList(List<PayoutFarmersCollectionModel> dayCollectionModels) {
         this.dayCollectionModels = dayCollectionModels;
         this.dayCollectionModels1 = dayCollectionModels;
@@ -340,17 +441,28 @@ public class FragmentPayoutFarmersList extends Fragment {
         MenuItem mSearch = menu.findItem(R.id.action_search);
 
 
+        MenuItem mAutomatically = menu.findItem(R.id.action_automatically);
+        MenuItem mManually = menu.findItem(R.id.action_manually);
+        MenuItem mChronologically = menu.findItem(R.id.action_chronologically);
+        MenuItem mAlphabetically = menu.findItem(R.id.action_alphabetically);
+        MenuItem mRearrangeManually = menu.findItem(R.id.action_smanually);
+
+        mAutomatically.setVisible(false);
+        mChronologically.setVisible(true);
+        mManually.setVisible(true);
+        mAlphabetically.setVisible(true);
+        mRearrangeManually.setVisible(true);
+
+
+        searchView = (SearchView) mSearch.getActionView();
+        searchView.setVisibility(View.GONE);
+
         searchView = (SearchView) mSearch.getActionView();
         searchView.setVisibility(View.GONE);
 
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
 
-
-        return false;
-    }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
