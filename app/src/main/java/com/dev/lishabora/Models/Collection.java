@@ -5,9 +5,11 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity(tableName = "collectiontransactions", indices = {@Index(value = {"id", "code"}, unique = true)})
 
-public class Collection {
+public class Collection implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
@@ -92,6 +94,16 @@ public class Collection {
 
 
     private int approved;
+
+    private String gpsPoint;
+
+    public String getGpsPoint() {
+        return gpsPoint;
+    }
+
+    public void setGpsPoint(String gpsPoint) {
+        this.gpsPoint = gpsPoint;
+    }
 
     public String getPayoutCode() {
         return payoutCode;

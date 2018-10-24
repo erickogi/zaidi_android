@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.dev.lishaboramobile">
 
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.READ_SMS" />
@@ -65,6 +69,11 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <service
+            android:name="com.dev.lishabora.TrackerService"
+            android:enabled="true"
+            android:exported="true"></service>
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
@@ -152,7 +161,10 @@
             android:name="com.dev.lishabora.Views.Trader.Activities.LoansAndOrders"
             android:label="@string/title_activity_loans_and_orders"
             android:parentActivityName="com.dev.lishabora.Views.Trader.Activities.TraderActivity"
-
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.dev.lishabora.Views.Admin.Activities.AdminMain"
+            android:label="@string/title_activity_admin_main"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

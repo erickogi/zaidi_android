@@ -31,6 +31,15 @@ public class BalanceRepo {
         new insertAsyncTask(dao).execute(farmerBalance);
     }
 
+    public void insertDirect(FarmerBalance farmerBalance) {
+        // new insertAsyncTask(dao).execute(farmerBalance);
+        try {
+            dao.insertSingle(farmerBalance);
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+    }
+
 
     public LiveData<List<FarmerBalance>> fetchAll() {
         return dao.fetchAllData();
@@ -68,6 +77,15 @@ public class BalanceRepo {
 
     public void updateRecord(FarmerBalance farmerBalance) {
         new updateAsyncTask(dao).execute(farmerBalance);
+    }
+
+    public void updateRecordDirect(FarmerBalance farmerBalance) {
+        // new updateAsyncTask(dao).execute(farmerBalance);
+        try {
+            dao.updateRecord(farmerBalance);
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
     }
 
 

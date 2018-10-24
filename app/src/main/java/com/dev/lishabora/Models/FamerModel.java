@@ -267,7 +267,11 @@ public class FamerModel implements Serializable {
     }
 
     public String getTotalbalance() {
-        return totalbalance;
+        if (totalbalance != null) {
+            return totalbalance;
+        } else {
+            return "0";
+        }
     }
 
     public void setTotalbalance(String totalbalance) {

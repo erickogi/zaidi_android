@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    ​
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <!--<include layout="@layout/view_payout_farmers_titles" />-->
+
+        <TextView
+            android:id="@+id/txt_"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="Click on a farmer card to view his/her payout card"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <android.support.v7.widget.RecyclerView
+
+
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+
+            android:layout_height="match_parent"
+
+            android:layout_above="@+id/btn_approve"
+            android:layout_below="@+id/txt_"
+
+
+            android:layout_centerHorizontal="true"
+
+            android:nestedScrollingEnabled="false"
+            android:scrollIndicators="start|end"
+            android:scrollbarSize="6dp"
+            android:scrollbars="vertical"
+            android:visibility="visible"
+
+            >
+
+
+        </android.support.v7.widget.RecyclerView>
+
+        <include layout="@layout/view_payout_approval" />
+
+    </RelativeLayout>
+    <!--<android.support.design.bottomappbar.BottomAppBar-->
+    <!--android:id="@+id/bar"-->
+    <!--android:background="@color/colorPrimary"-->
+    <!--android:backgroundTint="@color/colorPrimary"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="bottom"-->
+    <!--app:navigationIcon="@drawable/ic_arrow_forward_black_24dp"/>-->
+    <!--​-->
+    <!--<android.support.design.widget.FloatingActionButton-->
+    <!--android:id="@+id/fab"-->
+    <!--android:src="@drawable/ic_add_white_24dp"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--app:layout_anchor="@id/bar"/>-->
+</android.support.design.widget.CoordinatorLayout>

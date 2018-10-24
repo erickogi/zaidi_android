@@ -33,7 +33,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:background="@color/divider"
                 android:gravity="start"
                 android:orientation="horizontal"
                 android:paddingStart="2dp"
@@ -145,6 +144,7 @@
             <include layout="@layout/view_increment" />
 
             <RadioGroup
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"

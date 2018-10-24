@@ -44,6 +44,9 @@ public class AppConstants {
     public static final int NOTIFICATION_TYPE_EMPTY = 15;
 
 
+    public static final String SEVENDAYS = "7 Days";
+    public static final String FIFTEENDAYS = "15 Days";
+    public static final String THIRTYDAYS = "30 Days";
 
 
 

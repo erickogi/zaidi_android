@@ -4,8 +4,10 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity(tableName = "notifications", indices = {@Index(value = {"code"}, unique = true)})
-public class Notifications {
+public class Notifications implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
 

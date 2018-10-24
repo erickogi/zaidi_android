@@ -72,6 +72,7 @@ public class PrefrenceManager {
 
     private static final String sortType = "sortyfd";
     private static final String lastSyncTime = "lastSyncTime";
+    private static final String lastCordinates = "lastLocationCordinates";
     private static final String isTraderFirstTime = "isTraderFirst";
     // Shared Preferences
 
@@ -337,5 +338,14 @@ public class PrefrenceManager {
 
     public String getLastTransactionTIme() {
         return pref.getString(lastSyncTime, "");
+    }
+
+    public void setLastCordinates(String latLon) {
+        editor.putString(lastCordinates, latLon);
+        editor.commit();
+    }
+
+    public String getLastCordiantes() {
+        return pref.getString(lastCordinates, null);
     }
 }

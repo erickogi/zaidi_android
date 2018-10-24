@@ -29,10 +29,6 @@ import com.stepstone.stepper.VerificationError;
 
 import java.util.Objects;
 
-import static com.dev.lishabora.Views.Trader.TraderConst.INTENT_TYPE_EDIT;
-import static com.dev.lishabora.Views.Trader.TraderConst.getTraderModel;
-import static com.dev.lishabora.Views.Trader.TraderConst.getType_selected;
-
 public class TraderBasicInfoFragment extends Fragment implements BlockingStep {
     TextInputEditText name, phone, bussinessname;
     CheckBox chkDummy;
@@ -58,9 +54,9 @@ public class TraderBasicInfoFragment extends Fragment implements BlockingStep {
         super.onCreate(savedInstanceState);
         traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
         prefrenceManager = new PrefrenceManager(getContext());
-        if (getType_selected() == INTENT_TYPE_EDIT) {
-            traderModel = getTraderModel();
-        }
+//        if (getType_selected() == INTENT_TYPE_EDIT) {
+//            traderModel = getTraderModel();
+//        }
     }
 
     @Nullable
@@ -89,7 +85,7 @@ public class TraderBasicInfoFragment extends Fragment implements BlockingStep {
 
     private void initData() {
 
-        traderViewModel.getTrader(prefrenceManager.getCode()).observe(this, new Observer<TraderModel>() {
+        traderViewModel.getTrader(prefrenceManager.getTraderModel().getCode()).observe(this, new Observer<TraderModel>() {
             @Override
             public void onChanged(@Nullable TraderModel traderModel) {
                 if (traderModel != null) {
@@ -128,7 +124,7 @@ public class TraderBasicInfoFragment extends Fragment implements BlockingStep {
 
 
         prefrenceManager.setLoggedUser(traderModel);
-        traderViewModel.updateTrader(traderModel);
+        traderViewModel.updateTraderDirect(traderModel);
 
 
         callback.goToNextStep();

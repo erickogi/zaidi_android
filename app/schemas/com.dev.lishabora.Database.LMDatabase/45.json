@@ -1,0 +1,1732 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 45,
+    "identityHash": "574c5a65703760f5a1ba2e62a207a9cd",
+    "entities": [
+      {
+        "tableName": "traders",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `code` TEXT, `entity` TEXT, `entitycode` TEXT, `entityname` TEXT, `transactioncode` TEXT, `names` TEXT NOT NULL, `mobile` TEXT, `password` TEXT, `balance` TEXT, `businessname` TEXT, `defaultpaymenttype` TEXT, `apikey` TEXT NOT NULL, `firebasetoken` TEXT, `status` TEXT NOT NULL, `transactiontime` TEXT, `synctime` TEXT, `transactedby` TEXT NOT NULL, `passwordstatus` INTEGER NOT NULL, `isarchived` INTEGER NOT NULL, `isdeleted` INTEGER NOT NULL, `issynced` INTEGER NOT NULL, `isdummy` INTEGER NOT NULL, `cycleStartDay` TEXT, `cycleEndDay` TEXT, `cycleStartDayNumber` INTEGER NOT NULL, `cycleEndDayNumber` INTEGER NOT NULL, `archived` INTEGER NOT NULL, `deleted` INTEGER NOT NULL, `synced` INTEGER NOT NULL, `dummy` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "code",
+            "columnName": "code",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "entity",
+            "columnName": "entity",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "entitycode",
+            "columnName": "entitycode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "entityname",
+            "columnName": "entityname",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "transactioncode",
+            "columnName": "transactioncode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "names",
+            "columnName": "names",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mobile",
+            "columnName": "mobile",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "password",
+            "columnName": "password",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "balance",
+            "columnName": "balance",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "businessname",
+            "columnName": "businessname",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "defaultpaymenttype",
+            "columnName": "defaultpaymenttype",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "apikey",
+            "columnName": "apikey",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "firebasetoken",
+            "columnName": "firebasetoken",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "transactiontime",
+            "columnName": "transactiontime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "synctime",
+            "columnName": "synctime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "transactedby",
+            "columnName": "transactedby",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "passwordstatus",
+            "columnName": "passwordstatus",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isarchived",
+            "columnName": "isarchived",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isdeleted",
+            "columnName": "isdeleted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "issynced",
+            "columnName": "issynced",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isdummy",
+            "columnName": "isdummy",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cycleStartDay",
+            "columnName": "cycleStartDay",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cycleEndDay",
+            "columnName": "cycleEndDay",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cycleStartDayNumber",
+            "columnName": "cycleStartDayNumber",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cycleEndDayNumber",
+            "columnName": "cycleEndDayNumber",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "archived",
+            "columnName": "archived",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deleted",
+            "columnName": "deleted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "synced",
+            "columnName": "synced",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dummy",
+            "columnName": "dummy",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_traders_code",
+            "unique": true,
+            "columnNames": [
+              "code"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_traders_code` ON `${TABLE_NAME}` (`code`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "farmers",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `route` TEXT, `compositecode` TEXT, `code` TEXT, `entitycode` TEXT, `entity` TEXT, `names` TEXT, `mobile` TEXT, `apikey` TEXT, `firebasetoken` TEXT, `cyclecode` TEXT, `cyclename` TEXT, `cycleStartDay` TEXT, `cycleStartEndDay` TEXT, `cycleStartDate` TEXT, `routecode` TEXT, `routename` TEXT, `unitcode` TEXT, `unitname` TEXT, `unitcapacity` TEXT, `unitprice` TEXT, `totalmilkcollection` TEXT, `totalorders` TEXT, `totalloans` TEXT, `totalbalance` TEXT, `transactedby` TEXT, `transactiontime` TEXT, `synctime` TEXT, `transactioncode` TEXT, `deleted` INTEGER NOT NULL, `archived` INTEGER NOT NULL, `status` TEXT, `dummy` INTEGER NOT NULL, `isSynched` INTEGER NOT NULL, `lastCollectionTime` TEXT, `syncstatus` INTEGER NOT NULL, `position` INTEGER NOT NULL, `loanbalance` TEXT, `milkbalance` TEXT, `orderbalance` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "route",
+            "columnName": "route",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "compositecode",
+            "columnName": "compositecode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "code",
+            "columnName": "code",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "entitycode",
+            "columnName": "entitycode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "entity",
+            "columnName": "entity",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "names",
+            "columnName": "names",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mobile",
+            "columnName": "mobile",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "apikey",
+            "columnName": "apikey",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "firebasetoken",
+            "columnName": "firebasetoken",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cyclecode",
+            "columnName": "cyclecode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cyclename",
+            "columnName": "cyclename",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cycleStartDay",
+            "columnName": "cycleStartDay",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cycleStartEndDay",
+            "columnName": "cycleStartEndDay",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cycleStartDate",
+            "columnName": "cycleStartDate",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "routecode",
+            "columnName": "routecode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "routename",
+            "columnName": "routename",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "unitcode",
+            "columnName": "unitcode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "unitname",
+            "columnName": "unitname",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "unitcapacity",
+            "columnName": "unitcapacity",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "unitprice",
+            "columnName": "unitprice",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "totalmilkcollection",
+            "columnName": "totalmilkcollection",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "totalorders",
+            "columnName": "totalorders",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "totalloans",
+            "columnName": "totalloans",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "totalbalance",
+            "columnName": "totalbalance",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "transactedby",
+            "columnName": "transactedby",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "transactiontime",
+            "columnName": "transactiontime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "synctime",
+            "columnName": "synctime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "transactioncode",
+            "columnName": "transactioncode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "deleted",
+            "columnName": "deleted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "archived",
+            "columnName": "archived",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dummy",
+            "columnName": "dummy",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isSynched",
+            "columnName": "isSynched",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastCollectionTime",
+            "columnName": "lastCollectionTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "syncstatus",
+            "columnName": "syncstatus",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "loanbalance",
+            "columnName": "loanbalance",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "milkbalance",
+            "columnName": "milkbalance",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "orderbalance",
+            "columnName": "orderbalance",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_farmers_code",
+            "unique": true,
+            "columnNames": [
+              "code"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_farmers_code` ON `${TABLE_NAME}` (`code`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "routes",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `code` TEXT, `route` TEXT, `entity` TEXT, `entitycode` TEXT, `entityname` TEXT, `transactiontime` TEXT, `transactedby` TEXT, `synctime` TEXT, `transactioncode` TEXT, `farmers` INTEGER NOT NULL, `status` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "code",
+            "columnName": "code",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "route",
+            "columnName": "route",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "entity",
+            "columnName": "entity",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "entitycode",
+            "columnName": "entitycode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "entityname",
+            "columnName": "entityname",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "transactiontime",
+            "columnName": "transactiontime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "transactedby",
+            "columnName": "transactedby",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "synctime",
+            "columnName": "synctime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "transactioncode",
+            "columnName": "transactioncode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "farmers",
+            "columnName": "farmers",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_routes_code",
+            "unique": true,
+            "columnNames": [
+              "code"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_routes_code` ON `${TABLE_NAME}` (`code`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "units",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `code` TEXT, `unit` TEXT, `unitprice` TEXT, `unitcapacity` TEXT, `transactiontime` TEXT, `transactedby` TEXT, `status` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "code",
+            "columnName": "code",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "unit",
+            "columnName": "unit",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "unitprice",
+            "columnName": "unitprice",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "unitcapacity",
+            "columnName": "unitcapacity",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "transactiontime",
+            "columnName": "transactiontime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "transactedby",
+            "columnName": "transactedby",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_units_code",
+            "unique": true,
+            "columnNames": [
+              "code"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_units_code` ON `${TABLE_NAME}` (`code`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "cycles",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `code` INTEGER NOT NULL, `cycle` TEXT, `period` TEXT, `transactedby` TEXT, `transactiontime` TEXT, `status` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "code",
+            "columnName": "code",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cycle",
+            "columnName": "cycle",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "period",
+            "columnName": "period",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "transactedby",
+            "columnName": "transactedby",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "transactiontime",
+            "columnName": "transactiontime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_cycles_id_code",
+            "unique": true,
+            "columnNames": [
+              "id",
+              "code"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_cycles_id_code` ON `${TABLE_NAME}` (`id`, `code`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "products",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `code` INTEGER NOT NULL, `names` TEXT, `costprice` TEXT, `buyingprice` TEXT, `sellingprice` TEXT, `allowablediscount` TEXT, `transactiontime` TEXT, `transactedby` TEXT, `subscribed` TEXT, `status` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "code",
+            "columnName": "code",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "names",
+            "columnName": "names",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "costprice",
+            "columnName": "costprice",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "buyingprice",
+            "columnName": "buyingprice",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sellingprice",
+            "columnName": "sellingprice",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "allowablediscount",
+            "columnName": "allowablediscount",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "transactiontime",
+            "columnName": "transactiontime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "transactedby",
+            "columnName": "transactedby",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "subscribed",
+            "columnName": "subscribed",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_products_id_code",
+            "unique": true,
+            "columnNames": [
+              "id",
+              "code"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_products_id_code` ON `${TABLE_NAME}` (`id`, `code`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "collectiontransactions",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `code` TEXT, `farmerCode` TEXT, `farmerName` TEXT, `cycleCode` TEXT, `unitCode` TEXT, `dayName` TEXT, `dayDate` TEXT, `dayDateTime` TEXT, `dayDateLog` INTEGER, `payoutnumber` INTEGER NOT NULL, `payoutCode` TEXT, `cycleId` TEXT, `cycleStartedOn` TEXT, `cycleEndsOn` TEXT, `milkCollectedAm` TEXT, `milkCollectedValueKshAm` TEXT, `milkCollectedValueLtrsAm` TEXT, `milkDetailsAm` TEXT, `milkCollectedIdAm` TEXT, `milkCollectedPm` TEXT, `milkCollectedValueKshPm` TEXT, `milkCollectedValueLtrsPm` TEXT, `milkDetailsPm` TEXT, `milkCollectedIdPm` TEXT, `timeOfDay` TEXT, `unitOfCollection` TEXT, `loanAmountGivenOutPrice` TEXT, `loanId` TEXT, `loanDetails` TEXT, `orderGivenOutPrice` TEXT, `orderId` TEXT, `orderDetails` TEXT, `productId` TEXT, `transactionTime` TEXT, `synced` INTEGER NOT NULL, `isSynced` INTEGER NOT NULL, `syncedId` TEXT, `synctime` TEXT, `approved` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "code",
+            "columnName": "code",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "farmerCode",
+            "columnName": "farmerCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "farmerName",
+            "columnName": "farmerName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cycleCode",
+            "columnName": "cycleCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "unitCode",
+            "columnName": "unitCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dayName",
+            "columnName": "dayName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dayDate",
+            "columnName": "dayDate",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dayDateTime",
+            "columnName": "dayDateTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dayDateLog",
+            "columnName": "dayDateLog",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "payoutnumber",
+            "columnName": "payoutnumber",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "payoutCode",
+            "columnName": "payoutCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cycleId",
+            "columnName": "cycleId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cycleStartedOn",
+            "columnName": "cycleStartedOn",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cycleEndsOn",
+            "columnName": "cycleEndsOn",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "milkCollectedAm",
+            "columnName": "milkCollectedAm",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "milkCollectedValueKshAm",
+            "columnName": "milkCollectedValueKshAm",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "milkCollectedValueLtrsAm",
+            "columnName": "milkCollectedValueLtrsAm",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "milkDetailsAm",
+            "columnName": "milkDetailsAm",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "milkCollectedIdAm",
+            "columnName": "milkCollectedIdAm",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "milkCollectedPm",
+            "columnName": "milkCollectedPm",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "milkCollectedValueKshPm",
+            "columnName": "milkCollectedValueKshPm",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "milkCollectedValueLtrsPm",
+            "columnName": "milkCollectedValueLtrsPm",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "milkDetailsPm",
+            "columnName": "milkDetailsPm",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "milkCollectedIdPm",
+            "columnName": "milkCollectedIdPm",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "timeOfDay",
+            "columnName": "timeOfDay",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "unitOfCollection",
+            "columnName": "unitOfCollection",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "loanAmountGivenOutPrice",
+            "columnName": "loanAmountGivenOutPrice",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "loanId",
+            "columnName": "loanId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "loanDetails",
+            "columnName": "loanDetails",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "orderGivenOutPrice",
+            "columnName": "orderGivenOutPrice",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "orderId",
+            "columnName": "orderId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "orderDetails",
+            "columnName": "orderDetails",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "productId",
+            "columnName": "productId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "transactionTime",
+            "columnName": "transactionTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "synced",
+            "columnName": "synced",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isSynced",
+            "columnName": "isSynced",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "syncedId",
+            "columnName": "syncedId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "synctime",
+            "columnName": "synctime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "approved",
+            "columnName": "approved",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_collectiontransactions_id_code",
+            "unique": true,
+            "columnNames": [
+              "id",
+              "code"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_collectiontransactions_id_code` ON `${TABLE_NAME}` (`id`, `code`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "payouts",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cycleCode` TEXT, `startDate` TEXT, `endDate` TEXT, `cyclename` TEXT, `payoutnumber` INTEGER NOT NULL, `status` INTEGER NOT NULL, `milkTotalLtrs` TEXT, `milkTotalKsh` TEXT, `code` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cycleCode",
+            "columnName": "cycleCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "startDate",
+            "columnName": "startDate",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "endDate",
+            "columnName": "endDate",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cyclename",
+            "columnName": "cyclename",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "payoutnumber",
+            "columnName": "payoutnumber",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "milkTotalLtrs",
+            "columnName": "milkTotalLtrs",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "milkTotalKsh",
+            "columnName": "milkTotalKsh",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "code",
+            "columnName": "code",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_payouts_code",
+            "unique": false,
+            "columnNames": [
+              "code"
+            ],
+            "createSql": "CREATE  INDEX `index_payouts_code` ON `${TABLE_NAME}` (`code`)"
+          },
+          {
+            "name": "index_payouts_startDate_endDate",
+            "unique": false,
+            "columnNames": [
+              "startDate",
+              "endDate"
+            ],
+            "createSql": "CREATE  INDEX `index_payouts_startDate_endDate` ON `${TABLE_NAME}` (`startDate`, `endDate`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "sync",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `actionType` INTEGER NOT NULL, `actionTypeName` TEXT, `entityType` INTEGER NOT NULL, `entityTypeName` TEXT, `object` TEXT, `dataType` INTEGER NOT NULL, `objects` TEXT, `timeStamp` TEXT, `syncTime` TEXT, `syncStatus` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "actionType",
+            "columnName": "actionType",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "actionTypeName",
+            "columnName": "actionTypeName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "entityType",
+            "columnName": "entityType",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "entityTypeName",
+            "columnName": "entityTypeName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "object",
+            "columnName": "object",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dataType",
+            "columnName": "dataType",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "objects",
+            "columnName": "objects",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "timeStamp",
+            "columnName": "timeStamp",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "syncTime",
+            "columnName": "syncTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "syncStatus",
+            "columnName": "syncStatus",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_sync_id",
+            "unique": true,
+            "columnNames": [
+              "id"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_sync_id` ON `${TABLE_NAME}` (`id`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "famersLoans",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `code` TEXT, `collectionCode` TEXT, `payoutCode` TEXT, `farmerCode` TEXT, `loanAmount` TEXT, `loanAmountPaid` TEXT, `installmentAmount` TEXT, `installmentNo` TEXT, `status` INTEGER NOT NULL, `timestamp` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "code",
+            "columnName": "code",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "collectionCode",
+            "columnName": "collectionCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "payoutCode",
+            "columnName": "payoutCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "farmerCode",
+            "columnName": "farmerCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "loanAmount",
+            "columnName": "loanAmount",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "loanAmountPaid",
+            "columnName": "loanAmountPaid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "installmentAmount",
+            "columnName": "installmentAmount",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "installmentNo",
+            "columnName": "installmentNo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_famersLoans_id_code",
+            "unique": true,
+            "columnNames": [
+              "id",
+              "code"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_famersLoans_id_code` ON `${TABLE_NAME}` (`id`, `code`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "famersOrders",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `collectionCode` TEXT, `payoutCode` TEXT, `farmerCode` TEXT, `orderAmount` TEXT, `orderAmountPaid` TEXT, `installmentAmount` TEXT, `installmentNo` TEXT, `status` INTEGER NOT NULL, `timestamp` TEXT, `code` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "collectionCode",
+            "columnName": "collectionCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "payoutCode",
+            "columnName": "payoutCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "farmerCode",
+            "columnName": "farmerCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "orderAmount",
+            "columnName": "orderAmount",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "orderAmountPaid",
+            "columnName": "orderAmountPaid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "installmentAmount",
+            "columnName": "installmentAmount",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "installmentNo",
+            "columnName": "installmentNo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "code",
+            "columnName": "code",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_famersOrders_id_code",
+            "unique": true,
+            "columnNames": [
+              "id",
+              "code"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_famersOrders_id_code` ON `${TABLE_NAME}` (`id`, `code`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "loanPayments",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `loanCode` TEXT, `amountPaid` TEXT, `amountRemaining` TEXT, `paymentMethod` TEXT, `refNo` TEXT, `payoutCode` TEXT, `timeStamp` TEXT, `code` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "loanCode",
+            "columnName": "loanCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "amountPaid",
+            "columnName": "amountPaid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "amountRemaining",
+            "columnName": "amountRemaining",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "paymentMethod",
+            "columnName": "paymentMethod",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "refNo",
+            "columnName": "refNo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "payoutCode",
+            "columnName": "payoutCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "timeStamp",
+            "columnName": "timeStamp",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "code",
+            "columnName": "code",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_loanPayments_id_code",
+            "unique": true,
+            "columnNames": [
+              "id",
+              "code"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_loanPayments_id_code` ON `${TABLE_NAME}` (`id`, `code`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "orderPayments",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `orderCode` TEXT, `amountPaid` TEXT, `amountRemaining` TEXT, `paymentMethod` TEXT, `refNo` TEXT, `payoutCode` TEXT, `timestamp` TEXT, `code` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "orderCode",
+            "columnName": "orderCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "amountPaid",
+            "columnName": "amountPaid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "amountRemaining",
+            "columnName": "amountRemaining",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "paymentMethod",
+            "columnName": "paymentMethod",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "refNo",
+            "columnName": "refNo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "payoutCode",
+            "columnName": "payoutCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "code",
+            "columnName": "code",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_orderPayments_id_code",
+            "unique": true,
+            "columnNames": [
+              "id",
+              "code"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_orderPayments_id_code` ON `${TABLE_NAME}` (`id`, `code`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "farmerBalance",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `code` TEXT, `farmerCode` TEXT, `balanceToPay` TEXT, `balanceOwed` TEXT, `payoutCode` TEXT, `lastUpdated` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "code",
+            "columnName": "code",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "farmerCode",
+            "columnName": "farmerCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "balanceToPay",
+            "columnName": "balanceToPay",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "balanceOwed",
+            "columnName": "balanceOwed",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "payoutCode",
+            "columnName": "payoutCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastUpdated",
+            "columnName": "lastUpdated",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_farmerBalance_id_farmerCode_code",
+            "unique": true,
+            "columnNames": [
+              "id",
+              "farmerCode",
+              "code"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_farmerBalance_id_farmerCode_code` ON `${TABLE_NAME}` (`id`, `farmerCode`, `code`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "notifications",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `date` TEXT, `title` TEXT, `message` TEXT, `code` TEXT, `viewd` INTEGER NOT NULL, `payoutCode` TEXT, `type` INTEGER NOT NULL, `actionId` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "message",
+            "columnName": "message",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "code",
+            "columnName": "code",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "viewd",
+            "columnName": "viewd",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "payoutCode",
+            "columnName": "payoutCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "actionId",
+            "columnName": "actionId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_notifications_code",
+            "unique": true,
+            "columnNames": [
+              "code"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_notifications_code` ON `${TABLE_NAME}` (`code`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"574c5a65703760f5a1ba2e62a207a9cd\")"
+    ]
+  }
+}

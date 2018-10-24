@@ -1,10 +1,15 @@
 package com.dev.lishabora;
 
+import android.app.Notification;
 import android.content.Context;
+import android.graphics.Color;
+import android.location.Location;
 import android.os.Build;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
@@ -51,6 +56,7 @@ import com.dev.lishabora.Utils.SyncDownResponseCallback;
 import com.dev.lishabora.Utils.SyncResponseCallback;
 import com.dev.lishabora.Views.Trader.Fragments.CollectMilk;
 import com.dev.lishaboramobile.BuildConfig;
+import com.dev.lishaboramobile.R;
 import com.evernote.android.job.JobManager;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.google.gson.Gson;
@@ -61,6 +67,7 @@ import org.json.JSONObject;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -68,6 +75,7 @@ import timber.log.Timber;
 
 public class Application extends MultiDexApplication {
 
+    private Location currentBestLocation = null;
     public static final String TAG = Application.class
             .getSimpleName();
     private static Application mInstance;
@@ -84,6 +92,17 @@ public class Application extends MultiDexApplication {
     public static CollectMilk collectMilk = null;
 
 
+    public static boolean getIfHasSyncData() {
+        LMDatabase lmDatabase = LMDatabase.getDatabase(context);
+        List<SyncModel> list = lmDatabase.syncDao().getAllByStatusRaw();
+        if (list != null) {
+            Log.d("testSyncUp", "SYNC ITEMS ARE +" + list.size());
+        }
+
+
+        return list != null && list.size() > 0;
+
+    }
     public static void sync() {
         try {
             LMDatabase lmDatabase = LMDatabase.getDatabase(context);
@@ -160,6 +179,8 @@ public class Application extends MultiDexApplication {
 
                     }
 
+                    //syncChanges();
+                    //syncDown();
 
                 }
 
@@ -264,7 +285,6 @@ public class Application extends MultiDexApplication {
 
                             }
 
-
                         }
 
                         @Override
@@ -344,6 +364,9 @@ public class Application extends MultiDexApplication {
 
     }
 
+    /**
+     * @param s
+     */
     public static void farmer(SyncModel s) {
         if (s.getActionType() == AppConstants.INSERT) {
             if (s.getDataType() == 1) {
@@ -604,14 +627,29 @@ public class Application extends MultiDexApplication {
             Request.Companion.getResponseSyncChanges(ApiConstants.Companion.getSyncDown(), jsonObject, "", new SyncChangesCallback() {
                 @Override
                 public void onSucces(SyncDownResponse response) {
-                    Log.d("syncddoa", new Gson().toJson(response));
-                    syncChanges(response.getData());
+                    if (!getIfHasSyncData()) {
+                        syncChanges(response.getData());
+                    } else {
+
+                        Notification notification = new NotificationCompat.Builder(Application.context)
+                                .setContentTitle("Sync Down issue")
+                                .setContentText("You've recieved new updates but we cant process them as you have un-synced data")
+                                .setAutoCancel(true)
+                                // .setContentIntent(pi)
+                                .setSmallIcon(R.mipmap.ic_launcher)
+                                .setShowWhen(true)
+                                .setColor(Color.RED)
+                                .setLocalOnly(true)
+                                .build();
+
+                        NotificationManagerCompat.from(Application.context)
+                                .notify(new Random().nextInt(), notification);
+                    }
 
                 }
 
                 @Override
                 public void onError(String error) {
-                    Log.d("syncddoa", error);
 
                 }
 
@@ -646,4 +684,6 @@ public class Application extends MultiDexApplication {
             return android.provider.Settings.System.getInt(context.getContentResolver(), android.provider.Settings.System.AUTO_TIME, 0) == 1;
         }
     }
+
+
 }

@@ -31,6 +31,14 @@ public class LoansTableRepo {
         new insertAsyncTask(dao).execute(farmerLoansTable);
     }
 
+    public void insertDirect(FarmerLoansTable farmerLoansTable) {
+        // new insertAsyncTask(dao).execute(farmerLoansTable);
+        try {
+            dao.insertSingleFarmerLoan(farmerLoansTable);
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+    }
 
     public LiveData<List<FarmerLoansTable>> fetchAll() {
         return dao.fetchAllData();
@@ -107,6 +115,17 @@ public class LoansTableRepo {
 
     public void deleteRecord(FarmerLoansTable farmerLoansTable) {
         new deleteAsyncTask(dao).execute(farmerLoansTable);
+    }
+
+
+    public void updateRecordDirect(FarmerLoansTable farmerLoansTable) {
+        // new updateAsyncTask(dao).execute(farmerLoansTable);
+        dao.updateRecord(farmerLoansTable);
+    }
+
+    public void deleteRecordDirect(FarmerLoansTable farmerLoansTable) {
+        // new deleteAsyncTask(dao).execute(farmerLoansTable);
+        dao.deleteRecord(farmerLoansTable);
     }
 
 

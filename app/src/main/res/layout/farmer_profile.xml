@@ -45,12 +45,15 @@
                         android:weightSum="2">
 
                         <TextView
+                            android:text="Names"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                            android:textColor="@color/textblack"
+
+
                             android:layout_width="100dp"
                             android:layout_height="match_parent"
                             android:padding="2dp"
-                            android:text="Names"
-                            android:textColor="#616061"
-                            android:textSize="13dp" />
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/txt_name"
@@ -58,8 +61,8 @@
                             android:layout_height="match_parent"
                             android:padding="3dp"
                             android:text="Your Names goes here"
-                            android:textColor="#8b8788"
-                            android:textSize="12dp" />
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -68,12 +71,14 @@
                         android:weightSum="2">
 
                         <TextView
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+
                             android:layout_width="100dp"
                             android:layout_height="match_parent"
                             android:padding="2dp"
                             android:text="Card No. (ID)"
-                            android:textColor="#616061"
-                            android:textSize="13dp" />
+                            android:textColor="@color/textblack"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/txt_code"
@@ -81,8 +86,8 @@
                             android:layout_height="match_parent"
                             android:padding="3dp"
                             android:text="4871"
-                            android:textColor="#8b8788"
-                            android:textSize="12dp" />
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -91,12 +96,14 @@
                         android:weightSum="2">
 
                         <TextView
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+
                             android:layout_width="100dp"
                             android:layout_height="match_parent"
                             android:padding="2dp"
                             android:text="Phone Number"
-                            android:textColor="#616061"
-                            android:textSize="13dp" />
+                            android:textColor="@color/textblack"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/txt_phone"
@@ -104,8 +111,8 @@
                             android:layout_height="match_parent"
                             android:padding="3dp"
                             android:text="+254 706828557"
-                            android:textColor="#8b8788"
-                            android:textSize="12dp" />
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <View
@@ -149,12 +156,14 @@
                         android:weightSum="2">
 
                         <TextView
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+
                             android:layout_width="100dp"
                             android:layout_height="match_parent"
                             android:padding="2dp"
                             android:text="Route Name"
-                            android:textColor="#616061"
-                            android:textSize="13dp" />
+                            android:textColor="@color/textblack"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/txt_route"
@@ -162,8 +171,8 @@
                             android:layout_height="match_parent"
                             android:padding="3dp"
                             android:text="Milimani Avenue"
-                            android:textColor="#8b8788"
-                            android:textSize="12dp" />
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -172,12 +181,14 @@
                         android:weightSum="2">
 
                         <TextView
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+
                             android:layout_width="100dp"
                             android:layout_height="match_parent"
                             android:padding="2dp"
                             android:text="Payment Cycle"
-                            android:textColor="#616061"
-                            android:textSize="13dp" />
+                            android:textColor="@color/textblack"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/txt_cycle"
@@ -185,8 +196,8 @@
                             android:layout_height="match_parent"
                             android:padding="3dp"
                             android:text="Weekly (Saturday - Sunday)"
-                            android:textColor="#8b8788"
-                            android:textSize="12dp" />
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -195,12 +206,14 @@
                         android:weightSum="2">
 
                         <TextView
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+
                             android:layout_width="100dp"
                             android:layout_height="match_parent"
                             android:padding="2dp"
                             android:text="Collection Unit"
-                            android:textColor="#616061"
-                            android:textSize="13dp" />
+                            android:textColor="@color/textblack"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/txt_unit"
@@ -208,8 +221,8 @@
                             android:layout_height="match_parent"
                             android:padding="3dp"
                             android:text="1 Ltr "
-                            android:textColor="#8b8788"
-                            android:textSize="12dp" />
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
 
@@ -238,8 +251,7 @@
                         android:layout_height="wrap_content"
                         android:padding="3dp"
                         android:text="Other Information"
-                        android:textColor="#5c5c5c"
-                        android:textSize="14dp"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textStyle="bold" />
 
                     <View
@@ -368,13 +380,14 @@
                         android:padding="5dp">
 
                         <TextView
+                            android:textColor="@color/textblack"
+
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:padding="3dp"
                             android:text="Balance"
-                            android:textColor="#616061"
                             android:textSize="13dp"
                             android:textStyle="bold" />
 

@@ -272,6 +272,11 @@ public class BalncesViewModel extends AndroidViewModel
         synch(AppConstants.INSERT, AppConstants.ENTITY_LOANS, farmerLoansTable, null, 1);
     }
 
+    public void insertLoanDirect(FarmerLoansTable farmerLoansTable) {
+        loansTableRepo.insertDirect(farmerLoansTable);
+        farmerLoansTable.setTraderCode(prefrenceManager.getTraderModel().getCode());
+        synch(AppConstants.INSERT, AppConstants.ENTITY_LOANS, farmerLoansTable, null, 1);
+    }
     public LiveData<FarmerLoansTable> getFarmerLoanByCode(String code) {
         return loansTableRepo.getFarmerLoanByCode(code);
     }
@@ -352,6 +357,20 @@ public class BalncesViewModel extends AndroidViewModel
 
     }
 
+    public void updateRecordLoanDirect(FarmerLoansTable farmerLoansTable) {
+        loansTableRepo.updateRecordDirect(farmerLoansTable);
+        farmerLoansTable.setTraderCode(prefrenceManager.getTraderModel().getCode());
+        synch(AppConstants.UPDATE, AppConstants.ENTITY_LOANS, farmerLoansTable, null, 1);
+
+    }
+
+    public void deleteRecordLoanDirect(FarmerLoansTable farmerLoansTable) {
+        loansTableRepo.deleteRecordDirect(farmerLoansTable);
+        farmerLoansTable.setTraderCode(prefrenceManager.getTraderModel().getCode());
+        synch(AppConstants.DELETE, AppConstants.ENTITY_LOANS, farmerLoansTable, null, 1);
+
+    }
+
     public double getBalanceLoanByFarmerCode(String farmercode) {
         return loansTableRepo.getBalanceByFarmerCode(farmercode);
     }
@@ -407,6 +426,14 @@ public class BalncesViewModel extends AndroidViewModel
 
     public void insertOrder(FarmerOrdersTable farmerOrdersTable) {
         ordersTableRepo.insert(farmerOrdersTable);
+        farmerOrdersTable.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
+        synch(AppConstants.INSERT, AppConstants.ENTITY_ORDERS, farmerOrdersTable, null, 1);
+
+    }
+
+    public void insertOrderDirect(FarmerOrdersTable farmerOrdersTable) {
+        ordersTableRepo.insertDirect(farmerOrdersTable);
         farmerOrdersTable.setTraderCode(prefrenceManager.getTraderModel().getCode());
 
         synch(AppConstants.INSERT, AppConstants.ENTITY_ORDERS, farmerOrdersTable, null, 1);
@@ -488,6 +515,22 @@ public class BalncesViewModel extends AndroidViewModel
 
     public void deleteRecord(FarmerOrdersTable farmerOrdersTable) {
         ordersTableRepo.deleteRecord(farmerOrdersTable);
+        farmerOrdersTable.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
+        synch(AppConstants.DELETE, AppConstants.ENTITY_ORDERS, farmerOrdersTable, null, 1);
+
+    }
+
+    public void updateRecordDirect(FarmerOrdersTable farmerOrdersTable) {
+        ordersTableRepo.updateRecordDirect(farmerOrdersTable);
+        farmerOrdersTable.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
+        synch(AppConstants.UPDATE, AppConstants.ENTITY_ORDERS, farmerOrdersTable, null, 1);
+
+    }
+
+    public void deleteRecordDirect(FarmerOrdersTable farmerOrdersTable) {
+        ordersTableRepo.deleteRecordDirect(farmerOrdersTable);
         farmerOrdersTable.setTraderCode(prefrenceManager.getTraderModel().getCode());
 
         synch(AppConstants.DELETE, AppConstants.ENTITY_ORDERS, farmerOrdersTable, null, 1);
@@ -756,6 +799,14 @@ public class BalncesViewModel extends AndroidViewModel
 
     }
 
+    public void insertDirect(FarmerBalance farmerBalance) {
+        balanceRepo.insertDirect(farmerBalance);
+        farmerBalance.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
+        synch(AppConstants.INSERT, AppConstants.ENTITY_BALANCES, farmerBalance, null, 1);
+
+    }
+
 
     public LiveData<List<FarmerBalance>> fetchAll() {
         return balanceRepo.fetchAll();
@@ -785,6 +836,14 @@ public class BalncesViewModel extends AndroidViewModel
 
     public void updateRecord(FarmerBalance farmerBalance) {
         balanceRepo.updateRecord(farmerBalance);
+        farmerBalance.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
+        synch(AppConstants.UPDATE, AppConstants.ENTITY_BALANCES, farmerBalance, null, 1);
+
+    }
+
+    public void updateRecordDirect(FarmerBalance farmerBalance) {
+        balanceRepo.updateRecordDirect(farmerBalance);
         farmerBalance.setTraderCode(prefrenceManager.getTraderModel().getCode());
 
         synch(AppConstants.UPDATE, AppConstants.ENTITY_BALANCES, farmerBalance, null, 1);

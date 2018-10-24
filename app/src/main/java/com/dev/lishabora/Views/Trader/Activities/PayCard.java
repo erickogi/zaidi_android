@@ -30,6 +30,7 @@ import com.dev.lishabora.Application;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.DayCollectionModel;
 import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.FarmerBalance;
 import com.dev.lishabora.Models.LoanModel;
 import com.dev.lishabora.Models.OrderModel;
 import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
@@ -749,12 +750,28 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
 
     }
 
+    public void approveCollections() {
+        for (Collection c : collections) {
+            c.setApproved(1);
+            traderViewModel.updateCollection(c);
+        }
+    }
 
+    public void approvePayoutBalance() {
+
+        FarmerBalance farmerBalance = balncesViewModel.getByFarmerCodeByPayoutOne(famerModel.getCode(), payouts.getCode());
+        farmerBalance.setPayoutStatus(1);
+
+        balncesViewModel.updateRecord(farmerBalance);
+    }
     public void approveCard(PayoutFarmersCollectionModel model) {
         payoutsVewModel.approveFarmersPayoutCard(model.getFarmercode(), model.getPayoutCode());
         model.setCardstatus(1);
         model.setStatusName("Approved");
         setData(model);
+
+        approveCollections();
+        approvePayoutBalance();
     }
 
     @Override

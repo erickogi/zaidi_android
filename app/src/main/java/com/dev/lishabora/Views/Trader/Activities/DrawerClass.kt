@@ -59,7 +59,7 @@ class DrawerClass {
 
 
             val loansAndorders = PrimaryDrawerItem().withIdentifier(23)
-                    .withName("Loans/Orders").withTextColorRes(R.color.white).withIcon(R.drawable.ic_attach_money_black_24dp)
+                    .withName("Loans/Orders").withTextColorRes(R.color.white).withIcon(R.drawable.ic_insert_chart_black_24dp)
 
             val payout = PrimaryDrawerItem().withIdentifier(21)
                     .withName("Payouts").withTextColorRes(R.color.white).withIcon(R.drawable.ic_attach_money_black_24dp)

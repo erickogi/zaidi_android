@@ -7,9 +7,11 @@ import android.arch.persistence.room.PrimaryKey;
 
 import com.dev.lishabora.Utils.DateTimeUtils;
 
+import java.io.Serializable;
+
 @Entity(tableName = "farmerBalance", indices = {@Index(value = {"id", "farmerCode", "code"}, unique = true)})
 
-public class FarmerBalance {
+public class FarmerBalance implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -62,8 +64,6 @@ public class FarmerBalance {
         this.code = code;
     }
 
-    public FarmerBalance() {
-    }
 
     public void setPayoutCode(String payoutCode) {
         this.payoutCode = payoutCode;

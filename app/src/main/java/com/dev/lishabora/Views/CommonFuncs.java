@@ -3,8 +3,11 @@ package com.dev.lishabora.Views;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +15,8 @@ import android.support.design.button.MaterialButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -62,6 +67,7 @@ import com.dev.lishabora.Utils.MilkEditValueListener;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
+import com.dev.lishabora.Views.Trader.Activities.TraderActivity;
 import com.dev.lishaboramobile.R;
 import com.google.gson.Gson;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -1802,10 +1808,10 @@ public class CommonFuncs {
 
     }
 
-    public static void updateBalance(FamerModel famerModel,
-                                     TraderViewModel traderViewModel,
-                                     BalncesViewModel balncesViewModel,
-                                     Collection c, String payoutCode, int type, FarmerLoansTable farmerLoan, FarmerOrdersTable farmerOrder) {
+    public static FamerModel updateBalance(FamerModel famerModel,
+                                           TraderViewModel traderViewModel,
+                                           BalncesViewModel balncesViewModel,
+                                           Collection c, String payoutCode, int type, FarmerLoansTable farmerLoan, FarmerOrdersTable farmerOrder) {
 
 
 
@@ -1815,7 +1821,7 @@ public class CommonFuncs {
         if (type == AppConstants.MILK) {
 
 
-            refreshTotalBalances(0, null, null, balncesViewModel, traderViewModel, c, famerModel);
+            return refreshTotalBalances(0, null, null, balncesViewModel, traderViewModel, c, famerModel);
 
 
         } else if (type == AppConstants.LOAN) {
@@ -1838,7 +1844,7 @@ public class CommonFuncs {
                         timed);
 
 
-                refreshLoanStatus(balncesViewModel, c.getCode(), 1, farmerLoan, traderViewModel, c, famerModel);
+                return refreshLoanStatus(balncesViewModel, c.getCode(), 1, farmerLoan, traderViewModel, c, famerModel);
 
 
             } else {
@@ -1849,8 +1855,7 @@ public class CommonFuncs {
                 farmerLoan.setTimestamp(timed);
 
 
-
-                refreshLoanStatus(balncesViewModel, c.getCode(), 2, farmerLoan, traderViewModel, c, famerModel);
+                return refreshLoanStatus(balncesViewModel, c.getCode(), 2, farmerLoan, traderViewModel, c, famerModel);
 
 
             }
@@ -1875,7 +1880,7 @@ public class CommonFuncs {
                         GeneralUtills.Companion.createCode(c.getFarmerCode()));
                 balncesViewModel.insertOrder(farmerOrder);
 
-                refreshOrderStatus(balncesViewModel, c.getCode(), 2, farmerOrder, traderViewModel, c, famerModel);
+                return refreshOrderStatus(balncesViewModel, c.getCode(), 2, farmerOrder, traderViewModel, c, famerModel);
 
 
             } else {
@@ -1887,13 +1892,14 @@ public class CommonFuncs {
                 farmerOrder.setTimestamp(timed);
 
 
-
-                refreshOrderStatus(balncesViewModel, c.getCode(), 1, farmerOrder, traderViewModel, c, famerModel);
+                return refreshOrderStatus(balncesViewModel, c.getCode(), 1, farmerOrder, traderViewModel, c, famerModel);
 
 
             }
 
 
+        } else {
+            return null;
         }
 
 
@@ -1903,13 +1909,13 @@ public class CommonFuncs {
 
     static Double orderTotalD = 0.0;
 
-    private static void refreshTotalBalances(int type,
-                                             FarmerLoansTable lastLoan,
-                                             FarmerOrdersTable lastOrder,
-                                             BalncesViewModel balncesViewModel,
-                                             TraderViewModel traderViewModel,
-                                             Collection c,
-                                             FamerModel famerModel) {
+    private static FamerModel refreshTotalBalances(int type,
+                                                   FarmerLoansTable lastLoan,
+                                                   FarmerOrdersTable lastOrder,
+                                                   BalncesViewModel balncesViewModel,
+                                                   TraderViewModel traderViewModel,
+                                                   Collection c,
+                                                   FamerModel famerModel) {
 
         Double totalMilkForCurrentPayout = 0.0;
         try {
@@ -1998,7 +2004,8 @@ public class CommonFuncs {
 
                 Timber.tag("ColSdebug1").d("UPDATED  FARMER BALANCE  IS  " + new Gson().toJson(farmerBalance));
 
-                balncesViewModel.insert(farmerBalance);
+                balncesViewModel.insertDirect(farmerBalance);
+                famerModel.setTotalbalance(farmerBalance.getBalanceToPay());
                 traderViewModel.updateFarmer(famerModel, false, false);
 
 
@@ -2015,14 +2022,18 @@ public class CommonFuncs {
 
                 Timber.tag("ColSdebug1").d("UPDATED  FARMER BALANCE  IS  " + new Gson().toJson(farmerBalance));
 
-                balncesViewModel.updateRecord(farmerBalance);
+                balncesViewModel.updateRecordDirect(farmerBalance);
+                famerModel.setTotalbalance(farmerBalance.getBalanceToPay());
                 traderViewModel.updateFarmer(famerModel, false, false);
 
                 // handler(traderViewModel, famerModel);
             }
+            return famerModel;
+
         } catch (Exception nm) {
             nm.printStackTrace();
 
+            return null;
         }
 
     }
@@ -2034,7 +2045,7 @@ public class CommonFuncs {
     }
 
 
-    private static void refreshLoanStatus(BalncesViewModel balncesViewModel, String id, int type, FarmerLoansTable farmerLoansTable, TraderViewModel traderViewModel, Collection c, FamerModel famerModel) {
+    private static FamerModel refreshLoanStatus(BalncesViewModel balncesViewModel, String id, int type, FarmerLoansTable farmerLoansTable, TraderViewModel traderViewModel, Collection c, FamerModel famerModel) {
 
 
         if (type == 2) {//UPDATE LOAN
@@ -2062,24 +2073,24 @@ public class CommonFuncs {
 
 
             if (Double.valueOf(farmerLoansTable.getLoanAmount()) < 1) {
-                balncesViewModel.deleteRecordLoan(farmerLoansTable);
+                balncesViewModel.deleteRecordLoanDirect(farmerLoansTable);
 
             } else {
-                balncesViewModel.updateRecordLoan(farmerLoansTable);
+                balncesViewModel.updateRecordLoanDirect(farmerLoansTable);
             }
 
         } else {
-            balncesViewModel.insertLoan(farmerLoansTable);
+            balncesViewModel.insertLoanDirect(farmerLoansTable);
 
 
         }
 
-        refreshTotalBalances(1, farmerLoansTable, null, balncesViewModel, traderViewModel, c, famerModel);
+        return refreshTotalBalances(1, farmerLoansTable, null, balncesViewModel, traderViewModel, c, famerModel);
 
 
     }
 
-    private static void refreshOrderStatus(BalncesViewModel balncesViewModel, String id, int type, FarmerOrdersTable farmerOrdersTable, TraderViewModel traderViewModel, Collection c, FamerModel famerModel) {
+    private static FamerModel refreshOrderStatus(BalncesViewModel balncesViewModel, String id, int type, FarmerOrdersTable farmerOrdersTable, TraderViewModel traderViewModel, Collection c, FamerModel famerModel) {
 
 
         if (type == 2) {//UPDATE
@@ -2108,19 +2119,19 @@ public class CommonFuncs {
             }
 
             if (Double.valueOf(farmerOrdersTable.getOrderAmount()) < 1) {
-                balncesViewModel.deleteRecord(farmerOrdersTable);
+                balncesViewModel.deleteRecordDirect(farmerOrdersTable);
 
             } else {
-                balncesViewModel.updateRecord(farmerOrdersTable);
+                balncesViewModel.updateRecordDirect(farmerOrdersTable);
             }
 
 
         } else {  //INSERT
 
-            balncesViewModel.insertOrder(farmerOrdersTable);
+            balncesViewModel.insertOrderDirect(farmerOrdersTable);
         }
 
-        refreshTotalBalances(2, null, farmerOrdersTable, balncesViewModel, traderViewModel, c, famerModel);
+        return refreshTotalBalances(2, null, farmerOrdersTable, balncesViewModel, traderViewModel, c, famerModel);
 
 
     }
@@ -2579,7 +2590,8 @@ public class CommonFuncs {
         Double total = 0.0;
         for (FarmerBalance f : farmerBalances) {
             try {
-                if (f.getPayoutStatus() == 0 && !f.getPayoutCode().equals(famerModel.getCurrentPayoutCode())) {
+                boolean isPast = DateTimeUtils.Companion.isPastLastDay(f.getLastUpdated());
+                if (f.getPayoutStatus() == 0 && !f.getPayoutCode().equals(famerModel.getCurrentPayoutCode()) && !isPast) {
                     total = total + (Double.valueOf(f.getBalanceToPay()));
                 }
             } catch (Exception nm) {
@@ -2796,24 +2808,27 @@ public class CommonFuncs {
 
 
         try {
-            if (notifications != null) {
-                if (notifications.size() == 1) {
-                    //  List<Notifications> notificati = CommonFuncs.getPendingPayout(new PayoutsRepo(com.dev.lishabora.Application.application).getPayoutsByStatusD("0"));
-                    new NotificationRepo(com.dev.lishabora.Application.application).insert(notifications.get(0));
+            if (notifications.size() == 1) {
+                //  List<Notifications> notificati = CommonFuncs.getPendingPayout(new PayoutsRepo(com.dev.lishabora.Application.application).getPayoutsByStatusD("0"));
+                new NotificationRepo(com.dev.lishabora.Application.application).insert(notifications.get(0));
 
-                } else if (notifications.size() > 1) {
-                    String txtTitle = "Un-Approved Payouts ";
-                    String mes = "You have " + notifications.size() + " Pending payouts that require approval";
+                sendNotification(notifications.get(0).getTitle(), notifications.get(0).getMessage(), true);
 
-                    Notifications n = notifications.get(0);
-                    n.setTitle(txtTitle);
-                    n.setMessage(mes);
-                    n.setType(AppConstants.NOTIFICATION_TYPE_MULTIPLE_PAYOUT_PENDING);
+            } else if (notifications.size() > 1) {
+                String txtTitle = "Un-Approved Payouts ";
+                String mes = "You have " + notifications.size() + " Pending payouts that require approval";
 
+                Notifications n = notifications.get(0);
+                n.setTitle(txtTitle);
+                n.setMessage(mes);
+                n.setType(AppConstants.NOTIFICATION_TYPE_MULTIPLE_PAYOUT_PENDING);
 
-                    new NotificationRepo(com.dev.lishabora.Application.application).insert(n);
+                sendNotification(txtTitle, mes, true);
 
-                }
+                new NotificationRepo(com.dev.lishabora.Application.application).insert(n);
+
+                sendNotification(txtTitle, mes, true);
+
             }
         } catch (Exception nm) {
             nm.printStackTrace();
@@ -3074,6 +3089,34 @@ public class CommonFuncs {
         }
 
 
+    }
+
+    private static void sendNotification(String title, String message, boolean isloggedIn) {
+
+        // if (isloggedIn) {
+        Intent intent = new Intent(com.dev.lishabora.Application.context, TraderActivity.class);
+        intent.putExtra("type", "notification_fragment");
+
+
+        PendingIntent pi = PendingIntent.getActivity(com.dev.lishabora.Application.context, 0,
+                intent, 0);
+
+        Notification notification = new NotificationCompat.Builder(com.dev.lishabora.Application.context)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setAutoCancel(true)
+                .setContentIntent(pi)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setShowWhen(true)
+                .setColor(Color.RED)
+                .setLocalOnly(true)
+                .build();
+
+
+        NotificationManagerCompat.from(com.dev.lishabora.Application.context)
+                .notify(5, notification);
+
+        // }
     }
 
 

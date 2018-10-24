@@ -117,6 +117,7 @@ public class FragmentPayouts extends Fragment {
         recyclerView.setAdapter(listAdapter);
 
         listAdapter.notifyDataSetChanged();
+        emptyState(listAdapter.getItemCount() > 0);
 
 
     }
@@ -183,6 +184,17 @@ public class FragmentPayouts extends Fragment {
         payoutsVewModel.fetchAll(false).observe(this, this::setData);
     }
 
+    private void emptyState(boolean listHasData) {
+        LinearLayout empty_layout;
+        empty_layout = view.findViewById(R.id.empty_layout);
+
+        if (listHasData) {
+            empty_layout.setVisibility(View.GONE);
+        } else {
+            empty_layout.setVisibility(View.VISIBLE);
+
+        }
+    }
 
     private void setData(List<com.dev.lishabora.Models.Payouts> payouts) {
         if (payouts != null) {
@@ -200,11 +212,14 @@ public class FragmentPayouts extends Fragment {
                 this.payouts = new LinkedList<>();
                 this.payouts.addAll(payouts1);
                 listAdapter.notifyDataSetChanged();
+                emptyState(listAdapter.getItemCount() > 0);
 
             } else {
                 this.payouts.clear();
                 this.payouts.addAll(payouts1);
                 listAdapter.notifyDataSetChanged();
+                emptyState(listAdapter.getItemCount() > 0);
+
             }
             initList();
         }

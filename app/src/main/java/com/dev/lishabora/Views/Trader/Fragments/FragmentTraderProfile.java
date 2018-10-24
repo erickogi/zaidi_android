@@ -14,9 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.dev.lishabora.Application;
 import com.dev.lishabora.Models.Trader.TraderModel;
-import com.dev.lishabora.Repos.Trader.TraderRepo;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Trader.Activities.FirstTimeLaunch;
@@ -84,13 +82,14 @@ public class FragmentTraderProfile extends Fragment {
         //traderModel = prefrenceManager.getTraderModel();
 
 
-        traderViewModel.getTrader(prefrenceManager.getCode()).observe(this, traderModelf -> {
+        traderViewModel.getTrader(prefrenceManager.getTraderModel().getCode()).observe(this, traderModelf -> {
 
             if (traderModelf != null) {
                 FragmentTraderProfile.this.traderModel = traderModelf;
+
             } else {
-                FragmentTraderProfile.this.traderModel = prefrenceManager.getTraderModel();
-                new TraderRepo(Application.application).insert(traderModel);
+                // FragmentTraderProfile.this.traderModel = prefrenceManager.getTraderModel();
+                // new TraderRepo(Application.application).insert(traderModel);
 
             }
             try {

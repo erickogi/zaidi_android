@@ -9,7 +9,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +26,6 @@ import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.Utils.RecyclerTouchListener;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishaboramobile.R;
-import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -41,6 +39,8 @@ public class FragmentTraderLoans extends Fragment {
     List<Integer> unclickableRows, unswipeableRows;
     List<LoanPayments> payments;
     LoansOrdersPaymnetsAdapter listAdapterP;
+    private StaggeredGridLayoutManager mStaggeredLayoutManager;
+
     private BalncesViewModel balncesViewModel;
     private RecyclerView recyclerView;
     private RecyclerTouchListener onTouchListener;
@@ -49,7 +49,6 @@ public class FragmentTraderLoans extends Fragment {
     private View view;
     private List<FarmerLoansTable> farmerLoansTables;
     private List<FarmerOrdersTable> farmerOrdersTables;
-    private StaggeredGridLayoutManager mStaggeredLayoutManager;
 
     private void listPayments(String code) {
 
@@ -130,45 +129,6 @@ public class FragmentTraderLoans extends Fragment {
             NM.printStackTrace();
         }
 
-
-//        MaterialButton btnPositive, btnNegative, btnNeutral;
-//        TextView txtTitle;
-//        LinearLayout lTitle;
-//        ImageView imgIcon;
-//        btnPositive = mView.findViewById(R.id.btn_positive);
-//        btnNegative = mView.findViewById(R.id.btn_negative);
-//        btnNeutral = mView.findViewById(R.id.btn_neutral);
-//        txtTitle = mView.findViewById(R.id.txt_title);
-//        lTitle = mView.findViewById(R.id.linear_title);
-//        imgIcon = mView.findViewById(R.id.img_icon);
-//
-//
-//        btnNeutral.setVisibility(View.GONE);
-//        btnNeutral.setText("Delete");
-//
-//        btnNeutral.setBackgroundColor(this.getResources().getColor(R.color.red));
-//        lTitle.setVisibility(View.GONE);
-//        txtTitle.setVisibility(View.VISIBLE);
-//        imgIcon.setVisibility(View.VISIBLE);
-//        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
-//        txtTitle.setText("Route");
-//        btnPositive.setVisibility(View.GONE);
-//
-////        btnNeutral.setOnClickListener(new View.OnClickListener() {
-////            @Override
-////            public void onClick(View view) {
-////                OrderConstants.getProductOrderModels().remove(pos);
-////
-////                alertDialogAndroid.dismiss();
-////
-////                refreshList();
-////            }
-////        });
-//
-////        btnPositive.setOnClickListener(new FragmentProductList.CustomListener(alertDialogAndroid, selected));
-//
-//        btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
-//
 
         balncesViewModel.getLoanPaymentByLoanCode(code).observe(FragmentTraderLoans.this, loanPayments -> {
             if (loanPayments != null && loanPayments.size() > 0) {
@@ -264,10 +224,9 @@ public class FragmentTraderLoans extends Fragment {
 
         balncesViewModel.getFarmerLoans().observe(this, farmerLoansTables -> {
             if (farmerLoansTables != null) {
-                Log.d("LoansDubug", " Is null" + new Gson().toJson(farmerLoansTables.get(0)));
 
                 initList(farmerLoansTables);
-                // filter(farmerLoansTables);
+
             } else {
             }
         });

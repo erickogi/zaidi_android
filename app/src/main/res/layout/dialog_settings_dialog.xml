@@ -50,7 +50,7 @@
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
-                        <com.dev.customfonts.MyTextView_Roboto_Regular
+                        <TextView
                             android:id="@+id/subtitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

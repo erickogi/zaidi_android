@@ -1013,18 +1013,18 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
             }
 
 //Cycles
-            if (cycles != null && cycles.size() > 0) {
-                new PrefrenceManager(getContext()).setIsCyclesListFirst(false);
-                String units[] = new String[cycles.size()];
-
-                // units[0]="Choose Unit ";
-                for (int a = 0; a < cycles.size(); a++) {
-                    units[a] = cycles.get(a).getCycle();
-
-                }
-                spinner.setItems(units);
-
-            }
+//            if (cycles != null && cycles.size() > 0) {
+//                new PrefrenceManager(getContext()).setIsCyclesListFirst(false);
+//                String units[] = new String[cycles.size()];
+//
+//                // units[0]="Choose Unit ";
+//                for (int a = 0; a < cycles.size(); a++) {
+//                    units[a] = cycles.get(a).getCycle();
+//
+//                }
+//                spinner.setItems(units);
+//
+//            }
 
 
             alertDialogBuilderUserInput

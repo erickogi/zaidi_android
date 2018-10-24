@@ -173,6 +173,10 @@ public class TraderViewModel extends AndroidViewModel
         traderRepo.upDateRecord(traderModel);
     }
 
+    public void updateTraderDirect(TraderModel traderModel) {
+        traderRepo.upDateRecordDirect(traderModel);
+    }
+
     public void createTrader(TraderModel traderModel) {
         traderRepo.insert(traderModel);
     }
@@ -1027,13 +1031,11 @@ public class TraderViewModel extends AndroidViewModel
 
     private String getCycleName(String cycleCode) {
         if (cycleCode.equals("1")) {
-            return "Weekly";
+            return AppConstants.SEVENDAYS;
         } else if (cycleCode.equals("2")) {
-            return "Bi Weekly";
+            return AppConstants.FIFTEENDAYS;
         } else if (cycleCode.equals("3")) {
-            return "Semi Monthly";
-        } else if (cycleCode.equals("4")) {
-            return "Monthly";
+            return AppConstants.THIRTYDAYS;
         } else {
             return "";
         }
@@ -1042,35 +1044,29 @@ public class TraderViewModel extends AndroidViewModel
     private Cycles insertCycles(String cycleCode) {
         Cycles cycles = new Cycles();
         cycles.setCode(1);
-        cycles.setCycle("Weekly");
+        cycles.setCycle(AppConstants.SEVENDAYS);
         cycles.setPeriod("7");
         cycles.setStatus("1");
 
         Cycles cycles1 = new Cycles();
         cycles1.setCode(2);
-        cycles1.setCycle("Bi Weekly");
+        cycles1.setCycle(AppConstants.FIFTEENDAYS);
         cycles1.setPeriod("14");
         cycles1.setStatus("1");
 
 
         Cycles cycles2 = new Cycles();
         cycles2.setCode(3);
-        cycles2.setCycle("Semi Monthly");
-        cycles2.setPeriod("14");
+        cycles2.setCycle(AppConstants.THIRTYDAYS);
+        cycles2.setPeriod("30");
         cycles2.setStatus("1");
 
 
-        Cycles cycles3 = new Cycles();
-        cycles3.setCode(4);
-        cycles3.setCycle("Monthly");
-        cycles3.setPeriod("30");
-        cycles3.setStatus("1");
 
         List<Cycles> cycles4 = new LinkedList<>();
         cycles4.add(cycles);
         cycles4.add(cycles1);
         cycles4.add(cycles2);
-        cycles4.add(cycles3);
 
         cyclesRepo.insert(cycles4);
 
@@ -1080,8 +1076,6 @@ public class TraderViewModel extends AndroidViewModel
             return cycles1;
         } else if (cycleCode.equals("3")) {
             return cycles2;
-        } else if (cycleCode.equals("4")) {
-            return cycles3;
         } else {
             return null;
         }

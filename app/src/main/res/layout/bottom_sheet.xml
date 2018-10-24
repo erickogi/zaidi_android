@@ -52,8 +52,7 @@
 
     </LinearLayout>
 
-    <include layout="@layout/view_payout_farmers_titles" />
-
+    /
     <LinearLayout
 
         android:visibility="gone"

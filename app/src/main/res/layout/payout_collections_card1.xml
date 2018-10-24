@@ -10,8 +10,8 @@
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="1dp"
-        android:background="@drawable/rounded_border_tv">
+
+        >
 
         <LinearLayout
             android:id="@+id/rl_header"
@@ -22,6 +22,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:layout_marginStart="3dp"
                 android:id="@+id/txt_day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,48 +54,6 @@
             android:layout_below="@+id/rl_header"
             android:orientation="horizontal">
 
-            <!--<View-->
-            <!--android:layout_width="1dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_marginEnd="3dp"-->
-            <!--android:background="@color/divider" />-->
-
-            <!--<LinearLayout-->
-            <!--android:visibility="gone"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-
-            <!--android:orientation="vertical"-->
-            <!--android:paddingTop="2dp"-->
-            <!--android:paddingBottom="2dp"-->
-            <!--android:weightSum="2">-->
-
-
-            <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_weight="1"-->
-            <!--android:gravity="center"-->
-            <!--android:text=" AM  "-->
-            <!--android:textColor="@color/black"-->
-            <!--android:textStyle="bold" />-->
-
-            <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_weight="1"-->
-            <!--android:gravity="center"-->
-            <!--android:text=" PM  "-->
-            <!--android:textColor="@color/black"-->
-            <!--android:textStyle="bold" />-->
-
-            <!--</LinearLayout>-->
-
-            <!--<View-->
-            <!--android:layout_width="1dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_marginEnd="3dp"-->
-            <!--android:background="@color/divider" />-->
 
             <LinearLayout
                 android:layout_width="0dp"

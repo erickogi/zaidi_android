@@ -1,30 +1,55 @@
 package com.dev.lishabora.Views.Trader.Activities;
 
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Toast;
 
+import com.dev.lishabora.Adapters.FarmersAdapter;
+import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Utils.MyToast;
+import com.dev.lishabora.Utils.OnclickRecyclerListener;
+import com.dev.lishabora.Utils.RecyclerTouchListener;
+import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentTraderLoans;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentTraderOrders;
+import com.dev.lishabora.Views.Trader.OrderConstants;
 import com.dev.lishaboramobile.R;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class LoansAndOrders extends AppCompatActivity {
     static Fragment page;
     private static ViewPager viewPager;
     SearchView mSearchView;
     private TabLayout tabLayout;
-
+    FarmersAdapter listAdapterP;
+    AlertDialog alertDialogAndroid;
+    List<Integer> unclickableRows, unswipeableRows;
+    private TraderViewModel traderViewModel;
+    private StaggeredGridLayoutManager mStaggeredLayoutManager;
+    private RecyclerTouchListener onTouchListener;
     private void setupViewPager(ViewPager viewPager) {
 
 
@@ -64,6 +89,7 @@ public class LoansAndOrders extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
         viewPager = findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
@@ -74,9 +100,121 @@ public class LoansAndOrders extends AppCompatActivity {
 
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show());
-        fab.hide();
+        fab.setOnClickListener(view -> give());
+
+    }
+
+    private void give() {
+        int id = viewPager.getCurrentItem();
+        traderViewModel.getFarmerByStatusRoute(50, "").observe(this, famerModels -> {
+
+            if (famerModels != null && famerModels.size() > 0) {
+                displayFarmers(id, famerModels);
+            } else {
+                MyToast.toast("You have no farmers", LoansAndOrders.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+            }
+        });
+
+    }
+
+    private void displayFarmers(int id, List<FamerModel> famerModels) {
+        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(this);
+        View mView = layoutInflaterAndroid.inflate(R.layout.fragment_recycler_view, null);
+        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(this));
+        alertDialogBuilderUserInput.setView(mView);
+        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
+        alertDialogBuilderUserInput.setTitle("Farmers");
+
+        RecyclerView recyclerView = mView.findViewById(R.id.recyclerView);
+        unclickableRows = new ArrayList<>();
+        unswipeableRows = new ArrayList<>();
+
+
+        mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(mStaggeredLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+
+        listAdapterP = new FarmersAdapter(this, famerModels, new OnclickRecyclerListener() {
+            @Override
+            public void onClickListener(int position) {
+
+            }
+
+            @Override
+            public void onLongClickListener(int position) {
+
+            }
+
+            @Override
+            public void onCheckedClickListener(int position) {
+
+            }
+
+            @Override
+            public void onMoreClickListener(int position) {
+
+            }
+
+            @Override
+            public void onMenuItem(int position, int menuItem) {
+
+            }
+
+            @Override
+            public void onClickListener(int adapterPosition, @NotNull View view) {
+
+            }
+
+            @Override
+            public void onSwipe(int adapterPosition, int direction) {
+
+            }
+        }, null);
+
+
+        recyclerView.setAdapter(listAdapterP);
+
+        listAdapterP.notifyDataSetChanged();
+        onTouchListener = new RecyclerTouchListener(this, recyclerView);
+        onTouchListener
+                .setClickable(new RecyclerTouchListener.OnRowClickListener() {
+                    @Override
+                    public void onRowClicked(int position) {
+                        alertDialogAndroid.dismiss();
+                        if (id == 0) {
+
+                        } else {
+                            OrderConstants.setFamerModel(famerModels.get(position));
+                            Intent intent2 = new Intent(LoansAndOrders.this, GiveOrder.class);
+                            intent2.putExtra("farmer", famerModels.get(position));
+                            startActivity(intent2);
+                        }
+                    }
+
+                    @Override
+                    public void onIndependentViewClicked(int independentViewID, int position) {
+
+                    }
+                })
+                .setLongClickable(true, position -> {
+
+                });
+        alertDialogBuilderUserInput
+                .setCancelable(true);
+
+        alertDialogAndroid = alertDialogBuilderUserInput.create();
+        alertDialogAndroid.setCancelable(true);
+        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
+        try {
+            alertDialogAndroid.show();
+        } catch (Exception NM) {
+            NM.printStackTrace();
+            Log.d("farmvie", NM.toString());
+        }
+        Log.d("farmvie", "" + listAdapterP.getItemCount());
+
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

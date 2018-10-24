@@ -59,11 +59,6 @@
                             android:layout_weight="1"
                             android:orientation="horizontal">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="To : "
-                                android:textSize="10sp" />
 
                             <TextView
                                 android:id="@+id/txt_farmer"
@@ -92,11 +87,6 @@
                             android:gravity="end"
                             android:orientation="horizontal">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="On : "
-                                android:textSize="10sp" />
 
                             <TextView
 

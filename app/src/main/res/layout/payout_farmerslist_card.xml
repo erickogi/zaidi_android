@@ -8,10 +8,9 @@
     android:focusable="true"
     app:strokeColor="@color/divider"
     android:foreground="?attr/selectableItemBackground"
-    app:cardCornerRadius="4dp"
-    android:layout_margin="1dp"
+
     android:layout_marginTop="2dp"
-    android:layout_marginEnd="4dp"
+
     app:cardElevation="3dp">
     <RelativeLayout
         android:id="@+id/background"
@@ -21,11 +20,12 @@
         android:background="@color/green_color_picker">
 
         <LinearLayout
+            android:padding="3dp"
             android:background="@color/white"
             android:id="@+id/rl_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
+
             android:gravity="start"
             android:orientation="horizontal"
             android:paddingStart="2dp"
@@ -64,138 +64,162 @@
 
             android:layout_height="wrap_content"
             android:layout_below="@+id/rl_header"
-            android:layout_marginStart="4dp"
+
             android:background="@color/white"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:padding="3dp"
             android:weightSum="4">
 
 
-            <TextView
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="start"
-                android:text="Totals"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
-
-            <View
-                android:visibility="gone"
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="3dp"
-                android:background="@color/divider" />
-
             <LinearLayout
-                android:layout_width="match_parent"
-
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-
-                <TextView
-                    android:id="@+id/txt_milk"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="0.0 Ltrs" />
-            </LinearLayout>
-
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="3dp"
-                android:background="@color/divider" />
-
-            <LinearLayout
                 android:layout_width="match_parent"
+                android:orientation="horizontal">
 
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="0dp"
 
-
-                <TextView
-                    android:id="@+id/txt_loans"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-                    android:text="0.0 /=" />
-
-            </LinearLayout>
-
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="3dp"
-                android:background="@color/divider" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-
-                <TextView
-                    android:id="@+id/txt_orders"
-                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="0.0 /=" />
+                    android:orientation="horizontal">
 
-            </LinearLayout>
+                    <TextView
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="3dp"
-                android:background="@color/divider" />
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
 
-            <LinearLayout
-                android:layout_width="match_parent"
+                        android:text="Milk  :"
 
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textColor="@color/textblack"
 
-                <TextView
-                    android:id="@+id/txt_balance"
-                    android:layout_width="match_parent"
+                        android:textStyle="bold" />
+
+
+                    <TextView
+                        android:id="@+id/txt_milk"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="0.0 Ltrs" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+
                     android:layout_height="wrap_content"
-
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="0.0"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:orientation="horizontal">
 
-                    android:textStyle="bold" />
+                    <TextView
+
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+
+                        android:text="Loans  :"
+
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textColor="@color/textblack"
+
+                        android:textStyle="bold" />
+
+
+                    <TextView
+                        android:id="@+id/txt_loans"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="0.0 Ltrs" />
+                </LinearLayout>
 
 
             </LinearLayout>
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+
+                        android:text="Orders  :"
+
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textColor="@color/textblack"
+
+                        android:textStyle="bold" />
+
+
+                    <TextView
+                        android:id="@+id/txt_orders"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="0.0 Ltrs" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+
+                        android:text="Balance  :"
+
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textColor="@color/textblack"
+
+                        android:textStyle="bold" />
+
+
+                    <TextView
+                        android:id="@+id/txt_balance"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="0.0 Ltrs" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
 
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_below="@+id/linear_totals"
-            android:layout_marginStart="3dp"
-            android:background="@color/divider" />
 
         <LinearLayout
             android:id="@+id/linear_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/linear_totals"
-            android:layout_marginStart="4dp"
 
-            android:layout_marginTop="2dp"
 
             android:background="@color/white"
             android:orientation="horizontal"
@@ -225,8 +249,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Approved"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
+                    android:textStyle="italic|normal" />
             </LinearLayout>
 
 

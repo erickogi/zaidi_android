@@ -64,7 +64,7 @@
                                 android:text="Start "
                                 android:textSize="9sp" />
 
-                            <com.dev.customfonts.MyTextView_Roboto_Bold
+                            <TextView
                                 android:id="@+id/txt_date_start"
                                 android:layout_width="match_parent"
 
@@ -148,7 +148,7 @@
                                 android:layout_weight="1"
                                 android:orientation="horizontal">
 
-                                <com.dev.customfonts.MyTextView_Roboto_Bold
+                                <TextView
 
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
@@ -161,7 +161,7 @@
 
                                     android:textStyle="normal" />
 
-                                <com.dev.customfonts.MyTextView_Roboto_Bold
+                                <TextView
                                     android:id="@+id/txt_Bal_out"
                                     android:layout_width="0dp"
 
@@ -180,7 +180,7 @@
                                 android:layout_weight="1"
                                 android:orientation="horizontal">
 
-                                <com.dev.customfonts.MyTextView_Roboto_Bold
+                                <TextView
 
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
@@ -193,7 +193,7 @@
 
                                     android:textStyle="bold" />
 
-                                <com.dev.customfonts.MyTextView_Roboto_Bold
+                                <TextView
                                     android:id="@+id/txt_milk_totals"
                                     android:layout_width="0dp"
 
@@ -219,7 +219,7 @@
                                 android:layout_weight="1"
                                 android:orientation="horizontal">
 
-                                <com.dev.customfonts.MyTextView_Roboto_Bold
+                                <TextView
 
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
@@ -232,7 +232,7 @@
 
                                     android:textStyle="bold" />
 
-                                <com.dev.customfonts.MyTextView_Roboto_Bold
+                                <TextView
                                     android:id="@+id/txt_loans_total"
                                     android:layout_width="0dp"
 
@@ -251,7 +251,7 @@
                                 android:layout_weight="1"
                                 android:orientation="horizontal">
 
-                                <com.dev.customfonts.MyTextView_Roboto_Bold
+                                <TextView
 
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
@@ -263,7 +263,7 @@
 
                                     android:textStyle="bold" />
 
-                                <com.dev.customfonts.MyTextView_Roboto_Bold
+                                <TextView
                                     android:id="@+id/txt_orders_total"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"

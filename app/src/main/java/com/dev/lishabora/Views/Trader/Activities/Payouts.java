@@ -17,10 +17,9 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.dev.lishabora.Utils.DateTimeUtils;
-import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentPayoutColloectionsList;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentPayoutFarmersList;
+import com.dev.lishabora.Views.Trader.Fragments.FragmentPayoutSummary;
 import com.dev.lishabora.Views.Trader.PayoutConstants;
 import com.dev.lishaboramobile.R;
 import com.jaredrummler.materialspinner.MaterialSpinner;
@@ -42,29 +41,6 @@ public class Payouts extends AppCompatActivity {
     public RelativeLayout background;
     public View statusview;
 
-    //    public static void setSpinner(int v) {
-//        try {
-//            spinner.setVisibility(v);
-//
-//        } catch (Exception nm) {
-//            nm.printStackTrace();
-//        }
-////    }
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//
-//
-//    }
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        MenuItem mSearch = menu.findItem(R.id.action_search);
-//        mSearchView = (SearchView) mSearch.getActionView();
-//
-//        mSearchView.setVisibility(View.GONE);
-//
-//        return true;
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -109,10 +85,18 @@ public class Payouts extends AppCompatActivity {
 
         fragment.setArguments(args);
 
+        Fragment fragment2 = new FragmentPayoutSummary();
+        args.putSerializable("data", payouts);
+
+        fragment.setArguments(args);
+
+
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(fragment1, "all");
         adapter.addFragment(fragment, "add");
+        adapter.addFragment(fragment2, "sum");
+
 
         viewPager.setOffscreenPageLimit(1);
         viewPager.setAdapter(adapter);
@@ -120,6 +104,7 @@ public class Payouts extends AppCompatActivity {
 
     private void setupTabIcons() {
 
+        tabLayout.getTabAt(2).setText("Summary");
         tabLayout.getTabAt(0).setText("Collections");
         tabLayout.getTabAt(1).setText("Farmers");
 
@@ -168,7 +153,7 @@ public class Payouts extends AppCompatActivity {
         setTitle("Payouts");
         setSpinner();
 
-        initCardHeader();
+        //  initCardHeader();
 
 
 
@@ -227,38 +212,6 @@ public class Payouts extends AppCompatActivity {
 //        }
     }
 
-    public void setCardHeaderData(com.dev.lishabora.Models.Payouts model) {
-        startDate.setText(DateTimeUtils.Companion.getDisplayDate(model.getStartDate(), DateTimeUtils.Companion.getDisplayDatePattern1()));
-        endDate.setText(DateTimeUtils.Companion.getDisplayDate(model.getEndDate(), DateTimeUtils.Companion.getDisplayDatePattern1()));
-        cycleName.setText(model.getCyclename());
-
-
-        milkTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getMilkTotalLtrs(), 1), this.getString(R.string.ltrs)));
-        loanTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getLoanTotal(), 1), this.getString(R.string.ksh)));
-        orderTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getOrderTotal(), 1), this.getString(R.string.ksh)));
-        balance.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getBalance(), 1), this.getString(R.string.ksh)));
-        GeneralUtills.Companion.changeCOlor(model.getBalance(), balance, 1);
-
-
-        approvedCount.setText(model.getApprovedCards());
-        unApprovedCount.setText(model.getPendingCards());
-
-
-        if (model.getStatus() == 1) {
-            // status.setText("Active");
-            background.setBackgroundColor(this.getResources().getColor(R.color.green_color_picker));
-
-
-        } else if (model.getStatus() == 0) {
-            background.setBackgroundColor(this.getResources().getColor(R.color.red));
-
-        } else {
-            background.setBackgroundColor(this.getResources().getColor(R.color.blue_color_picker));
-
-        }
-
-    }
-
 
     public void setUpView(Fragment fragment) {
         if (fragment != null) {
@@ -299,29 +252,61 @@ public class Payouts extends AppCompatActivity {
         fragmentManager.beginTransaction().replace(R.id.frame_layout, fragment, "fragmentMain").commit();
 
     }
-
-    public void initCardHeader() {
-        background = findViewById(R.id.background);
-        startDate = findViewById(R.id.txt_date_start);
-        endDate = findViewById(R.id.txt_date_end);
-
-
-        cycleName = findViewById(R.id.txt_cycle);
-
-        milkTotal = findViewById(R.id.txt_milk_totals);
-        loanTotal = findViewById(R.id.txt_loans_total);
-        orderTotal = findViewById(R.id.txt_orders_total);
-
-        approvedCount = findViewById(R.id.txt_approved_farmers);
-        unApprovedCount = findViewById(R.id.txt_pending_farmers);
-        balance = findViewById(R.id.txt_Bal_out);
-
-        if (payouts != null) {
-            setCardHeaderData(payouts);
-        }
-        //setSpinner();
-
-    }
+//    public void setCardHeaderData(com.dev.lishabora.Models.Payouts model) {
+//        startDate.setText(DateTimeUtils.Companion.getDisplayDate(model.getStartDate(), DateTimeUtils.Companion.getDisplayDatePattern1()));
+//        endDate.setText(DateTimeUtils.Companion.getDisplayDate(model.getEndDate(), DateTimeUtils.Companion.getDisplayDatePattern1()));
+//        cycleName.setText(model.getCyclename());
+//
+//
+//        milkTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getMilkTotalLtrs(), 1), this.getString(R.string.ltrs)));
+//        loanTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getLoanTotal(), 1), this.getString(R.string.ksh)));
+//        orderTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getOrderTotal(), 1), this.getString(R.string.ksh)));
+//        balance.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getBalance(), 1), this.getString(R.string.ksh)));
+//        GeneralUtills.Companion.changeCOlor(model.getBalance(), balance, 1);
+//
+//
+//        approvedCount.setText(model.getApprovedCards());
+//        unApprovedCount.setText(model.getPendingCards());
+//
+//
+//        if (model.getStatus() == 1) {
+//            // status.setText("Active");
+//            background.setBackgroundColor(this.getResources().getColor(R.color.green_color_picker));
+//
+//
+//        } else if (model.getStatus() == 0) {
+//            background.setBackgroundColor(this.getResources().getColor(R.color.red));
+//
+//        } else {
+//            background.setBackgroundColor(this.getResources().getColor(R.color.blue_color_picker));
+//
+//        }
+//
+//    }
+//
+//
+//    public void initCardHeader() {
+//        background = findViewById(R.id.background);
+//        startDate = findViewById(R.id.txt_date_start);
+//        endDate = findViewById(R.id.txt_date_end);
+//
+//
+//        cycleName = findViewById(R.id.txt_cycle);
+//
+//        milkTotal = findViewById(R.id.txt_milk_totals);
+//        loanTotal = findViewById(R.id.txt_loans_total);
+//        orderTotal = findViewById(R.id.txt_orders_total);
+//
+//        approvedCount = findViewById(R.id.txt_approved_farmers);
+//        unApprovedCount = findViewById(R.id.txt_pending_farmers);
+//        balance = findViewById(R.id.txt_Bal_out);
+//
+//        if (payouts != null) {
+//            setCardHeaderData(payouts);
+//        }
+//        //setSpinner();
+//
+//    }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();

@@ -119,7 +119,7 @@ public class SplashActivity extends AppCompatActivity {
         if (globalPrefs.isLoggedIn()) {
             // Timber.d("I have tried Log");
             LMDatabase lmDatabase = LMDatabase.getDatabase(Application.context);
-            lmDatabase.syncDao().getCount();
+            // lmDatabase.syncDao().getCount();
 
             switch (globalPrefs.getTypeLoggedIn()) {
                 case LoginController.ADMIN:
@@ -136,15 +136,21 @@ public class SplashActivity extends AppCompatActivity {
                     } else {
                         int daysBtwen = DateTimeUtils.Companion.calcDiff(DateTimeUtils.Companion.conver2Date(xTime), DateTimeUtils.Companion.getTodayDate()).getDays();
 
-                        if (daysBtwen > 7 && lmDatabase.syncDao().getCount() > 0) {
+                        try {
+                            if (daysBtwen > 7 && lmDatabase.syncDao().getCount() > 0) {
 
-                            sync(daysBtwen);
-                        } else {
+                                sync(daysBtwen);
+                            } else {
+                                intent = new Intent(this, TraderActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        } catch (Exception nm) {
+                            nm.printStackTrace();
                             intent = new Intent(this, TraderActivity.class);
                             startActivity(intent);
                             finish();
                         }
-
                     }
                     break;
 

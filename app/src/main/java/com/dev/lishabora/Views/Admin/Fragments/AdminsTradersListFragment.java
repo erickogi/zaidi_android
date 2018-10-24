@@ -41,13 +41,17 @@ import com.dev.lishabora.Adapters.TradersAdapter;
 import com.dev.lishabora.COntrollers.LoginController;
 import com.dev.lishabora.Models.Admin.FetchTraderModel;
 import com.dev.lishabora.Models.ResponseModel;
+import com.dev.lishabora.Models.Trader.Data;
 import com.dev.lishabora.Models.Trader.TraderModel;
+import com.dev.lishabora.Network.ApiConstants;
+import com.dev.lishabora.Network.Request;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.NetworkUtils;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.Utils.RequestDataCallback;
+import com.dev.lishabora.Utils.SyncDownResponseCallback;
 import com.dev.lishabora.ViewModels.Admin.AdminsViewModel;
 import com.dev.lishabora.Views.Admin.Activities.AdimTraderProfile;
 import com.dev.lishabora.Views.Admin.Activities.CreateTrader;
@@ -71,6 +75,7 @@ import java.util.Objects;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -212,72 +217,49 @@ public class AdminsTradersListFragment extends Fragment {
 
         All = 1;
 
-//        chipDelete.setOnCheckedChangeListener((compoundButton, b) -> {
-//
-//            disablechips();
-//
-//            if (chipDelete.isChecked()) {
-//                TraderDel = 1;
-//            } else {
-//                TraderDel = 0;
-//            }
-//            if (mViewModel != null) {
-//                startAnim();
-//                mViewModel.refresh(getSearchObject(), true);
-//            }
-//        });
-//        chipArchive.setOnCheckedChangeListener((compoundButton, b) -> {
-//            disablechips();
-//
-//            if (chipArchive.isChecked()) {
-//                TraderArchive = 1;
-//            } else {
-//                TraderArchive = 0;
-//            }
-//            if (mViewModel != null) {
-//                startAnim();
-//                mViewModel.refresh(getSearchObject(), true);
-//            }
-//        });
-//        chipAll.setOnCheckedChangeListener((compoundButton, b) -> {
-//            disablechips();
-//
-//            if (b) {
-//
-//                All = 1;
-//
-//
-//            } else {
-//
-//                All = 0;
-//            }
-//
-//            if (mViewModel != null) {
-//                startAnim();
-//                /// emptyState(true,linearLayoutEmpty,);
-//                mViewModel.refresh(getSearchObject(), true);
-//            }
-//        });
-//        chipDummy.setOnCheckedChangeListener((compoundButton, b) -> {
-//            disablechips();
-//
-//            if (chipDummy.isChecked()) {
-//                TraderDummy = 1;
-//            } else {
-//                // setDefault();
-//                TraderDummy = 0;
-//            }
-//
-//            if (mViewModel != null && tradersController != null) {
-//                startAnim();
-//                mViewModel.refresh(getSearchObject(), true);
-//            }24
-//        });
-//
-//        chipGroup.setOnCheckedChangeListener((chipGroup, i) -> {
+    }
+
+    void getTraderInfo(TraderModel traderModel) {
+        try {
+            // TraderModel f = new PrefrenceManager(context).getTraderModel();
+
+            JSONObject jb = new JSONObject(gson.toJson(traderModel));
+            Timber.tag("Syncdownprefjj").d(gson.toJson(jb.toString()));
 
 
-        //  });
+            avi.smoothToShow();
+            Request.Companion.getResponseSyncDown(ApiConstants.Companion.getViewInfo(), jb, "",
+                    new SyncDownResponseCallback() {
+                        @Override
+                        public void response(Data responseModel) {
+                            Timber.tag("Syncdownprefhj").d(gson.toJson(responseModel));
+
+                            avi.smoothToHide();
+
+                            Intent intent = new Intent(getActivity(), AdimTraderProfile.class);
+
+                            intent.putExtra("data", traderModel);
+                            intent.putExtra("data1", responseModel);
+
+                            startActivity(intent);
+
+                        }
+
+                        @Override
+                        public void response(String error) {
+                            //Timber.tag("Syncdownprefnmm").d(error);
+
+                            // avi.smoothToHide();
+
+
+                        }
+                    });
+        } catch (JSONException e) {
+            e.printStackTrace();
+
+
+        }
+
 
 
     }
@@ -298,9 +280,7 @@ public class AdminsTradersListFragment extends Fragment {
                 @Override
                 public void onClickListener(int position) {
 
-                    Intent intent = new Intent(getActivity(), AdimTraderProfile.class);
-                    intent.putExtra("data", filteredTraderModels.get(position));
-                    startActivity(intent);
+                    getTraderInfo(filteredTraderModels.get(position));
                 }
 
                 @Override
@@ -629,6 +609,7 @@ public class AdminsTradersListFragment extends Fragment {
                     Type listType = new TypeToken<LinkedList<TraderModel>>() {
                     }.getType();
                     traderModels = gson.fromJson(jsonArray, listType);
+
                     filterTraders(spinner.getSelectedIndex());
                     populateTraders();
                 } else if (responseModel.getResultCode() == 2) {

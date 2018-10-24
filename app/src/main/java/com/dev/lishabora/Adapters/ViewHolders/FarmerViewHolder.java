@@ -30,7 +30,7 @@ public class FarmerViewHolder extends RecyclerView.ViewHolder implements View.On
     public RelativeLayout background;
     public View statusview;
     public View itemVew;
-    public LinearLayout lBig;
+    public RelativeLayout lBig;
     public View dragHandle;
     // public SwipeRevealLayout swipeLayout;
     private MaterialCardView card;

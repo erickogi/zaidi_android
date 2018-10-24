@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.dev.lishabora.AppConstants;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Utils.PrefrenceManager;
@@ -104,11 +105,15 @@ public class FragmentCycleDetails extends Fragment implements BlockingStep, View
         spinner.setSelectedIndex(Integer.valueOf(fm.getCyclecode()) - 1);
         SELECTED = Integer.valueOf(fm.getCyclecode());
 
+        spinner.setEnabled(false);
+
     }
 
     private void setUpSpinners() {
 
-        spinner.setItems("Weekly", "Bi-Weekly", "Semi-Monthly", "Monthly");
+        //spinner.setItems("Weekly", "Bi-Weekly", "Semi-Monthly", "Monthly");
+        spinner.setItems(AppConstants.SEVENDAYS, AppConstants.FIFTEENDAYS, AppConstants.THIRTYDAYS);
+
 
 
         spinner.setOnItemSelectedListener((MaterialSpinner.OnItemSelectedListener<String>) (view, position, id, item) -> {

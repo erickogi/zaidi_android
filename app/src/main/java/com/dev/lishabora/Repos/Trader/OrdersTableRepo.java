@@ -31,6 +31,16 @@ public class OrdersTableRepo {
         new insertAsyncTask(dao).execute(farmerOrdersTable);
     }
 
+    public void insertDirect(FarmerOrdersTable farmerOrdersTable) {
+        try {
+            dao.insertSingleFarmerOrder(farmerOrdersTable);
+        } catch (Exception nm) {
+            nm.printStackTrace();
+            new insertAsyncTask(dao).execute(farmerOrdersTable);
+
+        }
+    }
+
     public LiveData<List<FarmerOrdersTable>> fetchAll() {
         return dao.fetchAllData();
     }
@@ -104,6 +114,24 @@ public class OrdersTableRepo {
 
     public void deleteRecord(FarmerOrdersTable farmerOrdersTable) {
         new deleteAsyncTask(dao).execute(farmerOrdersTable);
+    }
+
+    public void updateRecordDirect(FarmerOrdersTable farmerOrdersTable) {
+        //new updateAsyncTask(dao).execute(farmerOrdersTable);
+        try {
+            dao.updateRecord(farmerOrdersTable);
+        } catch (Exception nm) {
+            new updateAsyncTask(dao).execute(farmerOrdersTable);
+        }
+    }
+
+    public void deleteRecordDirect(FarmerOrdersTable farmerOrdersTable) {
+        try {
+            dao.deleteRecord(farmerOrdersTable);
+        } catch (Exception nm) {
+            new deleteAsyncTask(dao).execute(farmerOrdersTable);
+        }
+
     }
 
     public double getBalanceByFarmerCode(String farmercode) {

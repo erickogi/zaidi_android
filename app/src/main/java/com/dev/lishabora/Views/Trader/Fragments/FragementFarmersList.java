@@ -1,5 +1,6 @@
 package com.dev.lishabora.Views.Trader.Fragments;
 
+import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -32,6 +33,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -107,7 +109,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     private Context context;
     private RecyclerView recyclerView;
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
-    private LinearLayout empty_layout;
     private TextView emptyTxt, txt_network_state;
     private AVLoadingIndicatorView avi;
     private String filterText = "";
@@ -151,6 +152,14 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
 
     }
+
+    public static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
     public void deleteFarmer(FamerModel famerModel) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(famerModel.getNames());
@@ -413,6 +422,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                 }
             }
         });
+        emptyState(listAdapter.getItemCount() > 0);
 
 
 
@@ -472,7 +482,6 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
         prefrenceManager = new PrefrenceManager(getContext());
         recyclerView = view.findViewById(R.id.recyclerView);
-        empty_layout = view.findViewById(R.id.empty_layout);
         emptyTxt = view.findViewById(R.id.empty_text);
         avi = view.findViewById(R.id.avi);
         txt_network_state = view.findViewById(R.id.txt_network_state);
@@ -576,6 +585,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
             filterFarmers();
         }
     }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -743,8 +753,8 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     public void observeBalance() {
         balncesViewModel.fetchAll().observe(this, farmerBalances -> {
 
-            fetchFarmers(FragementFarmersList.this.getSelectedAccountStatus(),
-                    FragementFarmersList.this.getSelectedRoute());//update(famerModel);
+            //  fetchFarmers(FragementFarmersList.this.getSelectedAccountStatus(),
+            //      FragementFarmersList.this.getSelectedRoute());//update(famerModel);
 
 
 
@@ -803,12 +813,12 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
                 for (int a = 0; a < famerModels.size(); a++) {
 
-                    String bal = "0.0";
+                    FamerModel fm = famerModels.get(a);
+                    Double bal = 0.0;
                     try {
                         FarmerBalance f = balncesViewModel.getByFarmerCodeByPayoutOne(famerModels.get(a).getCode(), famerModels.get(a).getCurrentPayoutCode());
-
                         if (f != null) {
-                            bal = f.getBalanceToPay();
+                            bal = Double.valueOf(f.getBalanceToPay());
                         } else {
 
                         }
@@ -817,9 +827,18 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                         NM.printStackTrace();
                     }
 
-                    famerModels.get(a).setTotalbalance(bal);
+                    if (Double.valueOf(fm.getTotalbalance()) != bal) {
+
+                        if (bal > Double.valueOf(fm.getTotalbalance())) {
+                            famerModels.get(a).setTotalbalance(String.valueOf(bal));
+                        }
+                    }
+
+
+
+
                     try {
-                        // famerModels.get(a).setPreviousBalance(CommonFuncs.getPreviousPayoutBalance(famerModels.get(a), balncesViewModel));
+                        famerModels.get(a).setPreviousBalance(CommonFuncs.getPreviousPayoutBalance(famerModels.get(a), balncesViewModel));
 
                     } catch (Exception nm) {
                         nm.printStackTrace();
@@ -917,16 +936,22 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         listAdapter.notifyDataSetChanged();
         recyclerView.setAdapter(listAdapter);
 
+        emptyState(listAdapter.getItemCount() > 0);
 
-        emptyState(listAdapter.getItemCount() > 0, "We couldn't find any farmers records", empty_layout, null, emptyTxt);
+
+        // emptyState(listAdapter.getItemCount() > 0, "We couldn't find any farmers records", empty_layout, null, emptyTxt);
 
     }
 
-    private void emptyState(boolean listHasData, String text, LinearLayout empty_layout, ImageView empty_image, TextView emptyTxt) {
+    private void emptyState(boolean listHasData) {
+        LinearLayout empty_layout;
+        empty_layout = view.findViewById(R.id.empty_layout);
+
         if (listHasData) {
+            empty_layout.setVisibility(View.GONE);
         } else {
-            if (text != null) {
-            }
+            empty_layout.setVisibility(View.VISIBLE);
+
         }
     }
 
@@ -959,6 +984,8 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
         switch (sort) {
             case AUTOMATICALLY:
                 listAdapter.notifyDataSetChanged();
+                emptyState(listAdapter.getItemCount() > 0);
+
                 break;
             case ALPHABETICAL:
                 filterFarmersAlpahbetically();
@@ -971,6 +998,8 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                 break;
             default:
                 listAdapter.notifyDataSetChanged();
+                emptyState(listAdapter.getItemCount() > 0);
+
         }
 
 
@@ -982,6 +1011,8 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
         Collections.sort(FarmerConst.getSearchFamerModels(), farmerNameComparator);
         listAdapter.notifyDataSetChanged();
+        emptyState(listAdapter.getItemCount() > 0);
+
 
 
     }
@@ -991,6 +1022,8 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
         Collections.sort(FarmerConst.getSearchFamerModels(), farmerDateComparator);
         listAdapter.notifyDataSetChanged();
+        emptyState(listAdapter.getItemCount() > 0);
+
 
 
     }
@@ -1000,6 +1033,8 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
         Collections.sort(FarmerConst.getSearchFamerModels(), farmerPosComparator);
         listAdapter.notifyDataSetChanged();
+        emptyState(listAdapter.getItemCount() > 0);
+
 
 
     }
@@ -1008,6 +1043,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     public void onResume() {
         super.onResume();
 
+        hideKeyboardFrom(getContext(), view);
 
         fetchFarmers(0, "");
 
@@ -1263,8 +1299,10 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
 
+                    break;
                 case R.id.sms:
                     sendSMS("0" + famerModel.getMobile());
+                    break;
                 default:
             }
             return false;
@@ -1301,7 +1339,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     public void createCollection(Collection c, FamerModel famerModel) {
 
 
-
+        c.setGpsPoint(prefrenceManager.getLastCordiantes());
         mViewModel.createCollections(c).observe(FragementFarmersList.this, responseModel -> {
 
 
@@ -1319,10 +1357,10 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                 famerModel.setCurrentPayoutCode(responseModel.getPayoutCode());
 
 
-                CommonFuncs.updateBalance(famerModel, mViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.MILK, null, null);
+                FamerModel fm = CommonFuncs.updateBalance(famerModel, mViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.MILK, null, null);
 
 
-                mViewModel.updateFarmer(famerModel, false, hasToSyncFarmer);
+                mViewModel.updateFarmer(fm, false, hasToSyncFarmer);
 
 
             } else {
@@ -1336,6 +1374,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     }
     @Override
     public void updateCollection(Collection c, FamerModel famerModel) {
+        c.setGpsPoint(prefrenceManager.getLastCordiantes());
 
         mViewModel.updateCollection(c).observe(FragementFarmersList.this, responseModel -> {
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
@@ -1348,8 +1387,9 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                 }
                 famerModel.setCurrentPayoutCode(responseModel.getPayoutCode());
 
-                CommonFuncs.updateBalance(famerModel, mViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.MILK, null, null);
-                mViewModel.updateFarmer(famerModel, false, hasToSyncFarmer);
+                FamerModel fm = CommonFuncs.updateBalance(famerModel, mViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.MILK, null, null);
+
+                mViewModel.updateFarmer(fm, false, hasToSyncFarmer);
 
 
             } else {

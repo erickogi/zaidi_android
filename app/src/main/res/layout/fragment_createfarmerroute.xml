@@ -65,6 +65,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -143,106 +144,119 @@
                         android:textStyle="bold" />
 
                     <LinearLayout
-                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:background="@color/colorAccent">
-
-                        <com.jaredrummler.materialspinner.MaterialSpinner
-                            android:id="@+id/spinnerUnit"
-                            android:layout_width="match_parent"
-                            android:hint="Unit"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="2dp"
-
-                            android:textColorHint="@color/white"
-
-                            app:ms_arrow_tint="@color/white"
-                            app:ms_background_color="@color/colorAccent"
-                            app:ms_hint_color="@color/white"
-
-                            app:ms_text_color="@color/white"
-
-
-                            app:ms_hint="Select Unit" />
-
-
-                    </LinearLayout>
-
-                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-                        <android.support.design.widget.TextInputLayout
-
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-
+                        <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_margin="2dp"
                             android:layout_weight="1"
+                            android:background="@color/colorAccent">
 
-                            android:textColorHint="@color/black">
-
-                            <android.support.design.widget.TextInputEditText
-                                android:id="@+id/edt_unit_names"
+                            <com.jaredrummler.materialspinner.MaterialSpinner
+                                android:id="@+id/spinnerUnit"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:enabled="false"
-                                android:hint="Unit  "
+                                android:layout_height="wrap_content"
+                                android:layout_margin="2dp"
+                                android:hint="Unit"
 
-                                android:inputType="text"
-                                android:textColor="@color/black" />
+                                android:textColorHint="@color/white"
 
-                        </android.support.design.widget.TextInputLayout>
+                                app:ms_arrow_tint="@color/white"
+                                app:ms_background_color="@color/colorAccent"
+                                app:ms_hint="Select Unit"
 
-                        <android.support.design.widget.TextInputLayout
+                                app:ms_hint_color="@color/white"
 
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+                                app:ms_text_color="@color/white" />
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
 
-                            android:layout_weight="1"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
-                            android:textColorHint="@color/black">
+                            <android.support.design.widget.TextInputLayout
 
-                            <android.support.design.widget.TextInputEditText
-                                android:id="@+id/edt_unit_size"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:enabled="false"
-                                android:hint="Size(Mils)"
-                                android:inputType="text"
-                                android:textColor="@color/black" />
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
 
-                        </android.support.design.widget.TextInputLayout>
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
 
-                        <android.support.design.widget.TextInputLayout
+                                android:textColorHint="@color/black">
 
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                <android.support.design.widget.TextInputEditText
+                                    android:id="@+id/edt_unit_names"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:enabled="false"
+                                    android:hint="Unit  "
 
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textColorHint="@color/black">
+                                    android:inputType="text"
+                                    android:textColor="@color/black" />
 
-                            <android.support.design.widget.TextInputEditText
-                                android:id="@+id/edt_unit_price"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:enabled="true"
-                                android:focusedByDefault="true"
-                                android:focusable="true"
-                                android:focusableInTouchMode="true"
-                                android:hint="Price(Ksh)"
+                            </android.support.design.widget.TextInputLayout>
 
-                                android:inputType="numberDecimal"
-                                android:textColor="@color/black" />
+                            <android.support.design.widget.TextInputLayout
 
-                        </android.support.design.widget.TextInputLayout>
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+
+                                android:layout_weight="1"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:textColorHint="@color/black">
+
+                                <android.support.design.widget.TextInputEditText
+                                    android:id="@+id/edt_unit_size"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:enabled="false"
+                                    android:hint="Size(Mils)"
+                                    android:inputType="text"
+                                    android:textColor="@color/black" />
+
+                            </android.support.design.widget.TextInputLayout>
+
+
+                        </LinearLayout>
 
                     </LinearLayout>
+
+                    <android.support.design.widget.TextInputLayout
+
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColorHint="@color/black">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/edt_unit_price"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:enabled="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:focusedByDefault="true"
+                            android:hint="Price(Ksh)"
+
+                            android:inputType="numberDecimal"
+                            android:textColor="@color/black" />
+
+                    </android.support.design.widget.TextInputLayout>
+
 
                 </LinearLayout>
             </android.support.design.card.MaterialCardView>

@@ -19,7 +19,6 @@ import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
 
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class PayoutCheckerJob extends Job {
@@ -43,7 +42,7 @@ public class PayoutCheckerJob extends Job {
 
     private void sendNotification(String title, String message, boolean isloggedIn) {
 
-        if (isloggedIn) {
+        // if (isloggedIn) {
             Intent intent = new Intent(Application.context, TraderActivity.class);
             intent.putExtra("type", "notification_fragment");
 
@@ -62,10 +61,11 @@ public class PayoutCheckerJob extends Job {
                     .setLocalOnly(true)
                     .build();
 
-            NotificationManagerCompat.from(Application.context)
-                    .notify(new Random().nextInt(), notification);
 
-        }
+        NotificationManagerCompat.from(Application.context)
+                .notify(5, notification);
+
+        // }
     }
 
     @Override
@@ -82,17 +82,17 @@ public class PayoutCheckerJob extends Job {
                 title = "Hi . " + new PrefrenceManager(Application.context).getTraderModel().getNames();
                 message = "You have " + notifications.size() + " Pending payouts that require approval";
 
-                if (new PrefrenceManager(Application.context).isLoggedIn()) {
+                //if (new PrefrenceManager(Application.context).isLoggedIn()) {
                     sendNotification(title, message, true);
-                }
+                //}
 
             } else if (notifications.size() == 1) {
                 title = "Hi . " + new PrefrenceManager(Application.context).getTraderModel().getNames() + " You have 1 " + notifications.get(0).getTitle();
                 message = notifications.get(0).getMessage();
 
-                if (new PrefrenceManager(Application.context).isLoggedIn()) {
-                    sendNotification(title, message, true);
-                }
+                //if (new PrefrenceManager(Application.context).isLoggedIn()) {
+                sendNotification(title, message, true);
+                //}
 
             }
         }

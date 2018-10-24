@@ -1,13 +1,19 @@
 package com.dev.lishabora.Views.Trader.Activities;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -27,6 +33,7 @@ import com.dev.lishabora.Models.ResponseObject;
 import com.dev.lishabora.Models.Trader.TraderModel;
 import com.dev.lishabora.Network.ApiConstants;
 import com.dev.lishabora.Network.Request;
+import com.dev.lishabora.TrackerService;
 import com.dev.lishabora.Utils.Jobs.Evernote.PayoutCheckerJob;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.PrefrenceManager;
@@ -46,6 +53,16 @@ import com.dev.lishabora.Views.Trader.Fragments.FragmentProductList;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentRoutes;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentTraderProfile;
 import com.dev.lishaboramobile.R;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStates;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.gson.Gson;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -57,10 +74,14 @@ import java.util.Objects;
 import static com.dev.lishabora.Application.collectMilk;
 
 public class TraderActivity extends AppCompatActivity {
+    private static final int PERMISSIONS_REQUEST = 1;
+
     private static Fragment fragment = null;
     PrefrenceManager traderPrefs;
     FloatingActionButton fab;
     private ProgressDialog progressDialog;
+    private GoogleApiClient googleApiClient;
+
 
     SearchView mSearchView;
     ViewPagerAdapter adapter;
@@ -72,8 +93,107 @@ public class TraderActivity extends AppCompatActivity {
     private static final String SAMPLE_DB_NAME = "lm_database";
     private static final String SAMPLE_TABLE_NAME = "Info";
 
+    private void settings() {
+
+        if (googleApiClient == null) {
+            googleApiClient = new GoogleApiClient.Builder(getApplicationContext()).addApi(LocationServices.API).build();
+            googleApiClient.connect();
+
+            LocationRequest locationRequest = LocationRequest.create();
+            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            locationRequest.setInterval(30 * 1000);
+            locationRequest.setFastestInterval(5 * 1000);
+            LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+
+// **************************
+
+            builder.setAlwaysShow(true); // this is the key ingredient
 
 
+            PendingResult result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
+            //                @Override
+//                public void onResult(@NonNull Result result) {
+//
+//                }
+//  @Override
+            result.setResultCallback((ResultCallback<LocationSettingsResult>) results -> {
+
+                final Status status = results.getStatus();
+
+                final LocationSettingsStates state = results.getLocationSettingsStates();
+
+                switch (status.getStatusCode())
+
+                {
+
+                    case LocationSettingsStatusCodes.SUCCESS:
+
+                        break;
+
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+
+
+                        try {
+
+                            status.startResolutionForResult(TraderActivity.this, 1000);
+
+                        } catch (IntentSender.SendIntentException e)
+
+                        {
+
+                        }
+
+                        break;
+
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+
+                        break;
+
+                }
+
+            });
+        }
+    }
+
+    private void startTrackerService() {
+        startService(new Intent(this, TrackerService.class));
+        // finish();
+    }
+
+    private void setUp() {
+        // Check GPS is enabled
+        LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (lm != null && !lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            //Toast.makeText(this, "Please enable location services", Toast.LENGTH_SHORT).show();
+            //finish();
+            settings();
+
+        }
+
+        // Check location permission is granted - if it is, start
+        // the service, otherwise request the permission
+        int permission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+        if (permission == PackageManager.PERMISSION_GRANTED) {
+            startTrackerService();
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[]
+            grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST && grantResults.length == 1
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // Start the service when the permission is granted
+            startTrackerService();
+        } else {
+            //finish();
+        }
+    }
 
 
     void setUpDrawer(Toolbar toolbar, String name, String email) {
@@ -142,7 +262,6 @@ public class TraderActivity extends AppCompatActivity {
 
             @Override
             public void helpClicked() {
-
                 Application.syncChanges();
             }
 
@@ -349,6 +468,7 @@ public class TraderActivity extends AppCompatActivity {
             collectMilk = new CollectMilk(this, true);
 
         }
+        setUp();
     }
 
     @Override
@@ -494,25 +614,34 @@ public class TraderActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Exit");
-        builder.setMessage("Are You Sure?");
 
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                TraderActivity.super.onBackPressed();
-            }
-        });
+        Fragment f = getSupportFragmentManager().findFragmentById(R.id.frame_layout);
+        if (f instanceof FragementFarmersList) {
 
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Exit");
+            builder.setMessage("Are You Sure?");
+
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    TraderActivity.super.onBackPressed();
+                }
+            });
+
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();            //additional code
+        } else {
+            popOutFragments();
+        }
+
 
     }
 }

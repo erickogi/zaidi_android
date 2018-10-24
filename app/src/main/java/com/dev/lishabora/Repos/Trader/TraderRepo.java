@@ -42,6 +42,16 @@ public class TraderRepo {
     public void upDateRecord(TraderModel traderModel){
         new updateTradersAsyncTask(db.tradersDao()).execute(traderModel);
     }
+
+    public void upDateRecordDirect(TraderModel traderModel) {
+        // new updateTradersAsyncTask(db.tradersDao()).execute(traderModel);
+        try {
+            db.tradersDao().updateRecord(traderModel);
+        } catch (Exception nm) {
+            nm.printStackTrace();
+            new updateTradersAsyncTask(db.tradersDao()).execute(traderModel);
+        }
+    }
     public void deleteRecord(TraderModel traderModel){
         new deleteTradersAsyncTask(db.tradersDao()).execute(traderModel);
     }

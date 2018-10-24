@@ -125,6 +125,18 @@
 
                         </LinearLayout>
 
+                        <com.dev.customfonts.MyTextView_Roboto_Bold
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+
+                            android:layout_weight="1"
+                            android:background="@color/colorPrimary"
+                            android:gravity="center"
+                            android:text="Edit"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                            android:textColor="@color/white"
+                            android:visibility="gone" />
+
                     </LinearLayout>
 
 

@@ -101,6 +101,17 @@ public class FragmentProductList extends Fragment {
 
     }
 
+    private void emptyState(boolean listHasData) {
+        LinearLayout empty_layout;
+        empty_layout = view.findViewById(R.id.empty_layout);
+
+        if (listHasData) {
+            empty_layout.setVisibility(View.GONE);
+        } else {
+            empty_layout.setVisibility(View.VISIBLE);
+
+        }
+    }
 
 
     @Nullable
@@ -325,6 +336,7 @@ public class FragmentProductList extends Fragment {
 
         listAdapter.notifyDataSetChanged();
         recyclerView.setAdapter(listAdapter);
+        emptyState(listAdapter.getItemCount() > 0);
         //emptyState(listAdapter.getItemCount() > 0, "We couldn't find any farmers records", empty_layout, null, emptyTxt);
 
     }
@@ -453,6 +465,8 @@ public class FragmentProductList extends Fragment {
 
             }
             listAdapter.refresh(filteredProductsModel);
+            emptyState(listAdapter.getItemCount() > 0);
+
 
         }
 
