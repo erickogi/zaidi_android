@@ -225,13 +225,15 @@
 
         <LinearLayout
 
+            android:layout_margin="4dp"
+            android:padding="4dp"
             android:id="@+id/empty_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <ImageView
 
@@ -245,6 +247,7 @@
 
             <TextView
 
+                android:padding="2dp"
 
                 android:text="You have no farmers to display here .. Please click on the add button below to add new farmers"
                 android:id="@+id/empty_text"

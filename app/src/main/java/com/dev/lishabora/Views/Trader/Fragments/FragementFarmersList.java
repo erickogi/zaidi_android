@@ -899,8 +899,13 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
     private void filterFarmersChronologically() {
 
-
-        Collections.sort(FarmerConst.getSearchFamerModels(), farmerDateComparator);
+        if (FarmerConst.getSearchFamerModels() != null) {
+            try {
+                Collections.sort(FarmerConst.getSearchFamerModels(), farmerDateComparator);
+            } catch (Exception nm) {
+                nm.printStackTrace();
+            }
+        }
         listAdapter.notifyDataSetChanged();
         emptyState(listAdapter.getItemCount() > 0);
 
@@ -910,8 +915,14 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
     private void filterFarmersManually() {
 
+        if (FarmerConst.getSearchFamerModels() != null) {
+            try {
+                Collections.sort(FarmerConst.getSearchFamerModels(), farmerPosComparator);
+            } catch (Exception nm) {
+                nm.printStackTrace();
+            }
+        }
 
-        Collections.sort(FarmerConst.getSearchFamerModels(), farmerPosComparator);
         listAdapter.notifyDataSetChanged();
         emptyState(listAdapter.getItemCount() > 0);
 
