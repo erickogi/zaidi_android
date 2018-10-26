@@ -1,10 +1,8 @@
 package com.dev.lishabora.Views.Trader.Activities;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -88,10 +86,8 @@ public class CreateFarmerActivity extends AppCompatActivity implements StepperLa
     }
 
     private void update() {
-        mViewModel.updateFarmer(FarmerConst.getFamerModel(), false, true).observe(this, new Observer<ResponseModel>() {
-            @Override
-            public void onChanged(@Nullable ResponseModel responseModel) {
-                if (responseModel != null && responseModel.getResultCode() == 1) {
+        ResponseModel responseModel = mViewModel.updateFarmer(FarmerConst.getFamerModel(), false, true);
+        if (responseModel != null && responseModel.getResultCode() == 1) {
                     snack(responseModel.getResultDescription());
 
 
@@ -101,8 +97,8 @@ public class CreateFarmerActivity extends AppCompatActivity implements StepperLa
                     setResult(RESULT_OK, data);
                     finish();
                 }
-            }
-        });
+
+        // });
     }
 
     private void insert(int position) {

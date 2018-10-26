@@ -77,20 +77,7 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
     }
 
 
-    @Override
-    public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
-        FarmerConst.getFamerModel().setRoute(edtRouteName.getText().toString());
-        FarmerConst.getFamerModel().setRoutename(edtRouteName.getText().toString());
-        FarmerConst.getFamerModel().setRoutecode(edtRouteCode.getText().toString());
-        FarmerConst.getFamerModel().setUnitcapacity(edtUnitMeasurement.getText().toString());
-        FarmerConst.getFamerModel().setUnitname(spinnerUnit.getItems().get(spinnerUnit.getSelectedIndex()).toString());
-        FarmerConst.getFamerModel().setUnitcode(edtUnitName.getText().toString());
-        FarmerConst.getFamerModel().setUnitcapacity(edtUnitMeasurement.getText().toString());
-        FarmerConst.getFamerModel().setUnitprice(edtUnitPrice.getText().toString());
-
-        callback.goToNextStep();
-
-    }
+    UnitsModel unitsModel = null;//= unitsModels.get(position);
 
     @Override
     public void onCompleteClicked(StepperLayout.OnCompleteClickedCallback callback) {
@@ -131,23 +118,19 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
         return spinner.isSelected();
     }
 
-
-    private void initViews() {
-        spinnerUnit = view.findViewById(R.id.spinnerUnit);
-        spinnerRoute = view.findViewById(R.id.spinnerRoute);
-        edtUnitName = view.findViewById(R.id.edt_unit_names);
-        edtUnitPrice = view.findViewById(R.id.edt_unit_price);
-        edtUnitMeasurement = view.findViewById(R.id.edt_unit_size);
-        edtRouteName = view.findViewById(R.id.edt_route_names);
-        edtRouteCode = view.findViewById(R.id.edt_route_code);
-
+    @Override
+    public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
+        FarmerConst.getFamerModel().setRoute(edtRouteName.getText().toString());
+        FarmerConst.getFamerModel().setRoutename(edtRouteName.getText().toString());
+        FarmerConst.getFamerModel().setRoutecode(edtRouteCode.getText().toString());
+        FarmerConst.getFamerModel().setUnitcapacity(edtUnitMeasurement.getText().toString());
+        FarmerConst.getFamerModel().setUnitname(spinnerUnit.getItems().get(spinnerUnit.getSelectedIndex()).toString());
+        FarmerConst.getFamerModel().setUnitcode(edtUnitName.getText().toString());
+        FarmerConst.getFamerModel().setUnitcapacity(edtUnitMeasurement.getText().toString());
+        FarmerConst.getFamerModel().setUnitprice(edtUnitPrice.getText().toString());
 
         hideKeyboardFrom(Objects.requireNonNull(getContext()), view);
-
-        initData();
-        initActions();
-
-
+        callback.goToNextStep();
 
     }
 
@@ -164,11 +147,32 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
 
     }
 
+    private void initViews() {
+        spinnerUnit = view.findViewById(R.id.spinnerUnit);
+        spinnerRoute = view.findViewById(R.id.spinnerRoute);
+        edtUnitName = view.findViewById(R.id.edt_unit_names);
+        edtUnitPrice = view.findViewById(R.id.edt_unit_price);
+        edtUnitMeasurement = view.findViewById(R.id.edt_unit_size);
+        edtRouteName = view.findViewById(R.id.edt_route_names);
+        edtRouteCode = view.findViewById(R.id.edt_route_code);
+
+
+
+        hideKeyboardFrom(Objects.requireNonNull(getContext()), view);
+
+        initData();
+        initActions();
+
+
+
+    }
+
     private void initActions() {
+
         try {
             spinnerUnit.setOnItemSelectedListener((view, position, id, item) -> {
                 //   if (position != 0) {
-                UnitsModel unitsModel = unitsModels.get(position);
+                unitsModel = unitsModels.get(position);
                 edtUnitName.setText("" + unitsModel.getUnit());
                 edtUnitMeasurement.setText(unitsModel.getUnitcapacity());
                 edtUnitPrice.setText(unitsModel.getUnitprice());
@@ -176,6 +180,15 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
 
                     edtUnitPrice.setText("0");
 
+                }
+
+            });
+
+            edtUnitPrice.setOnClickListener(view -> {
+
+                if (unitsModel == null || TextUtils.isEmpty(edtUnitName.getText().toString())) {
+                    spinnerUnit.expand();
+                    hideKeyboardFrom(getContext(), view);
                 }
 
             });

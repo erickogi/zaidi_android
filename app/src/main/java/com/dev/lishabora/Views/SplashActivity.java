@@ -12,7 +12,6 @@ import com.dev.lishabora.Application;
 import com.dev.lishabora.COntrollers.LoginController;
 import com.dev.lishabora.Database.LMDatabase;
 import com.dev.lishabora.Utils.DateTimeUtils;
-import com.dev.lishabora.Utils.Jobs.Evernote.UpSyncJob;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.Views.Admin.Activities.AdminsActivity;
 import com.dev.lishabora.Views.Login.Activities.LoginActivity;
@@ -43,7 +42,6 @@ public class SplashActivity extends AppCompatActivity {
         } else {
             timeIs();
         }
-        UpSyncJob.schedulePeriodic();
 
     }
 

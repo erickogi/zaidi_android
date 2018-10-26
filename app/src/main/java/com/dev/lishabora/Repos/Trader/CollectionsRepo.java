@@ -121,8 +121,13 @@ public class CollectionsRepo {
 
     public void insert(Collection collection) {
 
-        collectionsDao.insertSingleCollection(collection);
-        //new insertAsyncTask(collectionsDao).execute(collection);
+        try {
+            collectionsDao.insertSingleCollection(collection);
+        } catch (Exception nm) {
+            nm.printStackTrace();
+            new insertAsyncTask(collectionsDao).execute(collection);
+
+        }
     }
 
     public boolean insert(List<Collection> collections) {

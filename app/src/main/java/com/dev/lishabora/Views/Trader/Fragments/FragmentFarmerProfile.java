@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -140,7 +139,7 @@ public class FragmentFarmerProfile extends Fragment {
                 txtMilk.setText("");
                 txtLoan.setText("");
                 txtOrder.setText("");
-                // txtBalance.setText(GeneralUtills.Companion.round(farmerModel.getTotalbalance(), 1));
+                txtBalance.setText(GeneralUtills.Companion.round(farmerModel.getTotalbalance(), 1));
                 txtTime.setText(famerModel.getLastCollectionTime());
 
                 try {
@@ -151,27 +150,27 @@ public class FragmentFarmerProfile extends Fragment {
 
             });
             try {
-                String bal = "0.0";
-                try {
-                    balncesViewModel.getByFarmerCodeByPayout(famerModel.getCode(), famerModel.getCurrentPayoutCode()).observe(this, farmerBalances -> {
-
-                        Double total = 0.0;
-                        try {
-                            if (farmerBalances.getPayoutStatus() == 0) {
-                                total = total + (Double.valueOf(farmerBalances.getBalanceToPay()));
-                                }
-                            } catch (Exception nm) {
-                                nm.printStackTrace();
-                            }
-
-                        txtBalance.setText(GeneralUtills.Companion.round(String.valueOf(total), 1));
-
-                    });
-                } catch (Exception NM) {
-                    NM.printStackTrace();
-                    Log.d("balls", NM.toString());
-
-                }
+//                String bal = "0.0";
+//                try {
+//                    balncesViewModel.getByFarmerCodeByPayout(famerModel.getCode(), famerModel.getCurrentPayoutCode()).observe(this, farmerBalances -> {
+//
+//                        Double total = 0.0;
+//                        try {
+//                            if (farmerBalances.getPayoutStatus() == 0) {
+//                                total = total + (Double.valueOf(farmerBalances.getBalanceToPay()));
+//                                }
+//                            } catch (Exception nm) {
+//                                nm.printStackTrace();
+//                            }
+//
+//                        txtBalance.setText(GeneralUtills.Companion.round(String.valueOf(total), 1));
+//
+//                    });
+//                } catch (Exception NM) {
+//                    NM.printStackTrace();
+//                    Log.d("balls", NM.toString());
+//
+//                }
 
 
             } catch (Exception nm) {

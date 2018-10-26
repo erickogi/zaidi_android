@@ -298,21 +298,24 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
                         if (a != null) {
                             a.dismiss();
                         }
+                        FamerModel fm = famerModel;
                         if (type == AppConstants.MILK) {
-                            CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, null);
+                            fm = CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, null);
                         } else if (type == AppConstants.LOAN) {
                             FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getCode());
 
-                            CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, f, null);
+                            fm = CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, f, null);
 
 
                         } else if (type == AppConstants.ORDER) {
                             FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getCode());
 
-                            CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, f);
+                            fm = CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, f);
 
 
                         }
+                        traderViewModel.updateFarmer(fm, false, true);
+
                         MyToast.toast(responseModel.getResultDescription(), getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
                     }
                 });
@@ -326,16 +329,17 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
                 payoutsVewModel.updateCollection(c).observe(FragmentCurrentFarmerPayout.this, new Observer<ResponseModel>() {
                     @Override
                     public void onChanged(@Nullable ResponseModel responseModel) {
-                        if (responseModel.getResultCode() == 1) {
+                        if (responseModel != null && responseModel.getResultCode() == 1) {
                             if (a != null) {
                                 a.dismiss();
                             }
+                            FamerModel fm = famerModel;
                             if (type == AppConstants.MILK) {
-                                CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, null);
+                                fm = CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, null);
                             } else if (type == AppConstants.LOAN) {
                                 FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getCode());
 
-                                CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, f, null);
+                                fm = CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, f, null);
 
 
                             } else if (type == AppConstants.ORDER) {
@@ -343,10 +347,12 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
 
                                 FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getCode());
 
-                                CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, f);
+                                fm = CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, f);
 
 
                             }
+
+                            traderViewModel.updateFarmer(fm, false, true);
                             MyToast.toast("Collection updated", getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
 
                         }
@@ -482,25 +488,6 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
     }
 
     private void approve(Payouts payouts, PayoutFarmersCollectionModel model) {
-//        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
-//        alertDialog.setMessage("Confirm that you wish to approve " + model.getFarmername() + "'s " + payouts.getCyclename() + " Collection card").setCancelable(false).setTitle("Approve " + model.getFarmername() + " Card");
-//
-//
-//        alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
-//
-//            payoutsVewModel.approveFarmersPayoutCard(model.getFarmercode(), model.getPayoutNumber());
-//            model.setCardstatus(1);
-//            model.setStatusName("Approved");
-//            setData(model);
-//
-//
-//            dialogInterface.dismiss();
-//
-//        }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
-//
-//        AlertDialog alertDialogAndroid = alertDialog.create();
-//        alertDialogAndroid.setCancelable(false);
-//        alertDialogAndroid.show();
 
         CommonFuncs.doAprove(getContext(), balncesViewModel, traderViewModel, model, famerModel, payouts, this);
 
@@ -533,17 +520,7 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
             milkKsh = integer;
             setBalance(milkKsh);
         });
-//        payoutsVewModel.getSumOfLoansForPayout(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
-//            toolBar.updateLoan(String.valueOf(integer));
-//
-//            setBalance(milkKsh);
-//        });
-//        payoutsVewModel.getSumOfOrdersForPayout(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
-//            toolBar.updateOrder(String.valueOf(integer));
-//
-//            setBalance(milkKsh);
-//        });
-//
+
 
         balncesViewModel.getFarmerLoanByFarmer(model.getFarmercode()).observe(this, farmerLoansTables -> {
             if (farmerLoansTables != null) {

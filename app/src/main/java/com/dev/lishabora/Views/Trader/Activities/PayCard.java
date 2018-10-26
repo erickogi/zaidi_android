@@ -223,24 +223,7 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
         alertDialogAndroid.show();
     }
     private void approve(Payouts payouts, PayoutFarmersCollectionModel model) {
-//        AlertDialog.Builder alertDialog = new AlertDialog.Builder(PayCard.this);
-//        alertDialog.setMessage("Confirm that you wish to approve " + model.getFarmername() + "'s " + payouts.getCyclename() + " Collection card").setCancelable(false).setTitle("Approve " + model.getFarmername() + " Card");
 //
-//
-//        alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
-//
-//            payoutsVewModel.approveFarmersPayoutCard(model.getFarmercode(), model.getPayoutNumber());
-//            model.setCardstatus(1);
-//            model.setStatusName("Approved");
-//            setData(model);
-//            dialogInterface.dismiss();
-//
-//
-//        }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
-//
-//        AlertDialog alertDialogAndroid = alertDialog.create();
-//        alertDialogAndroid.setCancelable(false);
-//        alertDialogAndroid.show();
         CommonFuncs.doAprove(PayCard.this, balncesViewModel, traderViewModel, model, famerModel, payouts, this);
 
 
@@ -309,7 +292,6 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
             }
         });
         recyclerView.setAdapter(listAdapter);
-
         listAdapter.notifyDataSetChanged();
 
     }
@@ -317,7 +299,6 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
     private void setBottom() {
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
         sheetBehavior.setFitToContents(true);
-        // sheetBehavior.setPeekHeight(300);
         sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
@@ -458,21 +439,24 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
 
 
                         }
+                        FamerModel fm = famerModel;
+
                         if (type == AppConstants.MILK) {
-                            CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, null);
+                            fm = CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, null);
+
                         } else if (type == AppConstants.LOAN) {
                             FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getCode());
-
-                            CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, f, null);
+                            fm = CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, f, null);
 
                         } else if (type == AppConstants.ORDER) {
 
                             FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getCode());
-
-                            CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, f);
+                            fm = CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, f);
 
 
                         }
+                        traderViewModel.updateFarmer(fm, false, true);
+
                         MyToast.toast(responseModel.getResultDescription(), PayCard.this, R.drawable.ic_launcher, Toast.LENGTH_LONG);
                     }
                 });
@@ -488,23 +472,26 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
                         if (a != null) {
                             a.dismiss();
                         }
+                        FamerModel fm = famerModel;
                         if (type == AppConstants.MILK) {
-                            CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, null);
+
+                            fm = CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, null);
+
                         } else if (type == AppConstants.LOAN) {
                             FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getCode());
-
-                            CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, f, null);
+                            fm = CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, f, null);
 
 
                         } else if (type == AppConstants.ORDER) {
 
                             FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getCode());
-
-                            CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, f);
+                            fm = CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), type, null, f);
 
 
 
                         }
+                        traderViewModel.updateFarmer(fm, false, true);
+
                     }
                 });
 

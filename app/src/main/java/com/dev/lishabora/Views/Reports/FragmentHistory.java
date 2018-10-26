@@ -36,7 +36,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.dev.lishabora.Views.CommonFuncs.createPayoutsByCollection;
+import static com.dev.lishabora.Views.CommonFuncs.createPayouts;
 
 public class FragmentHistory extends Fragment implements DatePickerDialog.OnDateSetListener {
     private HistoryToolBarUI toolbar;
@@ -148,7 +148,7 @@ public class FragmentHistory extends Fragment implements DatePickerDialog.OnDate
 
 
                     if (collections != null) {
-                        payoutsList.add(createPayoutsByCollection(collections, p, payoutsVewModel, balncesViewModel, null, false, payoutsVewModel.getFarmersByCycleONe(p.getCycleCode())));
+                        payoutsList.add(createPayouts(collections, p, payoutsVewModel, balncesViewModel));
                         listpayouts = payoutsList;
                         //   payoutesAdapter.refresh(payoutsList);
 

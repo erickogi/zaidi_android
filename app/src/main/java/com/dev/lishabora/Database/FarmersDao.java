@@ -15,6 +15,8 @@ import java.util.List;
 
 @Dao
 public interface FarmersDao {
+    //FULL OUTER JOIN
+
 
     @Query("SELECT * FROM FARMERS  ")
     LiveData<List<FamerModel>> findAllBalRoute();

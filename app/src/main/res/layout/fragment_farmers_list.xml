@@ -141,6 +141,7 @@
         app:cardUseCompatPadding="true">
 
         <RelativeLayout
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/rounded_border_tv"

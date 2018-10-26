@@ -1,6 +1,8 @@
 package com.dev.lishabora.Views.Trader.Fragments;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,8 +10,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dev.lishabora.AppConstants;
 import com.dev.lishabora.Models.Cycles;
@@ -43,6 +47,12 @@ public class FragmentCycleDetails extends Fragment implements BlockingStep, View
         // TODO: Use the ViewModel
     }
 
+    public static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +98,8 @@ public class FragmentCycleDetails extends Fragment implements BlockingStep, View
 
 
     void setUp() {
+        hideKeyboardFrom(getContext(), view);
+
         spinner = view.findViewById(R.id.spinnerCycle);
         setUpSpinners();
 
@@ -103,36 +115,23 @@ public class FragmentCycleDetails extends Fragment implements BlockingStep, View
     private void setEditData(FamerModel fm) {
 
         spinner.setSelectedIndex(Integer.valueOf(fm.getCyclecode()) - 1);
-        SELECTED = Integer.valueOf(fm.getCyclecode());
-
+        SELECTED = spinner.getSelectedIndex() + 1;
         spinner.setEnabled(false);
 
     }
 
     private void setUpSpinners() {
 
-        //spinner.setItems("Weekly", "Bi-Weekly", "Semi-Monthly", "Monthly");
         spinner.setItems(AppConstants.SEVENDAYS, AppConstants.FIFTEENDAYS, AppConstants.THIRTYDAYS);
-
-
-
         spinner.setOnItemSelectedListener((MaterialSpinner.OnItemSelectedListener<String>) (view, position, id, item) -> {
             SELECTED = position + 1;
         });
     }
 
-    private void setUpCalender(int position) {
-        lcyclestart.setVisibility(View.VISIBLE);
-
-
-
-
-    }
 
 
     @Override
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
-
 
     }
 
@@ -146,6 +145,7 @@ public class FragmentCycleDetails extends Fragment implements BlockingStep, View
         FarmerConst.getFamerModel().setCycleStartDate(prefrenceManager.getTraderModel().getCycleStartDay());
         FarmerConst.getFamerModel().setCycleStartDay(prefrenceManager.getTraderModel().getCycleStartDay());
         FarmerConst.getFamerModel().setCycleStartEndDay(prefrenceManager.getTraderModel().getCycleEndDay());
+
 
         callback.complete();
     }
@@ -161,9 +161,11 @@ public class FragmentCycleDetails extends Fragment implements BlockingStep, View
     public VerificationError verifyStep() {
 
         if (SELECTED > 0) {
+
             return null;
 
         } else {
+            Toast.makeText(getContext(), "kjkj" + SELECTED, Toast.LENGTH_LONG).show();
             return new VerificationError("Select Cycle");
         }
     }

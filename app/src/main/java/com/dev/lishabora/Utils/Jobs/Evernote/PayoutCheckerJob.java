@@ -28,7 +28,7 @@ public class PayoutCheckerJob extends Job {
     public static void schedulePeriodic() {
         Log.d("jobadd", "job shedule periodic" + TAG);
         new JobRequest.Builder(PayoutCheckerJob.TAG)
-                .setPeriodic(TimeUnit.MINUTES.toMillis(15), TimeUnit.MINUTES.toMillis(5))
+                .setPeriodic(TimeUnit.MINUTES.toMillis(300), TimeUnit.MINUTES.toMillis(5))
                 .setUpdateCurrent(true)
                 //.setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
                 .setRequiresBatteryNotLow(false)

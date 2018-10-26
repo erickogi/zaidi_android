@@ -147,7 +147,7 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
     }
 
     @Override
-    public void createCollection(Collection c, FamerModel famerModel) {
+    public void createCollection(Collection c, FamerModel famerModel, Double aDouble) {
         traderViewModel.createCollections(c).observe(this, responseModel -> {
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
                 FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getCode());
@@ -160,9 +160,11 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
                 }
                 famerModel.setCurrentPayoutCode(responseModel.getPayoutCode());
 
-                CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.ORDER, null, f);
+                FamerModel fm = CommonFuncs.updateBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.ORDER, null, f);
 
-                traderViewModel.updateFarmer(famerModel, false, hasToSyncFarmer);
+                traderViewModel.updateFarmer(fm, false, true);
+
+
                 finish();
             } else {
                 snack(responseModel.getResultDescription());
@@ -174,7 +176,7 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
     }
 
     @Override
-    public void updateCollection(Collection c, FamerModel famerModel) {
+    public void updateCollection(Collection c, FamerModel famerModel, Double aDouble) {
         traderViewModel.updateCollection(c).observe(this, responseModel -> {
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
 
@@ -187,9 +189,8 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
                 }
                 famerModel.setCurrentPayoutCode(responseModel.getPayoutCode());
 
-                CommonFuncs.updateBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.ORDER, null, f);
-
-                traderViewModel.updateFarmer(famerModel, false, hasToSyncFarmer);
+                FamerModel fm = CommonFuncs.updateBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.ORDER, null, f);
+                traderViewModel.updateFarmer(fm, false, true);
                 finish();
             } else {
 

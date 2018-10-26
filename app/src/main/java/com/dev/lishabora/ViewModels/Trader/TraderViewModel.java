@@ -996,6 +996,138 @@ public class TraderViewModel extends AndroidViewModel
         return createCollectionSuccess;
     }
 
+    public ResponseModel createCollectionsU(Collection collection) {
+
+        ResponseModel responseModel = new ResponseModel();
+
+        collection.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
+
+        Payouts p = getLastPayout(collection.getCycleCode());
+        Payouts plastIfOne = getLastPayout();
+
+
+        Cycles c = getCycleO(collection.getCycleCode());
+        if (c == null) {
+            c = insertCycles(collection.getCycleCode());
+            //c = getCycleO(collection.getCycleCode());
+
+        }
+        int farmerCountPerCycle = getFarmersCountByCycle(collection.getCycleCode());
+        int tradersStartDay = prefrenceManager.getTraderModel().getCycleStartDayNumber();
+        int tradersEndDay = prefrenceManager.getTraderModel().getCycleEndDayNumber();
+
+
+        Payouts payouts = new Payouts();
+        payouts.setCycleCode(collection.getCycleCode());
+        payouts.setCyclename(getCycleName(collection.getCycleCode()));
+        payouts.setFarmersCount("" + farmerCountPerCycle);
+        payouts.setStatus(0);
+        payouts.setCode(GeneralUtills.Companion.createCode());
+        PayoutsCyclesDatesUtills.EndAndStart endAndStart = new PayoutsCyclesDatesUtills.EndAndStart();
+
+
+        payouts.setApprovedCards("");
+        payouts.setMilkTotal("");
+        payouts.setBalance("");
+        payouts.setLoanTotal("");
+
+
+        if (p == null) {
+            endAndStart = PayoutsCyclesDatesUtills.getPayoutStartEndDate(c.getCode(), new PayoutsCyclesDatesUtills.EndAndStart(tradersStartDay, tradersEndDay), null);
+            payouts.setStartDate(endAndStart.getStartDate());
+            payouts.setEndDate(endAndStart.getEndDate());
+
+
+            if (plastIfOne != null) {
+                payouts.setPayoutnumber(plastIfOne.getPayoutnumber() + 1);
+
+            } else {
+                payouts.setPayoutnumber(1);
+
+            }
+
+            final Runnable r = () -> insertPayout(payouts);
+            r.run();
+
+
+            collection.setCycleStartedOn(payouts.getStartDate());
+            collection.setPayoutnumber(payouts.getPayoutnumber());
+            collection.setPayoutCode(payouts.getCode());
+            //  synch(AppConstants.INSERT, AppConstants.ENTITY_COLLECTION, collection, null, 1);
+
+
+            //  collectionsRepo.insert(collection);
+            // ResponseModel responseModel = new ResponseModel();
+            responseModel.setResultCode(1);
+            responseModel.setResultDescription("Collection Inserted \nNew  payout \n(No other  payouts available)");
+            responseModel.setData(null);
+            responseModel.setPayoutCode(payouts.getCode());
+
+
+            // createCollectionSuccess.setValue(responseModel);
+
+
+        } else {
+
+
+            if (DateTimeUtils.Companion.isPastLastDay(p.getEndDate())) {
+
+
+                endAndStart = PayoutsCyclesDatesUtills.getPayoutStartEndDate(c.getCode(), new PayoutsCyclesDatesUtills.EndAndStart(tradersStartDay, tradersEndDay), new PayoutsCyclesDatesUtills.EndAndStart(p.getStartDate(), p.getEndDate()));
+                payouts.setStartDate(endAndStart.getStartDate());
+                payouts.setEndDate(endAndStart.getEndDate());
+                payouts.setPayoutnumber(plastIfOne.getPayoutnumber() + 1);
+
+                final Runnable r = () -> insertPayout(payouts);
+                r.run();
+
+
+                collection.setCycleStartedOn(payouts.getStartDate());
+                collection.setPayoutnumber(payouts.getPayoutnumber());
+                collection.setPayoutCode(payouts.getCode());
+
+                responseModel.setResultCode(1);
+                responseModel.setResultDescription("Collection Inserted \nNew  payout \nOther cycles payouts available");
+                responseModel.setData(null);
+                responseModel.setPayoutCode(payouts.getCode());
+
+
+            } else {
+                collection.setCycleStartedOn(p.getStartDate());
+                collection.setPayoutnumber(p.getPayoutnumber());
+                collection.setPayoutCode(p.getCode());
+
+                responseModel.setResultCode(1);
+                responseModel.setResultDescription("Collection Inserted \nExisting payout");
+                responseModel.setData(null);
+                responseModel.setPayoutCode(p.getCode());
+
+                //  createCollectionSuccess.setValue(responseModel);
+
+            }
+
+
+        }
+
+        if (collection.getPayoutCode() != null) {
+            responseModel.setPayoutCode(collection.getPayoutCode());
+            collectionsRepo.insert(collection);
+            final Runnable r = () -> synch(AppConstants.INSERT, AppConstants.ENTITY_COLLECTION, collection, null, 1);
+            r.run();
+
+
+        } else {
+            responseModel.setResultCode(0);
+            responseModel.setResultDescription("Collection not updated");
+
+        }
+
+
+        return responseModel;
+    }
+
+
     public LiveData<ResponseModel> updateCollection(Collection c) {
         ResponseModel responseModel = new ResponseModel();
 
@@ -1186,9 +1318,15 @@ public class TraderViewModel extends AndroidViewModel
         return deleteFarmerSuccess;
     }
 
-    public LiveData<ResponseModel> updateFarmer(FamerModel famerModel, boolean isOnline, boolean isFarmerProfileUpdate) {
+    public void updateFarmer(FamerModel famerModel) {
+        farmerRepo.upDateRecordDirect(famerModel);
+    }
+
+    public ResponseModel updateFarmer(FamerModel famerModel, boolean isOnline, boolean isFarmerProfileUpdate) {
         if (this.updateFarmerSuccess == null) {
         }
+        ResponseModel responseModel = new ResponseModel();
+
         this.updateFarmerSuccess = new MutableLiveData();
 
         if (isOnline) {
@@ -1210,20 +1348,21 @@ public class TraderViewModel extends AndroidViewModel
             });
 
         } else {
-            famerModel.setTraderCode(prefrenceManager.getTraderModel().getCode());
+//            famerModel.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
 
             farmerRepo.upDateRecord(famerModel);
+
             if (isFarmerProfileUpdate) {
                 synch(AppConstants.UPDATE, AppConstants.ENTITY_FARMER, famerModel, null, 1);
             }
-            ResponseModel responseModel = new ResponseModel();
             responseModel.setResultCode(1);
             responseModel.setResultDescription("Farmer updated successfully");
             responseModel.setData(null);
-            updateFarmerSuccess.setValue(responseModel);
+            // updateFarmerSuccess.setValue(responseModel);
 
         }
-        return updateFarmerSuccess;
+        return responseModel;
     }
 
     private JSONObject getFarmerJson() {

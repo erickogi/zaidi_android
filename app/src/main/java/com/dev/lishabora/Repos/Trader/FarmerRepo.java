@@ -133,6 +133,14 @@ public class FarmerRepo {
     public void upDateRecord(FamerModel farmerModel){
         new updateTradersAsyncTask(db.farmersDao()).execute(farmerModel);
     }
+
+    public void upDateRecordDirect(FamerModel farmerModel) {
+        try {
+            db.farmersDao().updateRecord(farmerModel);
+        } catch (Exception nm) {
+            new updateTradersAsyncTask(db.farmersDao()).execute(farmerModel);
+        }
+    }
     public void deleteRecord(FamerModel farmerModel){
         new deleteTradersAsyncTask(db.farmersDao()).execute(farmerModel);
     }

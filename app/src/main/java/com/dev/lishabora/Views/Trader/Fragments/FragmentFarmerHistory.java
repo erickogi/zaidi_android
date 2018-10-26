@@ -193,27 +193,14 @@ public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.
             LinkedList<Payouts> payouts1 = new LinkedList<>();
             for (int a = 0; a < payouts.size(); a++) {
                 List<Collection> c = payoutsVewModel.getCollectionByDateByPayoutListOne(payouts.get(a).getCode());
-                payouts1.add(CommonFuncs.createPayoutsByCollection(c, payouts.get(a), payoutsVewModel, balncesViewModel, null, false, payoutsVewModel.getFarmersByCycleONe(payouts.get(a).getCycleCode())));
+                payouts1.add(CommonFuncs.createPayoutsByCollection(c, payouts.get(a), payoutsVewModel, balncesViewModel, null, true, payoutsVewModel.getFarmersByCycleONe(payouts.get(a).getCycleCode())));
 
 
             }
             listpayouts = payouts1;
             payoutesAdapter.refresh(payouts1);
 
-            //  payoutesAdapter.refresh(payoutsList);
 
-
-//            if (this.payouts == null) {
-//                this.payouts = new LinkedList<>();
-//                this.payouts.addAll(payouts1);falsefalse
-//                listAdapter.notifyDataSetChanged();
-//
-//            } else {
-//                this.payouts.clear();
-//                this.payouts.addAll(payouts1);
-//                listAdapter.notifyDataSetChanged();
-//            }
-//            initList();
         }
     }
     private PayoutesAdapter initPayoutList() {

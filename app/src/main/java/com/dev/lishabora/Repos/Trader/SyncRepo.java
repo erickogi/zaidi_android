@@ -3,11 +3,11 @@ package com.dev.lishabora.Repos.Trader;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.dev.lishabora.Database.LMDatabase;
 import com.dev.lishabora.Database.SyncDao;
 import com.dev.lishabora.Models.SyncModel;
+import com.dev.lishabora.Utils.Jobs.Evernote.UpSyncJob;
 
 import java.util.List;
 
@@ -88,9 +88,10 @@ public class SyncRepo {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            com.dev.lishabora.Application.sync();
+            //com.dev.lishabora.Application.sync();
+            UpSyncJob.scheduleExact();
 
-            Log.d("testSyncUp", "DATA INSERTED SYNC CALLED");
+            // Log.d("testSyncUp", "DATA INSERTED SYNC CALLED");
 
 
         }

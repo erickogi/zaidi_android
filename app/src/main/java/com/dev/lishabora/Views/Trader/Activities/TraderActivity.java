@@ -35,6 +35,7 @@ import com.dev.lishabora.Network.ApiConstants;
 import com.dev.lishabora.Network.Request;
 import com.dev.lishabora.TrackerService;
 import com.dev.lishabora.Utils.Jobs.Evernote.PayoutCheckerJob;
+import com.dev.lishabora.Utils.Jobs.Evernote.UpSyncJob;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.Utils.ResponseCallback;
@@ -198,6 +199,11 @@ public class TraderActivity extends AppCompatActivity {
 
     void setUpDrawer(Toolbar toolbar, String name, String email) {
         DrawerClass.Companion.getDrawer("0", email, name, this, toolbar, new DrawerItemListener() {
+
+            @Override
+            public void syncDue(Application.hasSynced a) {
+                CommonFuncs.syncDue(TraderActivity.this, a.getDays());
+            }
             @Override
             public void wrongTime() {
                 CommonFuncs.timeIs(TraderActivity.this);
@@ -253,8 +259,9 @@ public class TraderActivity extends AppCompatActivity {
                     alertDialogAndroid.show();
 
                 } else {
-
                     MyToast.toast("You have un-synced data... ", TraderActivity.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                    UpSyncJob.scheduleExact();
+
                 }
 
 
@@ -362,7 +369,7 @@ public class TraderActivity extends AppCompatActivity {
             }
         });
 
-        DrawerClass.Companion.setOpened(true);
+        //  DrawerClass.Companion.setOpened(true);
     }
 
     public void updateTrader(JSONObject jsonObject) {
@@ -464,10 +471,7 @@ public class TraderActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (collectMilk == null) {
-            collectMilk = new CollectMilk(this, true);
 
-        }
         setUp();
     }
 
@@ -492,9 +496,6 @@ public class TraderActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         viewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
 
-        collectMilk = new CollectMilk(this, true);
-
-
 
 
         traderPrefs = new PrefrenceManager(this);
@@ -502,11 +503,12 @@ public class TraderActivity extends AppCompatActivity {
 
         fab = findViewById(R.id.fab);
         fab.hide();
-        if (traderPrefs.isTraderFirstTime()) {
-            //alertDialogFirstTime();
-        }
+
 
         setUpMainFragment();
+        collectMilk = new CollectMilk(TraderActivity.this, this, true);
+
+//        initConnectivityListener();
 
 
         boolean[] settings = new PrefrenceManager(TraderActivity.this).getSettingStatus();

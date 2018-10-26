@@ -91,7 +91,7 @@ public class FragmentNotifications extends Fragment {
                                 if (payouts != null) {
                                     Log.d("padfs", new Gson().toJson(payouts));
                                     List<Collection> c = payoutsVewModel.getCollectionByDateByPayoutListOne(payouts.getCode());
-                                    Payouts p = CommonFuncs.createPayoutsByCollection(c, payouts, payoutsVewModel, balncesViewModel, null, false, payoutsVewModel.getFarmersByCycleONe(payouts.getCycleCode()));
+                                    Payouts p = CommonFuncs.createPayouts(c, payouts, payoutsVewModel, balncesViewModel);
                                     Intent intent = new Intent(getActivity(), com.dev.lishabora.Views.Trader.Activities.Payouts.class);
                                     intent.putExtra("data", p);
                                     PayoutConstants.setPayouts(p);

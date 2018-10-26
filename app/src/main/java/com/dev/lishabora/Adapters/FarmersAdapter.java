@@ -13,15 +13,10 @@ import com.dev.lishabora.Utils.Draggable.helper.OnStartDragListener;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.Utils.TextUtils;
-import com.dev.lishabora.Views.Trader.FarmerConst;
 import com.dev.lishaboramobile.R;
 
-import java.lang.ref.WeakReference;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
-import github.nisrulz.recyclerviewhelper.RVHAdapter;
 
 //import github.nisrulz.recyclerviewhelper.RVHAdapter;
 
@@ -31,7 +26,7 @@ import github.nisrulz.recyclerviewhelper.RVHAdapter;
 //import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
 // RecyclerView.Adapter<FarmerViewHolder> implements RVHAdapter {
-public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> implements RVHAdapter
+public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder>
 
 {
     private Context context;
@@ -46,7 +41,7 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
     }
     public FarmersAdapter(Context context, List<FamerModel> modelList, OnclickRecyclerListener listener, OnStartDragListener dragStartListener) {
         this.context = context;
-        mmDragStartListener = dragStartListener;
+        // mmDragStartListener = dragStartListener;
 
         this.modelList = modelList;
         this.listener = listener;
@@ -62,13 +57,13 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
 
     }
 
-    public void setDraggale(boolean d) {
-        if (d) {
-            mDragStartListener = mmDragStartListener;
-        } else {
-            mDragStartListener = null;
-        }
-    }
+//    public void setDraggale(boolean d) {
+//        if (d) {
+//            mDragStartListener = mmDragStartListener;
+//        } else {
+//            mDragStartListener = null;
+//        }
+//    }
 
 
     @Override
@@ -134,7 +129,13 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
         holder.route.setText(farmer.getRoutename());
         String[] arr = DateTimeUtils.Companion.getDateAndTime(farmer.getLastCollectionTime());
         holder.txtDate.setText(TextUtils.makeSectionOfTextBold(arr[0], arr[1]));
-//
+
+        if (farmer.getArchived() == 1) {
+            holder.deleteLayoutTxtDelete.setText("Un-Archive");
+        } else {
+            holder.deleteLayoutTxtDelete.setText("Archive");
+
+        }
 
     }
 
@@ -151,40 +152,37 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder> imple
 //        notifyItemRemoved(position);
 //    }
 
-    @Override
-    public void onItemDismiss(int position, int direction) {
-        //modelList.remove(position);
-        //notifyItemRemoved(position);
-        WeakReference<OnclickRecyclerListener> listenerWeakReference;
-        listenerWeakReference = new WeakReference<>(listener);
-
-        if (listener != null) {
-            listenerWeakReference.get().onSwipe(position, direction);
-        }
-
-
-    }
-
-    @Override
-    public boolean onItemMove(int fromPosition, int toPosition) {
-        try {
-
-
-            Collections.swap(modelList, fromPosition, toPosition);
-            FarmerConst.setSortedFamerModels(modelList);
-            notifyItemMoved(fromPosition, toPosition);
-
-
-        } catch (Exception ignored) {
-
-        }
-
-
-        return true;
-    }
-
 //    @Override
-//    public int getSwipeLayoutResourceId(int position) {
-//        return R.id.swipe;
+//    public void onItemDismiss(int position, int direction) {
+//        //modelList.remove(position);
+//        //notifyItemRemoved(position);
+//        WeakReference<OnclickRecyclerListener> listenerWeakReference;
+//        listenerWeakReference = new WeakReference<>(listener);
+//
+//        if (listener != null) {
+//            listenerWeakReference.get().onSwipe(position, direction);
+//        }
+//
+//
 //    }
+//
+//    @Override
+//    public boolean onItemMove(int fromPosition, int toPosition) {
+//        try {
+//
+//
+//            Collections.swap(modelList, fromPosition, toPosition);
+//            FarmerConst.setSortedFamerModels(modelList);
+//            notifyItemMoved(fromPosition, toPosition);
+//
+//
+//        } catch (Exception ignored) {
+//
+//        }
+//
+//
+//        return true;
+//    }
+
+
 }

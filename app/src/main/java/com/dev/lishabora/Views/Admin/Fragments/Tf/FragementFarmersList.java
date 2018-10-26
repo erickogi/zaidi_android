@@ -5,7 +5,6 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,7 +18,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -43,13 +41,13 @@ import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.FarmersAdapter;
 import com.dev.lishabora.AppConstants;
+import com.dev.lishabora.Application;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.FarmerBalance;
 import com.dev.lishabora.Models.Notifications;
 import com.dev.lishabora.Models.Payouts;
-import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.RoutesModel;
 import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.Utils.CollectListener;
@@ -298,7 +296,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
                     } else {
                         try {
-                            popupMenu(adapterPosition, view, FarmerConst.getSearchFamerModels().get(adapterPosition));
+                            //popupMenu(adapterPosition, view, FarmerConst.getSearchFamerModels().get(adapterPosition));
                         } catch (Exception nm) {
                             nm.printStackTrace();
                         }
@@ -493,21 +491,26 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
         fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(viehw -> {
-            if (isTimeAutomatic()) {
+            Application.hasSynced a = Application.hasSyncInPast7Days();
+            if (a.isHasSynced()) {
 
-                if (mViewModel.getUnits1(false).size() < 1) {
-                    getUnit();
-                } else {
-                    if (isSetUp()) {
-                        FragementFarmersList.this.createFarmers();
+                if (isTimeAutomatic()) {
+
+                    if (mViewModel.getUnits1(false).size() < 1) {
+                        getUnit();
                     } else {
-                        initDataOffline(true, true, true);
-                        MyToast.toast("Routes, Units and Cycles Not set Up", getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                        if (isSetUp()) {
+                            FragementFarmersList.this.createFarmers();
+                        } else {
+                            initDataOffline(true, true, true);
+                            MyToast.toast("Routes, Units and Cycles Not set Up", getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                        }
                     }
+                } else {
+                    timeIs();
                 }
             } else {
-                // new PrefrenceManager(Application.context).setTimeI
-                timeIs();
+                CommonFuncs.syncDue(getActivity(), a.getDays());
             }
         });
 
@@ -709,16 +712,16 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
 
     void setDraggale(boolean draggale) {
-        if (listAdapter != null) {
-            listAdapter.setDraggale(draggale);
-        }
-        if (draggale) {
-            isDraggable = true;
-            btnDrag.setVisibility(View.VISIBLE);
-        } else {
-            isDraggable = false;
-            btnDrag.setVisibility(View.GONE);
-        }
+//        if (listAdapter != null) {
+//            listAdapter.setDraggale(draggale);
+//        }
+//        if (draggale) {
+//            isDraggable = true;
+//            btnDrag.setVisibility(View.VISIBLE);
+//        } else {
+//            isDraggable = false;
+//            btnDrag.setVisibility(View.GONE);
+//        }
     }
 
 
@@ -1079,7 +1082,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                                 public void onChanged(@Nullable Payouts payouts) {
                                     if (payouts != null) {
                                         List<Collection> c = payoutsVewModel.getCollectionByDateByPayoutListOne(payouts.getCode());
-                                        Payouts p = CommonFuncs.createPayoutsByCollection(c, payouts, payoutsVewModel, balncesViewModel, null, false, payoutsVewModel.getFarmersByCycleONe(payouts.getCycleCode()));
+                                        Payouts p = CommonFuncs.createPayouts(c, payouts, payoutsVewModel, balncesViewModel);
 
 
                                         Intent intent = new Intent(getActivity(), com.dev.lishabora.Views.Trader.Activities.Payouts.class);
@@ -1170,126 +1173,126 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
 
     private void popupMenu(int pos, View view, FamerModel famerModel) {
-        PopupMenu popupMenu = new PopupMenu(Objects.requireNonNull(getContext()), view);
-        popupMenu.inflate(R.menu.farmer_list_menu);
-
-        isArchived = false;
-        isDummy = false;
-        if (famerModel.getDeleted() == 1) {
-
-            popupMenu.getMenu().getItem(4).setTitle("Un-Delete");
-        }
-
-        if (famerModel.getArchived() == 1) {
-            isArchived = true;
-            popupMenu.getMenu().getItem(5).setTitle("Un-Archive");
-        }
-
-
-        if (famerModel.getDummy() == 1) {
-            isDummy = true;
-            popupMenu.getMenu().getItem(6).setTitle("Remove from dummy");
-
-
-        }
-
-
-        popupMenu.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.delete:
-
-
-                    famerModel.setStatus("Deleted");
-                    famerModel.setDeleted(1);
-                    avi.smoothToShow();
-                    mViewModel.updateFarmer(famerModel, false, true).observe(FragementFarmersList.this, responseModel -> avi.smoothToHide());
-                    FragementFarmersList.this.fetchFarmers(FragementFarmersList.this.getSelectedAccountStatus(), FragementFarmersList.this.getSelectedRoute());//update(famerModel);
-
-
-                    break;
-
-                case R.id.archive:
-
-                    if (isArchived) {
-                        famerModel.setStatus("Active");
-                        famerModel.setArchived(0);
-                    } else {
-                        famerModel.setStatus("Archived");
-                        famerModel.setArchived(1);
-                    }
-                    avi.smoothToShow();
-                    mViewModel.updateFarmer(famerModel, false, true).observe(FragementFarmersList.this, responseModel -> avi.smoothToHide());
-                    FragementFarmersList.this.fetchFarmers(FragementFarmersList.this.getSelectedAccountStatus(), FragementFarmersList.this.getSelectedRoute());
-
-
-                    break;
-
-                case R.id.dummy:
-
-                    if (isDummy) {
-                        famerModel.setStatus("Active");
-                        famerModel.setDummy(0);
-                    } else {
-                        famerModel.setStatus("Dummy");
-                        famerModel.setDummy(1);
-                    }
-                    avi.smoothToShow();
-                    mViewModel.updateFarmer(famerModel, false, true).observe(FragementFarmersList.this, new Observer<ResponseModel>() {
-                        @Override
-                        public void onChanged(@Nullable ResponseModel responseModel) {
-                            avi.smoothToHide();
-                            fetchFarmers(getSelectedAccountStatus(), getSelectedRoute());
-
-                        }
-                    });
-
-                    break;
-                case R.id.edit:
-                    Intent intent = new Intent(getActivity(), FarmerProfile.class);
-                    intent.putExtra("farmer", famerModel);
-                    startActivity(intent);
-
-                    break;
-
-                case R.id.view:
-
-                    Intent intent1 = new Intent(getActivity(), FarmerProfile.class);
-                    intent1.putExtra("farmer", famerModel);
-                    startActivity(intent1);
-                    // FragementFarmersList.this.editTrader(famerModel, FragementFarmersList.this.getUnits(), FragementFarmersList.this.getCycles(), FragementFarmersList.this.getRoutess(), false);
-
-                    break;
-
-                case R.id.Loans:
-                    fragment = new FragmentGiveLoan();
-                    Bundle args = new Bundle();
-                    args.putSerializable("farmer", famerModel);
-                    fragment.setArguments(args);
-                    popOutFragments();
-                    setUpView();
-                    break;
-
-                case R.id.Orders:
-
-                    OrderConstants.setFamerModel(famerModel);
-                    Intent intent2 = new Intent(getActivity(), GiveOrder.class);
-                    intent2.putExtra("farmer", famerModel);
-                    startActivity(intent2);
-
-                    break;
-
-                case R.id.call:
-                    intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "0" + famerModel.getMobile()));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
-
-                case R.id.sms:
-                    sendSMS("0" + famerModel.getMobile());
-                default:
-            }
-            return false;
-        });
-        popupMenu.show();
+//        PopupMenu popupMenu = new PopupMenu(Objects.requireNonNull(getContext()), view);
+//        popupMenu.inflate(R.menu.farmer_list_menu);
+//
+//        isArchived = false;
+//        isDummy = false;
+//        if (famerModel.getDeleted() == 1) {
+//
+//            popupMenu.getMenu().getItem(4).setTitle("Un-Delete");
+//        }
+//
+//        if (famerModel.getArchived() == 1) {
+//            isArchived = true;
+//            popupMenu.getMenu().getItem(5).setTitle("Un-Archive");
+//        }
+//
+//
+//        if (famerModel.getDummy() == 1) {
+//            isDummy = true;
+//            popupMenu.getMenu().getItem(6).setTitle("Remove from dummy");
+//
+//
+//        }
+//
+//
+//        popupMenu.setOnMenuItemClickListener(item -> {
+//            switch (item.getItemId()) {
+//                case R.id.delete:
+//
+//
+//                    famerModel.setStatus("Deleted");
+//                    famerModel.setDeleted(1);
+//                    avi.smoothToShow();
+//                    mViewModel.updateFarmer(famerModel, false, true).observe(FragementFarmersList.this, responseModel -> avi.smoothToHide());
+//                    FragementFarmersList.this.fetchFarmers(FragementFarmersList.this.getSelectedAccountStatus(), FragementFarmersList.this.getSelectedRoute());//update(famerModel);
+//
+//
+//                    break;
+//
+//                case R.id.archive:
+//
+//                    if (isArchived) {
+//                        famerModel.setStatus("Active");
+//                        famerModel.setArchived(0);
+//                    } else {
+//                        famerModel.setStatus("Archived");
+//                        famerModel.setArchived(1);
+//                    }
+//                    avi.smoothToShow();
+//                    mViewModel.updateFarmer(famerModel, false, true).observe(FragementFarmersList.this, responseModel -> avi.smoothToHide());
+//                    FragementFarmersList.this.fetchFarmers(FragementFarmersList.this.getSelectedAccountStatus(), FragementFarmersList.this.getSelectedRoute());
+//
+//
+//                    break;
+//
+//                case R.id.dummy:
+//
+//                    if (isDummy) {
+//                        famerModel.setStatus("Active");
+//                        famerModel.setDummy(0);
+//                    } else {
+//                        famerModel.setStatus("Dummy");
+//                        famerModel.setDummy(1);
+//                    }
+//                    avi.smoothToShow();
+//                    mViewModel.updateFarmer(famerModel, false, true).observe(FragementFarmersList.this, new Observer<ResponseModel>() {
+//                        @Override
+//                        public void onChanged(@Nullable ResponseModel responseModel) {
+//                            avi.smoothToHide();
+//                            fetchFarmers(getSelectedAccountStatus(), getSelectedRoute());
+//
+//                        }
+//                    });
+//
+//                    break;
+//                case R.id.edit:
+//                    Intent intent = new Intent(getActivity(), FarmerProfile.class);
+//                    intent.putExtra("farmer", famerModel);
+//                    startActivity(intent);
+//
+//                    break;
+//
+//                case R.id.view:
+//
+//                    Intent intent1 = new Intent(getActivity(), FarmerProfile.class);
+//                    intent1.putExtra("farmer", famerModel);
+//                    startActivity(intent1);
+//                    // FragementFarmersList.this.editTrader(famerModel, FragementFarmersList.this.getUnits(), FragementFarmersList.this.getCycles(), FragementFarmersList.this.getRoutess(), false);
+//
+//                    break;
+//
+//                case R.id.Loans:
+//                    fragment = new FragmentGiveLoan();
+//                    Bundle args = new Bundle();
+//                    args.putSerializable("farmer", famerModel);
+//                    fragment.setArguments(args);
+//                    popOutFragments();
+//                    setUpView();
+//                    break;
+//
+//                case R.id.Orders:
+//
+//                    OrderConstants.setFamerModel(famerModel);
+//                    Intent intent2 = new Intent(getActivity(), GiveOrder.class);
+//                    intent2.putExtra("farmer", famerModel);
+//                    startActivity(intent2);
+//
+//                    break;
+//
+//                case R.id.call:
+//                    intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "0" + famerModel.getMobile()));
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    context.startActivity(intent);
+//
+//                case R.id.sms:
+//                    sendSMS("0" + famerModel.getMobile());
+//                default:
+//            }
+//            return false;
+//        });
+//        popupMenu.show();
     }
 
     private void sendSMS(String phone) {
@@ -1319,7 +1322,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     }
 
     @Override
-    public void createCollection(Collection c, FamerModel famerModel) {
+    public void createCollection(Collection c, FamerModel famerModel, Double aDouble) {
 
 
         mViewModel.createCollections(c).observe(FragementFarmersList.this, responseModel -> {
@@ -1356,7 +1359,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     }
 
     @Override
-    public void updateCollection(Collection c, FamerModel famerModel) {
+    public void updateCollection(Collection c, FamerModel famerModel, Double aDouble) {
 
         mViewModel.updateCollection(c).observe(FragementFarmersList.this, responseModel -> {
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {

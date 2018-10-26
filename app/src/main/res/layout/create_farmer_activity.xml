@@ -21,8 +21,9 @@
 
         app:ms_showErrorMessageEnabled="true"
 
+
         app:ms_stepperFeedbackType="content_progress|disabled_bottom_navigation"
-        app:ms_stepperType="tabs"
+        app:ms_stepperType="dots"
         app:ms_tabNavigationEnabled="true"
 
 

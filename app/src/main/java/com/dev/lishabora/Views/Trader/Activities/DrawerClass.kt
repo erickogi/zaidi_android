@@ -172,72 +172,77 @@ class DrawerClass {
 
 
                     .withOnDrawerItemClickListener { view, position, drawerItem ->
+                        var a = com.dev.lishabora.Application.hasSyncInPast7Days()
+                        if (a.isHasSynced) {
+                            if (isTimeAutomatic()) {
 
-                        if (isTimeAutomatic()) {
+                                when (drawerItem.identifier.toInt()) {
+                                    1 -> {
+                                        itemListener.homeClicked()
+                                        result.closeDrawer()
+                                    }
 
-                            when (drawerItem.identifier.toInt()) {
-                                1 -> {
-                                    itemListener.homeClicked()
-                                    result.closeDrawer()
-                                }
+                                    2 -> {
 
-                                2 -> {
+                                    }
 
-                                }
+                                    3 -> {
+                                        itemListener.routesSettingsClicked()
+                                        result.closeDrawer()
+                                    }
+                                    4 -> {
+                                        itemListener.notificationsClicked()
+                                        result.closeDrawer()
+                                    }
+                                    5 -> {
+                                        itemListener.notificationsClicked()
+                                        result.closeDrawer()
+                                    }
+                                    6 -> {
+                                        itemListener.analyticsReportsTransactionsClicked()
+                                        result.closeDrawer()
+                                    }
 
-                                3 -> {
-                                    itemListener.routesSettingsClicked()
-                                    result.closeDrawer()
-                                }
-                                4 -> {
-                                    itemListener.notificationsClicked()
-                                    result.closeDrawer()
-                                }
-                                5 -> {
-                                    itemListener.notificationsClicked()
-                                    result.closeDrawer()
-                                }
-                                6 -> {
-                                    itemListener.analyticsReportsTransactionsClicked()
-                                    result.closeDrawer()
-                                }
+                                    7 -> {
+                                        itemListener.logOutClicked()
+                                        result.closeDrawer()
+                                    }
 
-                                7 -> {
-                                    itemListener.logOutClicked()
-                                    result.closeDrawer()
-                                }
-
-                                10 -> {
-                                    itemListener.helpClicked()
-                                    result.closeDrawer()
-                                }
-                                11 -> {
-                                    itemListener.syncWorksClicked()
-                                    result.closeDrawer()
-                                }
-                                9 -> {
-                                    itemListener.profileSettingsClicked()
-                                    result.closeDrawer()
-                                }
+                                    10 -> {
+                                        itemListener.helpClicked()
+                                        result.closeDrawer()
+                                    }
+                                    11 -> {
+                                        itemListener.syncWorksClicked()
+                                        result.closeDrawer()
+                                    }
+                                    9 -> {
+                                        itemListener.profileSettingsClicked()
+                                        result.closeDrawer()
+                                    }
 
 
-                                20 -> {
-                                    itemListener.productsClicked()
-                                    result.closeDrawer()
-                                }
-                                21 -> {
-                                    itemListener.payoutsClicked()
-                                    result.closeDrawer()
-                                }
+                                    20 -> {
+                                        itemListener.productsClicked()
+                                        result.closeDrawer()
+                                    }
+                                    21 -> {
+                                        itemListener.payoutsClicked()
+                                        result.closeDrawer()
+                                    }
 
-                                23 -> {
-                                    itemListener.loansAndOrders()
-                                    result.closeDrawer()
-                                }
+                                    23 -> {
+                                        itemListener.loansAndOrders()
+                                        result.closeDrawer()
+                                    }
 
+                                }
+                            } else {
+                                itemListener.wrongTime()
+                                result.closeDrawer()
                             }
                         } else {
-                            itemListener.wrongTime()
+                            itemListener.syncDue(a)
                             result.closeDrawer()
                         }
                         true

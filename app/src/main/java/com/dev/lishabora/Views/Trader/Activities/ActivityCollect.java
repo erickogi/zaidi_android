@@ -470,7 +470,7 @@ public class ActivityCollect extends AppCompatActivity implements NumberKeyboard
 
 
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                listener.createCollection(c, famerModel);
+                listener.createCollection(c, famerModel, 0.0);
 
 
             } else {
@@ -483,7 +483,7 @@ public class ActivityCollect extends AppCompatActivity implements NumberKeyboard
 
 
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                listener.updateCollection(collModel, famerModel);
+                listener.updateCollection(collModel, famerModel, 0.0);
 
 
             }
@@ -513,7 +513,7 @@ public class ActivityCollect extends AppCompatActivity implements NumberKeyboard
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
 
 
-                listener.createCollection(c, famerModel);
+                listener.createCollection(c, famerModel, 0.0);
 
 
             } else {
@@ -524,7 +524,7 @@ public class ActivityCollect extends AppCompatActivity implements NumberKeyboard
 
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
 
-                listener.updateCollection(collModel, famerModel);
+                listener.updateCollection(collModel, famerModel, 0.0);
 
 
             }
@@ -558,7 +558,7 @@ public class ActivityCollect extends AppCompatActivity implements NumberKeyboard
 
 
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                listener.createCollection(c, famerModel);
+                listener.createCollection(c, famerModel, 0.0);
 
 
             } else {
@@ -576,7 +576,7 @@ public class ActivityCollect extends AppCompatActivity implements NumberKeyboard
 
 
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                listener.updateCollection(collModel, famerModel);
+                listener.updateCollection(collModel, famerModel, 0.0);
 
 
             }
@@ -780,13 +780,13 @@ public class ActivityCollect extends AppCompatActivity implements NumberKeyboard
     }
 
     @Override
-    public void createCollection(Collection c, FamerModel famerModel) {
+    public void createCollection(Collection c, FamerModel famerModel, Double aDouble) {
 
     }
 
 
     @Override
-    public void updateCollection(Collection c, FamerModel famerModel) {
+    public void updateCollection(Collection c, FamerModel famerModel, Double aDouble) {
 
     }
 

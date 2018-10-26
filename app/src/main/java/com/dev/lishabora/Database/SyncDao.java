@@ -53,4 +53,7 @@ public interface SyncDao {
     int getCount();
 
 
+    @Query("SELECT * FROM SYNC  ORDER BY id ASC LIMIT 1")
+    SyncModel getEarliest();
+
 }

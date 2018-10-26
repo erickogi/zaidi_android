@@ -28,12 +28,14 @@ public class UpSyncJob extends Job {
                 .schedule();
     }
 
-    static void scheduleExact() {
+    public static void scheduleExact() {
         new JobRequest.Builder(UpSyncJob.TAG)
                 .setExact(TimeUnit.MINUTES.toMillis(10))
                 //.setPeriodic(TimeUnit.MINUTES.toMillis(15), TimeUnit.MINUTES.toMillis(5))
                 .setUpdateCurrent(true)
+                //.setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
                 .startNow()
+
                 //.setPersisted(true)
                 .build()
                 .schedule();
@@ -44,7 +46,6 @@ public class UpSyncJob extends Job {
     protected Result onRunJob(Params params) {
 
         Application.sync();
-        //Application.syncDown();
 
 
 

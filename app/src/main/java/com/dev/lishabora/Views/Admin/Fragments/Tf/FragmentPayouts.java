@@ -195,7 +195,7 @@ public class FragmentPayouts extends Fragment {
             LinkedList<Payouts> payouts1 = new LinkedList<>();
             for (int a = 0; a < payouts.size(); a++) {
                 List<Collection> c = payoutsVewModel.getCollectionByDateByPayoutListOne(payouts.get(a).getCode());
-                payouts1.add(CommonFuncs.createPayoutsByCollection(c, payouts.get(a), payoutsVewModel, balncesViewModel, null, false, payoutsVewModel.getFarmersByCycleONe(payouts.get(a).getCycleCode())));
+                payouts1.add(CommonFuncs.createPayouts(c, payouts.get(a), payoutsVewModel, balncesViewModel));
 
 
             }

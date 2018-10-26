@@ -28,7 +28,6 @@ import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
 import com.dev.lishabora.Models.Payouts;
-import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.Utils.PrefrenceManager;
@@ -42,9 +41,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
-import org.joda.time.Period;
 import org.joda.time.format.PeriodFormatter;
-import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -326,7 +323,6 @@ public class FragmentPayoutFarmersList extends Fragment {
     }
 
     private void setUpFarmerCollectionList() {
-        log("SETUP FARMER  COLLECTIONS STARTED  ");
 
         List<PayoutFarmersCollectionModel> collectionModels = new LinkedList<>();
 
@@ -365,6 +361,19 @@ public class FragmentPayoutFarmersList extends Fragment {
 
     }
 
+
+    private PeriodFormatter mPeriodFormat;
+    private Date previousdate;
+
+    private void setUpList(List<PayoutFarmersCollectionModel> dayCollectionModels) {
+        this.dayCollectionModels = dayCollectionModels;
+        this.dayCollectionModels1 = dayCollectionModels;
+
+        listAdapter.refresh(dayCollectionModels);
+        //initList();
+    }
+
+
     private void filterFarmersAlpahbetically() {
 
 
@@ -389,34 +398,6 @@ public class FragmentPayoutFarmersList extends Fragment {
         Collections.sort(famerModels, farmerPosComparator);
         listAdapter.notifyDataSetChanged();
 
-
-    }
-    private void setUpList(List<PayoutFarmersCollectionModel> dayCollectionModels) {
-        this.dayCollectionModels = dayCollectionModels;
-        this.dayCollectionModels1 = dayCollectionModels;
-
-        listAdapter.refresh(dayCollectionModels);
-        //initList();
-    }
-
-    private PeriodFormatter mPeriodFormat;
-    private Date previousdate;
-
-    private void log(String msg) {
-
-        mPeriodFormat = new PeriodFormatterBuilder().appendYears()
-                .appendMinutes().appendSuffix(" Mins")
-                .appendSeconds().appendSuffix(" Secs")
-                .appendMillis().appendSuffix("Mil")
-                .toFormatter();
-        if (previousdate == null) {
-            previousdate = DateTimeUtils.Companion.getDateNow();
-        }
-
-        Period length = DateTimeUtils.Companion.calcDiff(previousdate, new Date());
-
-        previousdate = new Date();
-        Timber.tag("debugfarmersclist").d("  Length " + mPeriodFormat.print(length) + "" + msg);
 
     }
 

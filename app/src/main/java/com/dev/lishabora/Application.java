@@ -49,6 +49,7 @@ import com.dev.lishabora.Repos.Trader.TraderRepo;
 import com.dev.lishabora.Repos.Trader.UnitsRepo;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.Jobs.Evernote.SyncJobCreator;
+import com.dev.lishabora.Utils.Jobs.Evernote.UpSyncJob;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.Utils.ResponseCallback;
 import com.dev.lishabora.Utils.SyncChangesCallback;
@@ -86,8 +87,6 @@ public class Application extends MultiDexApplication {
     public static volatile boolean isConnected;
     public static volatile Application application;
 
-    public static volatile int UpsyncTag = 0;
-    public static volatile int DownsyncTag = 0;
 
     public static CollectMilk collectMilk = null;
 
@@ -104,11 +103,11 @@ public class Application extends MultiDexApplication {
 
     }
     public static void sync() {
+
         try {
             LMDatabase lmDatabase = LMDatabase.getDatabase(context);
             List<SyncModel> list = lmDatabase.syncDao().getAllByStatusRaw();
             if (list != null) {
-                Log.d("testSyncUp", "SYNC ITEMS ARE +" + list.size());
             }
 
 
@@ -135,15 +134,12 @@ public class Application extends MultiDexApplication {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                sync(jsonObject, syncWorks1);
 
-                // if (UpsyncTag == 0) {
-                    sync(jsonObject, syncWorks1);
-                // }
             }
 
         } catch (Exception nm) {
             nm.printStackTrace();
-            Log.d("testSyncUp", "SYNC IError" + nm.toString());
 
         }
 
@@ -152,13 +148,10 @@ public class Application extends MultiDexApplication {
     public static void sync(JSONObject jsonObject, List<SyncModel> syncWorks) {
 
         try {
-            UpsyncTag = 1;
             Request.Companion.getResponseSync(ApiConstants.Companion.getSync(), jsonObject, "", new SyncResponseCallback() {
                 @Override
                 public void response(SyncResponseModel responseModel) {
-                    UpsyncTag = 0;
 
-                    Log.d("testSyncUp", "SYNC RESPONSE +" + responseModel.getResultDescription());
 
 
 
@@ -179,17 +172,12 @@ public class Application extends MultiDexApplication {
 
                     }
 
-                    //syncChanges();
-                    //syncDown();
 
                 }
 
                 @Override
                 public void response(String error) {
-                    // Log.d("datasend", error);
-                    Log.d("testSyncUp", "SYNC IError" + error);
 
-                    UpsyncTag = 0;
 
                 }
 
@@ -197,9 +185,7 @@ public class Application extends MultiDexApplication {
             });
         } catch (Exception nm) {
             nm.printStackTrace();
-            Log.d("testSyncUp", "SYNC IError" + nm.toString());
 
-            UpsyncTag = 0;
         }
 
     }
@@ -213,9 +199,7 @@ public class Application extends MultiDexApplication {
     }
 
     public static void syncDown() {
-        //if(DownsyncTag==0) {
-        syncDown(true);
-        // }
+        new Thread(() -> syncDown(true)).start();
     }
 
     public static void syncDown(boolean s) {
@@ -228,16 +212,12 @@ public class Application extends MultiDexApplication {
             TraderModel f = new PrefrenceManager(context).getTraderModel();
 
             JSONObject jb = new JSONObject(gson.toJson(f));
-            Timber.tag("Syncdownpref").d(gson.toJson(jb.toString()));
 
-            DownsyncTag = 1;
             Request.Companion.getResponseSyncDown(ApiConstants.Companion.getViewInfo(), jb, "",
                     new SyncDownResponseCallback() {
                         @Override
                         public void response(Data responseModel) {
-                            Timber.tag("Syncdownpref").d(gson.toJson(responseModel));
 
-                            DownsyncTag = 0;
                             try {
 
 
@@ -253,7 +233,6 @@ public class Application extends MultiDexApplication {
                                     new UnitsRepo(mInstance).insert(responseModel.getUnitsModels());
 
                                 } catch (Exception nm) {
-                                    Timber.tag("Syncdownpref").d(gson.toJson(jb.toString()));
 
                                     nm.printStackTrace();
                                 }
@@ -289,14 +268,12 @@ public class Application extends MultiDexApplication {
 
                         @Override
                         public void response(String error) {
-                            DownsyncTag = 0;
 
 
                         }
                     });
         } catch (JSONException e) {
             e.printStackTrace();
-            DownsyncTag = 0;
 
 
         }
@@ -306,41 +283,91 @@ public class Application extends MultiDexApplication {
     public static boolean canLogOut() {
         LMDatabase lmDatabase = LMDatabase.getDatabase(context);
         int count = lmDatabase.syncDao().getCount();
-        Log.d("testSyncUp", "Can Log Out Count +" + count);
 
         return count < 1;
 
     }
 
+    public static int periodAfterSync() {
 
+        LMDatabase lmDatabase = LMDatabase.getDatabase(context);
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        context = getApplicationContext();
-        applicationHandler = new Handler(context.getMainLooper());
+        SyncModel syncModel = lmDatabase.syncDao().getEarliest();
 
+        if (syncModel != null) {
+            String dta = syncModel.getTimeStamp();
+            org.joda.time.Period p = DateTimeUtils.Companion.calcDiff(DateTimeUtils.Companion.conver2Date(dta), DateTimeUtils.Companion.getTodayDate());
 
-        if (BuildConfig.DEBUG)
-            Timber.plant(new Timber.DebugTree());
-        else
-            Timber.plant(new NotLoggingTree());
+            Log.d("predios", "" + p.getDays());
+            return p.getDays();
 
-        mInstance = this;
-        JobManager.create(this).addJobCreator(new SyncJobCreator());
+        }
+        return 0;
+    }
 
-        AndroidNetworking.initialize(getApplicationContext());
-        AndroidNetworking.enableLogging();
-        new UCEHandler.Builder(this).setTrackActivitiesEnabled(true).addCommaSeparatedEmailAddresses("eric@lishabora.com").build();
+    public static hasSynced hasSyncInPast7Days() {
 
-        initConnectivityListener();
-        initHas7DaysData();
+        int p = periodAfterSync();
+        if (p >= 6) {
+            return new hasSynced(false, p);
+        } else {
+            return new hasSynced(true, p);
+        }
+
 
     }
 
-    private void initHas7DaysData() {
-
+    public static void syncChanges() {
+        new Thread(() -> syncChanges(true)).start();
     }
+
+    public static void syncChanges(boolean mw) {
+        PrefrenceManager prefrenceManager = new PrefrenceManager(context);
+        if (prefrenceManager.isLoggedIn() && prefrenceManager.getTraderModel() != null && prefrenceManager.getTypeLoggedIn() == LoginController.TRADER) {
+            TraderModel traderModel = prefrenceManager.getTraderModel();
+            JSONObject jsonObject = new JSONObject();
+
+            try {
+                jsonObject = new JSONObject(new Gson().toJson(traderModel));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Request.Companion.getResponseSyncChanges(ApiConstants.Companion.getSyncDown(), jsonObject, "", new SyncChangesCallback() {
+                @Override
+                public void onSucces(SyncDownResponse response) {
+                    if (!getIfHasSyncData()) {
+                        syncChanges(response.getData());
+                    } else {
+
+                        Notification notification = new NotificationCompat.Builder(Application.context)
+                                .setContentTitle("Sync Down issue")
+                                .setContentText("You've recieved new updates but we cant process them as you have un-synced data")
+                                .setAutoCancel(true)
+                                // .setContentIntent(pi)
+                                .setSmallIcon(R.mipmap.ic_launcher)
+                                .setShowWhen(true)
+                                .setColor(Color.RED)
+                                .setLocalOnly(true)
+                                .build();
+
+                        NotificationManagerCompat.from(Application.context)
+                                .notify(new Random().nextInt(), notification);
+                    }
+
+                }
+
+                @Override
+                public void onError(String error) {
+
+                }
+
+
+            });
+
+        }
+    }
+
+
 
     public static void updateTrader(JSONObject jsonObject) {
         Request.Companion.getResponse(ApiConstants.Companion.getUpdateTrader(), jsonObject, "",
@@ -613,53 +640,7 @@ public class Application extends MultiDexApplication {
 
     }
 
-    public static void syncChanges() {
-        PrefrenceManager prefrenceManager = new PrefrenceManager(context);
-        if (prefrenceManager.isLoggedIn() && prefrenceManager.getTraderModel() != null && prefrenceManager.getTypeLoggedIn() == LoginController.TRADER) {
-            TraderModel traderModel = prefrenceManager.getTraderModel();
-            JSONObject jsonObject = new JSONObject();
-
-            try {
-                jsonObject = new JSONObject(new Gson().toJson(traderModel));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            Request.Companion.getResponseSyncChanges(ApiConstants.Companion.getSyncDown(), jsonObject, "", new SyncChangesCallback() {
-                @Override
-                public void onSucces(SyncDownResponse response) {
-                    if (!getIfHasSyncData()) {
-                        syncChanges(response.getData());
-                    } else {
-
-                        Notification notification = new NotificationCompat.Builder(Application.context)
-                                .setContentTitle("Sync Down issue")
-                                .setContentText("You've recieved new updates but we cant process them as you have un-synced data")
-                                .setAutoCancel(true)
-                                // .setContentIntent(pi)
-                                .setSmallIcon(R.mipmap.ic_launcher)
-                                .setShowWhen(true)
-                                .setColor(Color.RED)
-                                .setLocalOnly(true)
-                                .build();
-
-                        NotificationManagerCompat.from(Application.context)
-                                .notify(new Random().nextInt(), notification);
-                    }
-
-                }
-
-                @Override
-                public void onError(String error) {
-
-                }
-
-
-            });
-
-        }
-    }
-
-    void initConnectivityListener() {
+    public static void initConnectivityListener() {
         ReactiveNetwork.observeInternetConnectivity()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -668,13 +649,66 @@ public class Application extends MultiDexApplication {
                     isConnected = isConnectedToInternet;
 
                     if (isConnectedToInternet) {
-                        sync();
-                        //syncDown();
+                        UpSyncJob.scheduleExact();
+
                     } else {
 
 
                     }
                 });
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        context = getApplicationContext();
+        applicationHandler = new Handler(context.getMainLooper());
+
+
+        if (BuildConfig.DEBUG)
+            Timber.plant(new Timber.DebugTree());
+        else
+            Timber.plant(new NotLoggingTree());
+
+        mInstance = this;
+        JobManager.create(this).addJobCreator(new SyncJobCreator());
+
+        AndroidNetworking.initialize(getApplicationContext());
+        AndroidNetworking.enableLogging();
+
+        UpSyncJob.schedulePeriodic();
+
+        new UCEHandler.Builder(this).setTrackActivitiesEnabled(true).addCommaSeparatedEmailAddresses("eric@lishabora.com").build();
+
+        initConnectivityListener();
+
+
+    }
+
+    public static class hasSynced {
+        private boolean hasSynced = false;
+        private int days;
+
+        public hasSynced(boolean hasSynced, int days) {
+            this.hasSynced = hasSynced;
+            this.days = days;
+        }
+
+        public boolean isHasSynced() {
+            return hasSynced;
+        }
+
+        public void setHasSynced(boolean hasSynced) {
+            this.hasSynced = hasSynced;
+        }
+
+        public int getDays() {
+            return days;
+        }
+
+        public void setDays(int days) {
+            this.days = days;
+        }
     }
 
     public static boolean isTimeAutomatic() {

@@ -170,123 +170,6 @@ public class FragmentGiveLoan extends Fragment implements CollectListener {
     private void giveLoan(String l, String loanDetails) {
 
         CommonFuncs.giveLoan(l, loanDetails, this, traderViewModel, famerModel);
-//        if (DateTimeUtils.Companion.isAM(DateTimeUtils.Companion.getTodayDate())) {
-//
-//            ampm = "AM";
-//
-//        } else {
-//
-//            ampm = "PM";
-//        }
-//
-//
-//        StringValue = null;
-//        //PmStringValue = null;
-//        DoubleValue = 0.0;
-//        //PmDoubleValue = 0.0;
-//
-//
-//        collModel = null;
-//
-//
-//        collModel = traderViewModel.getCollectionByDateByFarmerByTimeSngle(famerModel.getCode(), DateTimeUtils.Companion.getToday());
-//
-//
-//        if (collModel != null) {
-//            DoubleValue = DoubleValue + Double.valueOf(collModel.getLoanAmountGivenOutPrice());
-//            StringValue = String.valueOf(DoubleValue);
-//        }
-//
-//
-//        if (collModel == null) {
-//
-//                Collection c = new Collection();
-//                c.setCycleCode(famerModel.getCyclecode());
-//                c.setFarmerCode(famerModel.getCode());
-//                c.setFarmerName(famerModel.getNames());
-//                c.setCycleId(famerModel.getCode());
-//                c.setDayName(DateTimeUtils.Companion.getDayOfWeek(DateTimeUtils.Companion.getTodayDate(), "E"));
-//                c.setLoanAmountGivenOutPrice("0");
-//                c.setDayDate(DateTimeUtils.Companion.getToday());
-//                c.setDayDateLog(DateTimeUtils.Companion.getLongDate(c.getDayDate()));
-//                c.setCode(GeneralUtills.Companion.createCode(famerModel.getCode()));
-//
-//                c.setTimeOfDay(ampm);
-//                c.setMilkCollectedAm("0");
-//                 c.setMilkCollectedPm("0");
-//                c.setLoanAmountGivenOutPrice(l);
-//                c.setLoanDetails(loanDetails);
-//                c.setOrderGivenOutPrice("0");
-//
-//
-//                c.setLoanId("");
-//                c.setOrderId("");
-//                c.setSynced(0);
-//                c.setSynced(false);
-//                c.setApproved(0);
-//
-
-//            traderViewModel.createCollections(c, false).observe(FragmentGiveLoan.this, responseModel -> {
-//                if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-//
-//                    FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getCode());
-//
-//                    famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-//
-//                    CommonFuncs.updateBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.LOAN, f, null);
-//
-//
-//                    //traderViewModel.updateFarmer(famerModel, false, false);
-//                   popOutFragments();
-//
-//                } else {
-//
-//
-//                }
-//
-//
-//            });
-//
-//            } else {
-//
-//
-//            if (collModel != null) {
-//                collModel.setLoanAmountGivenOutPrice(l);
-//                collModel.setLoanDetails(loanDetails);
-//                }
-//
-//
-//            traderViewModel.updateCollection(collModel).observe(FragmentGiveLoan.this, responseModel -> {
-//                if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
-//                    Log.d("DebugUpdate", " \nLoan Old collection   Resp  : " + responseModel.getResultDescription());
-//                    FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(collModel.getCode());
-//                    try {
-//                        Log.d("DebugUpdate", " \nLoan Old collection   fetch farmerlaonstable  " + new Gson().toJson(f));
-//                    } catch (Exception nm) {
-//                        Log.d("DebugUpdate", " \nLoan Old collection   fetch farmerlaonstable  " + nm.toString());
-//
-//                        nm.printStackTrace();
-//                    }
-//                    famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-//                    CommonFuncs.updateBalance(famerModel, traderViewModel, balncesViewModel, collModel, responseModel.getPayoutCode(), AppConstants.LOAN, f, null);
-//                    Log.d("DebugUpdate", " Loan Old collection  Update Balance called ");
-//                    //traderViewModel.updateFarmer(famerModel, false, false);
-//
-//
-//                    Log.d("DebugUpdate", " Loan Old collection farmer update Called  " + new Gson().toJson(famerModel));
-//                    popOutFragments();
-//
-//                } else {
-//
-//
-//                }
-//            });
-//
-//            }
-//
-//
-//
-
 
     }
 
@@ -472,7 +355,7 @@ public class FragmentGiveLoan extends Fragment implements CollectListener {
     }
 
     @Override
-    public void createCollection(Collection c, FamerModel famerModel) {
+    public void createCollection(Collection c, FamerModel famerModel, Double aDouble) {
         Log.d("Colllectionn", new Gson().toJson(c));
 
 
@@ -487,9 +370,8 @@ public class FragmentGiveLoan extends Fragment implements CollectListener {
                     hasToSyncFarmer = true;
                 }
                 famerModel.setCurrentPayoutCode(responseModel.getPayoutCode());
-
-                CommonFuncs.updateBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.LOAN, f, null);
-                traderViewModel.updateFarmer(famerModel, false, hasToSyncFarmer);
+                FamerModel fm = CommonFuncs.updateBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.LOAN, f, null);
+                traderViewModel.updateFarmer(fm, false, hasToSyncFarmer);
                 popOutFragments();
 
             } else {
@@ -502,24 +384,26 @@ public class FragmentGiveLoan extends Fragment implements CollectListener {
         });
     }
 
+
     @Override
-    public void updateCollection(Collection c, FamerModel famerModel) {
+    public void updateCollection(Collection c, FamerModel famerModel, Double aDouble) {
 
 
         traderViewModel.updateCollection(c).observe(FragmentGiveLoan.this, responseModel -> {
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
                 FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getCode());
 
-
                 famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
                 boolean hasToSyncFarmer = false;
+
                 if (!famerModel.getCurrentPayoutCode().equals(responseModel.getPayoutCode())) {
                     hasToSyncFarmer = true;
                 }
                 famerModel.setCurrentPayoutCode(responseModel.getPayoutCode());
 
-                CommonFuncs.updateBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.LOAN, f, null);
-                traderViewModel.updateFarmer(famerModel, false, hasToSyncFarmer);
+
+                FamerModel fm = CommonFuncs.updateBalance(famerModel, traderViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.LOAN, f, null);
+                traderViewModel.updateFarmer(fm, false, true);
 
                 popOutFragments();
 

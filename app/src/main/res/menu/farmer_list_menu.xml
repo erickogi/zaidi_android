@@ -3,67 +3,78 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
+    <!--<item-->
+    <!--android:visible="false"-->
+    <!--android:id="@+id/Loans"-->
+    <!--android:orderInCategory="100"-->
+    <!--android:title="Loan "-->
+    <!--app:showAsAction="never" />-->
+
+    <!--<item-->
+    <!--android:visible="false"-->
+
+    <!--android:id="@+id/Orders"-->
+    <!--android:orderInCategory="100"-->
+    <!--android:title="Order "-->
+    <!--app:showAsAction="never" />-->
+
+    <!--<item-->
+    <!--android:visible="false"-->
+
+    <!--android:id="@+id/history"-->
+    <!--android:orderInCategory="100"-->
+    <!--android:title="History "-->
+    <!--app:showAsAction="never" />-->
+    <!--<item-->
+    <!--android:visible="false"-->
+
+    <!--android:id="@+id/view"-->
+    <!--android:orderInCategory="100"-->
+    <!--android:title="Profile "-->
+    <!--app:showAsAction="never" />-->
 
     <item
-        android:id="@+id/Loans"
-        android:orderInCategory="100"
-        android:title="Loan "
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_call_black_24dp"
 
-    <item
-        android:id="@+id/Orders"
-        android:orderInCategory="100"
-        android:title="Order "
-        app:showAsAction="never" />
-
-    <item
-        android:visible="false"
-        android:id="@+id/history"
-        android:orderInCategory="100"
-        android:title="History "
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/view"
-        android:orderInCategory="100"
-        android:title="Profile "
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/call"
         android:orderInCategory="100"
         android:title="Call "
         app:showAsAction="never" />
 
     <item
+        android:icon="@drawable/ic_sms_black_24dp"
         android:id="@+id/sms"
         android:orderInCategory="100"
         android:title="Sms "
         app:showAsAction="never" />
 
 
-    <item
-        android:actionLayout="@layout/farmer_delete_action_layout"
-        android:id="@+id/delete"
-        android:orderInCategory="100"
-        android:title="Delete "
-        app:showAsAction="never" />
+    <!--<item-->
+    <!--android:actionLayout="@layout/farmer_delete_action_layout"-->
+    <!--android:id="@+id/delete"-->
+    <!--android:orderInCategory="100"-->
+    <!--android:title="Delete "-->
+    <!--app:showAsAction="never" />-->
 
-    <item
-        android:id="@+id/archive"
-        android:orderInCategory="100"
-        android:title="Archive "
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/dummy"
-        android:orderInCategory="100"
-        android:title="Move to Dummy"
-        android:visible="true"
-        app:showAsAction="never" />
-    <item
-        android:visible="false"
-        android:id="@+id/edit"
-        android:orderInCategory="100"
-        android:title="Edit "
-        app:showAsAction="never" />
+    <!--<item-->
+    <!--android:visible="false"-->
+
+    <!--android:id="@+id/archive"-->
+    <!--android:orderInCategory="100"-->
+    <!--android:title="Archive "-->
+    <!--app:showAsAction="never" />-->
+    <!--<item-->
+
+    <!--android:id="@+id/dummy"-->
+    <!--android:orderInCategory="100"-->
+    <!--android:title="Move to Dummy"-->
+    <!--android:visible="false"-->
+    <!--app:showAsAction="never" />-->
+    <!--<item-->
+    <!--android:visible="false"-->
+    <!--android:id="@+id/edit"-->
+    <!--android:orderInCategory="100"-->
+    <!--android:title="Edit "-->
+    <!--app:showAsAction="never" />-->
 
 </menu>
