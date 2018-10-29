@@ -21,6 +21,7 @@ import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.MilkModel;
 import com.dev.lishabora.Models.UnitsModel;
+import com.dev.lishabora.Models.collectMod;
 import com.dev.lishabora.NumKey.NumberKeyboard;
 import com.dev.lishabora.NumKey.NumberKeyboardListener;
 import com.dev.lishabora.Utils.CollectListener;
@@ -36,7 +37,6 @@ import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 
@@ -68,15 +68,7 @@ public class CollectMilk implements NumberKeyboardListener {
     private DateTime dateTime;
     private Date date;
 
-    private String day1Ams = "";
-    private String day1pms = "";
-    private String day2Ams = "";
 
-    private String day2pms = "";
-    private String day3Ams = "";
-    private String day3pms = "";
-    private String day4Ams = "";
-    private String day4pms = "";
     private UnitsModel unitsModel = null;
     private Date previousdate;
     private Activity activity;
@@ -134,7 +126,6 @@ public class CollectMilk implements NumberKeyboardListener {
         Period length = DateTimeUtils.Companion.calcDiff(previousdate, new Date());
 
         previousdate = new Date();
-        //Timber.tag("debugfarmersclist").d("  Length " + mPeriodFormat.print(length) + "    " + msg);
 
     }
 
@@ -186,7 +177,7 @@ public class CollectMilk implements NumberKeyboardListener {
         btnNeutral.setVisibility(View.GONE);
         numberKeyboard = mView.findViewById(R.id.numberKeyboard);
         numberKeyboard.setNumberKeyTypeface(Typeface.DEFAULT);
-        // numberKeyboard.se
+
         if (withCustomKeyboard) {
             numberKeyboard.setVisibility(View.VISIBLE);
 
@@ -230,7 +221,7 @@ public class CollectMilk implements NumberKeyboardListener {
     }
 
 
-    void collectMilk(Activity activity, FamerModel famerModel, List<Collection> collections, CollectListener listener) {
+    void collectMilk(Activity activity, FamerModel famerModel, collectMod mode, CollectListener listener) {
 
         previousCollectionnm = new Collection();
 
@@ -250,71 +241,19 @@ public class CollectMilk implements NumberKeyboardListener {
                 unitsModel.setUnitprice(famerModel.getUnitprice());
                 unitsModel.setUnit(famerModel.getUnitname());
 
-                day1Ams = "";
-                day1pms = "";
-                day2Ams = "";
-                day2pms = "";
-                day3Ams = "";
-                day3pms = "";
-                day4Ams = "";
-                day4pms = "";
-                collModel = null;
 
-                if (collections != null) {
-                    for (Collection c : collections) {
-                        if (c.getDayDate().contains(DateTimeUtils.Companion.getDatePrevious(3))) {
-                            if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
-                                //day1am.setText(c.getMilkCollectedAm());
+                collModel = mode.getTodaysCollection();
 
-                                day1Ams = c.getMilkCollectedAm();
-                            }
-                            if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
-                                //day1pm.setText(c.getMilkCollectedPm());
-                                day1pms = c.getMilkCollectedPm();
-
-                            }
-                        } else if (c.getDayDate().contains(DateTimeUtils.Companion.getDatePrevious(2))) {
-                            if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
-                                // day2am.setText(c.getMilkCollectedAm());
-                                day2Ams = c.getMilkCollectedAm();
-
-                            }
-                            if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
-                                // day2pm.setText(c.getMilkCollectedPm());
-                                day2pms = c.getMilkCollectedPm();
-
-                            }
-                        } else if (c.getDayDate().contains(DateTimeUtils.Companion.getDatePrevious(1))) {
-                            if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
-                                // day3am.setText(c.getMilkCollectedAm());
-                                day3Ams = c.getMilkCollectedAm();
-
-
-                            }
-                            if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
-                                // day3pm.setText(c.getMilkCollectedPm());
-                                day3pms = c.getMilkCollectedPm();
-
-
-                            }
-                        } else if (c.getDayDate().contains(DateTimeUtils.Companion.getToday())) {
-                            collModel = c;
-                            if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
-
-                                day4Ams = c.getMilkCollectedAm();
-                                previousCollectionnm.setMilkCollectedValueKshAm(c.getMilkCollectedValueKshAm());
-
-                            }
-                            if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
-                                day4pms = c.getMilkCollectedPm();
-                                previousCollectionnm.setMilkCollectedValueKshPm(c.getMilkCollectedValueKshPm());
-
-
-                            }
-                        }
-
+                if (mode.getTodaysCollection() != null) {
+                    if (mode.getTodaysCollection().getMilkCollectedValueKshAm() != null) {
+                        previousCollectionnm.setMilkCollectedValueKshAm(mode.getTodaysCollection().getMilkCollectedValueKshAm());
+                    }
+                    if (mode.getTodaysCollection().getMilkCollectedValueKshPm() != null) {
+                        previousCollectionnm.setMilkCollectedValueKshPm(mode.getTodaysCollection().getMilkCollectedValueKshPm());
                     }
                 }
+
+
 
                 if (activity != null) {
                     activity.runOnUiThread(() -> {
@@ -324,17 +263,17 @@ public class CollectMilk implements NumberKeyboardListener {
                         unitName.setText(unitsModel.getUnit());
                         unitPrice.setText(unitsModel.getUnitprice());
 
-                        day1am.setText(day1Ams);
-                        day1pm.setText(day1pms);
+                        day1am.setText(mode.getDay1Ams());
+                        day1pm.setText(mode.getDay1pms());
 
-                        day2am.setText(day2Ams);
-                        day2pm.setText(day2pms);
+                        day2am.setText(mode.getDay2Ams());
+                        day2pm.setText(mode.getDay2pms());
 
-                        day3am.setText(day3Ams);
-                        day3pm.setText(day3pms);
+                        day3am.setText(mode.getDay3Ams());
+                        day3pm.setText(mode.getDay3pms());
 
-                        edtTodayAm.setText(day4Ams);
-                        edtTodayPm.setText(day4pms);
+                        edtTodayAm.setText(mode.getDay4Ams());
+                        edtTodayPm.setText(mode.getDay4pms());
 
 
                         try {
@@ -446,7 +385,6 @@ public class CollectMilk implements NumberKeyboardListener {
                                 numberKeyboard.setEnabled(false);
                                 numberKeyboard.setVisibility(View.GONE);
                             } else {
-                                //MyToast.toast("Current payout has already been approved",context,R.drawable.ic_error_outline_black_24dp,Toast.LENGTH_LONG);
                                 numberKeyboard.setEnabled(true);
                                 numberKeyboard.setVisibility(View.VISIBLE);
                             }

@@ -64,9 +64,27 @@ public class TraderModel implements Serializable {
     @Ignore
     private int isLoggedIn;
 
+    private int synchingStatus;
+    private String lastsynchingMessage;
+
     @Ignore
     private List<ProductsModel> productModels;
 
+    public int getSynchingStatus() {
+        return synchingStatus;
+    }
+
+    public void setSynchingStatus(int synchingStatus) {
+        this.synchingStatus = synchingStatus;
+    }
+
+    public String getLastsynchingMessage() {
+        return lastsynchingMessage;
+    }
+
+    public void setLastsynchingMessage(String lastsynchingMessage) {
+        this.lastsynchingMessage = lastsynchingMessage;
+    }
 
     public List<ProductsModel> getProductModels() {
         return productModels;

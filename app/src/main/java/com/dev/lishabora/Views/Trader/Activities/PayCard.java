@@ -223,7 +223,7 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
         alertDialogAndroid.show();
     }
     private void approve(Payouts payouts, PayoutFarmersCollectionModel model) {
-//
+
         CommonFuncs.doAprove(PayCard.this, balncesViewModel, traderViewModel, model, famerModel, payouts, this);
 
 

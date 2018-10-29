@@ -27,7 +27,16 @@ import com.dev.lishabora.Models.UnitsModel;
 @TypeConverters(DateConverter.class)
 
 public abstract class LMDatabase extends RoomDatabase {
-
+    //    static final Migration MIGRATION_47_48 = new Migration(47, 48) {
+//        @Override
+//        public void migrate(SupportSQLiteDatabase database) {
+//            database.execSQL("ALTER TABLE traders  ADD COLUMN synchingStatus INTEGER  ");
+//            database.execSQL("ALTER TABLE traders  ADD COLUMN lastsynchingMessage STRING  ");
+//            database.execSQL("ALTER TABLE farmerBalance  ADD COLUMN loans STRING  ");
+//            database.execSQL("ALTER TABLE farmerBalance  ADD COLUMN orders STRING  ");
+//            database.execSQL("ALTER TABLE farmerBalance  ADD COLUMN milk STRING  ");
+//        }
+//    };
     private static LMDatabase INSTANCE;
     public  static LMDatabase getDatabase(final Context context) {
 
@@ -35,7 +44,10 @@ public abstract class LMDatabase extends RoomDatabase {
             synchronized (LMDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            LMDatabase.class, "lm_database").fallbackToDestructiveMigration().allowMainThreadQueries()
+                            LMDatabase.class, "lm_database")
+                            .fallbackToDestructiveMigration()
+                            //.addMigrations(MIGRATION_47_48)
+                            .allowMainThreadQueries()
                             .build();
 
                 }

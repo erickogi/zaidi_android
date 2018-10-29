@@ -147,13 +147,26 @@ public class Application extends MultiDexApplication {
 
     public static void sync(JSONObject jsonObject, List<SyncModel> syncWorks) {
 
+        LMDatabase lmDatabase = LMDatabase.getDatabase(context);
+
+        TraderModel traderModel = lmDatabase.tradersDao().getTraderByCodeOne(new PrefrenceManager(context).getCode());
+        if (traderModel != null) {
+            traderModel.setSynchingStatus(1);
+
+            lmDatabase.tradersDao().updateRecord(traderModel);
+
+        }
         try {
             Request.Companion.getResponseSync(ApiConstants.Companion.getSync(), jsonObject, "", new SyncResponseCallback() {
                 @Override
                 public void response(SyncResponseModel responseModel) {
 
 
+                    if (traderModel != null) {
+                        traderModel.setSynchingStatus(0);
+                        lmDatabase.tradersDao().updateRecord(traderModel);
 
+                    }
 
                     if (responseModel.getResultCode() == 2) {
                         int failureId = Integer.valueOf(responseModel.getFailureId());
@@ -177,6 +190,13 @@ public class Application extends MultiDexApplication {
 
                 @Override
                 public void response(String error) {
+                    if (traderModel != null) {
+                        traderModel.setSynchingStatus(2);
+                        traderModel.setLastsynchingMessage(error);
+
+                        lmDatabase.tradersDao().updateRecord(traderModel);
+
+                    }
 
 
                 }
@@ -185,6 +205,12 @@ public class Application extends MultiDexApplication {
             });
         } catch (Exception nm) {
             nm.printStackTrace();
+            if (traderModel != null) {
+                traderModel.setSynchingStatus(0);
+
+                lmDatabase.tradersDao().updateRecord(traderModel);
+
+            }
 
         }
 
@@ -212,12 +238,25 @@ public class Application extends MultiDexApplication {
             TraderModel f = new PrefrenceManager(context).getTraderModel();
 
             JSONObject jb = new JSONObject(gson.toJson(f));
+            LMDatabase lmDatabase = LMDatabase.getDatabase(context);
 
+            TraderModel traderModel = lmDatabase.tradersDao().getTraderByCodeOne(new PrefrenceManager(context).getCode());
+            if (traderModel != null) {
+                traderModel.setSynchingStatus(1);
+
+                lmDatabase.tradersDao().updateRecord(traderModel);
+
+            }
             Request.Companion.getResponseSyncDown(ApiConstants.Companion.getViewInfo(), jb, "",
                     new SyncDownResponseCallback() {
                         @Override
                         public void response(Data responseModel) {
 
+                            if (traderModel != null) {
+                                traderModel.setSynchingStatus(0);
+                                lmDatabase.tradersDao().updateRecord(traderModel);
+
+                            }
                             try {
 
 
@@ -269,7 +308,14 @@ public class Application extends MultiDexApplication {
                         @Override
                         public void response(String error) {
 
+                            if (traderModel != null) {
+                                traderModel.setSynchingStatus(2);
+                                traderModel.setLastsynchingMessage(error);
 
+
+                                lmDatabase.tradersDao().updateRecord(traderModel);
+
+                            }
                         }
                     });
         } catch (JSONException e) {

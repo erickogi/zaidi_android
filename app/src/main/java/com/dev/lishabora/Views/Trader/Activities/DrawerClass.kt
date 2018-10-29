@@ -4,6 +4,9 @@ import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.support.v7.widget.Toolbar
+import android.view.View
+import android.widget.TextView
+import com.dev.lishabora.Application
 import com.dev.lishabora.Application.isTimeAutomatic
 import com.dev.lishabora.Models.Trader.TraderModel
 import com.dev.lishaboramobile.R
@@ -38,7 +41,8 @@ class DrawerClass {
     companion object {
         internal lateinit var result: Drawer
         internal lateinit var headerResult: AccountHeader
-        fun getDrawer(noti: String, email: String?, name: String?, activity: Activity, toolbar: Toolbar, itemListener: DrawerItemListener) {
+        fun getDrawer(noti: String, email: String?, name: String?,
+                      activity: Activity, toolbar: Toolbar, itemListener: DrawerItemListener): Drawer {
             // result: Drawer
             val drawerEmptyItem = PrimaryDrawerItem().withIdentifier(0).withName("")
             drawerEmptyItem.withEnabled(false)
@@ -131,7 +135,7 @@ class DrawerClass {
                     .withActivity(activity)
                     //.withFooter(R.layout.footer)
 
-                    //.withFooter(R.layout.footer)
+                    .withFooter(R.layout.footer)
 
                     //.withGenerateMiniDrawer(true)
                     .withFooterDivider(false)
@@ -249,6 +253,7 @@ class DrawerClass {
                     }
 
                     .build()
+            return result
         }
 
         fun observeChangesInProfile(traderModel: TraderModel) {
@@ -278,6 +283,32 @@ class DrawerClass {
 
         fun setOpened(b: Boolean) {
             result.openDrawer()
+
+        }
+
+        fun footer(traderModel: TraderModel) {
+            var view = result.footer
+
+            var txt_network_state: TextView = view.findViewById(R.id.txt_network_state)
+            if (traderModel != null) {
+                if (traderModel.synchingStatus == 1) {
+                    txt_network_state.visibility = View.VISIBLE
+                    txt_network_state.text = "Syncing data ...."
+                } else if (traderModel.synchingStatus == 2) {
+                    txt_network_state.visibility = View.VISIBLE
+                    if (Application.isConnected) {
+                        txt_network_state.text = traderModel.lastsynchingMessage
+                    } else {
+                        txt_network_state.text = "No internet sync failed"
+
+                    }
+
+
+                } else {
+                    txt_network_state.visibility = View.GONE
+
+                }
+            }
 
         }
     }

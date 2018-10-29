@@ -51,6 +51,7 @@ import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.RoutesModel;
 import com.dev.lishabora.Models.UnitsModel;
+import com.dev.lishabora.Models.collectMod;
 import com.dev.lishabora.Utils.CollectListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.MyToast;
@@ -559,6 +560,32 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
     }
 
+    private void listenOnSyncStatus() {
+        mViewModel.getTrader(prefrenceManager.getCode()).observe(this, traderModel -> {
+
+            if (traderModel != null) {
+                if (traderModel.getSynchingStatus() == 1) {
+                    txt_network_state.setVisibility(View.VISIBLE);
+                    txt_network_state.setText("Syncing data ....");
+                } else if (traderModel.getSynchingStatus() == 2) {
+                    txt_network_state.setVisibility(View.VISIBLE);
+                    if (Application.isConnected) {
+                        txt_network_state.setText(traderModel.getLastsynchingMessage());
+                    } else {
+                        txt_network_state.setText("No internet sync failed");
+
+                    }
+
+
+                } else {
+                    txt_network_state.setVisibility(View.GONE);
+
+                }
+            }
+
+        });
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -646,6 +673,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
             nm.printStackTrace();
         }
 
+        listenOnSyncStatus();
 
     }
 
@@ -1462,18 +1490,86 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
         }
     }
 
-    private class DownloadFilesTask extends AsyncTask<String, Integer, List<Collection>> {
-        protected List<Collection> doInBackground(String... data) {
+    private class DownloadFilesTask extends AsyncTask<String, Integer, collectMod> {
+        protected collectMod doInBackground(String... data) {
 
-            return mViewModel.getCollectionsBetweenDatesOne(DateTimeUtils.Companion.getLongDate(DateTimeUtils.Companion.getDatePrevious(4)), DateTimeUtils.Companion.getLongDate(DateTimeUtils.Companion.getToday()), data[0]);
+            List<Collection> collections = mViewModel.getCollectionsBetweenDatesOne(DateTimeUtils.Companion.getLongDate(DateTimeUtils.Companion.getDatePrevious(4)), DateTimeUtils.Companion.getLongDate(DateTimeUtils.Companion.getToday()), data[0]);
+            collectMod mod = new collectMod();
+            if (collections != null) {
+                for (Collection c : collections) {
+                    if (c.getDayDate().contains(DateTimeUtils.Companion.getDatePrevious(3))) {
+                        if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
+                            //day1am.setText(c.getMilkCollectedAm());
+
+
+                            mod.setDay1Ams(c.getMilkCollectedAm());
+                        }
+                        if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
+                            mod.setDay1pms(c.getMilkCollectedPm());
+
+                        }
+                    } else if (c.getDayDate().contains(DateTimeUtils.Companion.getDatePrevious(2))) {
+                        if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
+                            // day2am.setText(c.getMilkCollectedAm());
+                            mod.setDay2Ams(c.getMilkCollectedAm());
+
+                        }
+                        if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
+                            // day2pm.setText(c.getMilkCollectedPm());
+                            mod.setDay2pms(c.getMilkCollectedPm());
+
+                        }
+                    } else if (c.getDayDate().contains(DateTimeUtils.Companion.getDatePrevious(1))) {
+                        if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
+                            // day3am.setText(c.getMilkCollectedAm());
+                            mod.setDay3Ams(c.getMilkCollectedAm());
+
+
+                        }
+                        if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
+                            // day3pm.setText(c.getMilkCollectedPm());
+                            mod.setDay3pms(c.getMilkCollectedPm());
+
+
+                        }
+                    } else if (c.getDayDate().contains(DateTimeUtils.Companion.getToday())) {
+                        mod.setTodaysCollection(c);
+                        if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
+
+                            mod.setDay4Ams(c.getMilkCollectedAm());
+
+                        }
+                        if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
+                            mod.setDay4pms(c.getMilkCollectedPm());
+
+
+                        }
+                    }
+
+                }
+            }
+
+
+            return mod;
+
+
+
+
+
+
+
+
+
 
         }
 
 
-        protected void onPostExecute(List<Collection> collections) {
+        protected void onPostExecute(collectMod c) {
 
-            collectMilk.collectMilk(getActivity(), FarmerConst.getSearchFamerModels().get(selectedInt), collections, FragementFarmersList.this);
+            collectMilk.collectMilk(getActivity(), FarmerConst.getSearchFamerModels().get(selectedInt), c, FragementFarmersList.this);
 
         }
     }
+
+
 }

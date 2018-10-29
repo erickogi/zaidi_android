@@ -28,6 +28,12 @@ public class FarmerBalance implements Serializable {
 
     private String balanceOwed;
 
+    private String loans;
+
+    private String orders;
+
+    private String milk;
+
     private String payoutCode;
 
     private int payoutStatus;
@@ -35,13 +41,43 @@ public class FarmerBalance implements Serializable {
 
     private String lastUpdated;
 
-    public FarmerBalance(String code, String farmerCode, String payoutCode, String balanceToPay, String balanceOwed, String lastUpdated) {
+    public FarmerBalance(String code, String farmerCode, String payoutCode, String balanceToPay,
+                         String balanceOwed, String lastUpdated, String loans, String orders, String milk) {
         this.code = code;
         this.farmerCode = farmerCode;
         this.payoutCode = payoutCode;
         this.balanceToPay = balanceToPay;
         this.balanceOwed = balanceOwed;
         this.lastUpdated = lastUpdated;
+        this.loans = loans;
+        this.orders = orders;
+        this.milk = milk;
+
+
+    }
+
+    public String getLoans() {
+        return loans;
+    }
+
+    public void setLoans(String loans) {
+        this.loans = loans;
+    }
+
+    public String getOrders() {
+        return orders;
+    }
+
+    public void setOrders(String orders) {
+        this.orders = orders;
+    }
+
+    public String getMilk() {
+        return milk;
+    }
+
+    public void setMilk(String milk) {
+        this.milk = milk;
     }
 
     public int getPayoutStatus() {

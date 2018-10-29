@@ -2106,7 +2106,7 @@ public class CommonFuncs {
 
 
                 farmerBalance = new FarmerBalance(GeneralUtills.Companion.createCode(c.getFarmerCode()),
-                        c.getFarmerCode(), c.getPayoutCode(), "", "", "");
+                        c.getFarmerCode(), c.getPayoutCode(), "", "", "", String.valueOf(loanTotalAmount), String.valueOf(orderTotalAmount), String.valueOf(totalMilkForCurrentPayout));
 
                 farmerBalance.setBalanceOwed(String.valueOf((totalMilkForCurrentPayout - ((loanTotalAmount - loanPaid) + (orderTotalAmount - orderPaid)))));
                 farmerBalance.setBalanceToPay(String.valueOf((totalMilkForCurrentPayout - ((loanInstalmentAmount) + (orderInstalmentAmount)))));
@@ -2847,7 +2847,7 @@ public class CommonFuncs {
 
 
                 farmerBalance = new FarmerBalance(GeneralUtills.Companion.createCode(farmerCode),
-                        farmerCode, payoutCode, "", "", "");
+                        farmerCode, payoutCode, "", "", "", String.valueOf(loanTotalAmount), String.valueOf(orderTotalAmount), String.valueOf(totalMilkForCurrentPayout));
 
                 farmerBalance.setBalanceOwed(String.valueOf((totalMilkForCurrentPayout - ((loanTotalAmount - loanPaid) + (orderTotalAmount - orderPaid)))));
                 farmerBalance.setBalanceToPay(String.valueOf((totalMilkForCurrentPayout - ((loanInstalmentAmount) + (orderInstalmentAmount)))));

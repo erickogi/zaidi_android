@@ -52,6 +52,9 @@ public interface TradersDao {
     @Query("SELECT * FROM TRADERS WHERE code =:code")
     LiveData<TraderModel> getTraderByCode(String code);
 
+    @Query("SELECT * FROM TRADERS WHERE code =:code")
+    TraderModel getTraderByCodeOne(String code);
+
     @Query("SELECT * FROM TRADERS WHERE names =:names")
     LiveData<TraderModel> getTradersByNames(String names);
 

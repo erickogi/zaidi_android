@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.ViewPagerAdapter;
@@ -65,6 +66,7 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.gson.Gson;
+import com.mikepenz.materialdrawer.Drawer;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONException;
@@ -90,7 +92,7 @@ public class TraderActivity extends AppCompatActivity {
 
     private TraderViewModel viewModel;
 
-
+    private Drawer d;
     private static final String SAMPLE_DB_NAME = "lm_database";
     private static final String SAMPLE_TABLE_NAME = "Info";
 
@@ -196,9 +198,38 @@ public class TraderActivity extends AppCompatActivity {
         }
     }
 
+    private void listenOnSyncStatus() {
+        TextView txt_network_state = d.getFooter().findViewById(R.id.txt_network_state);
+
+        viewModel.getTrader(traderPrefs.getCode()).observe(this, traderModel -> {
+
+            if (traderModel != null) {
+                if (traderModel.getSynchingStatus() == 1) {
+                    txt_network_state.setVisibility(View.VISIBLE);
+                    txt_network_state.setText("Syncing data ....");
+                } else if (traderModel.getSynchingStatus() == 2) {
+                    txt_network_state.setVisibility(View.VISIBLE);
+                    if (Application.isConnected) {
+                        txt_network_state.setText(traderModel.getLastsynchingMessage());
+                    } else {
+                        txt_network_state.setText("No internet sync failed");
+
+                    }
+
+
+                } else {
+                    txt_network_state.setVisibility(View.GONE);
+
+                }
+            }
+
+
+        });
+    }
+
 
     void setUpDrawer(Toolbar toolbar, String name, String email) {
-        DrawerClass.Companion.getDrawer("0", email, name, this, toolbar, new DrawerItemListener() {
+        d = DrawerClass.Companion.getDrawer("0", email, name, this, toolbar, new DrawerItemListener() {
 
             @Override
             public void syncDue(Application.hasSynced a) {
@@ -352,7 +383,7 @@ public class TraderActivity extends AppCompatActivity {
 
             }
         });
-
+        listenOnSyncStatus();
         viewModel.getTrader(traderPrefs.getCode()).observe(this, traderModel -> {
             if (traderModel != null) {
                 DrawerClass.Companion.observeChangesInProfile(traderModel);
