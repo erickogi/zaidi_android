@@ -87,6 +87,10 @@ public class ProductsRepo {
         return db.productsDao().getAllByStatus(status);
     }
 
+    public List<ProductsModel> getAllByStatusOne(int status) {
+        return db.productsDao().getAllByStatusOne(status);
+    }
+
     public LiveData<ProductsModel> getUnitByCode(String code) {
         return db.productsDao().getProductByCode(code);
     }

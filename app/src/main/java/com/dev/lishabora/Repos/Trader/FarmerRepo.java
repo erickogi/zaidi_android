@@ -12,8 +12,6 @@ import com.dev.lishabora.Models.FarmerRouteBalance;
 
 import java.util.List;
 
-import timber.log.Timber;
-
 public class FarmerRepo {
     private FarmersDao farmersDao;
     private LiveData<List<FamerModel>> farmers;
@@ -275,7 +273,6 @@ public class FarmerRepo {
 
         @Override
         protected Boolean doInBackground(final FamerModel... params) {
-            Timber.tag("ColSdebug1").d(" FarmerUpdateBackground");
 
             mAsyncTaskDao.updateRecord(params[0]);
             return true;
@@ -284,7 +281,6 @@ public class FarmerRepo {
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
-            Timber.tag("ColSdebug1").d(" FarmerUpdatePost");
 
             super.onPostExecute(aBoolean);
 

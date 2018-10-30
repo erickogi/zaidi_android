@@ -513,9 +513,15 @@ public class TraderActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-        if (collectMilk != null) {
-            collectMilk.onDestroy();
+        try {
+
+            if (collectMilk != null) {
+                collectMilk.onDestroy();
+            }
+            super.onDestroy();
+
+        } catch (Exception nm) {
+            nm.printStackTrace();
         }
     }
 
@@ -528,15 +534,18 @@ public class TraderActivity extends AppCompatActivity {
         viewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
 
 
-
         traderPrefs = new PrefrenceManager(this);
         setUpDrawer(toolbar, traderPrefs.getTraderModel().getMobile(), traderPrefs.getTraderModel().getNames());
 
         fab = findViewById(R.id.fab);
         fab.hide();
 
-
         setUpMainFragment();
+
+
+        observeSyncDown();
+
+
         collectMilk = new CollectMilk(TraderActivity.this, this, true);
 
 //        initConnectivityListener();
@@ -552,6 +561,37 @@ public class TraderActivity extends AppCompatActivity {
 
 
         intNoti();
+
+    }
+
+    private void observeSyncDown() {
+
+        progressDialog = new ProgressDialog(TraderActivity.this);
+        viewModel.observeSyncDown().observe(this, syncDownObserver -> {
+            if (syncDownObserver != null) {
+                if (syncDownObserver.getStatus() == 0) {
+                    if (!progressDialog.isShowing()) {
+                        progressDialog.setCancelable(false);
+                        progressDialog.setMessage("Syncing Down your saved data . .. Please wait ");
+                        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                        progressDialog.show();
+                    } else {
+                        if (progressDialog != null) {
+
+                            progressDialog.dismiss();
+                        }
+                    }
+
+                } else {
+                    if (progressDialog != null) {
+
+                        progressDialog.dismiss();
+                    }
+                }
+            }
+        });
+
+
     }
 
     private void alertDialogFirstTime() {

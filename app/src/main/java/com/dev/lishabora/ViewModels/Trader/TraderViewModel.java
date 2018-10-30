@@ -5,7 +5,6 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.dev.lishabora.AppConstants;
 import com.dev.lishabora.Models.Collection;
@@ -19,6 +18,7 @@ import com.dev.lishabora.Models.RPFSearchModel;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.ResponseObject;
 import com.dev.lishabora.Models.RoutesModel;
+import com.dev.lishabora.Models.SyncDownObserver;
 import com.dev.lishabora.Models.SyncModel;
 import com.dev.lishabora.Models.Trader.TraderModel;
 import com.dev.lishabora.Models.UnitsModel;
@@ -27,6 +27,7 @@ import com.dev.lishabora.Network.Request;
 import com.dev.lishabora.Repos.NotificationRepo;
 import com.dev.lishabora.Repos.ProductsRepo;
 import com.dev.lishabora.Repos.RoutesRepo;
+import com.dev.lishabora.Repos.SyncDownObserverRepo;
 import com.dev.lishabora.Repos.Trader.CollectionsRepo;
 import com.dev.lishabora.Repos.Trader.CyclesRepo;
 import com.dev.lishabora.Repos.Trader.FarmerRepo;
@@ -66,6 +67,7 @@ public class TraderViewModel extends AndroidViewModel
     SyncRepo syncRepo;
     TraderRepo traderRepo;
     NotificationRepo notificationRepo;
+    SyncDownObserverRepo syncDownObserverRepo;
 
 
     Gson gson = new Gson();
@@ -139,6 +141,7 @@ public class TraderViewModel extends AndroidViewModel
         traderRepo = new TraderRepo(application);
         notificationRepo = new NotificationRepo(application);
 
+        syncDownObserverRepo = new SyncDownObserverRepo(application);
 
 
 //
@@ -148,6 +151,10 @@ public class TraderViewModel extends AndroidViewModel
 
 //
 //
+    }
+
+    public LiveData<SyncDownObserver> observeSyncDown() {
+        return syncDownObserverRepo.getObserver();
     }
 
     public LiveData<List<Notifications>> getNotifications(int viewd) {
@@ -350,6 +357,15 @@ public class TraderViewModel extends AndroidViewModel
 
 
     }
+
+    public List<ProductsModel> getProductsModelsOne(int status) {
+
+
+        return productsRepo.getAllByStatusOne(status);
+
+
+    }
+
 
 
     public LiveData<List<FarmerRouteBalance>> getFarmerByStatusRouteJoined(int status, String route) {
@@ -871,7 +887,6 @@ public class TraderViewModel extends AndroidViewModel
         Cycles c = getCycleO(collection.getCycleCode());
         if (c == null) {
             c = insertCycles(collection.getCycleCode());
-            //c = getCycleO(collection.getCycleCode());
 
         }
         int farmerCountPerCycle = getFarmersCountByCycle(collection.getCycleCode());
@@ -908,7 +923,6 @@ public class TraderViewModel extends AndroidViewModel
 
             }
 
-            // Log.d("payoutCodeDebug", "Collection Inserted \nExisting payout  " + p.getCode());
 
             insertPayout(payouts);
 
@@ -916,20 +930,15 @@ public class TraderViewModel extends AndroidViewModel
             collection.setCycleStartedOn(payouts.getStartDate());
             collection.setPayoutnumber(payouts.getPayoutnumber());
             collection.setPayoutCode(payouts.getCode());
-            //  synch(AppConstants.INSERT, AppConstants.ENTITY_COLLECTION, collection, null, 1);
-
-            Log.d("payoutCodeDebug", "Collection Inserted \nNew  payout \n(No other  payouts available) " + payouts.getCode());
 
 
-            //  collectionsRepo.insert(collection);
-            // ResponseModel responseModel = new ResponseModel();
+
             responseModel.setResultCode(1);
             responseModel.setResultDescription("Collection Inserted \nNew  payout \n(No other  payouts available)");
             responseModel.setData(null);
             responseModel.setPayoutCode(payouts.getCode());
 
 
-            // createCollectionSuccess.setValue(responseModel);
 
 
         } else {
@@ -938,14 +947,12 @@ public class TraderViewModel extends AndroidViewModel
             if (DateTimeUtils.Companion.isPastLastDay(p.getEndDate())) {
 
 
-                Log.d("payoutCodeDebug", "" + p.getEndDate());
                 endAndStart = PayoutsCyclesDatesUtills.getPayoutStartEndDate(c.getCode(), new PayoutsCyclesDatesUtills.EndAndStart(tradersStartDay, tradersEndDay), new PayoutsCyclesDatesUtills.EndAndStart(p.getStartDate(), p.getEndDate()));
                 payouts.setStartDate(endAndStart.getStartDate());
                 payouts.setEndDate(endAndStart.getEndDate());
                 payouts.setPayoutnumber(plastIfOne.getPayoutnumber() + 1);
 
                 insertPayout(payouts);
-                Log.d("payoutCodeDebug", "Collection Inserted \nNew  payout \nOther cycles payouts available" + payouts.getCode());
 
 
 
@@ -958,13 +965,11 @@ public class TraderViewModel extends AndroidViewModel
                 responseModel.setData(null);
                 responseModel.setPayoutCode(payouts.getCode());
 
-                // createCollectionSuccess.setValue(responseModel);
 
 
             } else {
                 collection.setCycleStartedOn(p.getStartDate());
                 collection.setPayoutnumber(p.getPayoutnumber());
-                Log.d("payoutCodeDebug", "Collection Inserted \nExisting payout  " + p.getCode());
                 collection.setPayoutCode(p.getCode());
 
                 responseModel.setResultCode(1);
@@ -972,7 +977,6 @@ public class TraderViewModel extends AndroidViewModel
                 responseModel.setData(null);
                 responseModel.setPayoutCode(p.getCode());
 
-                //  createCollectionSuccess.setValue(responseModel);
 
             }
 
@@ -1010,7 +1014,6 @@ public class TraderViewModel extends AndroidViewModel
         Cycles c = getCycleO(collection.getCycleCode());
         if (c == null) {
             c = insertCycles(collection.getCycleCode());
-            //c = getCycleO(collection.getCycleCode());
 
         }
         int farmerCountPerCycle = getFarmersCountByCycle(collection.getCycleCode());
@@ -1054,18 +1057,13 @@ public class TraderViewModel extends AndroidViewModel
             collection.setCycleStartedOn(payouts.getStartDate());
             collection.setPayoutnumber(payouts.getPayoutnumber());
             collection.setPayoutCode(payouts.getCode());
-            //  synch(AppConstants.INSERT, AppConstants.ENTITY_COLLECTION, collection, null, 1);
 
-
-            //  collectionsRepo.insert(collection);
-            // ResponseModel responseModel = new ResponseModel();
             responseModel.setResultCode(1);
             responseModel.setResultDescription("Collection Inserted \nNew  payout \n(No other  payouts available)");
             responseModel.setData(null);
             responseModel.setPayoutCode(payouts.getCode());
 
 
-            // createCollectionSuccess.setValue(responseModel);
 
 
         } else {
@@ -1103,7 +1101,6 @@ public class TraderViewModel extends AndroidViewModel
                 responseModel.setData(null);
                 responseModel.setPayoutCode(p.getCode());
 
-                //  createCollectionSuccess.setValue(responseModel);
 
             }
 
@@ -1128,7 +1125,7 @@ public class TraderViewModel extends AndroidViewModel
     }
 
 
-    public LiveData<ResponseModel> updateCollection(Collection c) {
+    public ResponseModel updateCollection(Collection c) {
         ResponseModel responseModel = new ResponseModel();
 
         if (c != null && c.getPayoutCode() != null) {
@@ -1154,9 +1151,9 @@ public class TraderViewModel extends AndroidViewModel
         responseModel.setData(null);
 
 
-        updateCollectionSuccess.setValue(responseModel);
+        // updateCollectionSuccess.setValue(responseModel);
 
-        return updateCollectionSuccess;
+        return responseModel;
 
     }
 

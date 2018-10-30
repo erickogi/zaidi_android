@@ -37,6 +37,9 @@ public interface ProductsDao {
     @Query("SELECT * FROM PRODUCTS WHERE subscribed =:status")
     LiveData<List<ProductsModel>> getAllByStatus(int status);
 
+    @Query("SELECT * FROM PRODUCTS WHERE subscribed =:status")
+    List<ProductsModel> getAllByStatusOne(int status);
+
 
     @Query("SELECT * FROM PRODUCTS WHERE code =:code")
     LiveData<ProductsModel> getProductByCode(String code);

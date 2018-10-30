@@ -54,6 +54,7 @@ public class PayoutCheckerJob extends Job {
                     .setContentTitle(title)
                     .setContentText(message)
                     .setAutoCancel(true)
+                    .setOngoing(true)
                     .setContentIntent(pi)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setShowWhen(true)

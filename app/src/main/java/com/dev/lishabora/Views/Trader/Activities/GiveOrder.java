@@ -20,6 +20,7 @@ import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.OrderModel;
+import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.Trader.FarmerOrdersTable;
 import com.dev.lishabora.Utils.CollectListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
@@ -177,7 +178,7 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
 
     @Override
     public void updateCollection(Collection c, FamerModel famerModel, Double aDouble) {
-        traderViewModel.updateCollection(c).observe(this, responseModel -> {
+        ResponseModel responseModel = traderViewModel.updateCollection(c);//.observe(this, responseModel -> {
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
 
                 FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getCode());
@@ -197,7 +198,7 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
 
                 snack(responseModel.getResultDescription());
             }
-        });
+        // });
     }
 
     @Override

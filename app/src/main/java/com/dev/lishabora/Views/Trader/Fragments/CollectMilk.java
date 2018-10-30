@@ -226,6 +226,8 @@ public class CollectMilk implements NumberKeyboardListener {
         previousCollectionnm = new Collection();
 
 
+        this.activity = activity;
+
         if (DateTimeUtils.Companion.getTodayDate() != dateTime) {
             // setUpdDays();
             // DateTimeUtils.Companion.is
@@ -636,10 +638,16 @@ public class CollectMilk implements NumberKeyboardListener {
 
     @Override
     public void onNumberClicked(int number) {
-        if (amountText.isEmpty() && number == 0) {
-            return;
-        }
-        updateAmount(amountText + number);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (amountText.isEmpty() && number == 0) {
+                    return;
+                }
+                updateAmount(amountText + number);
+            }
+        }).start();
+
     }
 
     @Override
@@ -699,10 +707,11 @@ public class CollectMilk implements NumberKeyboardListener {
     private void showAmount(String amount) {
         switch (EDIT_CLICKED) {
             case 1:
-                edtTodayAm.setText(amount);
+
+                activity.runOnUiThread(() -> edtTodayAm.setText(amount));
                 break;
             case 2:
-                edtTodayPm.setText(amount);
+                activity.runOnUiThread(() -> edtTodayPm.setText(amount));
                 break;
         }
     }

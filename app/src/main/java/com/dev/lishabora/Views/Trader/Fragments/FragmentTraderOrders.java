@@ -59,6 +59,7 @@ public class FragmentTraderOrders extends Fragment {
         View mView = layoutInflaterAndroid.inflate(R.layout.fragment_recycler_view, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         alertDialogBuilderUserInput.setView(mView);
+        alertDialogBuilderUserInput.setCancelable(true);
         alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
         alertDialogBuilderUserInput.setTitle("Order Payments");
 

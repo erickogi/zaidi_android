@@ -278,7 +278,6 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
                 }
 
 
-                Timber.d(jsonObject.toString());
 
                 mViewModel.phoneAuth(jsonObject).observe(this, (ResponseObject responseModel) -> {
 

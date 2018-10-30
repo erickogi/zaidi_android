@@ -1,6 +1,7 @@
 package com.dev.lishabora;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.location.Location;
@@ -22,6 +23,7 @@ import com.dev.lishabora.Models.ProductsModel;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.ResponseObject;
 import com.dev.lishabora.Models.RoutesModel;
+import com.dev.lishabora.Models.SyncDownObserver;
 import com.dev.lishabora.Models.SyncDownResponse;
 import com.dev.lishabora.Models.SyncHolderModel;
 import com.dev.lishabora.Models.SyncModel;
@@ -74,6 +76,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
+//import com.rohitss.uceh.UCEHandler;
+
 public class Application extends MultiDexApplication {
 
     private Location currentBestLocation = null;
@@ -86,7 +90,7 @@ public class Application extends MultiDexApplication {
 
     public static volatile boolean isConnected;
     public static volatile Application application;
-
+    public static NotificationManager _completeNotificationManager = null;
 
     public static CollectMilk collectMilk = null;
 
@@ -224,37 +228,90 @@ public class Application extends MultiDexApplication {
 
     }
 
+    static SyncDownObserver sm = new SyncDownObserver();
+
     public static void syncDown() {
         new Thread(() -> syncDown(true)).start();
     }
 
+    static SyncDownObserver smo = new SyncDownObserver();
+
+    private static void buildNotification() {
+        //String stop = "stop";
+        //registerReceiver(stopReceiver, new IntentFilter(stop));
+        /// PendingIntent broadcastIntent = PendingIntent.getBroadcast(
+        //  this, 0, new Intent(stop), PendingIntent.FLAG_UPDATE_CURRENT);
+
+        try {
+//            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+//                    .setContentTitle(getString(R.string.app_name))
+//                    .setContentText("Syncing your back your data")
+//                    .setOngoing(true)
+//                   // .setContentIntent(broadcastIntent)
+//                    .setSmallIcon(R.drawable.ic_launcher_background);
+//
+
+
+            Notification notification = new NotificationCompat.Builder(Application.context)
+                    .setContentTitle(context.getString(R.string.app_name))
+                    .setContentText("Syncing your back your data")
+                    .setAutoCancel(true)
+                    .setOngoing(true)
+                    //  .setContentIntent(pi)
+                    .setSmallIcon(R.drawable.ic_launcher_background)
+//
+                    .setShowWhen(true)
+                    .setColor(Color.RED)
+                    .setLocalOnly(true)
+                    .build();
+
+
+            _completeNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+//            notification=new NotificationManagerCompat.from(Application.context)
+//                    .notify(6, notification);
+            _completeNotificationManager.notify(6, notification);
+
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+    }
+
     public static void syncDown(boolean s) {
 
-        Gson gson = new Gson();
 
+        Gson gson = new Gson();
+        LMDatabase lmDatabase = LMDatabase.getDatabase(context);
+
+        buildNotification();
+
+        if (lmDatabase.syncObserverDao().getCount() < 1) {
+            sm.setStatus(0);
+            sm.setResponse("Syncing");
+            sm.setTransactiontime(DateTimeUtils.Companion.getNow());
+            lmDatabase.syncObserverDao().insertSingleSync(sm);
+        }
+
+        smo = lmDatabase.syncObserverDao().getRecord();
 
 
         try {
             TraderModel f = new PrefrenceManager(context).getTraderModel();
-
             JSONObject jb = new JSONObject(gson.toJson(f));
-            LMDatabase lmDatabase = LMDatabase.getDatabase(context);
 
-            TraderModel traderModel = lmDatabase.tradersDao().getTraderByCodeOne(new PrefrenceManager(context).getCode());
-            if (traderModel != null) {
-                traderModel.setSynchingStatus(1);
 
-                lmDatabase.tradersDao().updateRecord(traderModel);
-
-            }
             Request.Companion.getResponseSyncDown(ApiConstants.Companion.getViewInfo(), jb, "",
                     new SyncDownResponseCallback() {
                         @Override
                         public void response(Data responseModel) {
+                            if (_completeNotificationManager != null) {
+                                _completeNotificationManager.cancel(6);
+                            }
 
-                            if (traderModel != null) {
-                                traderModel.setSynchingStatus(0);
-                                lmDatabase.tradersDao().updateRecord(traderModel);
+                            if (smo != null) {
+                                smo.setStatus(1);
+                                smo.setResponse(responseModel.getResultDescription());
+                                lmDatabase.syncObserverDao().updateRecord(smo);
 
                             }
                             try {
@@ -307,13 +364,13 @@ public class Application extends MultiDexApplication {
 
                         @Override
                         public void response(String error) {
-
-                            if (traderModel != null) {
-                                traderModel.setSynchingStatus(2);
-                                traderModel.setLastsynchingMessage(error);
-
-
-                                lmDatabase.tradersDao().updateRecord(traderModel);
+                            if (_completeNotificationManager != null) {
+                                _completeNotificationManager.cancel(6);
+                            }
+                            if (smo != null) {
+                                smo.setStatus(2);
+                                smo.setResponse(error);
+                                lmDatabase.syncObserverDao().updateRecord(smo);
 
                             }
                         }
@@ -334,7 +391,9 @@ public class Application extends MultiDexApplication {
 
     }
 
+
     public static int periodAfterSync() {
+
 
         LMDatabase lmDatabase = LMDatabase.getDatabase(context);
 
@@ -352,6 +411,7 @@ public class Application extends MultiDexApplication {
     }
 
     public static hasSynced hasSyncInPast7Days() {
+
 
         int p = periodAfterSync();
         if (p >= 6) {
@@ -413,9 +473,11 @@ public class Application extends MultiDexApplication {
         }
     }
 
-
-
     public static void updateTrader(JSONObject jsonObject) {
+        new Thread(() -> updateTrader(jsonObject, true)).start();
+    }
+
+    public static void updateTrader(JSONObject jsonObject, boolean a) {
         Request.Companion.getResponse(ApiConstants.Companion.getUpdateTrader(), jsonObject, "",
                 new ResponseCallback() {
                     @Override
@@ -423,12 +485,10 @@ public class Application extends MultiDexApplication {
                         if (responseModel.getResultCode() == 1) {
                             new PrefrenceManager(context).setIsFirebaseUdated(true);
                         }
-                        //  updateSuccess.setValue(responseModel);
                     }
 
                     @Override
                     public void response(ResponseObject responseModel) {
-                        // traders.setValue(responseModel);
                         if (responseModel.getResultCode() == 1) {
                             new PrefrenceManager(context).setIsFirebaseUdated(true);
                         }
@@ -758,10 +818,15 @@ public class Application extends MultiDexApplication {
     }
 
     public static boolean isTimeAutomatic() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            return Settings.Global.getInt(context.getContentResolver(), Settings.Global.AUTO_TIME, 0) == 1;
-        } else {
-            return android.provider.Settings.System.getInt(context.getContentResolver(), android.provider.Settings.System.AUTO_TIME, 0) == 1;
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                return Settings.Global.getInt(context.getContentResolver(), Settings.Global.AUTO_TIME, 0) == 1;
+            } else {
+                return android.provider.Settings.System.getInt(context.getContentResolver(), android.provider.Settings.System.AUTO_TIME, 0) == 1;
+            }
+        } catch (Exception nm) {
+            nm.printStackTrace();
+            return true;
         }
     }
 

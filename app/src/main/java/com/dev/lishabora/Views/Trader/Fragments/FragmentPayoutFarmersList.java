@@ -48,6 +48,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 import timber.log.Timber;
 
@@ -92,6 +93,7 @@ public class FragmentPayoutFarmersList extends Fragment {
         if (dayCollectionModels == null) {
             dayCollectionModels = new LinkedList<>();
         }
+
         listAdapter = new PayoutFarmersAdapter(getActivity(), dayCollectionModels, new OnclickRecyclerListener() {
             @Override
             public void onMenuItem(int position, int menuItem) {
@@ -329,7 +331,7 @@ public class FragmentPayoutFarmersList extends Fragment {
         int sort = new PrefrenceManager(getContext()).getSortType();
         switch (sort) {
             case AUTOMATICALLY:
-                listAdapter.notifyDataSetChanged();
+                Objects.requireNonNull(getActivity()).runOnUiThread(() -> listAdapter.notifyDataSetChanged());
                 break;
             case ALPHABETICAL:
                 filterFarmersAlpahbetically();
@@ -341,7 +343,7 @@ public class FragmentPayoutFarmersList extends Fragment {
                 filterFarmersManually();
                 break;
             default:
-                listAdapter.notifyDataSetChanged();
+                Objects.requireNonNull(getActivity()).runOnUiThread(() -> listAdapter.notifyDataSetChanged());
         }
 
 
@@ -369,8 +371,9 @@ public class FragmentPayoutFarmersList extends Fragment {
         this.dayCollectionModels = dayCollectionModels;
         this.dayCollectionModels1 = dayCollectionModels;
 
-        listAdapter.refresh(dayCollectionModels);
-        //initList();
+        Objects.requireNonNull(getActivity()).runOnUiThread(() -> listAdapter.notifyDataSetChanged());
+
+        initList();
     }
 
 
@@ -378,7 +381,7 @@ public class FragmentPayoutFarmersList extends Fragment {
 
 
         Collections.sort(famerModels, farmerNameComparator);
-        listAdapter.notifyDataSetChanged();
+        Objects.requireNonNull(getActivity()).runOnUiThread(() -> listAdapter.notifyDataSetChanged());
 
 
     }
@@ -387,7 +390,7 @@ public class FragmentPayoutFarmersList extends Fragment {
 
 
         Collections.sort(famerModels, farmerDateComparator);
-        listAdapter.notifyDataSetChanged();
+        Objects.requireNonNull(getActivity()).runOnUiThread(() -> listAdapter.notifyDataSetChanged());
 
 
     }
@@ -396,7 +399,7 @@ public class FragmentPayoutFarmersList extends Fragment {
 
 
         Collections.sort(famerModels, farmerPosComparator);
-        listAdapter.notifyDataSetChanged();
+        Objects.requireNonNull(getActivity()).runOnUiThread(() -> listAdapter.notifyDataSetChanged());
 
 
     }
@@ -410,7 +413,7 @@ public class FragmentPayoutFarmersList extends Fragment {
     private void starterPack() {
         // initCardHeader();
         initList();
-        loadFarmers();
+        new Thread(this::loadFarmers).start();
     }
 
     @Override
@@ -472,7 +475,6 @@ public class FragmentPayoutFarmersList extends Fragment {
         if (dayCollectionModels1 == null) {
 
             dayCollectionModels1 = new LinkedList<>();
-            //  FarmerConst.setSearchFamerModels(new LinkedList<>());
         }
 
 

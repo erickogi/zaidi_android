@@ -57,6 +57,8 @@ public class FragmentTraderLoans extends Fragment {
         View mView = layoutInflaterAndroid.inflate(R.layout.fragment_recycler_view, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         alertDialogBuilderUserInput.setView(mView);
+        alertDialogBuilderUserInput.setCancelable(true);
+
         alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
         alertDialogBuilderUserInput.setTitle("Loan Payments");
 
@@ -136,7 +138,6 @@ public class FragmentTraderLoans extends Fragment {
                 listAdapterP.notifyDataSetChanged();
             } else {
                 alertDialogAndroid.dismiss();
-
                 MyToast.toast("There are no payments to this loan", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
             }
 

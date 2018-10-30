@@ -20,13 +20,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.CollectionsAdapter;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.DayCollectionModel;
 import com.dev.lishabora.Models.Payouts;
-import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
@@ -38,8 +36,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 import java.util.List;
-
-import static com.dev.lishabora.Views.CommonFuncs.setPayoutActionStatus;
+import java.util.Objects;
 
 public class FragmentPayoutColloectionsList extends Fragment {
     public TextView status, startDate, cycleName, endDate, milkTotal, loanTotal, orderTotal, balance, approvedCount, unApprovedCount;
@@ -177,13 +174,7 @@ public class FragmentPayoutColloectionsList extends Fragment {
         } else {
             payouts = PayoutConstants.getPayouts();
         }
-//        if (payouts != null) {
-//            payoutsVewModel.getPayoutsByPayoutCode("" + payouts.getCode()).observe(this, payouts -> {
-//                this.payouts = CommonFuncs.createPayout(payouts, payoutsVewModel, balncesViewModel, null, false, payoutsVewModel.getFarmersByCycleONe(payouts.getCycleCode()));
-//                starterPack();
-//
-//            });
-//        }
+
     }
 
     @Override
@@ -207,32 +198,32 @@ public class FragmentPayoutColloectionsList extends Fragment {
 //        unApprovedCount = view.findViewById(R.id.txt_pending_farmers);
 //        balance = view.findViewById(R.id.txt_Bal_out);
 
-        if (payouts != null) {
+//        if (payouts != null) {
             setCardHeaderData(payouts);
-        }
-
-
-        if (CommonFuncs.canApprovePayout(payouts)) {
-            btnApprove.setVisibility(View.VISIBLE);
-        } else {
-            btnApprove.setVisibility(View.GONE);
-        }
-
-
-
-        btnApprove.setOnClickListener(view -> {
-
-            if (CommonFuncs.allCollectionsAreApproved(payoutsVewModel, payouts)) {
-                payouts.setStatus(1);
-                payouts.setStatusName("Approved");
-                payoutsVewModel.updatePayout(payouts);
-                starterPack();
-            } else {
-                MyToast.toast("Some farmer cards in this payout are not approved yet", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
-            }
-
-        });
-        setPayoutActionStatus(payouts, getContext(), btnApprove, txtApprovalStatus);
+//        }
+//
+//
+//        if (CommonFuncs.canApprovePayout(payouts)) {
+//            btnApprove.setVisibility(View.VISIBLE);
+//        } else {
+//            btnApprove.setVisibility(View.GONE);
+//        }
+//
+//
+//
+//        btnApprove.setOnClickListener(view -> {
+//
+//            if (CommonFuncs.allCollectionsAreApproved(payoutsVewModel, payouts)) {
+//                payouts.setStatus(1);
+//                payouts.setStatusName("Approved");
+//                payoutsVewModel.updatePayout(payouts);
+//                starterPack();
+//            } else {
+//                MyToast.toast("Some farmer cards in this payout are not approved yet", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+//            }
+//
+//        });
+//        setPayoutActionStatus(payouts, getContext(), btnApprove, txtApprovalStatus);
 
 
 
@@ -266,12 +257,16 @@ public class FragmentPayoutColloectionsList extends Fragment {
     }
 
     private void loadCollections() {
-        payoutsVewModel.getCollectionByDateByPayout(payouts.getCode()).observe(this, collections -> {
-            if (collections != null) {
-                FragmentPayoutColloectionsList.this.collections = collections;
-                setUpDayCollectionsModel();
-            }
-        });
+        try {
+            payoutsVewModel.getCollectionByDateByPayout(payouts.getCode()).observe(this, collections -> {
+                if (collections != null) {
+                    FragmentPayoutColloectionsList.this.collections = collections;
+                    setUpDayCollectionsModel();
+                }
+            });
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
     }
 
     private void setUpDayCollectionsModel() {
@@ -283,7 +278,9 @@ public class FragmentPayoutColloectionsList extends Fragment {
 
     private void setUpList(List<DayCollectionModel> dayCollectionModels) {
         this.dayCollectionModels = dayCollectionModels;
-        initList();
+        Objects.requireNonNull(getActivity()).runOnUiThread(this::initList);
+
+
     }
 
     @Override
@@ -297,7 +294,7 @@ public class FragmentPayoutColloectionsList extends Fragment {
     private void starterPack() {
         initCardHeader();
         initList();
-        loadCollections();
+        new Thread(this::loadCollections).start();
     }
 
 

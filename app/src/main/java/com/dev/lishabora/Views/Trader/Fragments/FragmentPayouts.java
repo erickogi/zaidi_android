@@ -181,7 +181,11 @@ public class FragmentPayouts extends Fragment {
     }
 
     private void fetch() {
-        payoutsVewModel.fetchAll(false).observe(this, this::setData);
+        new Thread(() -> {
+            emptyState(true);
+            payoutsVewModel.fetchAll(false).observe(FragmentPayouts.this, FragmentPayouts.this::setData);
+
+        }).start();
     }
 
     private void emptyState(boolean listHasData) {
@@ -207,21 +211,23 @@ public class FragmentPayouts extends Fragment {
 
 
             }
+            Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
 
-            if (this.payouts == null) {
-                this.payouts = new LinkedList<>();
-                this.payouts.addAll(payouts1);
-                listAdapter.notifyDataSetChanged();
-                emptyState(listAdapter.getItemCount() > 0);
 
-            } else {
-                this.payouts.clear();
-                this.payouts.addAll(payouts1);
-                listAdapter.notifyDataSetChanged();
-                emptyState(listAdapter.getItemCount() > 0);
+                if (this.payouts == null) {
+                    this.payouts = new LinkedList<>();
+                    this.payouts.addAll(payouts1);
+                    listAdapter.notifyDataSetChanged();
+                    emptyState(listAdapter.getItemCount() > 0);
 
-            }
-            initList();
+                } else {
+                    this.payouts.clear();
+                    this.payouts.addAll(payouts1);
+                    listAdapter.notifyDataSetChanged();
+                    emptyState(listAdapter.getItemCount() > 0);
+
+                }
+            });
         }
     }
 

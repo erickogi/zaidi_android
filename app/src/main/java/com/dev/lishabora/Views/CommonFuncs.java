@@ -20,8 +20,10 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.DigitsKeyListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -1036,8 +1038,35 @@ public class CommonFuncs {
         );
     }
 
-    public static void editValueMilk(boolean isEditable, int adapterPosition, int time, int type, String value, Object o, DayCollectionModel dayCollectionModel, Context context, AVLoadingIndicatorView avi, FamerModel famerModel, MilkEditValueListener listener) {
+    final static double MAX_ALLOWED_AMOUNT = 9999.99;
+    final static int MAX_ALLOWED_DECIMALS = 1;
 
+    private static int getNumDecimals(String num) {
+        if (!hasComma(num)) {
+            return 0;
+        }
+        return num.substring(num.indexOf('.') + 1, num.length()).length();
+    }
+
+    private static boolean hasComma(String text) {
+        for (int i = 0; i < text.length(); i++) {
+            if (text.charAt(i) == '.') {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static void updateAmount(String newAmountText) {
+//        double newAmount = newAmountText.isEmpty() ? 0.0 : Double.parseDouble(newAmountText.replaceAll(",", "."));
+//        if (newAmount >= 0.0 && newAmount <= MAX_ALLOWED_AMOUNT
+//                && getNumDecimals(newAmountText) <= MAX_ALLOWED_DECIMALS) {
+//            amountText = newAmountText;
+//            amount = newAmount;
+//            showAmount(amountText);
+//        }
+    }
+    public static void editValueMilk(boolean isEditable, int adapterPosition, int time, int type, String value, Object o, DayCollectionModel dayCollectionModel, Context context, AVLoadingIndicatorView avi, FamerModel famerModel, MilkEditValueListener listener) {
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_edit_collection, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(context));
@@ -1104,7 +1133,7 @@ public class CommonFuncs {
         tp = " Milk collection";
 
 
-        txt.setText(" Editing " + tp + "  For  " + dayCollectionModel.getDate() + "  " + ti);
+        txt.setText(" Editing " + tp + "  For  " + DateTimeUtils.Companion.getDisplayDate(dayCollectionModel.getDate(), DateTimeUtils.Companion.getDisplayDatePattern1()) + "  " + ti);
 
 
         try {
@@ -1117,8 +1146,35 @@ public class CommonFuncs {
         }
 
 
-        // edtVL.setFilters(new InputFilter[]{new InputFilterMinMax(1, 1000)});
+        //   edtVL.setFilters(new InputFilter[]{new InputFilterMinMax(1, 1000)});
 
+        edtVL.setFilters(new InputFilter[]{
+                new DigitsKeyListener(Boolean.FALSE, Boolean.TRUE) {
+                    int beforeDecimal = 5, afterDecimal = 2;
+
+                    @Override
+                    public CharSequence filter(CharSequence source, int start, int end,
+                                               Spanned dest, int dstart, int dend) {
+                        String temp = edtVL.getText() + source.toString();
+
+                        if (temp.equals(".")) {
+                            return "0.";
+                        } else if (temp.indexOf(".") == -1) {
+                            // no decimal point placed yet
+                            if (temp.length() > beforeDecimal) {
+                                return "";
+                            }
+                        } else {
+                            temp = temp.substring(temp.indexOf(".") + 1);
+                            if (temp.length() > afterDecimal) {
+                                return "";
+                            }
+                        }
+
+                        return super.filter(source, start, end, dest, dstart, dend);
+                    }
+                }
+        });
         alertDialogBuilderUserInput
                 .setCancelable(false);
         AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
@@ -2330,7 +2386,11 @@ public class CommonFuncs {
     static boolean isOrderEditable = false;
 
 
-    public static void doAprove(Context context, BalncesViewModel balncesViewModel, TraderViewModel traderViewModel, PayoutFarmersCollectionModel model, FamerModel c, Payouts p, ApproveFarmerPayCardListener listener) {
+    public static void doAprove(Context context, BalncesViewModel balncesViewModel,
+                                TraderViewModel traderViewModel,
+                                PayoutFarmersCollectionModel model,
+                                FamerModel c, Payouts p,
+                                ApproveFarmerPayCardListener listener) {
 
         double loanTotalAmount = 0.0;
         double loanInstalmentAmount = 0.0;
@@ -3040,7 +3100,7 @@ public class CommonFuncs {
             c.setApproved(0);
 
 
-            listener.createCollection(c, famerModel, xChange(c, previousColl, AppConstants.LOAN));
+            listener.createCollection(c, famerModel, 0.0);
 
 
         } else {
@@ -3048,7 +3108,7 @@ public class CommonFuncs {
 
             collModel.setLoanAmountGivenOutPrice(l);
             collModel.setLoanDetails(loanDetails);
-            listener.updateCollection(collModel, famerModel, xChange(collModel, previousColl, AppConstants.LOAN));
+            listener.updateCollection(collModel, famerModel, 0.0);
 
 
         }
@@ -3119,7 +3179,7 @@ public class CommonFuncs {
             c.setApproved(0);
 
 
-            listener.createCollection(c, famerModel, xChange(c, previousColl, AppConstants.ORDER));
+            listener.createCollection(c, famerModel, 0.0);
 
 
         } else {
@@ -3129,7 +3189,7 @@ public class CommonFuncs {
                 collModel.setOrderGivenOutPrice(o);
                 collModel.setOrderDetails(orderDetails);
             }
-            listener.updateCollection(collModel, famerModel, xChange(collModel, previousColl, AppConstants.ORDER));
+            listener.updateCollection(collModel, famerModel, 0.0);
 
 
         }
@@ -3174,9 +3234,7 @@ public class CommonFuncs {
 
         Double xChange;
 
-        Log.d("mseto", "Now  " + nowCollection.getMilkCollectedValueKshPm() + "  Prev  " + previousCollection.getMilkCollectedValueKshPm());
 
-        // Log.d("mseto"," Now  "+new Gson().toJson(nowCollection)+"  Pre"+new Gson().toJson(previousCollection));
         if (previousCollection != null) {
 
             switch (type) {

@@ -28,7 +28,6 @@ public class LoginActivity extends BasePermissionAppCompatActivity {
     private BroadcastReceiver codeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("closeoperation", "truecode received");
             if (intent.getAction().equals("com.lisha.codereceived")) {
                 try {
 
@@ -54,14 +53,7 @@ public class LoginActivity extends BasePermissionAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
 
-//        if (savedInstanceState == null) {
-//            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.right_enter, R.anim.left_out)
-//
-//                    .replace(R.id.container, LoginFragmentPhone.newInstance())
-//                    .commitNow();
-//
-//
-//        }
+
         fragment = new LoginFragmentPhone();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().setCustomAnimations(R.anim.left_enter, R.anim.right_out)

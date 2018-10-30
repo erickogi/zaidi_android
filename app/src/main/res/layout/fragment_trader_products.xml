@@ -121,7 +121,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="4dp"
-            android:text="You have no products to display here .. Please click on the add button below to add new farmers"
+            android:text="You have no products to display here .. Please click on the add button below to add products"
             android:textAlignment="center"
 
             android:textSize="15sp"

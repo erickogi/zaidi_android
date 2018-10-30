@@ -125,11 +125,16 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
                 initMonthlyList(new LinkedList<>());
             }
         });
-        btngetOrders.setOnClickListener(view -> traderViewModel.getProducts(false).observe(FragmentGiveOrder.this, productsModels -> {
+        btngetOrders.setOnClickListener(view -> {
+            List<ProductsModel> productsModels = traderViewModel.getProductsModelsOne(1);
+
             if (productsModels != null) {
                 filterList(productsModels);
             }
-        }));
+        });
+        //.observe(FragmentGiveOrder.this, productsModels -> {
+
+        //  }));
     }
 
     private void filterList(List<ProductsModel> productsModels) {

@@ -138,13 +138,14 @@ public class FragmentProductList extends Fragment {
             // subscribeProduct();
             launchDialog = true;
 //            if (productsModelAll == null || productsModelAll.size() < 1) {
+            //getAllProducts();
             getAllProducts();
 //
 //                subscribeProduct(sort(productsModel, productsModelAll));
 //
 //            } else {
 
-                subscribeProduct(sort(productsModel, productsModelAll));
+            //  subscribeProduct(sort(productsModel, productsModelAll));
             //   }
         });
 
@@ -185,6 +186,7 @@ public class FragmentProductList extends Fragment {
     }
 
     private void subscribeProduct(List<ProductsModel> productsModels) {
+        launchDialog = false;
 
         Log.d("ReTrReqd", " Dialog is has called");
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
@@ -323,7 +325,13 @@ public class FragmentProductList extends Fragment {
 
         btnPositive.setOnClickListener(new CustomListener(alertDialogAndroid, selected));
 
-        btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
+        btnNegative.setOnClickListener(view ->
+
+        {
+            launchDialog = false;
+
+            alertDialogAndroid.dismiss();
+        });
 
 
     }
@@ -531,7 +539,7 @@ public class FragmentProductList extends Fragment {
 
             avi.smoothToShow();
 
-            mViewModel.getProductsModels(0).observe(this, (List<ProductsModel> responseModel) -> {
+            List<ProductsModel> responseModel = mViewModel.getProductsModelsOne(0);//.observe(this, (List<ProductsModel> responseModel) -> {
 
                 Gson gson = new Gson();
 
@@ -539,28 +547,19 @@ public class FragmentProductList extends Fragment {
 
 
                 if (responseModel != null) {
-                    productsModelAll = responseModel;
-                    if (productsModel == null || productsModel.size() > 0) {
+                    //  productsModelAll = responseModel;
+                    //  if (productsModel == null || productsModel.size() > 0) {
+                    subscribeProduct(responseModel);
 
-                        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
-                        if (launchDialog) {
-                            // subscribeProduct(responseModel);
-                        } else {
-                            getProducts();
-                        }
-                    } else {
-                        if (launchDialog) {
-                            LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
-                            //  subscribeProduct(sort(productsModel, productsModelAll));
-                        } else {
-                            getProducts();
-                        }
-                    }
+                    // } else {
+
+
+                    //  }
                 }
 
 
 
-            });
+
 
 
         }
@@ -653,6 +652,7 @@ public class FragmentProductList extends Fragment {
         public CustomListener(AlertDialog alertDialogAndroid, LinkedList<ProductsModel> selectedProducts) {
             dialog = alertDialogAndroid;
             this.selectedProducts = selectedProducts;
+            launchDialog = true;
 
         }
 

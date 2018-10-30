@@ -48,6 +48,7 @@ import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.FarmerBalance;
 import com.dev.lishabora.Models.Notifications;
 import com.dev.lishabora.Models.Payouts;
+import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.RoutesModel;
 import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.Utils.CollectListener;
@@ -468,10 +469,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.view = view;
-//        mViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
-//        payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
-//        balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
-//
+
 
 
         prefrenceManager = new PrefrenceManager(getContext());
@@ -491,7 +489,10 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
 
         fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(viehw -> {
+
             Application.hasSynced a = Application.hasSyncInPast7Days();
+
+
             if (a.isHasSynced()) {
 
                 if (isTimeAutomatic()) {
@@ -1361,7 +1362,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     @Override
     public void updateCollection(Collection c, FamerModel famerModel, Double aDouble) {
 
-        mViewModel.updateCollection(c).observe(FragementFarmersList.this, responseModel -> {
+        ResponseModel responseModel = mViewModel.updateCollection(c);   //.observe(FragementFarmersList.this, responseModel -> {
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
 
 
@@ -1380,7 +1381,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                 snack(responseModel.getResultDescription());
 
             }
-        });
+        // });
     }
 
     @Override

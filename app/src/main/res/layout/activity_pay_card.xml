@@ -445,17 +445,7 @@
 
         </com.dev.lishabora.Views.Trader.MilkCardToolBarUI>
 
-        <TextView
-            android:id="@+id/txt_"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/toolbar"
-            android:gravity="center"
-            android:padding="1dp"
-            android:text="Click on a collection to edit "
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+
     <android.support.v7.widget.RecyclerView
 
 
@@ -465,11 +455,9 @@
 
         android:layout_centerHorizontal="true"
 
-        android:layout_marginStart="4dp"
 
+        android:layout_below="@+id/toolbar"
 
-        android:layout_below="@+id/txt_"
-        android:layout_marginEnd="4dp"
         android:layout_marginBottom="@dimen/mdtp_done_button_height"
 
         android:background="@color/white"

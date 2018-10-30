@@ -126,12 +126,7 @@ public class LoginFragmentPassword extends Fragment implements View.OnClickListe
         edtPassword.setOnClickListener(this);
         btnNextPasswordView.setOnClickListener(this);
         txtPasswordViewTitle.setOnClickListener(this);
-        txtForgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                forgotPassword();
-            }
-        });
+        txtForgotPassword.setOnClickListener(view -> forgotPassword());
 
 
     }
@@ -283,6 +278,8 @@ public class LoginFragmentPassword extends Fragment implements View.OnClickListe
         prefrenceManager.setIsLoggedIn(true, LoginController.TRADER);
         prefrenceManager.setLoggedUser(traderModel);
 
+        Application.syncDown();
+
         traderViewModel.createTrader(traderModel);
 
 
@@ -299,7 +296,6 @@ public class LoginFragmentPassword extends Fragment implements View.OnClickListe
             Application.updateTrader(jsonObject);
         }
 
-        Application.syncDown();
 
 
         startActivity(new Intent(getActivity(), TraderActivity.class));
@@ -314,8 +310,6 @@ public class LoginFragmentPassword extends Fragment implements View.OnClickListe
         startActivity(new Intent(getActivity(), AdminsActivity.class));
         Objects.requireNonNull(getActivity()).finish();
     }
-
-
 
     private void snack(String msg) {
         Snackbar.make(view, msg, Snackbar.LENGTH_LONG).show();

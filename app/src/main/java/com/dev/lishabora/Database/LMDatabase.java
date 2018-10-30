@@ -15,6 +15,7 @@ import com.dev.lishabora.Models.Notifications;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Models.ProductsModel;
 import com.dev.lishabora.Models.RoutesModel;
+import com.dev.lishabora.Models.SyncDownObserver;
 import com.dev.lishabora.Models.SyncModel;
 import com.dev.lishabora.Models.Trader.FarmerLoansTable;
 import com.dev.lishabora.Models.Trader.FarmerOrdersTable;
@@ -23,7 +24,11 @@ import com.dev.lishabora.Models.Trader.OrderPayments;
 import com.dev.lishabora.Models.Trader.TraderModel;
 import com.dev.lishabora.Models.UnitsModel;
 
-@Database(entities = {TraderModel.class, FamerModel.class, RoutesModel.class, UnitsModel.class, Cycles.class, ProductsModel.class, Collection.class, Payouts.class, SyncModel.class, FarmerLoansTable.class, FarmerOrdersTable.class, LoanPayments.class, OrderPayments.class, FarmerBalance.class, Notifications.class}, version = 47)
+@Database(entities = {TraderModel.class, FamerModel.class, RoutesModel.class,
+        UnitsModel.class, Cycles.class, ProductsModel.class, Collection.class,
+        Payouts.class, SyncModel.class, FarmerLoansTable.class,
+        FarmerOrdersTable.class, LoanPayments.class, OrderPayments.class,
+        FarmerBalance.class, Notifications.class, SyncDownObserver.class}, version = 48)
 @TypeConverters(DateConverter.class)
 
 public abstract class LMDatabase extends RoomDatabase {
@@ -83,5 +88,7 @@ public abstract class LMDatabase extends RoomDatabase {
     public abstract BalancesDao balancesDao();
 
     public abstract NotificationsDao notificationsDao();
+
+    public abstract SyncObserverDao syncObserverDao();
 
 }

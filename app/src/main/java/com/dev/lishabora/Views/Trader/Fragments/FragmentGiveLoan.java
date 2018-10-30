@@ -29,6 +29,7 @@ import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.FarmerHistoryByDateModel;
 import com.dev.lishabora.Models.LoanModel;
 import com.dev.lishabora.Models.MonthsDates;
+import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.Trader.FarmerLoansTable;
 import com.dev.lishabora.Utils.CollectListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
@@ -389,7 +390,7 @@ public class FragmentGiveLoan extends Fragment implements CollectListener {
     public void updateCollection(Collection c, FamerModel famerModel, Double aDouble) {
 
 
-        traderViewModel.updateCollection(c).observe(FragmentGiveLoan.this, responseModel -> {
+        ResponseModel responseModel = traderViewModel.updateCollection(c);//.observe(FragmentGiveLoan.this, responseModel -> {
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
                 FarmerLoansTable f = balncesViewModel.getFarmerLoanByCollectionOne(c.getCode());
 
@@ -412,7 +413,7 @@ public class FragmentGiveLoan extends Fragment implements CollectListener {
 
 
             }
-        });
+        // });
     }
 
     @Override

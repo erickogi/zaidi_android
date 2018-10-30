@@ -38,7 +38,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.FarmersAdapter;
 import com.dev.lishabora.AppConstants;
@@ -54,7 +53,6 @@ import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.Models.collectMod;
 import com.dev.lishabora.Utils.CollectListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
-import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnActivityTouchListener;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.Utils.PrefrenceManager;
@@ -570,7 +568,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
                 } else if (traderModel.getSynchingStatus() == 2) {
                     txt_network_state.setVisibility(View.VISIBLE);
                     if (Application.isConnected) {
-                        txt_network_state.setText(traderModel.getLastsynchingMessage());
+                        txt_network_state.setText("Sync is experiencing issues");
                     } else {
                         txt_network_state.setText("No internet sync failed");
 
@@ -586,6 +584,34 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
         });
     }
 
+    public void addRoutes(String mesg) {
+        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
+        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
+        alertDialogBuilderUserInput.setTitle("Routes");
+        alertDialogBuilderUserInput.setMessage(mesg);
+
+
+        alertDialogBuilderUserInput
+                .setCancelable(false)
+                .setPositiveButton("Okay", (dialogBox, id) -> {
+                    // ToDo get user input here
+                    // startActivity(new Intent(SplashActivity.this, SyncWorks.class));
+
+                    fragment = new FragmentRoutes();
+                    popOutFragments();
+                    setUpView();
+                });
+
+
+        AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
+        alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
+        alertDialogAndroid.show();
+
+
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -594,6 +620,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
         balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
         //observePayouts();
+
 
         FarmerConst.setFamerModels(new LinkedList<>());
         FarmerConst.setFilteredFamerModels(new LinkedList<>());
@@ -628,28 +655,25 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
         fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(viehw -> {
+
             Application.hasSynced a = Application.hasSyncInPast7Days();
             if (a.isHasSynced()) {
 
                 if (isTimeAutomatic()) {
 
-                    //if (isSetUp()) {
                     try {
                         if (spinner2.getItems().size() > 0) {
                             FragementFarmersList.this.createFarmers();
                         } else {
-                            MyToast.toast("You have not added any routes", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                            routes("You have not added any routes");
+
 
                         }
                     } catch (Exception nm) {
                         nm.printStackTrace();
-                        MyToast.toast("You have not added any routes", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                        routes("You have not added any routes");
 
                     }
-//                    } else {
-//                        initDataOffline(true, true, true);
-//                        MyToast.toast("Routes, Units and Cycles Not set Up", getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
-//                    }
 
                 } else {
                     CommonFuncs.timeIs(getActivity());
@@ -675,6 +699,10 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
         listenOnSyncStatus();
 
+    }
+
+    private void routes(String s) {
+        addRoutes(s);
     }
 
     @Override
@@ -757,15 +785,14 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
     private void fetchFarmers(int staus, String route) {
 
+        emptyState(true);
 
         if (mViewModel == null) {
-            mViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
+            mViewModel = ViewModelProviders.of(FragementFarmersList.this).get(TraderViewModel.class);
         }
+        mViewModel.getFarmerByStatusRoute(staus, route).observe(FragementFarmersList.this, famerModels -> update(famerModels));
 
-        mViewModel.getFarmerByStatusRoute(staus, route).observe(FragementFarmersList.this, famerModels -> {
 
-            update(famerModels);
-        });
 
 
     }
@@ -1078,7 +1105,6 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
     private void filterFarmers() {
 
-        new Thread(() -> {
 
 
             if (FarmerConst.getSearchFamerModels() == null) {
@@ -1108,15 +1134,16 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
                 }
             }
 
-            Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
 
                 int sort = prefrenceManager.getSortType();
 
 
                 switch (sort) {
                     case AUTOMATICALLY:
+
                         listAdapter.notifyDataSetChanged();
                         emptyState(listAdapter.getItemCount() > 0);
+
 
                         break;
                     case ALPHABETICAL:
@@ -1133,9 +1160,6 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
                         emptyState(listAdapter.getItemCount() > 0);
 
                 }
-            });
-
-        }).start();
 
 
 
@@ -1373,12 +1397,12 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
             nm.printStackTrace();
         }
-        mViewModel.updateFarmer(m);
+        mViewModel.updateFarmer(m, false, true);
 
 
 
         c.setGpsPoint(prefrenceManager.getLastCordiantes());
-        mViewModel.updateCollection(c).observe(FragementFarmersList.this, responseModel -> {
+        ResponseModel responseModel = mViewModel.updateCollection(c);//.observe(FragementFarmersList.this, responseModel -> {
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
 
 
@@ -1386,14 +1410,14 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
                 FamerModel fm = CommonFuncs.updateBalance(famerModel, mViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.MILK, null, null);
 
-                if (!famerModel.getCurrentPayoutCode().equals(responseModel.getPayoutCode())) {
-                    famerModel.setCurrentPayoutCode(responseModel.getPayoutCode());
-
-                    hasToSyncFarmer = true;
-
-                }
-                mViewModel.updateFarmer(fm, false, true);
-
+//                if (!famerModel.getCurrentPayoutCode().equals(responseModel.getPayoutCode())) {
+//                    famerModel.setCurrentPayoutCode(responseModel.getPayoutCode());
+//
+//                    hasToSyncFarmer = true;
+//
+//                }
+//                mViewModel.updateFarmer(fm, false, true);
+//
 
 
 
@@ -1403,7 +1427,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
                 snack(responseModel.getResultDescription());
 
             }
-        });
+        // });
     }
 
     private void log(String msg) {

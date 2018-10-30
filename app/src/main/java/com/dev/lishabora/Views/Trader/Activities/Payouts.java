@@ -48,7 +48,6 @@ public class Payouts extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         MenuItem mSearch = menu.findItem(R.id.action_search);
         mSearchView = (SearchView) mSearch.getActionView();
-
         mSearchView.setVisibility(View.GONE);
 
 
@@ -57,9 +56,6 @@ public class Payouts extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -160,56 +156,7 @@ public class Payouts extends AppCompatActivity {
     }
 
     private void setSpinner() {
-//        spinner.setVisibility(View.GONE);
-//        try {
-//            String items[] = {"Payout Collections List", "Farmers List"};
-//            spinner.setItems(items);
-//            spinner.setSelectedIndex(0);
-//
-//
-//            spinner.setOnItemSelectedListener((view, position, id, item) -> {
-//                if (position == 0) {
-//                    Fragment fragment = new FragmentPayoutColloectionsList();
-//                    Bundle args = new Bundle();
-//                    args.putSerializable("data", payouts);
-//                    fragment.setArguments(args);
-//
-//                    LinearLayout linearLayoutAmPm = findViewById(R.id.linear_farmers_titles);
-//                    linearLayoutAmPm.setVisibility(View.GONE);
-//
-//                    LinearLayout linearLayout = findViewById(R.id.linear_collection_titles);
-//                    linearLayout.setVisibility(View.VISIBLE);
-//
-//                    popOutFragments();
-//                    setUpView(fragment);
-//
-//                    //mSearchView.setVisibility(View.GONE);
-//
-//
-//
-//                } else {
-//
-//                    Fragment fragment = new FragmentPayoutFarmersList();
-//                    Bundle args = new Bundle();
-//                    args.putSerializable("data", payouts);
-//                    fragment.setArguments(args);
-//
-//                    LinearLayout linearLayoutAmPm = findViewById(R.id.linear_farmers_titles);
-//                    linearLayoutAmPm.setVisibility(View.VISIBLE);
-//
-//                    LinearLayout linearLayout = findViewById(R.id.linear_collection_titles);
-//                    linearLayout.setVisibility(View.GONE);
-//
-//
-//                    popOutFragments();
-//                    setUpView(fragment);
-//
-//                }
-//            });
-//
-//        } catch (Exception nm) {
-//            nm.printStackTrace();
-//        }
+
     }
 
 

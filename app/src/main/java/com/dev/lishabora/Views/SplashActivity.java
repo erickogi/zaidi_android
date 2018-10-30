@@ -26,6 +26,8 @@ import static com.dev.lishabora.Application.isTimeAutomatic;
 public class SplashActivity extends AppCompatActivity {
 
     private ImageView imageView;
+    private Intent intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +90,6 @@ public class SplashActivity extends AppCompatActivity {
         alertDialogBuilderUserInput
                 .setCancelable(false)
                 .setPositiveButton("SYNC", (dialogBox, id) -> {
-                    // ToDo get user input here
                     startActivity(new Intent(SplashActivity.this, SyncWorks.class));
 
 
@@ -96,7 +97,7 @@ public class SplashActivity extends AppCompatActivity {
 
                 .setNegativeButton("Skip for now",
                         (dialogBox, id) -> {
-                            //  dialogBox.cancel();
+
                             Intent intent = new Intent(this, TraderActivity.class);
                             startActivity(intent);
                             finish();
@@ -112,59 +113,62 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     public void start() {
-        PrefrenceManager globalPrefs = new PrefrenceManager(this);
-        Intent intent;
-        if (globalPrefs.isLoggedIn()) {
-            // Timber.d("I have tried Log");
-            LMDatabase lmDatabase = LMDatabase.getDatabase(Application.context);
-            // lmDatabase.syncDao().getCount();
 
-            switch (globalPrefs.getTypeLoggedIn()) {
-                case LoginController.ADMIN:
-                    intent = new Intent(this, AdminsActivity.class);
-                    startActivity(intent);
-                    finish();
-                    break;
-                case LoginController.TRADER:
-                    String xTime = globalPrefs.getLastTransactionTIme();
-                    if (xTime.equals("")) {
-                        intent = new Intent(this, TraderActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        int daysBtwen = DateTimeUtils.Companion.calcDiff(DateTimeUtils.Companion.conver2Date(xTime), DateTimeUtils.Companion.getTodayDate()).getDays();
+        new Thread(() -> {
+            PrefrenceManager globalPrefs = new PrefrenceManager(SplashActivity.this);
+            if (globalPrefs.isLoggedIn()) {
+                LMDatabase lmDatabase = LMDatabase.getDatabase(Application.context);
 
-                        try {
-                            if (daysBtwen > 7 && lmDatabase.syncDao().getCount() > 0) {
+                switch (globalPrefs.getTypeLoggedIn()) {
+                    case LoginController.ADMIN:
+                        intent = new Intent(SplashActivity.this, AdminsActivity.class);
 
-                                sync(daysBtwen);
-                            } else {
-                                intent = new Intent(this, TraderActivity.class);
-                                startActivity(intent);
-                                finish();
+                        break;
+                    case LoginController.TRADER:
+                        String xTime = globalPrefs.getLastTransactionTIme();
+                        if (xTime.equals("")) {
+                            intent = new Intent(SplashActivity.this, TraderActivity.class);
+
+                        } else {
+                            int daysBtwen = DateTimeUtils.Companion.calcDiff(DateTimeUtils.Companion.conver2Date(xTime), DateTimeUtils.Companion.getTodayDate()).getDays();
+
+                            try {
+                                if (daysBtwen > 7 && lmDatabase.syncDao().getCount() > 0) {
+                                    runOnUiThread(() -> sync(daysBtwen));
+                                } else {
+                                    intent = new Intent(SplashActivity.this, TraderActivity.class);
+
+                                }
+                            } catch (Exception nm) {
+                                nm.printStackTrace();
+                                intent = new Intent(SplashActivity.this, TraderActivity.class);
+
                             }
-                        } catch (Exception nm) {
-                            nm.printStackTrace();
-                            intent = new Intent(this, TraderActivity.class);
-                            startActivity(intent);
-                            finish();
                         }
-                    }
-                    break;
+                        break;
 
 
-                default:
-                    intent = new Intent(this, LoginActivity.class);
-                    startActivity(intent);
-                    finish();
+                    default:
+                        intent = new Intent(SplashActivity.this, LoginActivity.class);
+
+
+                }
+            } else {
+                intent = new Intent(SplashActivity.this, LoginActivity.class);
+
 
             }
-        } else {
-            intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
 
-        }
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(intent);
+                    finish();
+                }
+            });
+        }).start();
+
 //
 
     }
