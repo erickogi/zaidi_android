@@ -2,13 +2,14 @@ package com.dev.lishabora.Views;
 
 
 import android.app.Activity;
-import android.app.Application;
-import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
@@ -16,7 +17,6 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -31,6 +31,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dev.lishabora.AppConstants;
 import com.dev.lishabora.Models.Collection;
@@ -67,6 +68,7 @@ import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.InputFilterMinMax;
 import com.dev.lishabora.Utils.LoanEditValueListener;
 import com.dev.lishabora.Utils.MilkEditValueListener;
+import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
@@ -87,6 +89,10 @@ import java.util.Objects;
 import timber.log.Timber;
 
 public class CommonFuncs {
+    public static final String NOTIFICATION_CHANNEL_ID = "10001";
+    private static NotificationManager mNotificationManager;
+    private static NotificationCompat.Builder mBuilder;
+
     public static void timeIs(Activity activity) {
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(activity);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(activity));
@@ -1437,7 +1443,8 @@ public class CommonFuncs {
     }
 
     public static void setCardActionStatus(PayoutFarmersCollectionModel model, Context context,
-                                           MaterialButton btnApprove, MaterialButton btnBack, TextView txtApprovalStatus) {
+                                           MaterialButton btnApprove, MaterialButton btnBack,
+                                           TextView txtApprovalStatus, String loanTotal, String orderTotal) {
         if (model.getCardstatus() == 0 // Card not approved
                 && (DateTimeUtils.Companion.getToday().equals(model.getPayoutEnd())  //TODAY IS  THIS PAYOUT END DATE
                 || DateTimeUtils.Companion.isPastLastDay(model.getPayoutEnd())   // TODAY IS PAST THIS PAYOUT END DATE
@@ -1462,10 +1469,27 @@ public class CommonFuncs {
             if (model.getPayoutStatus() == 0) {
                 /*******THIS CARD IS APPROVED BUT WHOLE PAYOUT IS PENDING SO ONE CAN STILL CANCEL CARDS APPROVAL ******/
 
-                btnApprove.setVisibility(View.GONE);
-                btnBack.setVisibility(View.VISIBLE);
-                btnBack.setText("Cancel Approval");
-                txtApprovalStatus.setVisibility(View.VISIBLE);
+                if (Double.valueOf(loanTotal) > 0 || Double.valueOf(orderTotal) > 0) {
+
+                    /*******THIS CARD IS APPROVED BUT WHOLE PAYOUT IS PENDING SO ONE CAN STILL CANCEL CARDS APPROVAL ******/
+                    /*******but farmer has a loan or order that was adjusted on card approval and we dont have the logic to re-adjust back to initial value on cancel of approval so i just wont allow cancelling an approved farmer card for now******/
+
+                    btnApprove.setVisibility(View.GONE);
+                    btnBack.setVisibility(View.GONE);
+                    btnBack.setText("Cancel Approval");
+                    txtApprovalStatus.setVisibility(View.VISIBLE);
+                } else {
+
+                    /*******THIS CARD IS APPROVED BUT WHOLE PAYOUT IS PENDING SO ONE CAN STILL CANCEL CARDS APPROVAL ******/
+                    /*******farmer has no loans or orders to consider when readjusting balances so we can have the option to cancel approval******/
+
+
+                    btnApprove.setVisibility(View.GONE);
+                    btnBack.setVisibility(View.VISIBLE);
+                    btnBack.setVisibility(View.GONE);
+                    btnBack.setText("Cancel Approval");
+                    txtApprovalStatus.setVisibility(View.VISIBLE);
+                }
 
             } else {
 
@@ -1475,7 +1499,6 @@ public class CommonFuncs {
                 btnApprove.setVisibility(View.GONE);
                 txtApprovalStatus.setText("Approved");
                 txtApprovalStatus.setTextColor(context.getResources().getColor(R.color.colorPrimary));
-
                 txtApprovalStatus.setVisibility(View.VISIBLE);
             }
         } else if (model.getCardstatus() == 0 && (!DateTimeUtils.Companion.getToday().equals(model.getPayoutEnd())
@@ -1733,14 +1756,13 @@ public class CommonFuncs {
 
     public static Payouts createPayoutsByCollection(List<Collection> collections, Payouts p,
                                                     PayoutsVewModel payoutsVewModel,
-                                                    BalncesViewModel balncesViewModel
-            , String farmerId, boolean isFarmer,
-                                                    List<FamerModel> famerModels
+                                                    BalncesViewModel balncesViewModel,
+                                                    String farmerId
+
 
     ) {
 
 
-        double total = 0.0;
         double milk = 0.0;
         double loans = 0.0;
         double orders = 0.0;
@@ -1761,13 +1783,10 @@ public class CommonFuncs {
 
         List<FarmerLoansTable> farmerLoansTables;
         List<FarmerOrdersTable> farmerOrdersTables;
-        if (!isFarmer) {
-            farmerLoansTables = balncesViewModel.getFarmerLoanByPayoutCodeOne(p.getCode());
-            farmerOrdersTables = balncesViewModel.getFarmerOrderByPayoutCodeOne(p.getCode());
-        } else {
+
             farmerLoansTables = balncesViewModel.getFarmerLoanByPayoutCodeByFarmerOne(p.getCode(), farmerId);
             farmerOrdersTables = balncesViewModel.getFarmerOrderByPayoutCodeByFarmerOne(p.getCode(), farmerId);
-        }
+
 
 
         if (farmerLoansTables != null) {
@@ -1797,7 +1816,6 @@ public class CommonFuncs {
                     }
 
                 } catch (Exception nm) {
-                    Timber.tag("CreatePayout").e(nm.toString());
 
                 }
             }
@@ -1806,7 +1824,6 @@ public class CommonFuncs {
 
         if (collections != null) {
             for (Collection coll : collections) {
-                Timber.tag("CreatePayout").e(coll.getFarmerName());
 
 
                 try {
@@ -1814,12 +1831,7 @@ public class CommonFuncs {
                     milkLtrs = milkLtrs + (Double.valueOf(coll.getMilkCollectedValueLtrsAm()) + Double.valueOf(coll.getMilkCollectedValueLtrsPm()));
                     milkKsh = milkKsh + (Double.valueOf(coll.getMilkCollectedValueKshAm()) + Double.valueOf(coll.getMilkCollectedValueKshPm()));
 
-                    if (coll.getLoanAmountGivenOutPrice() != null) {
-                        loans = loans + Double.valueOf(coll.getLoanAmountGivenOutPrice());
-                    }
-                    if (coll.getOrderGivenOutPrice() != null) {
-                        orders = orders + Double.valueOf(coll.getOrderGivenOutPrice());
-                    }
+
                 } catch (Exception nm) {
                     nm.printStackTrace();
                 }
@@ -1829,18 +1841,11 @@ public class CommonFuncs {
         }
 
 
-        if (isFarmer) {
-
-            p.setBalance(String.valueOf(balncesViewModel.getByFarmerCodeByPayoutOne(farmerId, p.getCode()).getBalanceToPay()));
-            p.setBalanceTotal(String.valueOf(balncesViewModel.getByFarmerCodeByPayoutOne(farmerId, p.getCode()).getBalanceOwed()));
-
-        } else {
-
 
             p.setBalanceTotal(String.valueOf(milkKsh - ((loans - loansPaid) + (orders - orderPaid))));
             p.setBalance(String.valueOf(milkKsh - (loansInstallments + orderInstallments)));
 
-        }
+
 
 
         int status[] = getApprovedCards(collections, p.getCycleCode(), payoutsVewModel);
@@ -2084,13 +2089,13 @@ public class CommonFuncs {
 
     static Double orderTotalD = 0.0;
 
-    private static FamerModel refreshTotalBalances(int type,
-                                                   FarmerLoansTable lastLoan,
-                                                   FarmerOrdersTable lastOrder,
-                                                   BalncesViewModel balncesViewModel,
-                                                   TraderViewModel traderViewModel,
-                                                   Collection c,
-                                                   FamerModel famerModel) {
+    public static FamerModel refreshTotalBalances(int type,
+                                                  FarmerLoansTable lastLoan,
+                                                  FarmerOrdersTable lastOrder,
+                                                  BalncesViewModel balncesViewModel,
+                                                  TraderViewModel traderViewModel,
+                                                  Collection c,
+                                                  FamerModel famerModel) {
 
         Double totalMilkForCurrentPayout = 0.0;
         try {
@@ -2163,6 +2168,161 @@ public class CommonFuncs {
 
                 farmerBalance = new FarmerBalance(GeneralUtills.Companion.createCode(c.getFarmerCode()),
                         c.getFarmerCode(), c.getPayoutCode(), "", "", "", String.valueOf(loanTotalAmount), String.valueOf(orderTotalAmount), String.valueOf(totalMilkForCurrentPayout));
+
+                farmerBalance.setBalanceOwed(String.valueOf((totalMilkForCurrentPayout - ((loanTotalAmount - loanPaid) + (orderTotalAmount - orderPaid)))));
+                farmerBalance.setBalanceToPay(String.valueOf((totalMilkForCurrentPayout - ((loanInstalmentAmount) + (orderInstalmentAmount)))));
+
+
+                famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
+
+
+                balncesViewModel.insertDirect(farmerBalance);
+                famerModel.setTotalbalance(farmerBalance.getBalanceToPay());
+                // traderViewModel.updateFarmer(famerModel, false, false);
+
+
+            } else {
+
+
+                farmerBalance.setBalanceOwed(String.valueOf((totalMilkForCurrentPayout - ((loanTotalAmount - loanPaid) + (orderTotalAmount - orderPaid)))));
+                farmerBalance.setBalanceToPay(String.valueOf((totalMilkForCurrentPayout - ((loanInstalmentAmount) + (orderInstalmentAmount)))));
+
+
+                famerModel.setLastCollectionTime(DateTimeUtils.Companion.getNow());
+
+
+                balncesViewModel.updateRecordDirect(farmerBalance);
+                famerModel.setTotalbalance(farmerBalance.getBalanceToPay());
+                //traderViewModel.updateFarmer(famerModel, false, false);
+
+                // handler(traderViewModel, famerModel);
+            }
+            return famerModel;
+
+        } catch (Exception nm) {
+            nm.printStackTrace();
+
+            return null;
+        }
+
+    }
+
+    public static FarmerBalance getFarmerBalanceAfterPayoutCardApproval(FamerModel f, BalncesViewModel balncesViewModel, TraderViewModel traderViewModel) {
+        FarmerBalance farmerBalance = new FarmerBalance();
+        Double totalMilkForCurrentPayout = 0.0;
+        List<FarmerLoansTable> loansTables = balncesViewModel.getFarmerLoanByPayoutNumberByFarmerByStatus(f.getCode(), 0);
+        List<FarmerOrdersTable> ordersTables = balncesViewModel.getFarmerOrderByPayoutNumberByFarmerByStatus(f.getCode(), 0);
+        double loanTotalAmount = 0.0;
+        double loanInstalmentAmount = 0.0;
+        double loanPaid = 0.0;
+
+        double orderTotalAmount = 0.0;
+        double orderInstalmentAmount = 0.0;
+        double orderPaid = 0.0;
+        if (loansTables != null) {
+            for (FarmerLoansTable fl : loansTables) {
+
+                loanTotalAmount = +(Double.valueOf(fl.getLoanAmount()));
+                loanInstalmentAmount = +(Double.valueOf(fl.getInstallmentAmount()));
+                loanPaid = +balncesViewModel.getSumPaidLoanPayment(fl.getCode());
+            }
+        }
+
+        if (ordersTables != null) {
+            for (FarmerOrdersTable fo : ordersTables) {
+                orderTotalAmount = +(Double.valueOf(fo.getOrderAmount()));
+                orderInstalmentAmount = +(Double.valueOf(fo.getInstallmentAmount()));
+                orderPaid = +balncesViewModel.getSumPaidOrderPayment(fo.getCode());
+            }
+        }
+        farmerBalance.setBalanceOwed(String.valueOf((totalMilkForCurrentPayout - ((loanTotalAmount - loanPaid) + (orderTotalAmount - orderPaid)))));
+        farmerBalance.setBalanceToPay(String.valueOf((totalMilkForCurrentPayout - ((loanInstalmentAmount) + (orderInstalmentAmount)))));
+
+
+        return farmerBalance;
+
+
+    }
+
+    public static FamerModel refreshTotalBalances(int type,
+                                                  FarmerLoansTable lastLoan,
+                                                  FarmerOrdersTable lastOrder,
+                                                  BalncesViewModel balncesViewModel,
+                                                  TraderViewModel traderViewModel,
+                                                  String payoutCode,
+                                                  FamerModel famerModel) {
+
+        Double totalMilkForCurrentPayout = 0.0;
+        try {
+            totalMilkForCurrentPayout = traderViewModel.getSumOfMilkForPayoutKshD(famerModel.getCode(), payoutCode);
+
+        } catch (Exception nm) {
+            nm.printStackTrace();
+
+        }
+        try {
+            FarmerBalance farmerBalance = balncesViewModel.getByFarmerCodeByPayoutOne(famerModel.getCode(), payoutCode);
+            List<FarmerLoansTable> loansTables = balncesViewModel.getFarmerLoanByPayoutNumberByFarmerByStatus(famerModel.getCode(), 0);
+            List<FarmerOrdersTable> ordersTables = balncesViewModel.getFarmerOrderByPayoutNumberByFarmerByStatus(famerModel.getCode(), 0);
+
+
+            double loanTotalAmount = 0.0;
+            double loanInstalmentAmount = 0.0;
+            double loanPaid = 0.0;
+
+            double orderTotalAmount = 0.0;
+            double orderInstalmentAmount = 0.0;
+            double orderPaid = 0.0;
+
+
+            if (type == 1) {
+                boolean isFound = false;
+                for (FarmerLoansTable fl : loansTables) {
+                    if (fl.getTimestamp().equals(lastLoan.getTimestamp())) {
+                        isFound = true;
+                        break;
+                    }
+                }
+                if (!isFound) {
+                    loansTables.add(lastLoan);
+                }
+            } else if (type == 2) {
+                boolean isFound = false;
+                for (FarmerOrdersTable fo : ordersTables) {
+                    if (fo.getTimestamp().equals(lastOrder.getTimestamp())) {
+                        isFound = true;
+                        break;
+                    }
+                }
+                if (!isFound) {
+                    ordersTables.add(lastOrder);
+                }
+            }
+
+
+            if (loansTables != null) {
+                for (FarmerLoansTable fl : loansTables) {
+
+                    loanTotalAmount = +(Double.valueOf(fl.getLoanAmount()));
+                    loanInstalmentAmount = +(Double.valueOf(fl.getInstallmentAmount()));
+                    loanPaid = +balncesViewModel.getSumPaidLoanPayment(fl.getCode());
+                }
+            }
+
+            if (ordersTables != null) {
+                for (FarmerOrdersTable fo : ordersTables) {
+                    orderTotalAmount = +(Double.valueOf(fo.getOrderAmount()));
+                    orderInstalmentAmount = +(Double.valueOf(fo.getInstallmentAmount()));
+                    orderPaid = +balncesViewModel.getSumPaidOrderPayment(fo.getCode());
+                }
+            }
+
+
+            if (farmerBalance == null) {
+
+
+                farmerBalance = new FarmerBalance(GeneralUtills.Companion.createCode(famerModel.getCode()),
+                        famerModel.getCode(), payoutCode, "", "", "", String.valueOf(loanTotalAmount), String.valueOf(orderTotalAmount), String.valueOf(totalMilkForCurrentPayout));
 
                 farmerBalance.setBalanceOwed(String.valueOf((totalMilkForCurrentPayout - ((loanTotalAmount - loanPaid) + (orderTotalAmount - orderPaid)))));
                 farmerBalance.setBalanceToPay(String.valueOf((totalMilkForCurrentPayout - ((loanInstalmentAmount) + (orderInstalmentAmount)))));
@@ -2304,7 +2464,6 @@ public class CommonFuncs {
 
         List<FarmerLoansTable> farmerLoansTablesNotPaid = new LinkedList<>();
         for (FarmerLoansTable f : farmerLoansTables) {
-            Log.d("loanCardTotals", "1   " + f.getLoanAmount());
 
             if (f.getStatus() == 0) {
                 farmerLoansTablesNotPaid.add(f);
@@ -2317,7 +2476,6 @@ public class CommonFuncs {
             Double remaining = (Double.valueOf(fg.getLoanAmount()) - Double.valueOf(fg.getLoanAmountPaid()));
             Double installmentAmount = Double.valueOf(fg.getInstallmentAmount());
 
-            Log.d("loanCardTotals", "2  " + remaining + "    \n  " + installmentAmount);
 
             if (installmentAmount > remaining) {
                 toPay = toPay + remaining;
@@ -2343,7 +2501,6 @@ public class CommonFuncs {
         double toPay = 0.0;
 
         for (FarmerOrdersTable fg : farmerOrderTablesNotPaid) {
-            Log.d("comfdeb", "" + fg.getOrderAmount() + "" + fg.getOrderAmountPaid());
             Double oAmount = 0.0;
             Double oAmountPaid = 0.0;
 
@@ -2390,7 +2547,7 @@ public class CommonFuncs {
                                 TraderViewModel traderViewModel,
                                 PayoutFarmersCollectionModel model,
                                 FamerModel c, Payouts p,
-                                ApproveFarmerPayCardListener listener) {
+                                ApproveFarmerPayCardListener listener, String balance) {
 
         double loanTotalAmount = 0.0;
         double loanInstalmentAmount = 0.0;
@@ -2423,7 +2580,6 @@ public class CommonFuncs {
                 nm.printStackTrace();
             }
         }
-        Log.d("RecordAsd", "Alll Order " + loanInstalmentAmount + "\n" + ordersTables.size());
 
 
         double totalMilkForCurrentPayout = 0.0;
@@ -2700,12 +2856,12 @@ public class CommonFuncs {
         imgIcon = mView.findViewById(R.id.img_icon);
 
 
-        btnNeutral.setVisibility(View.GONE);
-        lTitle.setVisibility(View.GONE);
-        txtTitle.setVisibility(View.VISIBLE);
-        imgIcon.setVisibility(View.VISIBLE);
-        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
-        txtTitle.setText("Approve");
+        // btnNeutral.setVisibility(View.GONE);
+//        lTitle.setVisibility(View.GONE);
+        //  txtTitle.setVisibility(View.VISIBLE);
+        //  imgIcon.setVisibility(View.VISIBLE);
+        // imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
+        // txtTitle.setText("Approve");
 
 
         btnPositive.setOnClickListener(view -> {
@@ -2731,10 +2887,10 @@ public class CommonFuncs {
                 alertDialogAndroid.dismiss();
             }
         });
-        btnNeutral.setOnClickListener(view -> {
-
-            listener.onApproveDismiss();
-        });
+//        btnNeutral.setOnClickListener(view -> {
+//
+//            listener.onApproveDismiss();
+//        });
         btnNegative.setOnClickListener(view -> {
             listener.onApproveDismiss();
 
@@ -2790,37 +2946,6 @@ public class CommonFuncs {
 
     }
 
-    public static void updateBalance(Application mInstance, BalncesViewModel balncesViewModel) {
-        BalanceRepo balanceRepo = new BalanceRepo(mInstance);
-        LoansTableRepo loansTableRepo = new LoansTableRepo(mInstance);
-        OrdersTableRepo ordersTableRepo = new OrdersTableRepo(mInstance);
-        LoanPaymentsRepo loanPaymentsRepo = new LoanPaymentsRepo(mInstance);
-        OrderPaymentsRepo orderPaymentsRepo = new OrderPaymentsRepo(mInstance);
-        CollectionsRepo collectionsRepo = new CollectionsRepo(mInstance);
-        //PayoutsRepo payoutsRepo=new PayoutsRepo(mInstance);
-
-
-        List<FarmerBalance> farmerBalances = balanceRepo.fetchAllOne();
-
-        if (farmerBalances != null) {
-            String farmerCode = "";
-            String payoutCode = "";
-
-
-            for (FarmerBalance f : farmerBalances) {
-
-                if (f.getPayoutCode() != null) {
-                    farmerCode = f.getFarmerCode();
-                    payoutCode = f.getPayoutCode();
-                    updateBalances(0, null, null, balanceRepo,
-                            loansTableRepo, ordersTableRepo, loanPaymentsRepo, orderPaymentsRepo,
-                            collectionsRepo, farmerCode, payoutCode, balncesViewModel);
-
-                }
-            }
-        }
-
-    }
 
     private static void updateBalances(int type,
                                        FarmerLoansTable lastLoan,
@@ -2957,6 +3082,34 @@ public class CommonFuncs {
 //
 //        return notifications;
 //    }
+
+    public static String payoutDue(List<Payouts> payouts) {
+
+        int onAfter = 0;
+        int bef3 = 0;
+        for (Payouts p : payouts) {
+            org.joda.time.Period pe = DateTimeUtils.Companion.calcDiff(DateTimeUtils.Companion.conver2Date(p.getEndDate()), DateTimeUtils.Companion.getTodayDate());
+
+            if (pe.getDays() >= 6) {
+                onAfter++;
+            }
+            if (pe.getDays() > 2 && pe.getDays() < 6) {
+                bef3++;
+            }
+        }
+        if (onAfter == 0 && bef3 == 0) {
+            return null;
+        } else {
+            if (onAfter > 0) {
+                return "Hey .. You have payouts that need to be approved";
+            }
+            if (bef3 > 0) {
+                return "Hey .. You have " + bef3 + " Payouts that are 3 days to approval";
+            }
+        }
+        return null;
+
+    }
     public static List<Notifications> getPendingPayouts(List<Payouts> payoutss) {
         List<Notifications> notifications = new LinkedList<>();
         for (Payouts payouts : payoutss)
@@ -2991,6 +3144,7 @@ public class CommonFuncs {
 
             }
         } catch (Exception nm) {
+            MyToast.toast(nm.toString(), com.dev.lishabora.Application.context, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
             nm.printStackTrace();
         }
 
@@ -3197,114 +3351,51 @@ public class CommonFuncs {
 
     }
 
-    private static void sendNotification(String title, String message, boolean isloggedIn) {
+    public static void createNotification(String title, String message) {
+        /**Creates an explicit intent for an Activity in your app**/
+//        Intent resultIntent = new Intent(mContext , SomeOtherActivity.class);
+//        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        Intent intent = new Intent(com.dev.lishabora.Application.context, TraderActivity.class);
-        intent.putExtra("type", "notification_fragment");
+        Intent resultIntent = new Intent(com.dev.lishabora.Application.context, TraderActivity.class);
+        resultIntent.putExtra("type", "notification_fragment");
 
 
-        PendingIntent pi = PendingIntent.getActivity(com.dev.lishabora.Application.context, 0,
-                intent, 0);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(com.dev.lishabora.Application.context,
+                0 /* Request code */, resultIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Notification notification = new NotificationCompat.Builder(com.dev.lishabora.Application.context)
-                .setContentTitle(title)
+        mBuilder = new NotificationCompat.Builder(com.dev.lishabora.Application.context);
+        mBuilder.setSmallIcon(R.mipmap.ic_launcher);
+        mBuilder.setContentTitle(title)
                 .setContentText(message)
-                .setAutoCancel(true)
-                .setContentIntent(pi)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setShowWhen(true)
-                .setColor(Color.RED)
-                .setLocalOnly(true)
-                .build();
+                .setAutoCancel(false)
+                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
+                .setContentIntent(resultPendingIntent);
 
+        mNotificationManager = (NotificationManager) com.dev.lishabora.Application.context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        NotificationManagerCompat.from(com.dev.lishabora.Application.context)
-                .notify(5, notification);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "NOTIFICATION_CHANNEL_NAME", importance);
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.enableVibration(true);
+            notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+            assert mNotificationManager != null;
+            mBuilder.setChannelId(NOTIFICATION_CHANNEL_ID);
+            mNotificationManager.createNotificationChannel(notificationChannel);
+        }
+        assert mNotificationManager != null;
+        mNotificationManager.notify(0 /* Request Code */, mBuilder.build());
+    }
 
-        // }
+    public static void sendNotification(String title, String message, boolean isloggedIn) {
+
+        createNotification(title, message);
+
     }
 
 
-    public static Double xChange(Collection nowCollection, Collection previousCollection, int type) {
-        Double previusAm = 0.0;
-        Double previousPm = 0.0;
-
-        Double nowAm = 0.0;
-        Double nowPm = 0.0;
-
-        Double xChange;
-
-
-        if (previousCollection != null) {
-
-            switch (type) {
-                case AppConstants.MILK:
-                    if (previousCollection.getMilkCollectedValueKshAm() != null) {
-                        try {
-                            previusAm = Double.valueOf(previousCollection.getMilkCollectedValueKshAm());
-                        } catch (Exception nm) {
-                            nm.printStackTrace();
-                        }
-                    }
-                    if (previousCollection.getMilkCollectedValueKshPm() != null) {
-
-                        try {
-                            previousPm = Double.valueOf(previousCollection.getMilkCollectedValueKshPm());
-                        } catch (Exception nm) {
-                            nm.printStackTrace();
-                        }
-                    }
-                    break;
-                case AppConstants.LOAN:
-
-                    break;
-                case AppConstants.ORDER:
-
-                    break;
-            }
-
-        }
-
-
-        if (nowCollection != null) {
-
-            switch (type) {
-                case AppConstants.MILK:
-                    if (nowCollection.getMilkCollectedValueKshAm() != null) {
-                        try {
-                            nowAm = Double.valueOf(nowCollection.getMilkCollectedValueKshAm());
-                        } catch (Exception nm) {
-                            nm.printStackTrace();
-                        }
-                    }
-
-
-                    if (nowCollection.getMilkCollectedValueKshPm() != null) {
-
-                        try {
-                            nowPm = Double.valueOf(nowCollection.getMilkCollectedValueKshPm());
-                        } catch (Exception nm) {
-                            nm.printStackTrace();
-                        }
-                    }
-
-                    break;
-                case AppConstants.LOAN:
-
-                    break;
-                case AppConstants.ORDER:
-
-                    break;
-            }
-
-        }
-
-
-        xChange = (nowAm + nowPm) - (previusAm + previousPm);
-
-
-        return xChange;
-    }
 
 
     public static class createCollection {

@@ -830,6 +830,10 @@ public class BalncesViewModel extends AndroidViewModel
         return balanceRepo.getByFarmerCodeOne(code);
     }
 
+    public List<FarmerBalance> getByFarmerCodeByStatusOne(String code) {
+        return balanceRepo.getByFarmerCodeOne(code);
+    }
+
     public FarmerBalance getByFarmerCodeByPayoutOne(String code, String payoutCode) {
         return balanceRepo.getByFarmerCodeByPayoutOne(code, payoutCode);
     }

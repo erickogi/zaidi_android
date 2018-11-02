@@ -33,9 +33,9 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
 
-        imageView = findViewById(R.id.image);
+        // imageView = findViewById(R.id.image);
 
-        imageView.setImageResource(R.drawable.ic_launcher);
+        // imageView.setImageResource(R.drawable.ic_launcher);
 
         //setContentView(R.layout.activity_trader);
 
@@ -46,6 +46,7 @@ public class SplashActivity extends AppCompatActivity {
         }
 
     }
+
 
     private void timeIs() {
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(this);

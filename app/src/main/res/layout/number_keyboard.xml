@@ -168,6 +168,7 @@
         app:layout_constraintTop_toBottomOf="@+id/key8Container">
 
         <TextView
+
             android:id="@+id/key0"
             style="@style/key"
             android:text="@string/zero" />

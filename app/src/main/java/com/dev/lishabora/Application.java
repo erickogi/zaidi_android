@@ -1,11 +1,11 @@
 package com.dev.lishabora;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.location.Location;
-import android.os.Build;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
@@ -16,6 +16,8 @@ import android.util.Log;
 import com.androidnetworking.AndroidNetworking;
 import com.dev.lishabora.COntrollers.LoginController;
 import com.dev.lishabora.Database.LMDatabase;
+import com.dev.lishabora.Jobs.Evernote.SyncJobCreator;
+import com.dev.lishabora.Jobs.Evernote.UpSyncJob;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.FarmerBalance;
@@ -50,8 +52,6 @@ import com.dev.lishabora.Repos.Trader.PayoutsRepo;
 import com.dev.lishabora.Repos.Trader.TraderRepo;
 import com.dev.lishabora.Repos.Trader.UnitsRepo;
 import com.dev.lishabora.Utils.DateTimeUtils;
-import com.dev.lishabora.Utils.Jobs.Evernote.SyncJobCreator;
-import com.dev.lishabora.Utils.Jobs.Evernote.UpSyncJob;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.Utils.ResponseCallback;
 import com.dev.lishabora.Utils.SyncChangesCallback;
@@ -75,6 +75,8 @@ import java.util.Random;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
+
+//import com.rohitss.uceh.UCEHandler;
 
 //import com.rohitss.uceh.UCEHandler;
 
@@ -219,7 +221,6 @@ public class Application extends MultiDexApplication {
         }
 
     }
-
     public static void deleteSync(SyncModel s) {
         LMDatabase lmDatabase = LMDatabase.getDatabase(context);
         lmDatabase.syncDao().deleteRecord(s);
@@ -243,34 +244,67 @@ public class Application extends MultiDexApplication {
         //  this, 0, new Intent(stop), PendingIntent.FLAG_UPDATE_CURRENT);
 
         try {
-//            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-//                    .setContentTitle(getString(R.string.app_name))
+////            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+////                    .setContentTitle(getString(R.string.app_name))
+////                    .setContentText("Syncing your back your data")
+////                    .setOngoing(true)
+////                   // .setContentIntent(broadcastIntent)
+////                    .setSmallIcon(R.drawable.ic_launcher_background);
+////
+//
+//
+//            Notification notification = new NotificationCompat.Builder(Application.context)
+//                    .setContentTitle(context.getString(R.string.app_name))
 //                    .setContentText("Syncing your back your data")
+//                    .setAutoCancel(true)
 //                    .setOngoing(true)
-//                   // .setContentIntent(broadcastIntent)
-//                    .setSmallIcon(R.drawable.ic_launcher_background);
+//                    //  .setContentIntent(pi)
+//                    .setSmallIcon(R.drawable.ic_launcher_background)
+////
+//                    .setShowWhen(true)
+//                    .setColor(Color.RED)
+//                    .setLocalOnly(true)
+//                    .build();
 //
+//
+//            _completeNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+//
+////            notification=new NotificationManagerCompat.from(Application.context)
+////                    .notify(6, notification);
+//            _completeNotificationManager.notify(6, notification);
+
+            // NotificationManager mNotificationManager;
+            NotificationCompat.Builder mBuilder;
+            String NOTIFICATION_CHANNEL_ID = "10001";
 
 
-            Notification notification = new NotificationCompat.Builder(Application.context)
-                    .setContentTitle(context.getString(R.string.app_name))
+//            PendingIntent resultPendingIntent = PendingIntent.getActivity(com.dev.lishabora.Application.context,
+//                    0 /* Request code */, resultIntent,
+//                    PendingIntent.FLAG_UPDATE_CURRENT);
+
+            mBuilder = new NotificationCompat.Builder(com.dev.lishabora.Application.context);
+            mBuilder.setSmallIcon(R.mipmap.ic_launcher);
+            mBuilder.setContentTitle(context.getString(R.string.app_name))
                     .setContentText("Syncing your back your data")
-                    .setAutoCancel(true)
-                    .setOngoing(true)
-                    //  .setContentIntent(pi)
-                    .setSmallIcon(R.drawable.ic_launcher_background)
-//
-                    .setShowWhen(true)
-                    .setColor(Color.RED)
-                    .setLocalOnly(true)
-                    .build();
+                    .setAutoCancel(false)
+                    .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
+            //.setContentIntent(resultPendingIntent);
 
+            _completeNotificationManager = (NotificationManager) com.dev.lishabora.Application.context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-            _completeNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-//            notification=new NotificationManagerCompat.from(Application.context)
-//                    .notify(6, notification);
-            _completeNotificationManager.notify(6, notification);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                int importance = NotificationManager.IMPORTANCE_HIGH;
+                NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "NOTIFICATION_CHANNEL_NAME", importance);
+                notificationChannel.enableLights(true);
+                notificationChannel.setLightColor(Color.RED);
+                notificationChannel.enableVibration(true);
+                notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+                assert _completeNotificationManager != null;
+                mBuilder.setChannelId(NOTIFICATION_CHANNEL_ID);
+                _completeNotificationManager.createNotificationChannel(notificationChannel);
+            }
+            assert _completeNotificationManager != null;
+            _completeNotificationManager.notify(0 /* Request Code */, mBuilder.build());
 
         } catch (Exception nm) {
             nm.printStackTrace();
@@ -764,31 +798,19 @@ public class Application extends MultiDexApplication {
                 });
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        context = getApplicationContext();
-        applicationHandler = new Handler(context.getMainLooper());
+    public static boolean isTimeAutomatic() {
 
-
-        if (BuildConfig.DEBUG)
-            Timber.plant(new Timber.DebugTree());
-        else
-            Timber.plant(new NotLoggingTree());
-
-        mInstance = this;
-        JobManager.create(this).addJobCreator(new SyncJobCreator());
-
-        AndroidNetworking.initialize(getApplicationContext());
-        AndroidNetworking.enableLogging();
-
-        UpSyncJob.schedulePeriodic();
-
-        new UCEHandler.Builder(this).setTrackActivitiesEnabled(true).addCommaSeparatedEmailAddresses("eric@lishabora.com").build();
-
-        initConnectivityListener();
-
-
+//        try {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+//                return Settings.Global.getInt(context.getContentResolver(), Settings.Global.AUTO_TIME, 0) == 1;
+//            } else {
+//                return android.provider.Settings.System.getInt(context.getContentResolver(), android.provider.Settings.System.AUTO_TIME, 0) == 1;
+//            }
+//        } catch (Exception nm) {
+//            nm.printStackTrace();
+//            return true;
+//        }
+        return true;
     }
 
     public static class hasSynced {
@@ -817,17 +839,30 @@ public class Application extends MultiDexApplication {
         }
     }
 
-    public static boolean isTimeAutomatic() {
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                return Settings.Global.getInt(context.getContentResolver(), Settings.Global.AUTO_TIME, 0) == 1;
-            } else {
-                return android.provider.Settings.System.getInt(context.getContentResolver(), android.provider.Settings.System.AUTO_TIME, 0) == 1;
-            }
-        } catch (Exception nm) {
-            nm.printStackTrace();
-            return true;
-        }
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        context = getApplicationContext();
+        applicationHandler = new Handler(context.getMainLooper());
+
+
+        if (BuildConfig.DEBUG)
+            Timber.plant(new Timber.DebugTree());
+        else
+            Timber.plant(new NotLoggingTree());
+
+        mInstance = this;
+        JobManager.create(this).addJobCreator(new SyncJobCreator());
+
+        AndroidNetworking.initialize(getApplicationContext());
+        AndroidNetworking.enableLogging();
+
+        UpSyncJob.schedulePeriodic();
+
+        new UCEHandler.Builder(this).setTrackActivitiesEnabled(true).addCommaSeparatedEmailAddresses("eric@lishabora.com").build();
+        initConnectivityListener();
+
+
     }
 
 

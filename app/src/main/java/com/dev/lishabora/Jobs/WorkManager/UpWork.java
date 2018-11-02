@@ -1,4 +1,4 @@
-package com.dev.lishabora.Utils.Jobs.WorkManager;
+package com.dev.lishabora.Jobs.WorkManager;
 
 
 public class UpWork {//extends Worker {

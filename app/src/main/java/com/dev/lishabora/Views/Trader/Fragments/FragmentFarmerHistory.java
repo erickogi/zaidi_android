@@ -187,13 +187,12 @@ public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.
     private void setData(List<com.dev.lishabora.Models.Payouts> payouts) {
         if (payouts != null) {
 
-            List<Payouts> payoutsList = new LinkedList<>();
             PayoutesAdapter payoutesAdapter = initPayoutList();
 
             LinkedList<Payouts> payouts1 = new LinkedList<>();
             for (int a = 0; a < payouts.size(); a++) {
-                List<Collection> c = payoutsVewModel.getCollectionByDateByPayoutListOne(payouts.get(a).getCode());
-                payouts1.add(CommonFuncs.createPayoutsByCollection(c, payouts.get(a), payoutsVewModel, balncesViewModel, null, true, payoutsVewModel.getFarmersByCycleONe(payouts.get(a).getCycleCode())));
+                List<Collection> c = payoutsVewModel.getCollectionByDateByPayoutByFarmerListOne(payouts.get(a).getCode(), famerModel.getCode());
+                payouts1.add(CommonFuncs.createPayoutsByCollection(c, payouts.get(a), payoutsVewModel, balncesViewModel, famerModel.getCode()));
 
 
             }
@@ -267,7 +266,6 @@ public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.
             }
         }, true);
         recyclerView.setAdapter(listAdapter);
-
         listAdapter.notifyDataSetChanged();
 
 

@@ -41,6 +41,9 @@ public class FarmerBalance implements Serializable {
 
     private String lastUpdated;
 
+    public FarmerBalance() {
+    }
+
     public FarmerBalance(String code, String farmerCode, String payoutCode, String balanceToPay,
                          String balanceOwed, String lastUpdated, String loans, String orders, String milk) {
         this.code = code;

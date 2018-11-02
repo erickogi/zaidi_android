@@ -134,6 +134,7 @@ public class FragmentTraderLoans extends Fragment {
 
         balncesViewModel.getLoanPaymentByLoanCode(code).observe(FragmentTraderLoans.this, loanPayments -> {
             if (loanPayments != null && loanPayments.size() > 0) {
+
                 payments = loanPayments;
                 listAdapterP.notifyDataSetChanged();
             } else {
@@ -226,7 +227,15 @@ public class FragmentTraderLoans extends Fragment {
         balncesViewModel.getFarmerLoans().observe(this, farmerLoansTables -> {
             if (farmerLoansTables != null) {
 
-                initList(farmerLoansTables);
+                List<FarmerLoansTable> farmerLoansTables1 = new LinkedList<>();
+                for (FarmerLoansTable f : farmerLoansTables) {
+                    if (f.getLoanAmount() != null && Double.valueOf(f.getLoanAmount()) > 0) {
+                        farmerLoansTables1.add(f);
+                    } else {
+                        balncesViewModel.deleteRecordLoanDirect(f);
+                    }
+                }
+                initList(farmerLoansTables1);
 
             } else {
             }

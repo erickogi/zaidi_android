@@ -214,4 +214,5 @@ public class MilkCardToolBarUI extends RelativeLayout {
         txtPayoutNumber.setOnClickListener(clickListener);
     }
 
+
 }

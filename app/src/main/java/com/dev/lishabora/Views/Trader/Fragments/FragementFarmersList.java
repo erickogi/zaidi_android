@@ -188,31 +188,6 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
         }
     }
 
-    public static void timeIs(Context activity) {
-        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(activity);
-        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(activity));
-        alertDialogBuilderUserInput.setTitle("Time Error");
-        alertDialogBuilderUserInput.setMessage("Your time and Date settings is set to manual time settings.. For this app to run you need to enable automatic time settings");
-
-
-        alertDialogBuilderUserInput
-                .setCancelable(false)
-                .setPositiveButton("Okay", (dialogBox, id) -> {
-                    // ToDo get user input here
-                    // startActivity(new Intent(SplashActivity.this, SyncWorks.class));
-                    // activity.startActivityForResult(new Intent(android.provider.Settings.ACTION_DATE_SETTINGS), 0);
-
-                });
-
-
-        AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
-        alertDialogAndroid.setCancelable(false);
-        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
-        alertDialogAndroid.show();
-
-
-    }
 
     public void archiveFarmer(FamerModel famerModel) {
         String action = "Archive";
@@ -619,7 +594,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
         mViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
         balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
-        //observePayouts();
+        observePayouts();
 
 
         FarmerConst.setFamerModels(new LinkedList<>());
@@ -857,15 +832,6 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
         return false;
     }
 
-    private boolean isSetUp() {
-        if (getCycles == null && getCycles.size() < 1) {
-            return false;
-        }
-        if (getUnits == null && getUnits.size() < 1) {
-            return false;
-        }
-        return getRoutess != null || getRoutess.size() >= 1;
-    }
 
     @Override
     public void onStart() {
@@ -1069,24 +1035,6 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
     }
 
-    private void initDataOffline(boolean isRoutesFirst, boolean isUnitFirst, boolean isCycles) {
-
-        if (isRoutesFirst && isUnitFirst && isCycles) {
-            avi.smoothToShow();
-        }
-        TraderViewModel mViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
-        mViewModel.getRoutes(false).observe(this, routesModels -> {
-            if (routesModels != null && routesModels.size() > 0) {
-                prefrenceManager.setIsRoutesListFirst(false);
-                this.getRoutess = routesModels;
-                avi.smoothToHide();
-
-            }
-
-        });
-
-
-    }
 
     @Override
     public void onPause() {
@@ -1180,130 +1128,6 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
     }
 
 
-    private void popupMenu(int pos, View view, FamerModel famerModel) {
-//        PopupMenu popupMenu = new PopupMenu(Objects.requireNonNull(getContext()), view);
-//        popupMenu.inflate(R.menu.farmer_list_menu);
-//
-//        isArchived = false;
-//        isDummy = false;
-//        if (famerModel.getDeleted() == 1) {
-//
-//            popupMenu.getMenu().getItem(4).setTitle("Un-Delete");
-//        }
-//
-//        if (famerModel.getArchived() == 1) {
-//            isArchived = true;
-//            popupMenu.getMenu().getItem(5).setTitle("Un-Archive");
-//        }
-//
-//
-//        if (famerModel.getDummy() == 1) {
-//            isDummy = true;
-//            popupMenu.getMenu().getItem(6).setTitle("Remove from dummy");
-//
-//
-//        }
-//
-//
-//        popupMenu.setOnMenuItemClickListener(item -> {
-//            switch (item.getItemId()) {
-//                case R.id.delete:
-//
-//
-//                    famerModel.setStatus("Deleted");
-//                    famerModel.setDeleted(1);
-//                    avi.smoothToShow();
-//                    mViewModel.updateFarmer(famerModel, false, true).observe(FragementFarmersList.this, responseModel -> avi.smoothToHide());
-//                    FragementFarmersList.this.fetchFarmers(FragementFarmersList.this.getSelectedAccountStatus(), FragementFarmersList.this.getSelectedRoute());//update(famerModel);
-//
-//
-//                    break;
-//
-//                case R.id.archive:
-//
-//                    if (isArchived) {
-//                        famerModel.setStatus("Active");
-//                        famerModel.setArchived(0);
-//                    } else {
-//                        famerModel.setStatus("Archived");
-//                        famerModel.setArchived(1);
-//                    }
-//                    avi.smoothToShow();
-//                    mViewModel.updateFarmer(famerModel, false, true).observe(FragementFarmersList.this, responseModel -> avi.smoothToHide());
-//                    FragementFarmersList.this.fetchFarmers(FragementFarmersList.this.getSelectedAccountStatus(), FragementFarmersList.this.getSelectedRoute());
-//
-//
-//                    break;
-//
-//                case R.id.dummy:
-//
-//                    if (isDummy) {
-//                        famerModel.setStatus("Active");
-//                        famerModel.setDummy(0);
-//                    } else {
-//                        famerModel.setStatus("Dummy");
-//                        famerModel.setDummy(1);
-//                    }
-//                    avi.smoothToShow();
-//                    mViewModel.updateFarmer(famerModel, false, true).observe(FragementFarmersList.this, new Observer<ResponseModel>() {
-//                        @Override
-//                        public void onChanged(@Nullable ResponseModel responseModel) {
-//                            avi.smoothToHide();
-//                            fetchFarmers(getSelectedAccountStatus(), getSelectedRoute());
-//
-//                        }
-//                    });
-//
-//                    break;
-//                case R.id.edit:
-//                    Intent intent = new Intent(getActivity(), FarmerProfile.class);
-//                    intent.putExtra("farmer", famerModel);
-//                    startActivity(intent);
-//
-//                    break;
-//
-//                case R.id.view:
-//
-//                    Intent intent1 = new Intent(getActivity(), FarmerProfile.class);
-//                    intent1.putExtra("farmer", famerModel);
-//                    startActivity(intent1);
-//                    // FragementFarmersList.this.editTrader(famerModel, FragementFarmersList.this.getUnits(), FragementFarmersList.this.getCycles(), FragementFarmersList.this.getRoutess(), false);
-//
-//                    break;
-//
-//                case R.id.Loans:
-//                    fragment = new FragmentGiveLoan();
-//                    Bundle args = new Bundle();
-//                    args.putSerializable("farmer", famerModel);
-//                    fragment.setArguments(args);
-//                    popOutFragments();
-//                    setUpView();
-//                    break;
-//
-//                case R.id.Orders:
-//
-//                    OrderConstants.setFamerModel(famerModel);
-//                    Intent intent2 = new Intent(getActivity(), GiveOrder.class);
-//                    intent2.putExtra("farmer", famerModel);
-//                    startActivity(intent2);
-//
-//                    break;
-//
-//                case R.id.call:
-//                    intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "0" + famerModel.getMobile()));
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                    context.startActivity(intent);
-//
-//                    break;
-//                case R.id.sms:
-//                    sendSMS("0" + famerModel.getMobile());
-//                    break;
-//                default:
-//            }
-//            return false;
-//        });
-//        popupMenu.show();
-    }
 
     private void snack(String msg) {
         if (view != null) {
@@ -1457,12 +1281,16 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
     }
 
-    private class Balance extends AsyncTask<CommonFuncs.asyn, Integer, String> {
-        protected String doInBackground(CommonFuncs.asyn... data) {
+    private class Balance extends AsyncTask<CommonFuncs.asyn, Integer, FamerModel> {
+        protected FamerModel doInBackground(CommonFuncs.asyn... data) {
 
 
             FamerModel fm = CommonFuncs.updateBalance(data[0].getFamerModel(), mViewModel, balncesViewModel, data[0].getCollection(), data[0].getCollection().getPayoutCode(), AppConstants.MILK, null, null);
 
+
+            if (!data[0].getFamerModel().getTotalbalance().equals(fm.getTotalbalance())) {
+                return fm;
+            }
 
             return null;
 
@@ -1470,11 +1298,11 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
         }
 
 
-        protected void onPostExecute(String msg) {
+        protected void onPostExecute(FamerModel msg) {
 
 
             if (msg != null) {
-                snack(msg);
+                mViewModel.updateFarmer(msg, false, true);
             }
 
         }
@@ -1486,11 +1314,13 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
             ResponseModel responseModel = mViewModel.createCollectionsU(data[0].getCollection());//.observe(FragementFarmersList.this, responseModel -> {
 
+            FamerModel f = data[0].getFamerModel();
+
             if (!responseModel.getPayoutCode().equals(data[0].getFamerModel().getCurrentPayoutCode())) {
-                FamerModel f = data[0].getFamerModel();
                 f.setCurrentPayoutCode(responseModel.getPayoutCode());
-                mViewModel.updateFarmer(f, false, true);
             }
+            mViewModel.updateFarmer(f, false, true);
+
 
 
             return new CommonFuncs.createCollection(data[0].getCollection(), data[0].getFamerModel(), responseModel);

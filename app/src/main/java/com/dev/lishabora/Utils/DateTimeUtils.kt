@@ -246,6 +246,13 @@ class DateTimeUtils {
 
         }
 
+        fun isToday(date: DateTime): Boolean {
+            if (date == DateTime()) {
+                return true
+            }
+            return false
+        }
+
         fun addDaysString(date: DateTime, i: Int): String {
 
             val day = date.plusDays(i)

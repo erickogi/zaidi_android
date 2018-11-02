@@ -1,4 +1,4 @@
-package com.dev.lishabora.Utils.Jobs.Evernote;
+package com.dev.lishabora.Jobs.Evernote;
 
 import android.support.annotation.NonNull;
 
@@ -8,30 +8,26 @@ import com.evernote.android.job.JobRequest;
 
 import java.util.concurrent.TimeUnit;
 
-public class DownSyncJob extends Job {
+public class UpSyncJob extends Job {
 
-    static final String TAG = "down_sync_job";
+    static final String TAG = "sync_job_up";
 
     public static void schedulePeriodic() {
-        new JobRequest.Builder(DownSyncJob.TAG)
+        new JobRequest.Builder(UpSyncJob.TAG)
                 .setPeriodic(TimeUnit.MINUTES.toMillis(15), TimeUnit.MINUTES.toMillis(5))
                 .setUpdateCurrent(true)
                 .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
-                .setRequiresBatteryNotLow(true)
+                .setRequiresBatteryNotLow(false)
 
-                //.startNow()
-                //.setPersisted(true)
                 .build()
                 .schedule();
     }
 
-    static void scheduleExact() {
-        new JobRequest.Builder(DownSyncJob.TAG)
+    public static void scheduleExact() {
+        new JobRequest.Builder(UpSyncJob.TAG)
                 .setExact(TimeUnit.MINUTES.toMillis(10))
-                //.setPeriodic(TimeUnit.MINUTES.toMillis(15), TimeUnit.MINUTES.toMillis(5))
                 .setUpdateCurrent(true)
                 .startNow()
-                //.setPersisted(true)
                 .build()
                 .schedule();
     }
@@ -40,7 +36,13 @@ public class DownSyncJob extends Job {
     @Override
     protected Result onRunJob(Params params) {
 
-        Application.syncDown();
+        Application.sync();
+
+
+
+
+
+
         return Result.SUCCESS;
     }
 }

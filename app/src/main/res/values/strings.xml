@@ -50,4 +50,5 @@
     <string name="title_activity_milk_reports">MilkReports</string>
     <string name="title_activity_loans_and_orders">Loans And Orders</string>
     <string name="title_activity_admin_main">AdminMain</string>
+    <string name="skip_this_farmer">Skip this farmer</string>
 </resources>

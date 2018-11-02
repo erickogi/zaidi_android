@@ -186,12 +186,19 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
         }
     }
 
+    private View.OnClickListener payNoClicked = view -> {
+
+        CommonFuncs.doAprove(getContext(), balncesViewModel, traderViewModel, model, famerModel, payouts, this, getBalance(toolBar.getMilkTotal(), toolBar.getLoanTotal(), toolBar.getOrderTotal()));
+
+    };
+
     public void approvePayoutBalance() {
 
         FarmerBalance farmerBalance = balncesViewModel.getByFarmerCodeByPayoutOne(famerModel.getCode(), payouts.getCode());
         farmerBalance.setPayoutStatus(1);
 
         balncesViewModel.updateRecord(farmerBalance);
+        approveFarmerBalance();
     }
     private void initData() {
 
@@ -251,11 +258,18 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
 
     }
 
-    private View.OnClickListener payNoClicked = view -> {
+    private void approveFarmerBalance() {
+        FarmerBalance bal = CommonFuncs.getFarmerBalanceAfterPayoutCardApproval(famerModel, balncesViewModel, traderViewModel);
 
-        CommonFuncs.doAprove(getContext(), balncesViewModel, traderViewModel, model, famerModel, payouts, this);
+        famerModel.setTotalbalance(bal.getBalanceToPay());
+        traderViewModel.updateFarmer(famerModel, false, true);
 
-    };
+
+        //    FamerModel fm= CommonFuncs. refreshTotalBalances(0, null, null, balncesViewModel, traderViewModel, payouts.getCode(), famerModel);
+        // Double bal=Double.valueOf(getBalance(toolBar.getMilkTotal(),toolBar.getLoanTotal(),toolBar.getOrderTotal()));
+        //  Double after=
+
+    }
 
     public void editValue(boolean isEditable, int adapterPosition, int time, int type, String value, Object o, View editable, DayCollectionModel dayCollectionModel) {
 
@@ -489,7 +503,7 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
 
     private void approve(Payouts payouts, PayoutFarmersCollectionModel model) {
 
-        CommonFuncs.doAprove(getContext(), balncesViewModel, traderViewModel, model, famerModel, payouts, this);
+        CommonFuncs.doAprove(getContext(), balncesViewModel, traderViewModel, model, famerModel, payouts, this, getBalance(toolBar.getMilkTotal(), toolBar.getLoanTotal(), toolBar.getOrderTotal()));
 
     }
 
@@ -543,7 +557,7 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
         btnBack.setOnClickListener(view1 -> cancelApprove(payouts, model));
 
 
-        setCardActionStatus(model, getContext(), btnApprove, btnBack, txtApprovalStatus);
+        setCardActionStatus(model, getContext(), btnApprove, btnBack, txtApprovalStatus, toolBar.getLoanTotal(), toolBar.getOrderTotal());
 
 
     }

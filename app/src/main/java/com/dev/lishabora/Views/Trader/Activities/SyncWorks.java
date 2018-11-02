@@ -15,10 +15,10 @@ import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.SyncSAdapter;
 import com.dev.lishabora.AppConstants;
+import com.dev.lishabora.Jobs.Evernote.UpSyncJob;
 import com.dev.lishabora.Models.SyncHolderModel;
 import com.dev.lishabora.Models.SyncModel;
 import com.dev.lishabora.Utils.DateTimeUtils;
-import com.dev.lishabora.Utils.Jobs.Evernote.UpSyncJob;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;

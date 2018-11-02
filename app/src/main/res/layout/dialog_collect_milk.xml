@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--android:layout_width="match_parent"-->
 
-<!--android:layout_height="wrap_content"--><!--app:cardCornerRadius="4dp"-->
-
-
-<!--app:cardUseCompatPadding="true">-->
-
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        xmlns:keyboard="http://schemas.android.com/apk/res-auto"
-        android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
         <com.wang.avi.AVLoadingIndicatorView
             android:id="@+id/avi"
@@ -369,7 +362,7 @@
 
 
                 <TextView
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -384,6 +377,7 @@
                     android:background="@color/colorAccent" />
 
                 <LinearLayout
+                    android:background="@drawable/rounded_border_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -423,13 +417,13 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1.2"
-                            android:layout_gravity="center"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
-                            android:gravity="center"
-                            android:hint=""
+                        android:layout_gravity="center"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:gravity="center"
+                        android:hint=""
+                        android:textSize="16sp"
                             android:inputType="numberDecimal"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                             android:textStyle="bold"
 
 
@@ -457,15 +451,13 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1.2"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
-                            android:gravity="center"
-                            android:hint=""
-                            android:inputType="numberDecimal"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-
-
-                            android:textStyle="bold" />
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:gravity="center"
+                        android:hint=""
+                        android:inputType="numberDecimal"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                     <!--</android.support.design.widget.TextInputLayout>-->
 
@@ -549,11 +541,278 @@
 
                 </LinearLayout>
 
-                <com.dev.lishabora.NumKey.NumberKeyboard
-                    android:id="@+id/numberKeyboard"
+                <!--<com.dev.lishabora.NumKey.NumberKeyboard-->
+                <!--android:id="@+id/numberKeyboard"-->
+                <!--android:visibility="gone"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="200dp"-->
+                <!--keyboard:keyboardType="decimal" />-->
+
+                <LinearLayout
+                    android:id="@+id/keyBoard"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    keyboard:keyboardType="decimal" />
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/kkey1"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+
+                            android:background="@drawable/rounded_border_keys"
+                            android:clickable="true"
+                            android:contextClickable="true"
+                            android:focusable="true"
+
+                            android:gravity="center"
+                            android:text="1"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                            android:textColor="@drawable/key_text_color"
+                            android:textStyle="bold"
+                            android:typeface="normal" />
+
+                        <TextView
+                            android:id="@+id/kkey2"
+
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="@drawable/rounded_border_keys"
+                            android:clickable="true"
+                            android:contextClickable="true"
+                            android:focusable="true"
+
+                            android:gravity="center"
+                            android:text="2"
+
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                            android:textColor="@drawable/key_text_color"
+                            android:textStyle="bold"
+                            android:typeface="normal" />
+
+                        <TextView
+                            android:id="@+id/kkey3"
+
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="@drawable/rounded_border_keys"
+                            android:clickable="true"
+                            android:contextClickable="true"
+                            android:focusable="true"
+
+                            android:gravity="center"
+                            android:text="3"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                            android:textColor="@drawable/key_text_color"
+                            android:textStyle="bold"
+                            android:typeface="normal" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/kkey4"
+
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="@drawable/rounded_border_keys"
+                            android:clickable="true"
+                            android:contextClickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:text="4"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                            android:textColor="@drawable/key_text_color"
+                            android:textStyle="bold"
+                            android:typeface="normal" />
+
+                        <TextView
+                            android:id="@+id/kkey5"
+
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="@drawable/rounded_border_keys"
+                            android:clickable="true"
+                            android:contextClickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:text="5"
+
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                            android:textColor="@drawable/key_text_color"
+                            android:textStyle="bold"
+                            android:typeface="normal" />
+
+                        <TextView
+                            android:id="@+id/kkey6"
+
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="@drawable/rounded_border_keys"
+                            android:clickable="true"
+                            android:contextClickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:text="6"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                            android:textColor="@drawable/key_text_color"
+                            android:textStyle="bold"
+                            android:typeface="normal" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/kkey7"
+
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="@drawable/rounded_border_keys"
+                            android:clickable="true"
+                            android:contextClickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:text="7"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                            android:textColor="@drawable/key_text_color"
+                            android:textStyle="bold"
+                            android:typeface="normal" />
+
+                        <TextView
+                            android:id="@+id/kkey8"
+
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="@drawable/rounded_border_keys"
+                            android:clickable="true"
+                            android:contextClickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:text="8"
+
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                            android:textColor="@drawable/key_text_color"
+                            android:textStyle="bold"
+                            android:typeface="normal" />
+
+                        <TextView
+                            android:id="@+id/kkey9"
+
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="@drawable/rounded_border_keys"
+                            android:clickable="true"
+                            android:contextClickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:text="9"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                            android:textColor="@drawable/key_text_color"
+                            android:textStyle="bold"
+                            android:typeface="normal" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/kkey_decimal"
+
+                            android:layout_width="0dp"
+
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="@drawable/rounded_border_keys"
+                            android:clickable="true"
+                            android:contextClickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:text="."
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                            android:textColor="@drawable/key_text_color"
+                            android:textStyle="bold"
+                            android:typeface="normal" />
+
+                        <TextView
+                            android:id="@+id/kkey0"
+
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="@drawable/rounded_border_keys"
+                            android:clickable="true"
+                            android:contextClickable="true"
+                            android:focusable="true"
+
+                            android:gravity="center"
+                            android:text="0"
+
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                            android:textColor="@drawable/key_text_color"
+                            android:textStyle="bold"
+                            android:typeface="normal" />
+
+                        <ImageView
+                            android:id="@+id/kkey_delete"
+
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="@drawable/key_bg"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:src="@drawable/ic_backspace"
+                            android:text="9"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                            android:textStyle="bold"
+                            android:typeface="normal" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
 
 
                 <!--<com.fxn769.Numpad-->
@@ -611,9 +870,9 @@
                     android:id="@+id/txt_skip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:padding="4dp"
-                    android:text="Skip this farmer"
+                    android:layout_marginTop="2dp"
+                    android:padding="2dp"
+                    android:text="@string/skip_this_farmer"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/colorPrimary"
                     android:textStyle="bold" />
@@ -704,4 +963,3 @@
     </RelativeLayout>
 
 
-    <!--</LinearLayout>-->

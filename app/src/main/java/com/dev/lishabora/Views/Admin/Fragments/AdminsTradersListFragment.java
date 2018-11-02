@@ -36,7 +36,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.dev.lishabora.Adapters.TradersAdapter;
 import com.dev.lishabora.COntrollers.LoginController;
 import com.dev.lishabora.Models.Admin.FetchTraderModel;
@@ -48,8 +47,9 @@ import com.dev.lishabora.Network.Request;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.NetworkUtils;
+import com.dev.lishabora.Utils.OnActivityTouchListener;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
-import com.dev.lishabora.Utils.PrefrenceManager;
+import com.dev.lishabora.Utils.RecyclerTouchListener;
 import com.dev.lishabora.Utils.RequestDataCallback;
 import com.dev.lishabora.Utils.SyncDownResponseCallback;
 import com.dev.lishabora.ViewModels.Admin.AdminsViewModel;
@@ -77,10 +77,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-import static android.app.Activity.RESULT_OK;
+//import com.afollestad.materialdialogs.MaterialDialog;
 
 
-public class AdminsTradersListFragment extends Fragment {
+public class AdminsTradersListFragment extends Fragment implements RecyclerTouchListener.RecyclerTouchListenerHelper, RecyclerTouchListener.OnSwipeListener {
 
     Chip chipAll;
     Chip chipDummy;
@@ -88,6 +88,11 @@ public class AdminsTradersListFragment extends Fragment {
     Chip chipArchive;
     FloatingActionButton fab;
     TradersAdapter listAdapter;
+    List<Integer> unclickableRows, unswipeableRows;
+    private RecyclerTouchListener onTouchListener;
+    private int openOptionsPosition;
+    private OnActivityTouchListener touchListener;
+
     Gson gson = new Gson();
     List<Object> objects;
     LinkedList<TraderModel> traderModels;
@@ -181,7 +186,7 @@ public class AdminsTradersListFragment extends Fragment {
         // TODO: Use the ViewModel
     }
 
-    MaterialDialog materialDialog;
+    //MaterialDialog materialDialog;
 
     void initWIdgets() {
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -306,7 +311,25 @@ public class AdminsTradersListFragment extends Fragment {
                 }
             });
 
-            getTraders();
+
+            onTouchListener = new RecyclerTouchListener(getActivity(), recyclerView);
+            onTouchListener
+                    .setClickable(new RecyclerTouchListener.OnRowClickListener() {
+                        @Override
+                        public void onRowClicked(int position) {
+                            getTraderInfo(filteredTraderModels.get(position));
+                        }
+
+                        @Override
+                        public void onIndependentViewClicked(int independentViewID, int position) {
+
+                        }
+                    })
+                    .setLongClickable(true, position -> {
+                        popupMenu(position, view, filteredTraderModels.get(position));
+
+                    });
+
 
         } else {
             emptyState(false, "You are not connected to the internet ...", empty_layout, null, emptyTxt);
@@ -340,12 +363,32 @@ public class AdminsTradersListFragment extends Fragment {
         recyclerView.setLayoutManager(mStaggeredLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        listAdapter.notifyDataSetChanged();
+        recyclerView.setAdapter(listAdapter);
+
+
+        onTouchListener = new RecyclerTouchListener(getActivity(), recyclerView);
+        onTouchListener
+                .setClickable(new RecyclerTouchListener.OnRowClickListener() {
+                    @Override
+                    public void onRowClicked(int position) {
+                        getTraderInfo(filteredTraderModels.get(position));
+                    }
+
+                    @Override
+                    public void onIndependentViewClicked(int independentViewID, int position) {
+
+                    }
+                })
+                .setLongClickable(true, position -> {
+                    popupMenu(position, view, filteredTraderModels.get(position));
+
+                });
+
         if (filteredTraderModels.size() < 1) {
             snack("No data");
         }
 
-        listAdapter.notifyDataSetChanged();
-        recyclerView.setAdapter(listAdapter);
         emptyState(listAdapter.getItemCount() > 0, "We couldn't find any traders records", empty_layout, null, emptyTxt);
 
     }
@@ -586,6 +629,8 @@ public class AdminsTradersListFragment extends Fragment {
         filteredTraderModels = new LinkedList<>();
         initConnectivityListener();
         initTradersList();
+        getTraders();
+
 
     }
 
@@ -676,143 +721,7 @@ public class AdminsTradersListFragment extends Fragment {
 
         startActivityForResult(intent2, 10004);
 
-//        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
-//        View mView = layoutInflaterAndroid.inflate(R.layout.dialog_add_trader, null);
-//        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(context));
-//        alertDialogBuilderUserInput.setView(mView);
-//
-//
-//        avi = mView.findViewById(R.id.avi);
-//
-//        TextView txtKe;
-//        txtKe = mView.findViewById(R.id.txt_ke);
-//        TextInputEditText phone = mView.findViewById(R.id.edt_traders_phone);
-//        final char space = ' ';
-//
-//        phone.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                // if(s.length()>0&&editTextCarrierNumber.getText().toString().charAt(0)!='0') {
-//                try {
-//                    if (s.charAt(0) == '0') {
-//                        s.delete(s.length() - 1, s.length());
-//                        txtKe.setText("+254-0");
-//                    } else if (s != null && s.length() < 1) {
-//                        txtKe.setText("+254");
-//
-//                    }
-//
-//
-//                } catch (Exception nm) {
-//                    nm.printStackTrace();
-//                }
-//                if (s.length() > 0 && (s.length() % 4) == 0) {
-//                    final char c = s.charAt(s.length() - 1);
-//                    if (space == c) {
-//                        s.delete(s.length() - 1, s.length());
-//                    }
-//
-//                }
-//                // Insert char where needed.
-//                if (s.length() > 0 && (s.length() % 4) == 0) {
-//                    char c = s.charAt(s.length() - 1);
-//                    // Only if its a digit where there should be a space we insert a space
-//                    if (Character.isDigit(c) && TextUtils.split(s.toString(), String.valueOf(space)).length <= 3) {
-//                        s.insert(s.length() - 1, String.valueOf(space));
-//                    }
-//
-//                }
-//            }
-//        });
-//
-//
-//
-//        alertDialogBuilderUserInput
-//                .setCancelable(false);
-////                .setPositiveButton("Save", (dialogBox, id) -> {
-////                    // ToDo get user input here
-////
-////
-////                })
-////
-////                .setNegativeButton("Dismiss",
-////                        (dialogBox, id) -> dialogBox.cancel());
-//
-//
-//        AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
-//        alertDialogAndroid.setCancelable(false);
-//        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-//
-//        alertDialogAndroid.show();
-//
-////        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
-////        theButton.setOnClickListener(new CustomListener(alertDialogAndroid));
-//
-//
-//        MaterialButton btnPositive, btnNegative, btnNeutral;
-//        TextView txtTitle;
-//        LinearLayout lTitle;
-//        ImageView imgIcon;
-//        btnPositive = mView.findViewById(R.id.btn_positive);
-//        btnNegative = mView.findViewById(R.id.btn_negative);
-//        btnNeutral = mView.findViewById(R.id.btn_neutral);
-//        txtTitle = mView.findViewById(R.id.txt_title);
-//        lTitle = mView.findViewById(R.id.linear_title);
-//        imgIcon = mView.findViewById(R.id.img_icon);
-//
-//
-//        btnNeutral.setVisibility(View.GONE);
-//        lTitle.setVisibility(View.GONE);
-//        txtTitle.setVisibility(View.VISIBLE);
-//        imgIcon.setVisibility(View.VISIBLE);
-//        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
-//        txtTitle.setText("Add Trader");
-//
-//        btnPositive.setOnClickListener(new CustomListener(alertDialogAndroid));
-//        btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
 
-//        LinearLayout.LayoutParams buttonParams;
-//
-//
-//
-//
-//
-//        buttonParams = (LinearLayout.LayoutParams) theButton.getLayoutParams();
-//        buttonParams.gravity = Gravity.TOP;
-//
-//        Button buttonNegative = alertDialogAndroid.getButton(AlertDialog.BUTTON_NEGATIVE);
-//        buttonParams = (LinearLayout.LayoutParams) buttonNegative.getLayoutParams();
-//        buttonParams.gravity = Gravity.TOP;
-//
-//        Button buttonNeutral = alertDialogAndroid.getButton(AlertDialog.BUTTON_NEUTRAL);
-//        buttonParams = (LinearLayout.LayoutParams) buttonNeutral.getLayoutParams();
-//        buttonParams.gravity = Gravity.TOP;
-
-//        materialDialog=new MaterialDialog.Builder(getActivity()).title("").customView(R.layout.dialog_add_trader,true)
-//                .positiveText("Save").negativeText("Dismiss").onPositive((dialog, which) -> {
-//
-//                    View view=materialDialog.getView();
-//                    new QCustomListener(view).onClick(view);
-//
-//
-//
-//                }).onNegative((dialog, which) -> {
-//                    materialDialog.dismiss();
-//
-//                }).btnStackedGravity(GravityEnum.START)
-//                .autoDismiss(false).build();
-//
-//        materialDialog.show();
 
 
     }
@@ -910,290 +819,23 @@ public class AdminsTradersListFragment extends Fragment {
 
     }
 
-    private class CustomListener implements View.OnClickListener {
-        AlertDialog dialog;
-        boolean isDummy = false;
-        //int type;
-        RequestDataCallback requestDataCallback;
-
-        public CustomListener(AlertDialog alertDialogAndroid) {
-            dialog = alertDialogAndroid;
-
-        }
-
-        @Override
-        public void onClick(View v) {
-            TextInputEditText name, phone, bussinessname;
-            CheckBox chkDummy;
-            Spinner spinnerPayment;
-            spinnerPayment = dialog.findViewById(R.id.spinner);
-            bussinessname = dialog.findViewById(R.id.edt_traders_business_name);
-
-
-            name = dialog.findViewById(R.id.edt_traders_names);
-            phone = dialog.findViewById(R.id.edt_traders_phone);
-            chkDummy = dialog.findViewById(R.id.chk_dummy);
-
-
-            if (name.getText().toString().isEmpty()) {
-                name.setError("Required");
-                name.requestFocus();
-                stopAnim();
-                return;
-            }
-
-
-            if (phone.getText().toString().isEmpty()) {
-                phone.setError("Required");
-                phone.requestFocus();
-                stopAnim();
-                return;
-            }
-            String phoneNumber = phone.getText().toString().replaceAll(" ", "").trim();
-
-            if (!LoginController.isValidPhoneNumber(phoneNumber) && !GeneralUtills.Companion.isValidPhoneNumber(phoneNumber)) {
-                stopAnim();
-                snack("Invalid phone number ");
-                phone.requestFocus();
-                phone.setError("Invalid Phone number");
-                return;
-            }
-            String defaultPayment = "";
-            String bussines = "";
-
-
-            if (!bussinessname.getText().toString().isEmpty()) {
-                bussines = bussinessname.getText().toString();
-            }
-
-            if (spinnerPayment != null && spinnerPayment.getSelectedItemPosition() == 0) {
-
-
-                Snackbar snackbar = Snackbar.make(spinnerPayment, "Invalid payment option ", Snackbar.LENGTH_LONG);
-                View snackbarLayout = snackbar.getView();
-                snackbarLayout.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
-                snackbar.show();
-                spinnerPayment.requestFocus();
-
-                stopAnim();
-                //phone.setError("Invalid Phone number");
-            }
-
-
-            if (chkDummy.isChecked()) {
-                isDummy = true;
-            }
-
-
-            //  AdminPrefs adminPrefs = new AdminPrefs(context);
-            TraderModel traderModel = new TraderModel();
-            //if(type==ISCREATE) {
-            traderModel.setId(0);
-            traderModel.setCode("" + new GeneralUtills(context).getRandon(9000, 1000));
-            traderModel.setEntity("Admin");
-            traderModel.setEntityname("LishaBora");
-            traderModel.setBusinessname(bussines);
-            traderModel.setDefaultpaymenttype(spinnerPayment.getSelectedItem().toString());
-
-
-            traderModel.setEntitycode(new PrefrenceManager(context).getAdmin().getCode());
-
-            traderModel.setTransactioncode(DateTimeUtils.Companion.getNow());
-            traderModel.setNames(name.getText().toString());
-            traderModel.setMobile(phoneNumber);
-            traderModel.setPassword("password");
-            traderModel.setBalance("0");
-            traderModel.setApikey("");
-            traderModel.setFirebasetoken("");
-            traderModel.setStatus("Active");
-            traderModel.setTransactiontime(DateTimeUtils.Companion.getNow());
-            traderModel.setSynctime(DateTimeUtils.Companion.getNow());
-            traderModel.setTransactedby(new PrefrenceManager(context).getAdmin().getApikey());
-
-
-            traderModel.setArchived(0);
-            traderModel.setDeleted(0);
-            traderModel.setSynced(0);
-            traderModel.setDummy(0);
-
-
-            traderModel.setIsdeleted(false);
-            traderModel.setIsarchived(false);
-            traderModel.setIsdummy(isDummy);
-
-
-            startAnim();
-
-            JSONObject jsonObject = null;
-            try {
-                jsonObject = new JSONObject(gson.toJson(traderModel));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            mViewModel.createTrader(jsonObject, true).observe(AdminsTradersListFragment.this, new Observer<ResponseModel>() {
-                @Override
-                public void onChanged(@Nullable ResponseModel responseModel) {
-                    stopAnim();
-
-
-                    Snackbar snackbar = Snackbar.make(name, responseModel.getResultDescription(), Snackbar.LENGTH_LONG);
-                    View snackbarLayout = snackbar.getView();
-                    snackbarLayout.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
-                    snackbar.show();
-
-
-                    // snack(responseModel.getResultDescription());
-                    if (responseModel.getResultCode() == 1) {
-                        traderModels.add(traderModel);
-                        listAdapter.notifyDataSetChanged();
-                        dialog.dismiss();
-                        avi.smoothToShow();
-                        mViewModel.refresh(getSearchObject(), true);
-                    }
-                }
-            });
-
-
-        }
+    @Override
+    public void setOnActivityTouchListener(OnActivityTouchListener listener) {
+        this.touchListener = listener;
 
     }
 
-    private class QCustomListener implements View.OnClickListener {
-        View dialog;
-        boolean isDummy = false;
-        //int type;
-        RequestDataCallback requestDataCallback;
-
-        public QCustomListener(View alertDialogAndroid) {
-            dialog = alertDialogAndroid;
-
-        }
-
-        @Override
-        public void onClick(View v) {
-            TextInputEditText name, phone, bussinessname;
-            CheckBox chkDummy;
-            Spinner spinnerPayment;
-            spinnerPayment = dialog.findViewById(R.id.spinner);
-            bussinessname = dialog.findViewById(R.id.edt_traders_business_name);
-
-
-            name = dialog.findViewById(R.id.edt_traders_names);
-            phone = dialog.findViewById(R.id.edt_traders_phone);
-            chkDummy = dialog.findViewById(R.id.chk_dummy);
-
-
-            if (name.getText().toString().isEmpty()) {
-                name.setError("Required");
-                name.requestFocus();
-                stopAnim();
-                return;
-            }
-
-
-            if (phone.getText().toString().isEmpty()) {
-                phone.setError("Required");
-                phone.requestFocus();
-                stopAnim();
-                return;
-            }
-
-            if (!LoginController.isValidPhoneNumber(phone.getText().toString()) && !GeneralUtills.Companion.isValidPhoneNumber(phone.getText().toString())) {
-                stopAnim();
-                snack("Invalid phone number ");
-                phone.requestFocus();
-                phone.setError("Invalid Phone number");
-                return;
-            }
-            String defaultPayment = "";
-            String bussines = "";
-
-
-            if (!bussinessname.getText().toString().isEmpty()) {
-                bussines = bussinessname.getText().toString();
-            }
-
-            if (spinnerPayment != null && spinnerPayment.getSelectedItemPosition() == 0) {
-
-                snack("Invalid payment option ");
-                spinnerPayment.requestFocus();
-
-                stopAnim();
-                //phone.setError("Invalid Phone number");
-            }
-
-
-            if (chkDummy.isChecked()) {
-                isDummy = true;
-            }
-
-
-            //  AdminPrefs adminPrefs = new AdminPrefs(context);
-            TraderModel traderModel = new TraderModel();
-            //if(type==ISCREATE) {
-            traderModel.setId(0);
-            traderModel.setCode("" + new GeneralUtills(context).getRandon(9000, 1000));
-            traderModel.setEntity("Admin");
-            traderModel.setEntityname("LishaBora");
-            traderModel.setBusinessname(bussines);
-            traderModel.setDefaultpaymenttype(spinnerPayment.getSelectedItem().toString());
-
-
-            traderModel.setEntitycode(new PrefrenceManager(context).getAdmin().getCode());
-
-            traderModel.setTransactioncode(DateTimeUtils.Companion.getNow());
-            traderModel.setNames(name.getText().toString());
-            traderModel.setMobile(phone.getText().toString());
-            traderModel.setPassword("password");
-            traderModel.setBalance("0");
-            traderModel.setApikey("");
-            traderModel.setFirebasetoken("");
-            traderModel.setStatus("Active");
-            traderModel.setTransactiontime(DateTimeUtils.Companion.getNow());
-            traderModel.setSynctime(DateTimeUtils.Companion.getNow());
-            traderModel.setTransactedby(new PrefrenceManager(context).getAdmin().getApikey());
-
-
-            traderModel.setArchived(0);
-            traderModel.setDeleted(0);
-            traderModel.setSynced(0);
-            traderModel.setDummy(0);
-
-
-            traderModel.setIsdeleted(false);
-            traderModel.setIsarchived(false);
-            traderModel.setIsdummy(isDummy);
-
-
-            startAnim();
-
-            JSONObject jsonObject = null;
-            try {
-                jsonObject = new JSONObject(gson.toJson(traderModel));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            mViewModel.createTrader(jsonObject, true).observe(AdminsTradersListFragment.this, new Observer<ResponseModel>() {
-                @Override
-                public void onChanged(@Nullable ResponseModel responseModel) {
-                    stopAnim();
-
-                    snack(responseModel.getResultDescription());
-                    if (responseModel.getResultCode() == 1) {
-                        traderModels.add(traderModel);
-                        listAdapter.notifyDataSetChanged();
-                        materialDialog.dismiss();
-                        mViewModel.refresh(getSearchObject(), true);
-                    }
-                }
-            });
-
-
-        }
+    @Override
+    public void onSwipeOptionsClosed() {
 
     }
+
+    @Override
+    public void onSwipeOptionsOpened() {
+
+    }
+
+
 
     private class EditCustomListener implements View.OnClickListener {
         AlertDialog dialog;
@@ -1310,20 +952,8 @@ public class AdminsTradersListFragment extends Fragment {
     public void onActivityResult(
             int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
 
-            case 10004:
-
-                if (resultCode == RESULT_OK) {
-                    initTradersList();
-
-
-                }
-                break;
-
-            default:
-        }
-        super.onActivityResult(requestCode, resultCode, data);
+        getTraders();
     }
 
     @Override

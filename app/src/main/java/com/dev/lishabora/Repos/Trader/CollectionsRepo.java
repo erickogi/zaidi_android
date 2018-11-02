@@ -115,6 +115,10 @@ public class CollectionsRepo {
         return collectionsDao.getCollectionByPayoutCodeListOne(payoutCode);
     }
 
+    public List<Collection> getCollectionByPayoutByFarmerListOne(String payoutCode, String farmerCode) {
+        return collectionsDao.getCollectionByPayoutByFarmerListOne(payoutCode, farmerCode);
+    }
+
     public Collection getLast(String cycleCode) {
         return collectionsDao.getLast(cycleCode);
     }

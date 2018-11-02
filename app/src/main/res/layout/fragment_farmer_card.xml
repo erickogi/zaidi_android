@@ -448,6 +448,7 @@
     </com.dev.lishabora.Views.Trader.MilkCardToolBarUI>
 
     <TextView
+        android:visibility="gone"
         android:id="@+id/txt_"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

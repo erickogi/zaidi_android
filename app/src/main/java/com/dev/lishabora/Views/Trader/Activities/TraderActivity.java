@@ -29,14 +29,14 @@ import android.widget.Toast;
 import com.dev.lishabora.Adapters.ViewPagerAdapter;
 import com.dev.lishabora.Application;
 import com.dev.lishabora.Database.LMDatabase;
+import com.dev.lishabora.Jobs.Evernote.PayoutCheckerJob;
+import com.dev.lishabora.Jobs.Evernote.UpSyncJob;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.ResponseObject;
 import com.dev.lishabora.Models.Trader.TraderModel;
 import com.dev.lishabora.Network.ApiConstants;
 import com.dev.lishabora.Network.Request;
 import com.dev.lishabora.TrackerService;
-import com.dev.lishabora.Utils.Jobs.Evernote.PayoutCheckerJob;
-import com.dev.lishabora.Utils.Jobs.Evernote.UpSyncJob;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.Utils.ResponseCallback;
@@ -78,12 +78,13 @@ import static com.dev.lishabora.Application.collectMilk;
 
 public class TraderActivity extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST = 1;
+    private GoogleApiClient googleApiClient;
+
 
     private static Fragment fragment = null;
     PrefrenceManager traderPrefs;
     FloatingActionButton fab;
     private ProgressDialog progressDialog;
-    private GoogleApiClient googleApiClient;
 
 
     SearchView mSearchView;
@@ -485,12 +486,18 @@ public class TraderActivity extends AppCompatActivity {
         Intent i = getIntent();
         try {
             if (i != null && i.getStringExtra("type").equals("notification_fragment")) {
+                setUpMainFragment();
                 fragment = new FragmentNotifications();
                 popOutFragments();
                 setUpView("Notifications");
+            } else {
+                setUpMainFragment();
+
             }
         } catch (Exception nm) {
             nm.printStackTrace();
+            setUpMainFragment();
+
         }
         try {
             PayoutCheckerJob.schedulePeriodic();
@@ -533,14 +540,16 @@ public class TraderActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         viewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
 
-
+        showcase(toolbar);
         traderPrefs = new PrefrenceManager(this);
         setUpDrawer(toolbar, traderPrefs.getTraderModel().getMobile(), traderPrefs.getTraderModel().getNames());
 
         fab = findViewById(R.id.fab);
         fab.hide();
 
-        setUpMainFragment();
+        intNoti();
+
+
 
 
         observeSyncDown();
@@ -560,10 +569,12 @@ public class TraderActivity extends AppCompatActivity {
         }
 
 
-        intNoti();
 
     }
 
+    public void showcase(Toolbar toolbar) {
+
+    }
     private void observeSyncDown() {
 
         progressDialog = new ProgressDialog(TraderActivity.this);

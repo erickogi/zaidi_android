@@ -2,16 +2,18 @@ package com.dev.lishabora.Views.Trader.Fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,8 +24,6 @@ import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.MilkModel;
 import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.Models.collectMod;
-import com.dev.lishabora.NumKey.NumberKeyboard;
-import com.dev.lishabora.NumKey.NumberKeyboardListener;
 import com.dev.lishabora.Utils.CollectListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
@@ -40,7 +40,7 @@ import java.util.Date;
 import java.util.Objects;
 
 
-public class CollectMilk implements NumberKeyboardListener {
+public class CollectMilk implements View.OnClickListener {//implements{// NumberKeyboardListener {
     private static final double MAX_ALLOWED_AMOUNT = 9999.99;
     private static final int MAX_ALLOWED_DECIMALS = 1;
     private int EDIT_CLICKED = 0;
@@ -59,7 +59,11 @@ public class CollectMilk implements NumberKeyboardListener {
     private TextView names, balance, day1, day2, day3, day1am, day1pm, day2am, day2pm, day3am, day3pm, today, unitName, unitPrice, unitTotal;
     private TextInputEditText edtTodayAm, edtTodayPm;
 
-    private NumberKeyboard numberKeyboard;
+    private TextView key1, key2, key3, key4, key5, key6, key7, key8, key9, key0, keyDecimal;
+    private LinearLayout keyboard;
+    private ImageView keyDelete;
+
+    // private NumberKeyboard numberKeyboard;
     private Collection previousCollectionnm;
     private String amountText;
     private double amount;
@@ -103,7 +107,7 @@ public class CollectMilk implements NumberKeyboardListener {
                 alertDialogAndroid.dismiss();
             } else {
                 try {
-                    alertDialogAndroid.dismiss();
+                    //  alertDialogAndroid.dismiss();
 
                 } catch (Exception nm) {
                     nm.printStackTrace();
@@ -175,11 +179,33 @@ public class CollectMilk implements NumberKeyboardListener {
 
 
         btnNeutral.setVisibility(View.GONE);
-        numberKeyboard = mView.findViewById(R.id.numberKeyboard);
-        numberKeyboard.setNumberKeyTypeface(Typeface.DEFAULT);
+//        numberKeyboard = mView.findViewById(R.id.numberKeyboard);
+//        numberKeyboard.setNumberKeyTypeface(Typeface.DEFAULT);
+//        numberKeyboard.setKeyPadding(0);
+//        numberKeyboard.setListener(this);
+
+
+        keyboard = mView.findViewById(R.id.keyBoard);
 
         if (withCustomKeyboard) {
-            numberKeyboard.setVisibility(View.VISIBLE);
+
+            keyboard.setVisibility(View.VISIBLE);
+
+            key0 = mView.findViewById(R.id.kkey0);
+            key1 = mView.findViewById(R.id.kkey1);
+            key2 = mView.findViewById(R.id.kkey2);
+            key3 = mView.findViewById(R.id.kkey3);
+            key4 = mView.findViewById(R.id.kkey4);
+            key5 = mView.findViewById(R.id.kkey5);
+            key6 = mView.findViewById(R.id.kkey6);
+            key7 = mView.findViewById(R.id.kkey7);
+            key8 = mView.findViewById(R.id.kkey8);
+            key9 = mView.findViewById(R.id.kkey9);
+            keyDecimal = mView.findViewById(R.id.kkey_decimal);
+            keyDelete = mView.findViewById(R.id.kkey_delete);
+
+            setUpListeners();
+            //  numberKeyboard.setVisibility(View.GONE);
 
             edtTodayAm.setFocusable(false);
             edtTodayAm.setFocusableInTouchMode(false);
@@ -189,7 +215,9 @@ public class CollectMilk implements NumberKeyboardListener {
 
 
         } else {
-            numberKeyboard.setVisibility(View.GONE);
+            keyboard.setVisibility(View.GONE);
+
+            //numberKeyboard.setVisibility(View.GONE);
 
             edtTodayAm.setFocusable(true);
             edtTodayAm.setFocusableInTouchMode(true);
@@ -201,18 +229,33 @@ public class CollectMilk implements NumberKeyboardListener {
         }
         setUpdDays();
 
-        numberKeyboard.setListener(this);
         alertDialogAndroid.show();
         alertDialogAndroid.hide();
 
 
     }
 
-    public void setUpdDays() {
+    private void setUpListeners() {
+        key0.setOnClickListener(this);
+        key1.setOnClickListener(this);
+        key2.setOnClickListener(this);
+        key3.setOnClickListener(this);
+        key4.setOnClickListener(this);
+        key5.setOnClickListener(this);
+        key6.setOnClickListener(this);
+        key7.setOnClickListener(this);
+        key8.setOnClickListener(this);
+        key9.setOnClickListener(this);
+        keyDelete.setOnClickListener(this);
+        keyDecimal.setOnClickListener(this);
+    }
+
+    private void setUpdDays() {
         dateTime = DateTimeUtils.Companion.getTodayDate();
         date = DateTimeUtils.Companion.getDateNow();
 
-        today.setText(DateTimeUtils.Companion.getDayOfWeek(dateTime, "E"));
+        // today.setText(DateTimeUtils.Companion.getDayOfWeek(dateTime, "E"));
+        today.setText("Today");
         day3.setText(DateTimeUtils.Companion.getDayPrevious(1, "E"));
         day2.setText(DateTimeUtils.Companion.getDayPrevious(2, "E"));
         day1.setText(DateTimeUtils.Companion.getDayPrevious(3, "E"));
@@ -228,10 +271,9 @@ public class CollectMilk implements NumberKeyboardListener {
 
         this.activity = activity;
 
-        if (DateTimeUtils.Companion.getTodayDate() != dateTime) {
-            // setUpdDays();
-            // DateTimeUtils.Companion.is
-        }
+        //if (DateTimeUtils.Companion.getTodayDate() != dateTime) {
+        //    CommonFuncs.timeIs(activity);
+        //}
 
         this.listener = listener;
         new Thread(() -> {
@@ -384,11 +426,11 @@ public class CollectMilk implements NumberKeyboardListener {
                         if (collModel != null) {
                             if (collModel.getApproved() == 1) {
                                 MyToast.toast("Current payout has already been approved", context, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
-                                numberKeyboard.setEnabled(false);
-                                numberKeyboard.setVisibility(View.GONE);
+                                keyboard.setEnabled(false);
+                                keyboard.setVisibility(View.GONE);
                             } else {
-                                numberKeyboard.setEnabled(true);
-                                numberKeyboard.setVisibility(View.VISIBLE);
+                                keyboard.setEnabled(true);
+                                keyboard.setVisibility(View.VISIBLE);
                             }
                         }
 
@@ -409,6 +451,7 @@ public class CollectMilk implements NumberKeyboardListener {
         btnPositive.setOnClickListener(view -> {
             String milkAm = "0";
             String milkPm = "0";
+
             if (!TextUtils.isEmpty(edtTodayAm.getText().toString())) {
                 milkAm = edtTodayAm.getText().toString();
 
@@ -427,10 +470,12 @@ public class CollectMilk implements NumberKeyboardListener {
                 if (collModel != null) {
                     if (collModel.getApproved() == 1) {
                         MyToast.toast("Current payout has already been approved", context, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
-                        numberKeyboard.setEnabled(false);
+                        keyboard.setEnabled(false);
 
                     } else {
-                        numberKeyboard.setEnabled(true);
+                        keyboard
+
+                                .setEnabled(true);
                         doCollect(famerModel, unitsModel, milkAm, milkPm);
 
 
@@ -636,21 +681,19 @@ public class CollectMilk implements NumberKeyboardListener {
     }
 
 
-    @Override
+    //  @Override
     public void onNumberClicked(int number) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (amountText.isEmpty() && number == 0) {
-                    return;
-                }
-                updateAmount(amountText + number);
+        Log.d("numkc", "" + number);
+        new Thread(() -> {
+            if (amountText.isEmpty() && number == 0) {
+                return;
             }
+            updateAmount(amountText + number);
         }).start();
 
     }
 
-    @Override
+    //  @Override
     public void onLeftAuxButtonClicked() {
         if (!hasComma(amountText)) {
             amountText = amountText.isEmpty() ? "0." : amountText + ".";
@@ -658,7 +701,7 @@ public class CollectMilk implements NumberKeyboardListener {
         }
     }
 
-    @Override
+    // @Override
     public void onRightAuxButtonClicked() {
         if (amountText.isEmpty()) {
             return;
@@ -908,4 +951,48 @@ public class CollectMilk implements NumberKeyboardListener {
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.kkey0:
+
+                onNumberClicked(0);
+                break;
+            case R.id.kkey1:
+                Log.d("numvlc", "1");
+                onNumberClicked(1);
+                break;
+            case R.id.kkey2:
+                onNumberClicked(2);
+                break;
+            case R.id.kkey3:
+                onNumberClicked(3);
+                break;
+            case R.id.kkey4:
+                onNumberClicked(4);
+                break;
+            case R.id.kkey5:
+                onNumberClicked(5);
+                break;
+            case R.id.kkey6:
+                onNumberClicked(6);
+                break;
+            case R.id.kkey7:
+                onNumberClicked(7);
+                break;
+            case R.id.kkey8:
+                onNumberClicked(8);
+                break;
+            case R.id.kkey9:
+                onNumberClicked(9);
+                break;
+            case R.id.kkey_decimal:
+                onLeftAuxButtonClicked();
+                break;
+            case R.id.kkey_delete:
+                onRightAuxButtonClicked();
+                break;
+        }
+
+    }
 }

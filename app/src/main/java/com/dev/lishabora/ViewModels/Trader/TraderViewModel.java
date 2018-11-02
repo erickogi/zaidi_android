@@ -487,8 +487,6 @@ public class TraderViewModel extends AndroidViewModel
                                 JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
                                 Type listType = new TypeToken<LinkedList<RoutesModel>>() {
                                 }.getType();
-                                // routesModel = ;
-                                Timber.d("routes update called");
                                 routesRepo.insertMultipleRoutes(gson.fromJson(jsonArray, listType));
 
                             }

@@ -410,6 +410,13 @@ public class PayoutsVewModel extends AndroidViewModel {
         return collectionsRepo.getCollectionByPayoutListOne(code);
     }
 
+    public List<Collection> getCollectionByDateByPayoutByFarmerListOne(String payoutcode, String farmerCode) {
+        if (collectionListOne == null) {
+            collectionListOne = new LinkedList<>();
+        }
+        return collectionsRepo.getCollectionByPayoutByFarmerListOne(payoutcode, farmerCode);
+    }
+
     public List<FamerModel> getFarmersByCycleONe(String code) {
         Timber.tag("farmersPayouts").d("Db called ");
 

@@ -1,4 +1,4 @@
-package com.dev.lishabora.Utils.FireBase;
+package com.dev.lishabora.FireBase;
 
 import android.util.Log;
 

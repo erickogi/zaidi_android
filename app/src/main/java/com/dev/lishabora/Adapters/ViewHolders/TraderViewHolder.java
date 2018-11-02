@@ -22,8 +22,8 @@ public class TraderViewHolder extends RecyclerView.ViewHolder implements View.On
     public TraderViewHolder(View itemView, OnclickRecyclerListener onclickRecyclerListener) {
         super(itemView);
         listenerWeakReference = new WeakReference<>(onclickRecyclerListener);
-        itemView.setOnClickListener(this);
-        itemView.setOnLongClickListener(this);
+        //itemView.setOnClickListener(this);
+        //itemView.setOnLongClickListener(this);
         txtDate = itemView.findViewById(R.id.txt_date);
 
         statusview = itemView.findViewById(R.id.status_view);
@@ -33,6 +33,9 @@ public class TraderViewHolder extends RecyclerView.ViewHolder implements View.On
         name = itemView.findViewById(R.id.txt_name);
         phone = itemView.findViewById(R.id.txt_phone);
         balance = itemView.findViewById(R.id.txt_balance);
+
+        itemView.setOnClickListener(this);
+        itemView.setOnLongClickListener(this);
 
     }
 

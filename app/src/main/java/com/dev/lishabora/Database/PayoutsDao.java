@@ -24,7 +24,7 @@ public interface PayoutsDao {
     void insertSinglePayouts(Payouts payout);
 
 
-    @Query("SELECT * FROM PAYOUTS ORDER BY status DESC")
+    @Query("SELECT * FROM PAYOUTS ORDER BY status ASC")
     LiveData<List<Payouts>> fetchAllData();
 
     @Query("SELECT * FROM PAYOUTS WHERE code =:code")

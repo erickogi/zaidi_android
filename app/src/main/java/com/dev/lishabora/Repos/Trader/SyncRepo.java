@@ -6,8 +6,8 @@ import android.os.AsyncTask;
 
 import com.dev.lishabora.Database.LMDatabase;
 import com.dev.lishabora.Database.SyncDao;
+import com.dev.lishabora.Jobs.Evernote.UpSyncJob;
 import com.dev.lishabora.Models.SyncModel;
-import com.dev.lishabora.Utils.Jobs.Evernote.UpSyncJob;
 
 import java.util.List;
 

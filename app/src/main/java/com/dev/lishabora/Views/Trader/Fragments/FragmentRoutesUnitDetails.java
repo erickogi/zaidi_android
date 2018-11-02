@@ -188,7 +188,7 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
 
                 if (unitsModel == null || TextUtils.isEmpty(edtUnitName.getText().toString())) {
                     spinnerUnit.expand();
-                    hideKeyboardFrom(getContext(), view);
+                    hideKeyboardFrom(Objects.requireNonNull(getContext()), view);
                 }
 
             });
@@ -197,11 +197,9 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
         }
         try {
             spinnerRoute.setOnItemSelectedListener((view, position, id, item) -> {
-                //  if (position != 0) {
                 RoutesModel routesModel = routesModels.get(position);
                 edtRouteName.setText(routesModel.getRoute());
                 edtRouteCode.setText(routesModel.getCode());
-                //  }
             });
         } catch (Exception nm) {
             nm.printStackTrace();
@@ -250,7 +248,7 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
             }
 
         });
-        mViewModel.getUnits(prefrenceManager.isUnitListFirstTime()).observe(this, unitsModels -> {
+        mViewModel.getUnits(false).observe(this, unitsModels -> {
             if (unitsModels != null && unitsModels.size() > 0) {
                 prefrenceManager.setIsRoutesListFirst(false);
                 FragmentRoutesUnitDetails.this.unitsModels = unitsModels;

@@ -1,7 +1,6 @@
-package com.dev.lishabora.Utils.Jobs.Evernote;
+package com.dev.lishabora.Jobs.Evernote;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.dev.lishabora.Application;
 import com.evernote.android.job.Job;
@@ -9,18 +8,16 @@ import com.evernote.android.job.JobRequest;
 
 import java.util.concurrent.TimeUnit;
 
-public class UpSyncJob extends Job {
+public class DownSyncJob extends Job {
 
-    static final String TAG = "sync_job_up";
+    static final String TAG = "down_sync_job";
 
     public static void schedulePeriodic() {
-        Log.d("jobadd", "job shedule periodic");
-        new JobRequest.Builder(UpSyncJob.TAG)
+        new JobRequest.Builder(DownSyncJob.TAG)
                 .setPeriodic(TimeUnit.MINUTES.toMillis(15), TimeUnit.MINUTES.toMillis(5))
                 .setUpdateCurrent(true)
                 .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
-                .setRequiresBatteryNotLow(false)
-                //.setRequirementsEnforced(true)
+                .setRequiresBatteryNotLow(true)
 
                 //.startNow()
                 //.setPersisted(true)
@@ -28,14 +25,12 @@ public class UpSyncJob extends Job {
                 .schedule();
     }
 
-    public static void scheduleExact() {
-        new JobRequest.Builder(UpSyncJob.TAG)
+    static void scheduleExact() {
+        new JobRequest.Builder(DownSyncJob.TAG)
                 .setExact(TimeUnit.MINUTES.toMillis(10))
                 //.setPeriodic(TimeUnit.MINUTES.toMillis(15), TimeUnit.MINUTES.toMillis(5))
                 .setUpdateCurrent(true)
-                //.setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
                 .startNow()
-
                 //.setPersisted(true)
                 .build()
                 .schedule();
@@ -45,13 +40,7 @@ public class UpSyncJob extends Job {
     @Override
     protected Result onRunJob(Params params) {
 
-        Application.sync();
-
-
-
-
-
-
+        Application.syncDown();
         return Result.SUCCESS;
     }
 }

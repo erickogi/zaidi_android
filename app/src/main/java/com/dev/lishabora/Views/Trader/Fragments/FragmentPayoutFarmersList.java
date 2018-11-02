@@ -296,18 +296,21 @@ public class FragmentPayoutFarmersList extends Fragment {
     private void loadFarmers() {
 
 
+        try {
+            payoutsVewModel.getFarmersByCycle("" + payouts.getCycleCode()).observe(this, famerModels -> {
+                if (famerModels != null) {
 
-        payoutsVewModel.getFarmersByCycle("" + payouts.getCycleCode()).observe(this, famerModels -> {
-            if (famerModels != null) {
+                    FragmentPayoutFarmersList.this.famerModels = famerModels;
 
-                FragmentPayoutFarmersList.this.famerModels = famerModels;
+                    loadCollectionPayouts();
 
-                loadCollectionPayouts();
+                } else {
 
-            } else {
-
-            }
-        });
+                }
+            });
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
     }
 
     private void loadCollectionPayouts() {

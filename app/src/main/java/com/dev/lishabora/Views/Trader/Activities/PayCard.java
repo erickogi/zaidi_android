@@ -224,7 +224,7 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
     }
     private void approve(Payouts payouts, PayoutFarmersCollectionModel model) {
 
-        CommonFuncs.doAprove(PayCard.this, balncesViewModel, traderViewModel, model, famerModel, payouts, this);
+        CommonFuncs.doAprove(PayCard.this, balncesViewModel, traderViewModel, model, famerModel, payouts, this, getBalance(toolBar.getMilkTotal(), toolBar.getLoanTotal(), toolBar.getOrderTotal()));
 
 
     }
@@ -364,18 +364,6 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
             milkKsh = integer;
             setBalance(milkKsh);
         });
-//        payoutsVewModel.getSumOfLoansForPayout(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
-//            //loan.setText(String.valueOf(integer));
-//            toolBar.updateLoan(String.valueOf(integer));
-//
-//            setBalance(milkKsh);
-//        });
-//        payoutsVewModel.getSumOfOrdersForPayout(model.getFarmercode(), model.getPayoutNumber()).observe(this, integer -> {
-//            //order.setText(String.valueOf(integer));
-//            toolBar.updateOrder(String.valueOf(integer));
-//
-//            setBalance(milkKsh);
-//        });
 
 
         balncesViewModel.getFarmerLoanByFarmer(model.getFarmercode()).observe(this, farmerLoansTables -> {
@@ -385,7 +373,6 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
                 setBalance(milkKsh);
             }
         });
-
         balncesViewModel.getFarmerOrderByFarmer(model.getFarmercode()).observe(this, farmerOrderTables -> {
             if (farmerOrderTables != null) {
 
@@ -397,7 +384,7 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
 
         btnApprove.setOnClickListener(view -> approve(payouts, model));
         btnBack.setOnClickListener(view1 -> cancelApprove(payouts, model));
-        setCardActionStatus(model, PayCard.this, btnApprove, btnBack, txtApprovalStatus);
+        setCardActionStatus(model, PayCard.this, btnApprove, btnBack, txtApprovalStatus, toolBar.getLoanTotal(), toolBar.getOrderTotal());
 
 
 
@@ -750,7 +737,10 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
         farmerBalance.setPayoutStatus(1);
 
         balncesViewModel.updateRecord(farmerBalance);
+        approveFarmerBalance();
+
     }
+
     public void approveCard(PayoutFarmersCollectionModel model) {
         payoutsVewModel.approveFarmersPayoutCard(model.getFarmercode(), model.getPayoutCode());
         model.setCardstatus(1);
@@ -759,6 +749,19 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
 
         approveCollections();
         approvePayoutBalance();
+    }
+
+    private void approveFarmerBalance() {
+        FarmerBalance bal = CommonFuncs.getFarmerBalanceAfterPayoutCardApproval(famerModel, balncesViewModel, traderViewModel);
+
+        famerModel.setTotalbalance(bal.getBalanceToPay());
+        traderViewModel.updateFarmer(famerModel, false, true);
+
+
+        //    FamerModel fm= CommonFuncs. refreshTotalBalances(0, null, null, balncesViewModel, traderViewModel, payouts.getCode(), famerModel);
+        // Double bal=Double.valueOf(getBalance(toolBar.getMilkTotal(),toolBar.getLoanTotal(),toolBar.getOrderTotal()));
+        //  Double after=
+
     }
 
     @Override

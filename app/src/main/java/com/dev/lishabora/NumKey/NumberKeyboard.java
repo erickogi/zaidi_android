@@ -31,7 +31,7 @@ public class NumberKeyboard extends ConstraintLayout {
 
     private static final int DEFAULT_KEY_WIDTH_DP = -1; // match_parent
     private static final int DEFAULT_KEY_HEIGHT_DP = -1; // match_parent
-    private static final int DEFAULT_KEY_PADDING_DP = 1;
+    private static final int DEFAULT_KEY_PADDING_DP = 0;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
