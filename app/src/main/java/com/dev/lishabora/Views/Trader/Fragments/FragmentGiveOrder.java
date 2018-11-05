@@ -517,7 +517,8 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
 
         avi = mView.findViewById(R.id.avi);
 
-        TextInputEditText name, buyPrice, sellingPrice, qty;
+        TextView name, buyPrice;
+        TextInputEditText sellingPrice, qty;
 
         name = mView.findViewById(R.id.edt_product_names);
         buyPrice = mView.findViewById(R.id.edt_product_cost_price);
@@ -532,14 +533,6 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
 
         alertDialogBuilderUserInput
                 .setCancelable(false);
-//                .setPositiveButton("Save", (dialogBox, id) -> {
-//                    // ToDo get user input here
-//
-//
-//                })
-//
-//                .setNegativeButton("Dismiss",
-//                        (dialogBox, id) -> dialogBox.cancel());
 
         AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
         alertDialogAndroid.setCancelable(false);
@@ -547,8 +540,6 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
 
         alertDialogAndroid.show();
 
-//        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
-//        theButton.setOnClickListener(new EditCustomListener(alertDialogAndroid,routesModel));
 
 
         MaterialButton btnPositive, btnNegative, btnNeutral;
@@ -576,8 +567,7 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
         btnPositive.setOnClickListener(new EditCustomListener(alertDialogAndroid, model, pos));
 
         btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
-        btnNeutral.setOnClickListener((View view) ->
-        {
+        btnNeutral.setOnClickListener((View view) -> {
             OrderConstants.getProductOrderModels().remove((pos));
             refreshList();
             alertDialogAndroid.dismiss();

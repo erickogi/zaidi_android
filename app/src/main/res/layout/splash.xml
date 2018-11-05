@@ -2,17 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.dev.lishabora.Views.SplashActivity"
     android:background="@drawable/headermain">
 
     <ImageView
+        android:layout_centerHorizontal="true"
         android:src="@drawable/ic_launcher"
         android:visibility="visible"
         android:id="@+id/image"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/title"

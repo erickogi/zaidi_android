@@ -577,7 +577,8 @@ public class FragmentProductList extends Fragment {
 
         avi = mView.findViewById(R.id.avi);
 
-        TextInputEditText name, buyPrice, sellingPrice;
+        TextView name, buyPrice;
+        TextInputEditText sellingPrice;
 
         name = mView.findViewById(R.id.edt_product_names);
         buyPrice = mView.findViewById(R.id.edt_product_cost_price);

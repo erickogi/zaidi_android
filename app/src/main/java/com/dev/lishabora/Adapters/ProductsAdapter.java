@@ -65,9 +65,13 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsViewHolder> {
             holder.chk.setChecked(false);
         }
         if (isChk) {
+            holder.imgEdit.setVisibility(View.GONE);
+
             holder.chk.setVisibility(View.VISIBLE);
         } else {
             holder.chk.setVisibility(View.GONE);
+            holder.imgEdit.setVisibility(View.VISIBLE);
+
         }
 
         String status = "";

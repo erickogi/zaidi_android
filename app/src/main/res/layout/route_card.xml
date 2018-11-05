@@ -123,7 +123,15 @@
                                 android:textColor="@color/green_color_picker"
                                 android:textStyle="italic|bold" />
 
+
                         </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="@drawable/rounded_border_tv"
+                            android:src="@drawable/ic_edit_24dp" />
 
                         <com.dev.customfonts.MyTextView_Roboto_Bold
                             android:layout_width="0dp"

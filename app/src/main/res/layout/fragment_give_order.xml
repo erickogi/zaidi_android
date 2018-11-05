@@ -38,7 +38,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
-                android:background="@color/divider"
                 android:gravity="start"
                 android:orientation="horizontal"
 
@@ -46,6 +45,7 @@
                 android:paddingBottom="2dp">
 
                 <TextView
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                     android:id="@+id/txt_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -55,6 +55,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:visibility="gone"
                     android:id="@+id/txt_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -193,6 +194,7 @@
 
                 <TextView
 
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                     android:id="@+id/txt_installment"
                     android:layout_width="0dp"
 

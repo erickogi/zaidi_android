@@ -27,6 +27,7 @@ import com.dev.lishabora.Adapters.FarmerCollectionsAdapter;
 import com.dev.lishabora.Adapters.PayoutFarmersAdapter;
 import com.dev.lishabora.AppConstants;
 import com.dev.lishabora.Application;
+import com.dev.lishabora.Models.ApprovalRegisterModel;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.DayCollectionModel;
 import com.dev.lishabora.Models.FamerModel;
@@ -166,19 +167,8 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
         save = findViewById(R.id.save_btn);
         save.setVisibility(View.GONE);
         layoutBottomSheet = findViewById(R.id.bottom_sheet);
-        // save.setOnClickListener(view -> update(liveModel));
 
 
-//        status = findViewById(R.id.txt_status);
-//        id = findViewById(R.id.txt_id);
-//        name = findViewById(R.id.txt_name);
-//        balance = findViewById(R.id.txt_balance);
-//        searchView = findViewById(R.id.search);
-//
-//
-//        milk = findViewById(R.id.txt_milk);
-//        loan = findViewById(R.id.txt_loans);
-//        order = findViewById(R.id.txt_orders);
         PayoutFarmersCollectionModel model = (PayoutFarmersCollectionModel) getIntent().getSerializableExtra("data");
         payouts = (Payouts) getIntent().getSerializableExtra("payout");
         setData(model);
@@ -197,34 +187,6 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
             layoutBottomSheet.setVisibility(View.GONE);
         }
 
-
-
-    }
-
-    private void cancelApprove(Payouts payouts, PayoutFarmersCollectionModel model) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(PayCard.this);
-        alertDialog.setMessage("Confirm that you wish to cancel " + model.getFarmername() + "'s " + payouts.getCyclename() + " Collection card").setCancelable(false).setTitle("Cancel " + model.getFarmername() + " Card");
-
-
-        alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
-
-            payoutsVewModel.cancelFarmersPayoutCard(model.getFarmercode(), model.getPayoutCode());
-            model.setCardstatus(0);
-            model.setStatusName("Canceled");
-            setData(model);
-
-
-            dialogInterface.dismiss();
-
-        }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
-
-        AlertDialog alertDialogAndroid = alertDialog.create();
-        alertDialogAndroid.setCancelable(false);
-        alertDialogAndroid.show();
-    }
-    private void approve(Payouts payouts, PayoutFarmersCollectionModel model) {
-
-        CommonFuncs.doAprove(PayCard.this, balncesViewModel, traderViewModel, model, famerModel, payouts, this, getBalance(toolBar.getMilkTotal(), toolBar.getLoanTotal(), toolBar.getOrderTotal()));
 
 
     }
@@ -328,71 +290,6 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
 
     }
 
-    private void setBalance(Double milkKsh) {
-        toolBar.show(getBalance(String.valueOf(milkKsh), toolBar.getLoanTotal(), toolBar.getOrderTotal()));
-    }
-
-    private void setData(PayoutFarmersCollectionModel model) {
-
-        this.model = model;
-
-        this.payoutfarmermodel = model;
-
-        boolean isApproved = false;
-        boolean isPast = false;
-        if (model.getCardstatus() == 1) {
-            isApproved = true;
-        } else if (model.getCardstatus() == 0) {
-
-            isApproved = false;
-
-        }
-
-        toolBar.show(model.getMilktotal(), model.getLoanTotal(), model.getOrderTotal(), "", famerModel, payouts, isApproved, isPast);
-
-
-        loadCollections("" + model.getPayoutCode(), model.getFarmercode());
-
-
-//
-        payoutsVewModel.getSumOfMilkForPayoutLtrs(model.getFarmercode(), model.getPayoutCode()).observe(this, integer -> {
-            //milk.setText(String.valueOf(integer));
-            toolBar.updateMilk(String.valueOf(integer));
-            setBalance(milkKsh);
-        });
-        payoutsVewModel.getSumOfMilkForPayoutKsh(model.getFarmercode(), model.getPayoutCode()).observe(this, integer -> {
-            milkKsh = integer;
-            setBalance(milkKsh);
-        });
-
-
-        balncesViewModel.getFarmerLoanByFarmer(model.getFarmercode()).observe(this, farmerLoansTables -> {
-            if (farmerLoansTables != null) {
-
-                toolBar.updateLoan(CommonFuncs.getCardLoan(farmerLoansTables));
-                setBalance(milkKsh);
-            }
-        });
-        balncesViewModel.getFarmerOrderByFarmer(model.getFarmercode()).observe(this, farmerOrderTables -> {
-            if (farmerOrderTables != null) {
-
-                toolBar.updateOrder(CommonFuncs.getCardOrder(farmerOrderTables));
-                setBalance(milkKsh);
-            }
-        });
-
-
-        btnApprove.setOnClickListener(view -> approve(payouts, model));
-        btnBack.setOnClickListener(view1 -> cancelApprove(payouts, model));
-        setCardActionStatus(model, PayCard.this, btnApprove, btnBack, txtApprovalStatus, toolBar.getLoanTotal(), toolBar.getOrderTotal());
-
-
-
-
-
-
-
-    }
 
     public void editValue(boolean isEditable, int adapterPosition, int time, int type, String value, Object o, View editable, DayCollectionModel dayCollectionModel) {
 
@@ -616,7 +513,80 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void insertLoanPayment(double toLoanInstallmentPayment) {
+    private void setData(PayoutFarmersCollectionModel model) {
+
+        this.model = model;
+
+        this.payoutfarmermodel = model;
+
+        boolean isApproved = false;
+        boolean isPast = false;
+        if (model.getCardstatus() == 1) {
+            isApproved = true;
+        } else if (model.getCardstatus() == 0) {
+
+            isApproved = false;
+
+        }
+
+        toolBar.show(model.getMilktotal(), model.getLoanTotal(), model.getOrderTotal(), "", famerModel, payouts, isApproved, isPast);
+
+
+        loadCollections("" + model.getPayoutCode(), model.getFarmercode());
+
+
+//
+        payoutsVewModel.getSumOfMilkForPayoutLtrs(model.getFarmercode(), model.getPayoutCode()).observe(this, integer -> {
+            //milk.setText(String.valueOf(integer));
+            toolBar.updateMilk(String.valueOf(integer));
+            setBalance(milkKsh);
+        });
+        payoutsVewModel.getSumOfMilkForPayoutKsh(model.getFarmercode(), model.getPayoutCode()).observe(this, integer -> {
+            milkKsh = integer;
+            setBalance(milkKsh);
+        });
+
+
+        balncesViewModel.getFarmerLoanByFarmer(model.getFarmercode()).observe(this, farmerLoansTables -> {
+            if (farmerLoansTables != null) {
+
+                toolBar.updateLoan(CommonFuncs.getCardLoan(farmerLoansTables));
+                setBalance(milkKsh);
+            }
+        });
+        balncesViewModel.getFarmerOrderByFarmer(model.getFarmercode()).observe(this, farmerOrderTables -> {
+            if (farmerOrderTables != null) {
+
+                toolBar.updateOrder(CommonFuncs.getCardOrder(farmerOrderTables));
+                setBalance(milkKsh);
+            }
+        });
+
+
+        btnApprove.setOnClickListener(view -> approve(payouts, model));
+
+        payoutsVewModel.getByFarmerPayoutCode(famerModel.getCode(), payouts.getCode()).observe(this, new Observer<ApprovalRegisterModel>() {
+            @Override
+            public void onChanged(@Nullable ApprovalRegisterModel approvalRegisterModel) {
+
+                setCardActionStatus(model,
+                        PayCard.this,
+                        btnApprove,
+                        btnBack, txtApprovalStatus,
+                        toolBar.getLoanTotal(),
+                        toolBar.getOrderTotal(), approvalRegisterModel
+                );
+
+                btnBack.setOnClickListener(view1 -> cancelApprove(payouts, model, approvalRegisterModel));
+
+            }
+        });
+
+
+    }
+
+    public String insertLoanPayment(double toLoanInstallmentPayment) {
+        List<LoanPayments> apploanPayments = new LinkedList<>();
         balncesViewModel.getFarmerLoanByFarmerByStatus(famerModel.getCode(), 0).observe(PayCard.this, new Observer<List<FarmerLoansTable>>() {
             @Override
             public void onChanged(@Nullable List<FarmerLoansTable> farmerLoansTables) {
@@ -629,6 +599,8 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
                         FarmerLoansTable farmerLoan = farmerLoansTables.get(a);
                         Double amp = Double.valueOf(farmerLoan.getLoanAmount());
                         Double inst = Double.valueOf(farmerLoan.getInstallmentAmount());
+
+
                         LoanPayments loanPayments = new LoanPayments();
                         loanPayments.setLoanCode(farmerLoan.getCode());
                         loanPayments.setPaymentMethod("Payout");
@@ -647,6 +619,7 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
 
                             remaining = 0.0;
                             balncesViewModel.insertSingleLoanPayment(loanPayments);
+                            apploanPayments.add(loanPayments);
                             break;
                         } else {
 
@@ -658,6 +631,8 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
                             remaining = toLoanInstallmentPayment - inst;
                             balncesViewModel.insertSingleLoanPayment(loanPayments);
 
+                            apploanPayments.add(loanPayments);
+
 
                         }
 
@@ -666,9 +641,16 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
             }
         });
 
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<LoanPayments>>() {
+        }.getType();
+        String json = gson.toJson(apploanPayments, type);
+        return json;
     }
 
-    public void insertOrderPayment(double toOrderInstallmentPayment) {
+    public String insertOrderPayment(double toOrderInstallmentPayment) {
+        List<OrderPayments> appOrderPayments = new LinkedList<>();
+
         balncesViewModel.getFarmerOrderByFarmerByStatus(famerModel.getCode(), 0).observe(PayCard.this, new Observer<List<FarmerOrdersTable>>() {
             @Override
             public void onChanged(@Nullable List<FarmerOrdersTable> farmerOrdersTables) {
@@ -700,6 +682,7 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
 
 
                             remainingOrderInstall = 0.0;
+                            appOrderPayments.add(orderPayments);
                             balncesViewModel.insertSingleOrderPayment(orderPayments);
 
 
@@ -712,6 +695,9 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
                             orderPayments.setAmountPaid("" + valueToPay);
                             orderPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
                             remaining = toOrderInstallmentPayment - inst;
+
+                            appOrderPayments.add(orderPayments);
+
                             balncesViewModel.insertSingleOrderPayment(orderPayments);
 
 
@@ -722,13 +708,101 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
             }
         });
 
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<OrderPayments>>() {
+        }.getType();
+        String json = gson.toJson(appOrderPayments, type);
+        return json;
     }
 
-    public void approveCollections() {
-        for (Collection c : collections) {
-            c.setApproved(1);
-            traderViewModel.updateCollection(c);
+    private void setBalance(Double milkKsh) {
+        toolBar.setMilkTotalKsh(String.valueOf(milkKsh));
+        toolBar.show(getBalance(String.valueOf(milkKsh), toolBar.getLoanTotal(), toolBar.getOrderTotal()));
+    }
+
+    private void cancelCollections(String farmerCode, String payoutCode) {
+        payoutsVewModel.cancelFarmersPayoutCard(farmerCode, payoutCode);
+        model.setCardstatus(0);
+        model.setStatusName("Approval Canceled");
+        setData(model);
+
+
+    }
+
+    private void cancelLoansandOrders(ApprovalRegisterModel approvalRegisterModel) {
+        if (approvalRegisterModel.getLoanPaymentCode() != null) {
+            Gson gson = new Gson();
+            Type type = new TypeToken<List<LoanPayments>>() {
+            }.getType();
+            List<LoanPayments> fromJson = gson.fromJson(approvalRegisterModel.getLoanPaymentCode(), type);
+
+            for (LoanPayments task : fromJson) {
+                LoanPayments p = balncesViewModel.getLoanPaymentByCodeOne(task.getCode());
+                balncesViewModel.deleteRecordLoanPayment(p);
+            }
+
         }
+
+        if (approvalRegisterModel.getOrderPaymentCode() != null) {
+            Gson gson = new Gson();
+            Type type = new TypeToken<List<OrderPayments>>() {
+            }.getType();
+            List<OrderPayments> fromJson = gson.fromJson(approvalRegisterModel.getOrderPaymentCode(), type);
+
+            for (OrderPayments task : fromJson) {
+                OrderPayments p = balncesViewModel.getOrderPaymentByCodeOne(task.getCode());
+                balncesViewModel.deleteRecordOrderPayment(p);
+            }
+
+        }
+
+        payoutsVewModel.deleteRecord(approvalRegisterModel);
+
+    }
+
+    private void cancelBalance(ApprovalRegisterModel approvalRegisterModel) {
+
+        FarmerBalance farmerBalance = balncesViewModel.getByFarmerCodeByPayoutOne(famerModel.getCode(), payouts.getCode());
+        farmerBalance.setPayoutStatus(0);
+        balncesViewModel.updateRecordDirect(farmerBalance);
+
+        refreshFarmerBalance();
+
+
+    }
+
+    private void cancelApprove(Payouts payouts, PayoutFarmersCollectionModel model, ApprovalRegisterModel approvalRegisterModel) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(PayCard.this);
+        alertDialog.setMessage("Confirm that you wish to cancel " + model.getFarmername() + "'s " + payouts.getCyclename() + " Collection card").setCancelable(false).setTitle("Cancel " + model.getFarmername() + " Card");
+
+
+        alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
+
+            cancelCollections(famerModel.getCode(), payouts.getCode());
+            cancelLoansandOrders(approvalRegisterModel);
+            cancelBalance(approvalRegisterModel);
+
+
+            dialogInterface.dismiss();
+
+        }).setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
+
+        AlertDialog alertDialogAndroid = alertDialog.create();
+        alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.show();
+    }
+
+    private void approve(Payouts payouts, PayoutFarmersCollectionModel model) {
+
+
+        model.setMilktotalKsh(toolBar.getMilkTotalKsh());
+        model.setLoanTotal(toolBar.getLoanTotal());
+        model.setOrderTotal(toolBar.getOrderTotal());
+
+
+        CommonFuncs.doAprove(PayCard.this, balncesViewModel, traderViewModel, model, famerModel, payouts, this, getBalance(toolBar.getMilkTotalKsh(), toolBar.getLoanTotal(), toolBar.getOrderTotal()));
+
+
     }
 
     public void approvePayoutBalance() {
@@ -737,61 +811,96 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
         farmerBalance.setPayoutStatus(1);
 
         balncesViewModel.updateRecord(farmerBalance);
-        approveFarmerBalance();
+        refreshFarmerBalance();
 
     }
 
-    public void approveCard(PayoutFarmersCollectionModel model) {
+
+    public void approveCollections() {
+        for (Collection c : collections) {
+            c.setApproved(1);
+            traderViewModel.updateCollection(c);
+        }
+    }
+
+    public void approveCard(PayoutFarmersCollectionModel model, String loanpayments, String orderPayments) {
         payoutsVewModel.approveFarmersPayoutCard(model.getFarmercode(), model.getPayoutCode());
+
+        approveCollections();
+        approvePayoutBalance();
+
+        ApprovalRegisterModel app = new ApprovalRegisterModel();
+        app.setApprovedOn(DateTimeUtils.Companion.getNow());
+        app.setFarmerCode(famerModel.getCode());
+        app.setPayoutCode(payouts.getCode());
+
+
+        if (loanpayments != null && orderPayments != null) {
+            app.setLoanPaymentCode(loanpayments);
+            app.setOrderPaymentCode(orderPayments);
+        } else if (loanpayments == null && orderPayments != null) {
+            app.setOrderPaymentCode(orderPayments);
+            app.setLoanPaymentCode(null);
+        } else if (orderPayments == null && loanpayments != null) {
+            app.setLoanPaymentCode(loanpayments);
+            app.setOrderPaymentCode(null);
+        } else {
+            app.setOrderPaymentCode(null);
+            app.setLoanPaymentCode(null);
+        }
+
+        payoutsVewModel.insertDirect(app);
+
         model.setCardstatus(1);
         model.setStatusName("Approved");
         setData(model);
 
-        approveCollections();
-        approvePayoutBalance();
     }
 
-    private void approveFarmerBalance() {
+    private void refreshFarmerBalance() {
         FarmerBalance bal = CommonFuncs.getFarmerBalanceAfterPayoutCardApproval(famerModel, balncesViewModel, traderViewModel);
 
         famerModel.setTotalbalance(bal.getBalanceToPay());
         traderViewModel.updateFarmer(famerModel, false, true);
 
 
-        //    FamerModel fm= CommonFuncs. refreshTotalBalances(0, null, null, balncesViewModel, traderViewModel, payouts.getCode(), famerModel);
-        // Double bal=Double.valueOf(getBalance(toolBar.getMilkTotal(),toolBar.getLoanTotal(),toolBar.getOrderTotal()));
-        //  Double after=
 
     }
 
     @Override
-    public void onApprove(PayoutFarmersCollectionModel model, Double totalKshToPay, Double toLoanInstallmentPayment, Double toOrderInstallmentPayment) {
-        insertLoanPayment(toLoanInstallmentPayment);
-        insertOrderPayment(toOrderInstallmentPayment);
-        approveCard(model);
+    public void onApprove(double farmerBalance, PayoutFarmersCollectionModel model, Double totalKshToPay, Double toLoanInstallmentPayment, Double toOrderInstallmentPayment) {
+        String loanPaymnets = insertLoanPayment(toLoanInstallmentPayment);
+        String orderPayments = insertOrderPayment(toOrderInstallmentPayment);
+
+
+        approveCard(model, loanPaymnets, orderPayments);
 
     }
 
     @Override
-    public void onApprovePayLoan(PayoutFarmersCollectionModel model, Double totalKshToPay, Double toLoanInstallmentPayment) {
-        insertLoanPayment(toLoanInstallmentPayment);
-        approveCard(model);
+    public void onApprovePayLoan(double farmerBalance, PayoutFarmersCollectionModel model, Double totalKshToPay, Double toLoanInstallmentPayment) {
+        String loanPaymnets = insertLoanPayment(toLoanInstallmentPayment);
+        approveCard(model, loanPaymnets, null);
     }
 
     @Override
-    public void onApprovePayOrder(PayoutFarmersCollectionModel model, Double totalKshToPay, Double toOrderInstallmentPayment) {
-        insertOrderPayment(toOrderInstallmentPayment);
-        approveCard(model);
+    public void onApprovePayOrder(double farmerBalance, PayoutFarmersCollectionModel model, Double totalKshToPay, Double toOrderInstallmentPayment) {
+        String orderPayments = insertOrderPayment(toOrderInstallmentPayment);
+        approveCard(model, null, orderPayments);
     }
 
     @Override
-    public void onApprove(PayoutFarmersCollectionModel model, Double totalKshToPay) {
-        approveCard(model);
+    public void onApprove(double farmerBalance, PayoutFarmersCollectionModel model, Double totalKshToPay) {
+        approveCard(model, null, null);
     }
 
     @Override
-    public void onApprove(PayoutFarmersCollectionModel model) {
-        approveCard(model);
+    public void onApprove(double farmerBalance, PayoutFarmersCollectionModel model) {
+        approveCard(model, null, null);
+    }
+
+    public class loanPaymentsDone {
+
     }
 
     @Override

@@ -180,6 +180,93 @@ public class TraderRoutesInfoFragment extends Fragment implements BlockingStep {
         btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
 
     }
+//    private void editRoute(RoutesModel routesModel, int pos) {
+//        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
+//        View mView = layoutInflaterAndroid.inflate(R.layout.dialog_add_route, null);
+//        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+//        alertDialogBuilderUserInput.setView(mView);
+////        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
+////        alertDialogBuilderUserInput.setTitle("Route");
+//
+//
+//        avi = mView.findViewById(R.id.avi);
+//
+//        TextInputEditText name;
+//        CheckBox chkDummy;
+//
+//        name = mView.findViewById(R.id.edt_rout_names);
+//        chkDummy = mView.findViewById(R.id.chk_dummy);
+//        chkDummy.setVisibility(View.GONE);
+//
+//        name.setText(routesModel.getRoute());
+//        try {
+//            name.setSelection(routesModel.getRoute().length());
+//        } catch (Exception nm) {
+//            nm.printStackTrace();
+//        }
+//
+//
+//        alertDialogBuilderUserInput
+//                .setCancelable(false);
+////                .setPositiveButton("Save", (dialogBox, id) -> {
+////                    // ToDo get user input here
+////
+////
+////                })
+////
+////                .setNegativeButton("Dismiss",
+////                        (dialogBox, id) -> dialogBox.cancel());
+//
+//        AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
+//        alertDialogAndroid.setCancelable(false);
+//        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//
+//        alertDialogAndroid.show();
+//
+////        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
+////        theButton.setOnClickListener(new EditCustomListener(alertDialogAndroid,routesModel));
+//
+//
+//        MaterialButton btnPositive, btnNegative, btnNeutral;
+//        TextView txtTitle;
+//        LinearLayout lTitle;
+//        ImageView imgIcon;
+//        btnPositive = mView.findViewById(R.id.btn_positive);
+//        btnNegative = mView.findViewById(R.id.btn_negative);
+//        btnNeutral = mView.findViewById(R.id.btn_neutral);
+//        txtTitle = mView.findViewById(R.id.txt_title);
+//        lTitle = mView.findViewById(R.id.linear_title);
+//        imgIcon = mView.findViewById(R.id.img_icon);
+//
+//
+//        btnNeutral.setVisibility(View.VISIBLE);
+//        btnNeutral.setText("Delete");
+//        btnNeutral.setBackgroundColor(getContext().getResources().getColor(R.color.red));
+//        lTitle.setVisibility(View.GONE);
+//        txtTitle.setVisibility(View.VISIBLE);
+//        imgIcon.setVisibility(View.VISIBLE);
+//        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
+//        txtTitle.setText("Route");
+//
+//        btnPositive.setOnClickListener(new FragmentRoutes.EditCustomListener(alertDialogAndroid, routesModel));
+//        btnNeutral.setOnClickListener(view -> {
+//
+//            FarmerRepo f = new FarmerRepo(Application.context);
+//            int count = f.getNoOfRows(routesModel.getCode());
+//            if (routesModel.getFarmers() < 1 && count < 1) {
+//                mViewModel.deleteRoute(routesModel, null, false).observe(FragmentRoutes.this, responseModel -> {
+//                    avi.smoothToHide();
+//                    MyToast.toast(responseModel.getResultDescription(), getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+//                    alertDialogAndroid.dismiss();
+//                });
+//            } else {
+//                MyToast.toast("Route has farmers,\n CANNOT BE DELETED", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+//            }
+//        });
+//        btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
+//
+//
+//    }
 
     public void initList() {
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -197,6 +284,8 @@ public class TraderRoutesInfoFragment extends Fragment implements BlockingStep {
             @Override
             public void onClickListener(int position) {
 
+                editRoute(filteredRoutesModels.get(position), position);
+                // popupMenu(adapterPosition, view, filteredRoutesModels.get(adapterPosition));
 
             }
 

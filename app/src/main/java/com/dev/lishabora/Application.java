@@ -287,6 +287,7 @@ public class Application extends MultiDexApplication {
             mBuilder.setContentTitle(context.getString(R.string.app_name))
                     .setContentText("Syncing your back your data")
                     .setAutoCancel(false)
+
                     .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
             //.setContentIntent(resultPendingIntent);
 
@@ -304,7 +305,7 @@ public class Application extends MultiDexApplication {
                 _completeNotificationManager.createNotificationChannel(notificationChannel);
             }
             assert _completeNotificationManager != null;
-            _completeNotificationManager.notify(0 /* Request Code */, mBuilder.build());
+            _completeNotificationManager.notify(6 /* Request Code */, mBuilder.build());
 
         } catch (Exception nm) {
             nm.printStackTrace();

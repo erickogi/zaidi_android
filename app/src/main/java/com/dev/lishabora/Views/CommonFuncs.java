@@ -34,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dev.lishabora.AppConstants;
+import com.dev.lishabora.Models.ApprovalRegisterModel;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.DayCollectionModel;
 import com.dev.lishabora.Models.DaysDates;
@@ -428,7 +429,6 @@ public class CommonFuncs {
 
     @NonNull
     public static String getBalance(String milkTotal, String loanTotal, String orderTotal) {
-        Log.d("getBalance", " MIlk " + milkTotal + " LOan " + loanTotal + "   Order " + orderTotal);
         double balance = 0.0;
         try {
             balance = Double.valueOf(milkTotal);
@@ -1444,7 +1444,11 @@ public class CommonFuncs {
 
     public static void setCardActionStatus(PayoutFarmersCollectionModel model, Context context,
                                            MaterialButton btnApprove, MaterialButton btnBack,
-                                           TextView txtApprovalStatus, String loanTotal, String orderTotal) {
+                                           TextView txtApprovalStatus, String loanTotal, String orderTotal,
+                                           ApprovalRegisterModel approvalRegisterModel
+
+
+    ) {
         if (model.getCardstatus() == 0 // Card not approved
                 && (DateTimeUtils.Companion.getToday().equals(model.getPayoutEnd())  //TODAY IS  THIS PAYOUT END DATE
                 || DateTimeUtils.Companion.isPastLastDay(model.getPayoutEnd())   // TODAY IS PAST THIS PAYOUT END DATE
@@ -1475,7 +1479,7 @@ public class CommonFuncs {
                     /*******but farmer has a loan or order that was adjusted on card approval and we dont have the logic to re-adjust back to initial value on cancel of approval so i just wont allow cancelling an approved farmer card for now******/
 
                     btnApprove.setVisibility(View.GONE);
-                    btnBack.setVisibility(View.GONE);
+                    btnBack.setVisibility(View.VISIBLE);
                     btnBack.setText("Cancel Approval");
                     txtApprovalStatus.setVisibility(View.VISIBLE);
                 } else {
@@ -2549,46 +2553,48 @@ public class CommonFuncs {
                                 FamerModel c, Payouts p,
                                 ApproveFarmerPayCardListener listener, String balance) {
 
-        double loanTotalAmount = 0.0;
-        double loanInstalmentAmount = 0.0;
-        double loanPaid = 0.0;
+//        double loanTotalAmount = 0.0;
+//        double loanInstalmentAmount = 0.0;
+//        double loanPaid = 0.0;
+//
+//        double orderTotalAmount = 0.0;
+//        double orderInstalmentAmount = 0.0;
+//        double orderPaid = 0.0;
+//
+//
+//        List<FarmerLoansTable> loansTables = balncesViewModel.getFarmerLoanByPayoutNumberByFarmerByStatus(c.getCode(), 0);
+//        List<FarmerOrdersTable> ordersTables = balncesViewModel.getFarmerOrderByPayoutNumberByFarmerByStatus(c.getCode(), 0);
+//
+//        for (FarmerLoansTable fl : loansTables) {
+//            try {
+//                loanTotalAmount = +(Double.valueOf(fl.getLoanAmount()));
+//                loanInstalmentAmount = +(Double.valueOf(fl.getInstallmentAmount()));
+//                loanPaid = +balncesViewModel.getSumPaidLoanPayment(fl.getCode());
+//            } catch (Exception nm) {
+//                nm.printStackTrace();
+//            }
+//        }
+//
+//        for (FarmerOrdersTable fo : ordersTables) {
+//            try {
+//                orderTotalAmount = +(Double.valueOf(fo.getOrderAmount()));
+//                orderInstalmentAmount = +(Double.valueOf(fo.getInstallmentAmount()));
+//                orderPaid = +balncesViewModel.getSumPaidOrderPayment(fo.getCode());
+//            } catch (Exception nm) {
+//                nm.printStackTrace();
+//            }
+//        }
+//
+//
+//        double totalMilkForCurrentPayout = 0.0;
+//        if (traderViewModel.getSumOfMilkForPayoutKshD(c.getCode(), p.getCode()) != null) {
+//            totalMilkForCurrentPayout += traderViewModel.getSumOfMilkForPayoutKshD(c.getCode(), p.getCode());
+//        }
 
-        double orderTotalAmount = 0.0;
-        double orderInstalmentAmount = 0.0;
-        double orderPaid = 0.0;
 
-
-        List<FarmerLoansTable> loansTables = balncesViewModel.getFarmerLoanByPayoutNumberByFarmerByStatus(c.getCode(), 0);
-        List<FarmerOrdersTable> ordersTables = balncesViewModel.getFarmerOrderByPayoutNumberByFarmerByStatus(c.getCode(), 0);
-
-        for (FarmerLoansTable fl : loansTables) {
-            try {
-                loanTotalAmount = +(Double.valueOf(fl.getLoanAmount()));
-                loanInstalmentAmount = +(Double.valueOf(fl.getInstallmentAmount()));
-                loanPaid = +balncesViewModel.getSumPaidLoanPayment(fl.getCode());
-            } catch (Exception nm) {
-                nm.printStackTrace();
-            }
-        }
-
-        for (FarmerOrdersTable fo : ordersTables) {
-            try {
-                orderTotalAmount = +(Double.valueOf(fo.getOrderAmount()));
-                orderInstalmentAmount = +(Double.valueOf(fo.getInstallmentAmount()));
-                orderPaid = +balncesViewModel.getSumPaidOrderPayment(fo.getCode());
-            } catch (Exception nm) {
-                nm.printStackTrace();
-            }
-        }
-
-
-        double totalMilkForCurrentPayout = 0.0;
-        if (traderViewModel.getSumOfMilkForPayoutKshD(c.getCode(), p.getCode()) != null) {
-            totalMilkForCurrentPayout += traderViewModel.getSumOfMilkForPayoutKshD(c.getCode(), p.getCode());
-        }
-
-
-        doPayout(context, model, "" + totalMilkForCurrentPayout, "" + (loanTotalAmount - loanPaid), "" + (orderTotalAmount - orderPaid), "" + loanInstalmentAmount, "" + orderInstalmentAmount, listener);
+        doPayout(context, model,
+                //"" + totalMilkForCurrentPayout, "" + (loanTotalAmount - loanPaid), "" + (orderTotalAmount - orderPaid), "" + loanInstalmentAmount, "" + orderInstalmentAmount,
+                listener, balance);
     }
 
     public static void setInputLimiter(TextInputEditText edt, double limit) {
@@ -2596,34 +2602,35 @@ public class CommonFuncs {
         edt.setFilters(new InputFilter[]{new InputFilterMinMax(0, (int) limit)});
     }
 
-    private static void doPayout(Context context, PayoutFarmersCollectionModel model, String milkCollection, String loanTotal, String orderTotal,
-                                 String loanInstallments, String orderInstallments, ApproveFarmerPayCardListener listener) {
+    private static void doPayout(Context context, PayoutFarmersCollectionModel model,
+                                 //  String milkCollection, String loanTotal, String orderTotal, String loanInstallments, String orderInstallments,
+                                 ApproveFarmerPayCardListener listener, String balance) {
 
         try {
-            milkCollectionD = Double.valueOf(milkCollection);
+            milkCollectionD = Double.valueOf(model.getMilktotalKsh());
         } catch (Exception nm) {
             nm.printStackTrace();
         }
         try {
-            loanTotalD = Double.valueOf(loanTotal);
+            loanTotalD = Double.valueOf(model.getLoanTotal());
         } catch (Exception nm) {
             nm.printStackTrace();
         }
         try {
-            orderTotalD = Double.valueOf(orderTotal);
+            orderTotalD = Double.valueOf(model.getOrderTotal());
         } catch (Exception nm) {
             nm.printStackTrace();
         }
-        try {
-            orderInstallmentsD = Double.valueOf(orderInstallments);
-        } catch (Exception nm) {
-            nm.printStackTrace();
-        }
-        try {
-            loanInstallmentsd = Double.valueOf(loanInstallments);
-        } catch (Exception nm) {
-            nm.printStackTrace();
-        }
+//        try {
+//            orderInstallmentsD = Double.valueOf(orderInstallments);
+//        } catch (Exception nm) {
+//            nm.printStackTrace();
+//        }
+//        try {
+//            loanInstallmentsd = Double.valueOf(loanInstallments);
+//        } catch (Exception nm) {
+//            nm.printStackTrace();
+//        }
 
 
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
@@ -2638,138 +2645,166 @@ public class CommonFuncs {
         txtMilkCollections = mView.findViewById(R.id.txt_approve_milk);
         txtTotalLoans = mView.findViewById(R.id.txt_approve_loans);
         txtTotalOrders = mView.findViewById(R.id.txt_approve_orders);
-        txtPayout = mView.findViewById(R.id.txt_approve_payout);
 
+        txtTotalLoans.setVisibility(View.GONE);
+        txtTotalOrders.setVisibility(View.GONE);
+
+
+        txtPayout = mView.findViewById(R.id.txt_approve_payout);
         edtLoanInstallment = mView.findViewById(R.id.edt_approve_loan_installment);
         edtOrderInstallment = mView.findViewById(R.id.edt_approve_order_installments);
 
+        edtLoanInstallment.setText("0");
+        edtOrderInstallment.setText("0");
+        txtPayout.setText("0");
 
-        txtMilkCollections.setText(GeneralUtills.Companion.round(milkCollection, 0));
-        txtTotalLoans.setText(GeneralUtills.Companion.round(loanTotal, 0));
-        txtTotalOrders.setText(GeneralUtills.Companion.round(orderTotal, 0));
+        edtLoanInstallment.setVisibility(View.GONE);
+        edtOrderInstallment.setVisibility(View.GONE);
+
+
+        txtMilkCollections.setText(GeneralUtills.Companion.round(model.getMilktotalKsh(), 0));
+        txtTotalLoans.setText(GeneralUtills.Companion.round(model.getLoanTotal(), 0));
+        txtTotalOrders.setText(GeneralUtills.Companion.round(model.getOrderTotal(), 0));
 
         // edtLoanInstallment.setFilters(new InputFilter[]{new InputFilterMinMax("0","100")});
 
-        edtLoanInstallment.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//        edtLoanInstallment.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//                double installmentValue = 0.0;
+//
+//                if (editable != null) {
+//
+//                    edtLoanInstallment.getText().toString();
+//                    if (!TextUtils.isEmpty(edtLoanInstallment.getText().toString())) {
+//                        try {
+//                            double value = Double.valueOf(edtLoanInstallment.getText().toString());
+//                            loanInstallmentsd = value;
+//
+//                        } catch (Exception nm) {
+//                            nm.printStackTrace();
+//                        }
+//
+//                    } else {
+//                        loanInstallmentsd = 0.0;
+//                    }
+//                } else {
+//                    loanInstallmentsd = 0.0;
+//                }
+//
+//
+//                if (isLoanEditable) {
+//                    totalToPay = (milkCollectionD - (loanInstallmentsd + orderInstallmentsD));
+//                    setInputLimiter(edtLoanInstallment, totalToPay);
+//                } else {
+//                    totalToPay = (milkCollectionD - (orderInstallmentsD));
+//
+//                }
+//                if (totalToPay > 0) {
+//                    txtPayout.setText(GeneralUtills.Companion.round(String.valueOf(totalToPay), 0));
+//                } else {
+//                    txtPayout.setText("0");
+//
+//                }
+//
+//
+//            }
+//        });
+//        edtOrderInstallment.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//                double installmentValue = 0.0;
+//
+//                if (editable != null) {
+//
+//                    edtOrderInstallment.getText().toString();
+//                    if (!TextUtils.isEmpty(edtOrderInstallment.getText().toString())) {
+//
+//                        try {
+//                            double value = Double.valueOf(edtOrderInstallment.getText().toString());
+//                            orderInstallmentsD = value;
+//
+//                        } catch (Exception nm) {
+//                            nm.printStackTrace();
+//                        }
+//
+//                    } else {
+//                        orderInstallmentsD = 0.0;
+//                    }
+//                } else {
+//                    orderInstallmentsD = 0.0;
+//                }
+//
+//
+//                if (isLoanEditable) {
+//                    totalToPay = (milkCollectionD - (loanInstallmentsd + orderInstallmentsD));
+//                    setInputLimiter(edtLoanInstallment, totalToPay);
+//                } else {
+//                    totalToPay = (milkCollectionD - (orderInstallmentsD));
+//
+//                }
+//                if (totalToPay > 0) {
+//                    txtPayout.setText(GeneralUtills.Companion.round(String.valueOf(totalToPay), 0));
+//                } else {
+//                    txtPayout.setText("0");
+//
+//                }
+//            }
+//        });
 
-            }
+        edtLoanInstallment.setEnabled(false);
+        edtOrderInstallment.setEnabled(false);
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                double installmentValue = 0.0;
-
-                if (editable != null) {
-
-                    edtLoanInstallment.getText().toString();
-                    if (!TextUtils.isEmpty(edtLoanInstallment.getText().toString())) {
-                        try {
-                            double value = Double.valueOf(edtLoanInstallment.getText().toString());
-                            loanInstallmentsd = value;
-
-                        } catch (Exception nm) {
-                            nm.printStackTrace();
-                        }
-
-                    } else {
-                        loanInstallmentsd = 0.0;
-                    }
-                } else {
-                    loanInstallmentsd = 0.0;
-                }
-
-
-                if (isLoanEditable) {
-                    totalToPay = (milkCollectionD - (loanInstallmentsd + orderInstallmentsD));
-                    setInputLimiter(edtLoanInstallment, totalToPay);
-                } else {
-                    totalToPay = (milkCollectionD - (orderInstallmentsD));
-
-                }
-                if (totalToPay > 0) {
-                    txtPayout.setText(GeneralUtills.Companion.round(String.valueOf(totalToPay), 0));
-                } else {
-                    txtPayout.setText("0");
-
-                }
-
-
-            }
-        });
-        edtOrderInstallment.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                double installmentValue = 0.0;
-
-                if (editable != null) {
-
-                    edtOrderInstallment.getText().toString();
-                    if (!TextUtils.isEmpty(edtOrderInstallment.getText().toString())) {
-
-                        try {
-                            double value = Double.valueOf(edtOrderInstallment.getText().toString());
-                            orderInstallmentsD = value;
-
-                        } catch (Exception nm) {
-                            nm.printStackTrace();
-                        }
-
-                    } else {
-                        orderInstallmentsD = 0.0;
-                    }
-                } else {
-                    orderInstallmentsD = 0.0;
-                }
-
-
-                if (isLoanEditable) {
-                    totalToPay = (milkCollectionD - (loanInstallmentsd + orderInstallmentsD));
-                    setInputLimiter(edtLoanInstallment, totalToPay);
-                } else {
-                    totalToPay = (milkCollectionD - (orderInstallmentsD));
-
-                }
-                if (totalToPay > 0) {
-                    txtPayout.setText(GeneralUtills.Companion.round(String.valueOf(totalToPay), 0));
-                } else {
-                    txtPayout.setText("0");
-
-                }
-            }
-        });
 
 
         double maxplayBalnce = milkCollectionD;
 
 
-        edtLoanInstallment.setText(GeneralUtills.Companion.round(loanInstallments, 0));
+        edtLoanInstallment.setText(GeneralUtills.Companion.round(model.getLoanTotal(), 0));
 
-        edtOrderInstallment.setText(GeneralUtills.Companion.round(orderInstallments, 0));
-
-
-        if (milkCollectionD > (loanInstallmentsd + orderInstallmentsD)) {
+        edtOrderInstallment.setText(GeneralUtills.Companion.round(model.getOrderTotal(), 0));
 
 
-            edtLoanInstallment.setText(GeneralUtills.Companion.roundD(loanInstallmentsd, 0));
-            edtOrderInstallment.setText(GeneralUtills.Companion.roundD(orderInstallmentsD, 0));
-            edtLoanInstallment.setVisibility(View.VISIBLE);
-            edtOrderInstallment.setVisibility(View.VISIBLE);
+        if (milkCollectionD >= (loanTotalD + orderTotalD)) {
+
+            if (loanTotalD > 0) {
+                edtLoanInstallment.setText(GeneralUtills.Companion.roundD(loanTotalD, 0));
+                edtLoanInstallment.setVisibility(View.VISIBLE);
+
+            } else {
+                edtLoanInstallment.setVisibility(View.GONE);
+
+            }
+            if (orderTotalD > 0) {
+                edtOrderInstallment.setText(GeneralUtills.Companion.roundD(orderTotalD, 0));
+                edtOrderInstallment.setVisibility(View.VISIBLE);
+            } else {
+                edtOrderInstallment.setVisibility(View.GONE);
+
+            }
+
+            txtPayout.setText(GeneralUtills.Companion.roundD(milkCollectionD - (loanTotalD + orderTotalD), 0));
+
 
 
             isLoanEditable = true;
@@ -2780,54 +2815,100 @@ public class CommonFuncs {
             setInputLimiter(edtOrderInstallment, maxplayBalnce);
 
 
-        } else if (milkCollectionD > orderInstallmentsD && milkCollectionD < (loanInstallmentsd + orderInstallmentsD)) {
-            edtOrderInstallment.setText(GeneralUtills.Companion.roundD(orderInstallmentsD, 0));
-            edtLoanInstallment.setVisibility(View.GONE);
-            edtOrderInstallment.setVisibility(View.VISIBLE);
-
-            isLoanEditable = false;
-            isOrderEditable = true;
-
-            setInputLimiter(edtOrderInstallment, maxplayBalnce);
-
-
-        } else if (milkCollectionD > 0) {
-            edtOrderInstallment.setText(GeneralUtills.Companion.roundD(milkCollectionD, 0));
-            edtLoanInstallment.setVisibility(View.GONE);
-            edtOrderInstallment.setVisibility(View.VISIBLE);
-
-            isLoanEditable = false;
-            isOrderEditable = true;
-
-
-            setInputLimiter(edtOrderInstallment, milkCollectionD);
-
-
         } else {
-            isLoanEditable = false;
-            isOrderEditable = false;
+            if (orderTotalD > 0) {
+                if (loanTotalD > 0) {
+                    if (milkCollectionD > orderTotalD) {
+                        edtOrderInstallment.setText(GeneralUtills.Companion.roundD(orderTotalD, 0));
+                        edtOrderInstallment.setVisibility(View.VISIBLE);
 
-            edtLoanInstallment.setVisibility(View.GONE);
-            edtOrderInstallment.setVisibility(View.GONE);
+                        edtLoanInstallment.setText(GeneralUtills.Companion.roundD(milkCollectionD - orderTotalD, 0));
+                        edtLoanInstallment.setVisibility(View.VISIBLE);
+
+                        txtPayout.setText(GeneralUtills.Companion.roundD(0.0, 0));
+
+                        orderInstallmentsD = orderTotalD;
+                        loanInstallmentsd = milkCollectionD - orderTotalD;
+                        totalToPay = 0.0;
+
+
+                    } else {
+                        edtOrderInstallment.setText(GeneralUtills.Companion.roundD(milkCollectionD - orderTotalD, 0));
+                        edtOrderInstallment.setVisibility(View.VISIBLE);
+                        txtPayout.setText(GeneralUtills.Companion.roundD(0.0, 0));
+
+
+                        orderInstallmentsD = milkCollectionD - orderTotalD;
+                        loanInstallmentsd = 0.0;
+                        totalToPay = 0.0;
+                    }
+
+                } else {
+                    if (milkCollectionD > orderTotalD) {
+                        edtOrderInstallment.setText(GeneralUtills.Companion.roundD(orderTotalD, 0));
+                        edtOrderInstallment.setVisibility(View.VISIBLE);
+
+
+                        txtPayout.setText(GeneralUtills.Companion.roundD(milkCollectionD - orderTotalD, 0));
+
+                        orderInstallmentsD = orderTotalD;
+                        loanInstallmentsd = 0.0;
+                        totalToPay = milkCollectionD - orderTotalD;
+
+                    } else {
+                        edtOrderInstallment.setText(GeneralUtills.Companion.roundD(milkCollectionD - orderTotalD, 0));
+                        edtOrderInstallment.setVisibility(View.VISIBLE);
+                        txtPayout.setText(GeneralUtills.Companion.roundD(0.0, 0));
+
+                        orderInstallmentsD = milkCollectionD - orderTotalD;
+                        loanInstallmentsd = 0.0;
+                        totalToPay = 0.0;
+
+                    }
+                }
+
+
+            } else {
+
+                if (loanTotalD > 0) {
+                    if (milkCollectionD > loanTotalD) {
+
+                        edtLoanInstallment.setText(GeneralUtills.Companion.roundD(loanTotalD, 0));
+                        edtLoanInstallment.setVisibility(View.VISIBLE);
+
+                        txtPayout.setText(GeneralUtills.Companion.roundD(milkCollectionD - loanTotalD, 0));
+
+
+                        orderInstallmentsD = loanTotalD;
+                        loanInstallmentsd = 0.0;
+                        totalToPay = milkCollectionD - loanTotalD;
+
+                    } else {
+                        edtLoanInstallment.setText(GeneralUtills.Companion.roundD(milkCollectionD, 0));
+                        edtLoanInstallment.setVisibility(View.VISIBLE);
+                        txtPayout.setText(GeneralUtills.Companion.roundD(0.0, 0));
+
+
+                        orderInstallmentsD = milkCollectionD;
+                        loanInstallmentsd = 0.0;
+                        totalToPay = 0.0;
+
+                    }
+
+                } else {
+
+                    txtPayout.setText(GeneralUtills.Companion.roundD(milkCollectionD, 0));
+
+                    orderInstallmentsD = 0.0;
+                    loanInstallmentsd = 0.0;
+                    totalToPay = milkCollectionD;
+
+                }
+            }
+
+
         }
 
-
-        if (orderInstallmentsD < 1) {
-            edtOrderInstallment.setVisibility(View.GONE);
-        }
-        if (loanInstallmentsd < 1) {
-            edtLoanInstallment.setVisibility(View.GONE);
-        }
-
-        totalToPay = (milkCollectionD - (loanInstallmentsd + orderInstallmentsD));
-
-
-        if (totalToPay > 0) {
-            txtPayout.setText(GeneralUtills.Companion.round(String.valueOf(totalToPay), 0));
-        } else {
-            txtPayout.setText("0");
-
-        }
 
         try {
             edtLoanInstallment.setSelection(Objects.requireNonNull(edtLoanInstallment.getText()).toString().length());
@@ -2868,22 +2949,22 @@ public class CommonFuncs {
 
 
             if (totalToPay > 0 && loanInstallmentsd > 0 && orderInstallmentsD > 0) {
-                listener.onApprove(model, totalToPay, loanInstallmentsd, orderInstallmentsD);
+                listener.onApprove(0.0, model, totalToPay, loanInstallmentsd, orderInstallmentsD);
                 alertDialogAndroid.dismiss();
-            } else if (totalToPay > 1 && loanInstallmentsd > 1 && orderInstallmentsD < 1) {
-                listener.onApprovePayLoan(model, totalToPay, loanInstallmentsd);
-                alertDialogAndroid.dismiss();
-
-            } else if (totalToPay > 1 && loanInstallmentsd < 1 && orderInstallmentsD > 1) {
-                listener.onApprovePayOrder(model, totalToPay, orderInstallmentsD);
+            } else if (totalToPay > 0 && loanInstallmentsd > 0 && orderInstallmentsD < 1) {
+                listener.onApprovePayLoan(0.0, model, totalToPay, loanInstallmentsd);
                 alertDialogAndroid.dismiss();
 
-            } else if (totalToPay > 1 && loanInstallmentsd < 1 && orderInstallmentsD < 1) {
-                listener.onApprove(model, totalToPay);
+            } else if (totalToPay > 0 && loanInstallmentsd < 1 && orderInstallmentsD > 0) {
+                listener.onApprovePayOrder(0.0, model, totalToPay, orderInstallmentsD);
+                alertDialogAndroid.dismiss();
+
+            } else if (totalToPay > 0 && loanInstallmentsd < 1 && orderInstallmentsD < 1) {
+                listener.onApprove(0.0, model, totalToPay);
                 alertDialogAndroid.dismiss();
 
             } else {
-                listener.onApprove(model);
+                listener.onApprove(0.0, model);
                 alertDialogAndroid.dismiss();
             }
         });

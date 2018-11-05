@@ -43,6 +43,8 @@
                     android:layout_weight="1.6">
 
                     <ImageView
+
+                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -52,7 +54,7 @@
                         android:id="@+id/txt_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="2dp"
+                        android:layout_marginStart="3dp"
                         android:lines="1"
                         android:singleLine="true"
                         android:text="Names"

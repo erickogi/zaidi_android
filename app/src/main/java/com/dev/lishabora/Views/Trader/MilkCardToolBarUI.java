@@ -26,6 +26,7 @@ public class MilkCardToolBarUI extends RelativeLayout {
     private TextView txtMilkTotal, txtLoanTotal, txtOrderTotal, txtBalance;
     private RelativeLayout rlTotals;
     private String orderTotal, loanTotal, milkTotal;
+    private String milkTotalKsh;
 
     public MilkCardToolBarUI(Context context) {
         super(context);
@@ -208,6 +209,14 @@ public class MilkCardToolBarUI extends RelativeLayout {
 
     public void setMilkTotal(String milkTotal) {
         this.milkTotal = milkTotal;
+    }
+
+    public String getMilkTotalKsh() {
+        return milkTotalKsh;
+    }
+
+    public void setMilkTotalKsh(String milkTotalKsh) {
+        this.milkTotalKsh = milkTotalKsh;
     }
 
     public void setOnPayNoClickListener(OnClickListener clickListener) {

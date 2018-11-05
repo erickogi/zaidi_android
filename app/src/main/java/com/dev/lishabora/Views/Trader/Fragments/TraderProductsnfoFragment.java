@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -23,9 +24,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.ProductsAdapter;
 import com.dev.lishabora.Models.ProductsModel;
+import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishaboramobile.R;
@@ -396,6 +399,84 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
 
     }
 
+    private void editProduct(ProductsModel model) {
+        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
+        View mView = layoutInflaterAndroid.inflate(R.layout.dialog_edit_product, null);
+        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+        alertDialogBuilderUserInput.setView(mView);
+//        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
+//        alertDialogBuilderUserInput.setTitle("Route");
+
+
+        avi = mView.findViewById(R.id.avi);
+
+        TextView name, buyPrice;
+        TextInputEditText sellingPrice;
+
+        name = mView.findViewById(R.id.edt_product_names);
+        buyPrice = mView.findViewById(R.id.edt_product_cost_price);
+        sellingPrice = mView.findViewById(R.id.edt_product_selling_prices);
+
+        name.setText(model.getNames());
+        buyPrice.setText(model.getBuyingprice());
+        sellingPrice.setText(model.getSellingprice());
+
+
+        alertDialogBuilderUserInput
+                .setCancelable(false);
+//                .setPositiveButton("Save", (dialogBox, id) -> {
+//                    // ToDo get user input here
+//
+//
+//                })
+//
+//                .setNegativeButton("Dismiss",
+//                        (dialogBox, id) -> dialogBox.cancel());
+
+        AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
+        alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
+        alertDialogAndroid.show();
+
+//        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
+//        theButton.setOnClickListener(new EditCustomListener(alertDialogAndroid,routesModel));
+
+
+        MaterialButton btnPositive, btnNegative, btnNeutral;
+        TextView txtTitle;
+        LinearLayout lTitle;
+        ImageView imgIcon;
+        btnPositive = mView.findViewById(R.id.btn_positive);
+        btnNegative = mView.findViewById(R.id.btn_negative);
+        btnNeutral = mView.findViewById(R.id.btn_neutral);
+        txtTitle = mView.findViewById(R.id.txt_title);
+        lTitle = mView.findViewById(R.id.linear_title);
+        imgIcon = mView.findViewById(R.id.img_icon);
+
+
+        btnNeutral.setVisibility(View.VISIBLE);
+        btnNeutral.setText("Delete");
+
+        btnNeutral.setBackgroundColor(getContext().getResources().getColor(R.color.red));
+        lTitle.setVisibility(View.GONE);
+        txtTitle.setVisibility(View.VISIBLE);
+        imgIcon.setVisibility(View.VISIBLE);
+        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
+        txtTitle.setText("Route");
+
+        btnPositive.setOnClickListener(new EditCustomListener(alertDialogAndroid, model));
+        btnNeutral.setOnClickListener(view -> {
+            tViewModel.deleteProduct(model, false).observe(TraderProductsnfoFragment.this, responseModel -> {
+                avi.smoothToHide();
+                MyToast.toast(responseModel.getResultDescription(), getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                alertDialogAndroid.dismiss();
+            });
+        });
+        btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());
+
+
+    }
 
     public void initList() {
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -412,7 +493,11 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
 
             @Override
             public void onClickListener(int position) {
-
+                try {
+                    editProduct(productsModel.get(position));
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
 
             }
 
@@ -438,6 +523,51 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
             }
         });
 
+
+    }
+
+    private class EditCustomListener implements View.OnClickListener {
+        AlertDialog dialog;
+        boolean isActive = true;
+        int isAct = 1;
+        ProductsModel model;
+
+        public EditCustomListener(AlertDialog alertDialogAndroid, ProductsModel model) {
+            dialog = alertDialogAndroid;
+            this.model = model;
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            TextInputEditText name, buyPrice, sellingPrice;
+
+            name = dialog.findViewById(R.id.edt_product_names);
+            buyPrice = dialog.findViewById(R.id.edt_product_cost_price);
+            sellingPrice = dialog.findViewById(R.id.edt_product_selling_prices);
+
+            name = dialog.findViewById(R.id.edt_rout_names);
+
+
+            if (sellingPrice.getText().toString().isEmpty()) {
+                sellingPrice.setError("Required");
+                sellingPrice.requestFocus();
+                avi.smoothToHide();
+                return;
+            }
+
+            model.setSellingprice(sellingPrice.getText().toString());
+
+
+            avi.smoothToShow();
+
+            tViewModel.updateProduct(model, false).observe(TraderProductsnfoFragment.this, responseModel -> {
+                avi.smoothToHide();
+                dialog.dismiss();
+            });
+
+
+        }
 
     }
 

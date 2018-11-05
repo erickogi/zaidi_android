@@ -27,7 +27,6 @@
             android:id="@+id/background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/rounded_border_tv"
 
             android:orientation="vertical">
 
@@ -36,7 +35,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:background="@color/divider"
                 android:gravity="start"
                 android:orientation="horizontal"
                 android:paddingStart="2dp"
@@ -45,6 +43,7 @@
                 android:paddingBottom="2dp">
 
                 <TextView
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                     android:id="@+id/txt_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -54,6 +53,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:visibility="gone"
                     android:id="@+id/txt_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -140,6 +140,7 @@
                         android:textColor="@color/black" />
 
                     <TextView
+                        android:textStyle="bold"
                         android:id="@+id/txt_milk"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -167,6 +168,8 @@
                         android:textColor="@color/black" />
 
                     <TextView
+                        android:textStyle="bold"
+
                         android:id="@+id/txt_loans"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -196,6 +199,8 @@
                         android:textColor="@color/black" />
 
                     <TextView
+                        android:textStyle="bold"
+
                         android:id="@+id/txt_orders"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -255,7 +260,7 @@
                     android:layout_centerVertical="true"
                     android:gravity="center"
                     android:padding="2dp"
-                    android:text="Click +  to add products to order "
+                    android:text="Add Products >> "
                     android:textColor="@color/black" />
 
                 <android.support.design.button.MaterialButton

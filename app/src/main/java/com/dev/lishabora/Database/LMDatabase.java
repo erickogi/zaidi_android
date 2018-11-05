@@ -7,6 +7,7 @@ import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
 import com.dev.lishabora.Database.Converters.DateConverter;
+import com.dev.lishabora.Models.ApprovalRegisterModel;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
@@ -28,7 +29,7 @@ import com.dev.lishabora.Models.UnitsModel;
         UnitsModel.class, Cycles.class, ProductsModel.class, Collection.class,
         Payouts.class, SyncModel.class, FarmerLoansTable.class,
         FarmerOrdersTable.class, LoanPayments.class, OrderPayments.class,
-        FarmerBalance.class, Notifications.class, SyncDownObserver.class}, version = 48)
+        FarmerBalance.class, Notifications.class, SyncDownObserver.class, ApprovalRegisterModel.class}, version = 49)
 @TypeConverters(DateConverter.class)
 
 public abstract class LMDatabase extends RoomDatabase {
@@ -90,5 +91,7 @@ public abstract class LMDatabase extends RoomDatabase {
     public abstract NotificationsDao notificationsDao();
 
     public abstract SyncObserverDao syncObserverDao();
+
+    public abstract ApprovalRegisterDao approvalRegisterDao();
 
 }

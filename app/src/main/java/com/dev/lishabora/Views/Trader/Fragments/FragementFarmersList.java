@@ -1314,12 +1314,11 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
             ResponseModel responseModel = mViewModel.createCollectionsU(data[0].getCollection());//.observe(FragementFarmersList.this, responseModel -> {
 
-            FamerModel f = data[0].getFamerModel();
+            // FamerModel f = data[0].getFamerModel();
 
             if (!responseModel.getPayoutCode().equals(data[0].getFamerModel().getCurrentPayoutCode())) {
-                f.setCurrentPayoutCode(responseModel.getPayoutCode());
+                data[0].getFamerModel().setCurrentPayoutCode(responseModel.getPayoutCode());
             }
-            mViewModel.updateFarmer(f, false, true);
 
 
 

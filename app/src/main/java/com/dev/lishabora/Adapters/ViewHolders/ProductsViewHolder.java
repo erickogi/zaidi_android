@@ -3,6 +3,7 @@ package com.dev.lishabora.Adapters.ViewHolders;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ public class ProductsViewHolder extends RecyclerView.ViewHolder implements View.
     //  public RelativeLayout engineer_background;
 
     public TextView status, id, name, selling, cost, famerscount, txtDate;
+    public ImageView imgEdit;
     public CheckBox chk;
     private WeakReference<OnclickRecyclerListener> listenerWeakReference;
     public RelativeLayout background;
@@ -29,6 +31,7 @@ public class ProductsViewHolder extends RecyclerView.ViewHolder implements View.
         statusview = itemView.findViewById(R.id.status_view);
         background = itemView.findViewById(R.id.background);
         txtDate = itemView.findViewById(R.id.txt_date);
+        imgEdit = itemView.findViewById(R.id.imgEdit);
 
         status = itemView.findViewById(R.id.txt_status);
         id = itemView.findViewById(R.id.txt_id);

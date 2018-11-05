@@ -681,7 +681,8 @@ public class EditOrder extends AppCompatActivity {
 
         avi = mView.findViewById(R.id.avi);
 
-        TextInputEditText name, buyPrice, sellingPrice, qty;
+        TextView name, buyPrice;
+        TextInputEditText sellingPrice, qty;
 
         name = mView.findViewById(R.id.edt_product_names);
         buyPrice = mView.findViewById(R.id.edt_product_cost_price);

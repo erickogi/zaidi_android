@@ -7,6 +7,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import com.dev.lishabora.AppConstants;
+import com.dev.lishabora.Models.ApprovalRegisterModel;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
@@ -19,6 +20,7 @@ import com.dev.lishabora.Models.SyncModel;
 import com.dev.lishabora.Models.Trader.TraderModel;
 import com.dev.lishabora.Repos.ProductsRepo;
 import com.dev.lishabora.Repos.RoutesRepo;
+import com.dev.lishabora.Repos.Trader.ApprovalRepo;
 import com.dev.lishabora.Repos.Trader.CollectionsRepo;
 import com.dev.lishabora.Repos.Trader.CyclesRepo;
 import com.dev.lishabora.Repos.Trader.FarmerRepo;
@@ -47,6 +49,7 @@ public class PayoutsVewModel extends AndroidViewModel {
     CollectionsRepo collectionsRepo;
     PayoutsRepo payoutsRepo;
     SyncRepo syncRepo;
+    ApprovalRepo approvalRepo;
 
     private MutableLiveData createPayoutSuccess;
     private MutableLiveData updatePayoutSuccess;
@@ -92,6 +95,9 @@ public class PayoutsVewModel extends AndroidViewModel {
         collectionsRepo = new CollectionsRepo(application);
         payoutsRepo = new PayoutsRepo(application);
         syncRepo = new SyncRepo(application);
+        approvalRepo = new ApprovalRepo(application);
+
+
         prefrenceManager = new PrefrenceManager(application);
 
 //
@@ -563,6 +569,56 @@ public class PayoutsVewModel extends AndroidViewModel {
         collectionsRepo.cancelFarmersPayoutCard(farmercode, payoutCode);
     }
 
+
+    public void insertMultiple(List<ApprovalRegisterModel> approvalRegisterModels) {
+        approvalRepo.insertMultiple(approvalRegisterModels);
+    }
+
+    public void insert(ApprovalRegisterModel approvalRegisterModel) {
+        approvalRepo.insert(approvalRegisterModel);
+
+
+    }
+
+    public void insertDirect(ApprovalRegisterModel approvalRegisterModel) {
+        approvalRepo.insertDirect(approvalRegisterModel);
+
+    }
+
+
+    public LiveData<List<ApprovalRegisterModel>> fetchAllApproval() {
+        return approvalRepo.fetchAll();
+    }
+
+    public List<ApprovalRegisterModel> fetchAllApprovalOne() {
+        return approvalRepo.fetchAllOne();
+    }
+
+    public LiveData<ApprovalRegisterModel> getByFarmerPayoutCode(String farmerCode, String payoutCode) {
+        return approvalRepo.getByFarmerPayoutCode(farmerCode, payoutCode);
+    }
+
+    public ApprovalRegisterModel getByFarmerPayoutCodeOne(String farmerCode, String payoutCode) {
+        return approvalRepo.getByFarmerPayoutCodeOne(farmerCode, payoutCode);
+    }
+
+
+    public void updateRecord(ApprovalRegisterModel approvalRegisterModel) {
+        approvalRepo.updateRecord(approvalRegisterModel);
+
+    }
+
+    public void updateRecordDirect(ApprovalRegisterModel approvalRegisterModel) {
+        approvalRepo.updateRecordDirect(approvalRegisterModel);
+
+    }
+
+
+    public void deleteRecord(ApprovalRegisterModel approvalRegisterModel) {
+        approvalRepo.deleteRecord(approvalRegisterModel);
+
+
+    }
 
 //    public LiveData<Integer> getStatusForFarmerPayout(String farmercode, String payoutCode) {
 //

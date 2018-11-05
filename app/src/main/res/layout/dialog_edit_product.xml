@@ -27,52 +27,78 @@
             android:orientation="vertical"
             android:padding="8dp">
 
-            <android.support.design.widget.TextInputLayout
-
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-
-                android:layout_width="match_parent"
+            <LinearLayout
                 android:layout_height="wrap_content"
-                android:layout_margin="3dp"
-                android:textColorHint="@color/black">
+                android:layout_width="match_parent"
+                android:orientation="horizontal">
 
-                <android.support.design.widget.TextInputEditText
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:enabled="false"
+                    android:padding="6dp"
+                    android:text="Products name :"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:padding="6dp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                     android:id="@+id/edt_product_names"
-                    android:layout_width="match_parent"
+                    android:textColor="@color/black"
                     android:layout_height="match_parent"
                     android:enabled="false"
-                    android:hint="Products name "
-                    android:inputType="text" />
+                    android:textStyle="bold"
+                    android:hint="Products name " />
+            </LinearLayout>
 
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-
-                android:layout_width="match_parent"
+            <LinearLayout
                 android:layout_height="wrap_content"
-                android:layout_margin="3dp"
-                android:textColorHint="@color/black">
 
-                <android.support.design.widget.TextInputEditText
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:enabled="false"
+                    android:padding="6dp"
+                    android:text="Buying price  :"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:padding="6dp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+
                     android:id="@+id/edt_product_cost_price"
-                    android:layout_width="match_parent"
+                    android:textColor="@color/textblack"
+                    android:textStyle="bold"
                     android:layout_height="match_parent"
                     android:enabled="false"
                     android:hint=" Buying Price(Ksh)
 "
                     android:inputType="number" />
 
-            </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
 
             <android.support.design.widget.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
 
-                android:background="@color/colorPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="3dp"
-                android:textColorHint="@color/white">
+                android:textColorHint="@color/textblack">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/edt_product_selling_prices"
@@ -80,8 +106,8 @@
                     android:layout_height="match_parent"
                     android:hint=" Selling Price(Ksh)
 "
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/white"
+                    android:textColor="@color/textblack"
+                    android:textColorHint="@color/textblack"
                     android:inputType="numberDecimal" />
 
             </android.support.design.widget.TextInputLayout>
