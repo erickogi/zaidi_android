@@ -42,6 +42,9 @@ public interface LoanPaymentsDao {
     @Query("SELECT * FROM LOANPAYMENTS WHERE loanCode =:loanCode")
     LiveData<List<LoanPayments>> getLoanPaymentByLoanCode(String loanCode);
 
+    @Query("SELECT * FROM LOANPAYMENTS WHERE loanCode =:loanCode")
+    List<LoanPayments> getLoanPaymentByLoanCodeOne(String loanCode);
+
     @Query("SELECT * FROM LOANPAYMENTS WHERE payoutCode =:payoutCode")
     LiveData<List<LoanPayments>> getLoanPaymentByPaout(String payoutCode);
 

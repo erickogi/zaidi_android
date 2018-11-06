@@ -89,10 +89,6 @@
         android:orientation="vertical"
         android:padding="2dp">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/colorPrimary" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -114,15 +110,16 @@
             android:weightSum="2">
 
             <TextView
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:padding="2dp"
                 android:text="Milk Collected (Ksh) "
-                android:textColor="#616061"
-                android:textSize="14dp" />
+                android:textColor="#616061" />
 
             <TextView
+
                 android:id="@+id/txt_approve_milk"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -130,12 +127,13 @@
                 android:padding="3dp"
                 android:text="200000 /-"
                 android:textColor="#8b8788"
-                android:textSize="13dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
 
                 android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:weightSum="2">
@@ -163,6 +161,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:weightSum="2">
@@ -189,10 +188,6 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/colorPrimary" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -255,34 +250,26 @@
 
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/colorPrimary" />
 
         <TextView
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
 
             android:text="Final Amount to Pay-out"
-            android:textSize="13dp"
             android:textStyle="bold" />
 
         <TextView
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
             android:id="@+id/txt_approve_payout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:padding="2dp"
             android:text="44364364"
-            android:textSize="16sp"
             android:textStyle="bold" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/colorPrimary" />
 
     </LinearLayout>
 

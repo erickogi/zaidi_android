@@ -432,10 +432,12 @@ public class CollectMilk implements View.OnClickListener {//implements{// Number
                                 keyboard.setEnabled(true);
                                 keyboard.setVisibility(View.VISIBLE);
                             }
+                        } else {
+                            keyboard.setEnabled(true);
+                            keyboard.setVisibility(View.VISIBLE);
                         }
 
                         alertDialogAndroid.show();
-
 
                         btnNeutral.setOnClickListener(view -> {
 
@@ -473,9 +475,7 @@ public class CollectMilk implements View.OnClickListener {//implements{// Number
                         keyboard.setEnabled(false);
 
                     } else {
-                        keyboard
-
-                                .setEnabled(true);
+                        keyboard.setEnabled(true);
                         doCollect(famerModel, unitsModel, milkAm, milkPm);
 
 

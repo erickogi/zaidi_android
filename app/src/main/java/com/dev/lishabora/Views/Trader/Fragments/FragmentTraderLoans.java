@@ -4,28 +4,39 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.button.MaterialButton;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.InputFilter;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.LoansOrdersAdapter;
 import com.dev.lishabora.Adapters.LoansOrdersPaymnetsAdapter;
+import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.FarmerBalance;
 import com.dev.lishabora.Models.Trader.FarmerLoansTable;
 import com.dev.lishabora.Models.Trader.FarmerOrdersTable;
 import com.dev.lishabora.Models.Trader.LoanPayments;
+import com.dev.lishabora.Utils.InputFilterMinMax;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnActivityTouchListener;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.Utils.RecyclerTouchListener;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
+import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
+import com.dev.lishabora.Views.CommonFuncs;
 import com.dev.lishaboramobile.R;
+import com.wajahatkarim3.easyflipview.EasyFlipView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -50,11 +61,16 @@ public class FragmentTraderLoans extends Fragment {
     private List<FarmerLoansTable> farmerLoansTables;
     private List<FarmerOrdersTable> farmerOrdersTables;
 
-    private void listPayments(String code) {
+    private EasyFlipView easyFlipView;
+    private EasyFlipView.FlipState currentSide;
+    private TraderViewModel traderViewModel;
+
+
+    private void listPayments(FarmerLoansTable code) {
 
         payments = new LinkedList<>();
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
-        View mView = layoutInflaterAndroid.inflate(R.layout.fragment_recycler_view, null);
+        View mView = layoutInflaterAndroid.inflate(R.layout.dialog_loan_order_payments, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         alertDialogBuilderUserInput.setView(mView);
         alertDialogBuilderUserInput.setCancelable(true);
@@ -64,13 +80,42 @@ public class FragmentTraderLoans extends Fragment {
 
         RecyclerView recyclerView = mView.findViewById(R.id.recyclerView);
 
+        MaterialButton positive = mView.findViewById(R.id.btn_positive);
+        MaterialButton negative = mView.findViewById(R.id.btn_negative);
+
+        MaterialButton positive1 = mView.findViewById(R.id.btn_positive1);
+        MaterialButton negative1 = mView.findViewById(R.id.btn_negative1);
+
+        RadioGroup radioGroup = mView.findViewById(R.id.radiogroup);
+        TextInputEditText value = mView.findViewById(R.id.edt_value);
+
+        double bal = (Double.valueOf(code.getLoanAmount())) - Double.valueOf(code.getLoanAmountPaid());
+        value.setFilters(new InputFilter[]{new InputFilterMinMax(1, (int) bal)});
+
+        if (code.getStatus() == 1) {
+            positive.setVisibility(View.GONE);
+        }
+        easyFlipView = mView.findViewById(R.id.easyFlipView);
+        easyFlipView.setOnFlipListener((easyFlipView, newCurrentSide) -> {
+            currentSide = newCurrentSide;
+
+            if (currentSide == EasyFlipView.FlipState.FRONT_SIDE) {
+            } else {
+            }
+
+
+        });
+
+        currentSide = EasyFlipView.FlipState.FRONT_SIDE;
+
+
 
         mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(mStaggeredLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
 
-        listAdapterP = new LoansOrdersPaymnetsAdapter(getActivity(), payments, null, new OnclickRecyclerListener() {
+        listAdapterP = new LoansOrdersPaymnetsAdapter(getActivity(), code.getLoanPayments(), null, new OnclickRecyclerListener() {
             @Override
             public void onMenuItem(int position, int menuItem) {
 
@@ -118,9 +163,7 @@ public class FragmentTraderLoans extends Fragment {
 
         listAdapterP.notifyDataSetChanged();
 
-        alertDialogBuilderUserInput
-                .setCancelable(true);
-
+        alertDialogBuilderUserInput.setCancelable(true);
         AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
         alertDialogAndroid.setCancelable(true);
         alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
@@ -131,22 +174,67 @@ public class FragmentTraderLoans extends Fragment {
             NM.printStackTrace();
         }
 
+        positive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        balncesViewModel.getLoanPaymentByLoanCode(code).observe(FragmentTraderLoans.this, loanPayments -> {
-            if (loanPayments != null && loanPayments.size() > 0) {
+                if (currentSide == EasyFlipView.FlipState.FRONT_SIDE) {
 
-                payments = loanPayments;
-                listAdapterP.notifyDataSetChanged();
-            } else {
+                    easyFlipView.flipTheView();
+                }
+            }
+        });
+
+
+        negative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 alertDialogAndroid.dismiss();
-                MyToast.toast("There are no payments to this loan", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+            }
+        });
+
+        positive1.setOnClickListener(v -> {
+
+            if (TextUtils.isEmpty(value.getText()) || value.getText().toString() == null) {
+                value.requestFocus();
+                value.setError("Required");
+            } else {
+                String valuea = value.getText().toString();
+                if (radioGroup.getCheckedRadioButtonId() == -1) {
+                    MyToast.toast("Select Payment method", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                } else {
+                    radioGroup.getCheckedRadioButtonId();
+
+                    FamerModel famerModel = traderViewModel.getFarmersByCodeOne(code.getFarmerCode());
+                    CommonFuncs.insertLoanPayment(Double.valueOf(valuea), balncesViewModel, famerModel, "");
+                    refreshFarmerBalance(famerModel, code.getPayoutCode());
+                    alertDialogAndroid.dismiss();
+                    getData();
+                }
+
+
             }
 
         });
 
 
+        negative1.setOnClickListener(v -> alertDialogAndroid.dismiss());
+
+
+
     }
 
+    private void refreshFarmerBalance(FamerModel f, String payoutCode) {
+        FarmerBalance bal;//= CommonFuncs.getFarmerBalanceAfterPayoutCardApproval(famerModel, balncesViewModel, traderViewModel,payouts);
+
+        bal = balncesViewModel.getByFarmerCodeByPayoutOne(f.getCode(), payoutCode);
+        if (bal != null) {
+            f.setTotalbalance(bal.getBalanceToPay());
+            traderViewModel.updateFarmer(f, false, true);
+        }
+
+
+    }
     public void initList(List<FarmerLoansTable> farmerLoansTables) {
         unclickableRows = new ArrayList<>();
         unswipeableRows = new ArrayList<>();
@@ -173,7 +261,7 @@ public class FragmentTraderLoans extends Fragment {
 
             @Override
             public void onClickListener(int position) {
-                listPayments(farmerLoansTables.get(position).getCode());
+                listPayments(farmerLoansTables.get(position));
 
 
             }
@@ -223,7 +311,13 @@ public class FragmentTraderLoans extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         this.view = view;
         balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
+        traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
 
+        getData();
+
+    }
+
+    void getData() {
         balncesViewModel.getFarmerLoans().observe(this, farmerLoansTables -> {
             if (farmerLoansTables != null) {
 
@@ -232,15 +326,51 @@ public class FragmentTraderLoans extends Fragment {
                     if (f.getLoanAmount() != null && Double.valueOf(f.getLoanAmount()) > 0) {
                         farmerLoansTables1.add(f);
                     } else {
-                        balncesViewModel.deleteRecordLoanDirect(f);
+                        // balncesViewModel.deleteRecordLoanDirect(f);
                     }
                 }
-                initList(farmerLoansTables1);
+                getPayments(farmerLoansTables1);
 
             } else {
             }
         });
 
+    }
+
+    private void getPayments(List<FarmerLoansTable> farmerLoansTables1) {
+        if (farmerLoansTables1 != null) {
+            for (int a = 0; a < farmerLoansTables1.size(); a++) {
+                List<LoanPayments> lm = balncesViewModel.getLoanPaymentByLoanCodeOne(farmerLoansTables1.get(a).getCode());
+                Double paid = 0.0;
+                if (lm != null) {
+                    for (LoanPayments lkm : lm) {
+                        try {
+                            paid = paid + Double.valueOf(lkm.getAmountPaid());
+
+                        } catch (Exception nm) {
+
+                        }
+                    }
+
+
+                    farmerLoansTables1.get(a).setLoanAmountPaid("" + String.valueOf(paid));
+                    farmerLoansTables1.get(a).setLoanPayments(lm);
+                    Double amount = Double.valueOf(farmerLoansTables1.get(a).getLoanAmount());
+                    try {
+                        if (paid.equals(amount) || paid > amount) {
+                            farmerLoansTables1.get(a).setStatus(1);
+                        } else {
+                            farmerLoansTables1.get(a).setStatus(0);
+                        }
+                    } catch (Exception nm) {
+                        nm.printStackTrace();
+                    }
+                }
+
+            }
+
+        }
+        initList(farmerLoansTables1);
     }
 
     private void filter(List<FarmerLoansTable> farmerLoansTables) {

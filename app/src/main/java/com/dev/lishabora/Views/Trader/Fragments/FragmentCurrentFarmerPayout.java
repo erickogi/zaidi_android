@@ -795,9 +795,11 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
     private void cancelBalance(ApprovalRegisterModel approvalRegisterModel) {
 
         FarmerBalance farmerBalance = balncesViewModel.getByFarmerCodeByPayoutOne(famerModel.getCode(), payouts.getCode());
-        farmerBalance.setPayoutStatus(0);
-        balncesViewModel.updateRecordDirect(farmerBalance);
+        if (farmerBalance != null) {
+            farmerBalance.setPayoutStatus(0);
+            balncesViewModel.updateRecordDirect(farmerBalance);
 
+        }
         refreshFarmerBalance();
 
 
@@ -807,8 +809,10 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
     private void refreshFarmerBalance() {
         FarmerBalance bal = CommonFuncs.getFarmerBalanceAfterPayoutCardApproval(famerModel, balncesViewModel, traderViewModel);
 
-        famerModel.setTotalbalance(bal.getBalanceToPay());
-        traderViewModel.updateFarmer(famerModel, false, true);
+        if (bal != null) {
+            famerModel.setTotalbalance(bal.getBalanceToPay());
+            traderViewModel.updateFarmer(famerModel, false, true);
+        }
 
 
     }

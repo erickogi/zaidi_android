@@ -38,6 +38,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.FarmersAdapter;
 import com.dev.lishabora.AppConstants;
@@ -53,6 +54,7 @@ import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.Models.collectMod;
 import com.dev.lishabora.Utils.CollectListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
+import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnActivityTouchListener;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.Utils.PrefrenceManager;
@@ -73,6 +75,7 @@ import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.jetbrains.annotations.NotNull;
+import org.joda.time.Interval;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
@@ -1117,16 +1120,6 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
     }
 
 
-    void startAnim() {
-        avi.show();
-
-    }
-
-    void stopAnim() {
-        avi.hide();
-
-    }
-
 
 
     private void snack(String msg) {
@@ -1308,6 +1301,26 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
         }
     }
 
+    public boolean canCollectBasedOnPayout(String cycleCode) {
+        Payouts p = payoutsVewModel.getLastPayout(cycleCode);
+        if (p != null) {
+            String endDate = p.getEndDate();
+            String startDate = p.getStartDate();
+
+
+            Interval interval = new Interval(DateTimeUtils.Companion.conver2Date(startDate), DateTimeUtils.Companion.conver2Date(endDate));
+
+            if (interval.containsNow() || DateTimeUtils.Companion.isTodayN(Objects.requireNonNull(DateTimeUtils.Companion.conver2Date(endDate)))) {
+                return p.getStatus() != 1;
+            } else {
+                return true;
+            }
+
+        } else {
+            return true;
+        }
+    }
+
     private class Collect extends AsyncTask<CommonFuncs.createCollection, Integer, CommonFuncs.createCollection> {
         protected CommonFuncs.createCollection doInBackground(CommonFuncs.createCollection... data) {
 
@@ -1419,7 +1432,12 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
         protected void onPostExecute(collectMod c) {
 
-            collectMilk.collectMilk(getActivity(), FarmerConst.getSearchFamerModels().get(selectedInt), c, FragementFarmersList.this);
+            if (canCollectBasedOnPayout(FarmerConst.getSearchFamerModels().get(selectedInt).getCyclecode())) {
+                collectMilk.collectMilk(getActivity(), FarmerConst.getSearchFamerModels().get(selectedInt), c, FragementFarmersList.this);
+            } else {
+                MyToast.toast("Appropriate payout for this farmer has already being approved", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+            }
+
 
         }
     }

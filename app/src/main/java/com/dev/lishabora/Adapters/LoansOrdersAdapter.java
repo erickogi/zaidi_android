@@ -62,8 +62,11 @@ public class LoansOrdersAdapter extends RecyclerView.Adapter<LoanOrderViewHolder
 
             if (model.getStatus() == 1) {
                 holder.status.setText("Paid In Full");
+                holder.status.setTextColor(context.getResources().getColor(R.color.green_color_picker));
             } else {
-                holder.status.setText("Pending Payment");
+                holder.status.setText("Pending Full Payment");
+                holder.status.setTextColor(context.getResources().getColor(R.color.red));
+
             }
 
 
@@ -77,8 +80,13 @@ public class LoansOrdersAdapter extends RecyclerView.Adapter<LoanOrderViewHolder
 
             if (model.getStatus() == 1) {
                 holder.status.setText("Paid In Full");
+                holder.status.setTextColor(context.getResources().getColor(R.color.green_color_picker));
+
             } else {
-                holder.status.setText("Pending Payment");
+
+                holder.status.setText("Pending Full Payment");
+                holder.status.setTextColor(context.getResources().getColor(R.color.red));
+
             }
         }
 

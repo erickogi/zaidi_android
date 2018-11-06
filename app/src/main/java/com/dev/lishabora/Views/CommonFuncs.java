@@ -53,6 +53,8 @@ import com.dev.lishabora.Models.Reports.ReportListModel;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.Trader.FarmerLoansTable;
 import com.dev.lishabora.Models.Trader.FarmerOrdersTable;
+import com.dev.lishabora.Models.Trader.LoanPayments;
+import com.dev.lishabora.Models.Trader.OrderPayments;
 import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.Repos.NotificationRepo;
 import com.dev.lishabora.Repos.Trader.BalanceRepo;
@@ -76,12 +78,14 @@ import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Trader.Activities.TraderActivity;
 import com.dev.lishaboramobile.R;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
+import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -174,6 +178,8 @@ public class CommonFuncs {
         return orderModel;
 
     }
+
+    static String json = "";
 
     public static OrderModel getOrderForDay(String date, List<Collection> collections) {
         double orderTotal = 0.0;
@@ -841,57 +847,9 @@ public class CommonFuncs {
 
     }
 
-    public static List<DayCollectionModel> setUpDayCollectionsModel(Payouts payouts, List<Collection> collections) {
+    static Double remaining = 0.0;
 
 
-        List<DaysDates> daysDates = DateTimeUtils.Companion.getDaysAndDatesBtnDates(payouts.getStartDate(), payouts.getEndDate());
-
-        List<DayCollectionModel> dayCollectionModels = new LinkedList<>();
-        for (DaysDates d : daysDates) {
-
-
-            MilkModel milkModelAm = CommonFuncs.getMilk(d.getDate(), "AM", collections);
-            MilkModel milkModelPm = CommonFuncs.getMilk(d.getDate(), "PM", collections);
-
-
-            String milkAm = milkModelAm.getUnitQty();
-            String milkPm = milkModelPm.getUnitQty();
-
-            LoanModel loanModel = CommonFuncs.getLoanForDay(d.getDate(), collections);
-            Log.d("loanTotsl", "" + new Gson().toJson(loanModel));
-
-            String loan = loanModel.getLoanAmount();
-
-
-            OrderModel orderModel = CommonFuncs.getOrderForDay(d.getDate(), collections);
-            String order = orderModel.getOrderAmount();
-
-
-            String collectionCode = getCollectionCode(d.getDate(), collections);
-
-            dayCollectionModels.add(new DayCollectionModel(
-                            payouts.getCode(),
-                            d.getDay(),
-                            d.getDate(),
-                            milkAm,
-                            milkPm,
-                            collectionCode,
-                            milkModelAm,
-                            milkModelPm, loan, order,
-                            loanModel.getCollectionCode(),
-                            loanModel, orderModel.getCollectionCode(), orderModel, payouts.getStatus(), milkModelAm.getValueLtrs(),
-                            milkModelAm.getValueKsh(),
-                            milkModelPm.getValueLtrs(),
-                            milkModelPm.getValueKsh()
-
-                    )
-
-            );
-        }
-
-        return dayCollectionModels;
-
-    }
 
     public static ValueObject getValueObjectToEditFromDayCollection(DayCollectionModel dayCollectionModel, int time, int type) {
         String value = "";
@@ -2248,6 +2206,7 @@ public class CommonFuncs {
 
     }
 
+
     public static FamerModel refreshTotalBalances(int type,
                                                   FarmerLoansTable lastLoan,
                                                   FarmerOrdersTable lastOrder,
@@ -2545,7 +2504,85 @@ public class CommonFuncs {
     static Double totalToPay = 0.0;
     static boolean isLoanEditable = false;
     static boolean isOrderEditable = false;
+    static Double remainingOrderInstall = 0.0;
 
+    public static void setInputLimiter(TextInputEditText edt, double limit) {
+
+        edt.setFilters(new InputFilter[]{new InputFilterMinMax(0, (int) limit)});
+    }
+
+    private static int getCollectionStatus(String date, List<Collection> collections) {
+        int status = 0;
+        if (collections != null) {
+            for (Collection c : collections) {
+
+                if (c.getDayDate().contains(date)) {
+
+
+                    status = c.getApproved();
+                }
+            }
+
+
+        }
+        return status;
+    }
+
+    public static List<DayCollectionModel> setUpDayCollectionsModel(Payouts payouts, List<Collection> collections) {
+
+
+        List<DaysDates> daysDates = DateTimeUtils.Companion.getDaysAndDatesBtnDates(payouts.getStartDate(), payouts.getEndDate());
+
+        List<DayCollectionModel> dayCollectionModels = new LinkedList<>();
+        for (DaysDates d : daysDates) {
+
+
+            MilkModel milkModelAm = CommonFuncs.getMilk(d.getDate(), "AM", collections);
+            MilkModel milkModelPm = CommonFuncs.getMilk(d.getDate(), "PM", collections);
+
+
+            String milkAm = milkModelAm.getUnitQty();
+            String milkPm = milkModelPm.getUnitQty();
+
+            LoanModel loanModel = CommonFuncs.getLoanForDay(d.getDate(), collections);
+            Log.d("loanTotsl", "" + new Gson().toJson(loanModel));
+
+            int colStatus = getCollectionStatus(d.getDate(), collections);
+
+            String loan = loanModel.getLoanAmount();
+
+
+            OrderModel orderModel = CommonFuncs.getOrderForDay(d.getDate(), collections);
+
+            String order = orderModel.getOrderAmount();
+
+
+            String collectionCode = getCollectionCode(d.getDate(), collections);
+
+            dayCollectionModels.add(new DayCollectionModel(
+                            payouts.getCode(),
+                            d.getDay(),
+                            d.getDate(),
+                            milkAm,
+                            milkPm,
+                            collectionCode,
+                            milkModelAm,
+                            milkModelPm, loan, order,
+                            loanModel.getCollectionCode(),
+                            loanModel,
+                            orderModel.getCollectionCode(), orderModel, payouts.getStatus(), milkModelAm.getValueLtrs(),
+                            milkModelAm.getValueKsh(),
+                            milkModelPm.getValueLtrs(),
+                            milkModelPm.getValueKsh(), colStatus
+
+                    )
+
+            );
+        }
+
+        return dayCollectionModels;
+
+    }
 
     public static void doAprove(Context context, BalncesViewModel balncesViewModel,
                                 TraderViewModel traderViewModel,
@@ -2553,53 +2590,8 @@ public class CommonFuncs {
                                 FamerModel c, Payouts p,
                                 ApproveFarmerPayCardListener listener, String balance) {
 
-//        double loanTotalAmount = 0.0;
-//        double loanInstalmentAmount = 0.0;
-//        double loanPaid = 0.0;
-//
-//        double orderTotalAmount = 0.0;
-//        double orderInstalmentAmount = 0.0;
-//        double orderPaid = 0.0;
-//
-//
-//        List<FarmerLoansTable> loansTables = balncesViewModel.getFarmerLoanByPayoutNumberByFarmerByStatus(c.getCode(), 0);
-//        List<FarmerOrdersTable> ordersTables = balncesViewModel.getFarmerOrderByPayoutNumberByFarmerByStatus(c.getCode(), 0);
-//
-//        for (FarmerLoansTable fl : loansTables) {
-//            try {
-//                loanTotalAmount = +(Double.valueOf(fl.getLoanAmount()));
-//                loanInstalmentAmount = +(Double.valueOf(fl.getInstallmentAmount()));
-//                loanPaid = +balncesViewModel.getSumPaidLoanPayment(fl.getCode());
-//            } catch (Exception nm) {
-//                nm.printStackTrace();
-//            }
-//        }
-//
-//        for (FarmerOrdersTable fo : ordersTables) {
-//            try {
-//                orderTotalAmount = +(Double.valueOf(fo.getOrderAmount()));
-//                orderInstalmentAmount = +(Double.valueOf(fo.getInstallmentAmount()));
-//                orderPaid = +balncesViewModel.getSumPaidOrderPayment(fo.getCode());
-//            } catch (Exception nm) {
-//                nm.printStackTrace();
-//            }
-//        }
-//
-//
-//        double totalMilkForCurrentPayout = 0.0;
-//        if (traderViewModel.getSumOfMilkForPayoutKshD(c.getCode(), p.getCode()) != null) {
-//            totalMilkForCurrentPayout += traderViewModel.getSumOfMilkForPayoutKshD(c.getCode(), p.getCode());
-//        }
 
-
-        doPayout(context, model,
-                //"" + totalMilkForCurrentPayout, "" + (loanTotalAmount - loanPaid), "" + (orderTotalAmount - orderPaid), "" + loanInstalmentAmount, "" + orderInstalmentAmount,
-                listener, balance);
-    }
-
-    public static void setInputLimiter(TextInputEditText edt, double limit) {
-
-        edt.setFilters(new InputFilter[]{new InputFilterMinMax(0, (int) limit)});
+        doPayout(context, model, listener, balance);
     }
 
     private static void doPayout(Context context, PayoutFarmersCollectionModel model,
@@ -2621,16 +2613,7 @@ public class CommonFuncs {
         } catch (Exception nm) {
             nm.printStackTrace();
         }
-//        try {
-//            orderInstallmentsD = Double.valueOf(orderInstallments);
-//        } catch (Exception nm) {
-//            nm.printStackTrace();
-//        }
-//        try {
-//            loanInstallmentsd = Double.valueOf(loanInstallments);
-//        } catch (Exception nm) {
-//            nm.printStackTrace();
-//        }
+
 
 
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
@@ -2666,111 +2649,6 @@ public class CommonFuncs {
         txtTotalLoans.setText(GeneralUtills.Companion.round(model.getLoanTotal(), 0));
         txtTotalOrders.setText(GeneralUtills.Companion.round(model.getOrderTotal(), 0));
 
-        // edtLoanInstallment.setFilters(new InputFilter[]{new InputFilterMinMax("0","100")});
-
-//        edtLoanInstallment.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//                double installmentValue = 0.0;
-//
-//                if (editable != null) {
-//
-//                    edtLoanInstallment.getText().toString();
-//                    if (!TextUtils.isEmpty(edtLoanInstallment.getText().toString())) {
-//                        try {
-//                            double value = Double.valueOf(edtLoanInstallment.getText().toString());
-//                            loanInstallmentsd = value;
-//
-//                        } catch (Exception nm) {
-//                            nm.printStackTrace();
-//                        }
-//
-//                    } else {
-//                        loanInstallmentsd = 0.0;
-//                    }
-//                } else {
-//                    loanInstallmentsd = 0.0;
-//                }
-//
-//
-//                if (isLoanEditable) {
-//                    totalToPay = (milkCollectionD - (loanInstallmentsd + orderInstallmentsD));
-//                    setInputLimiter(edtLoanInstallment, totalToPay);
-//                } else {
-//                    totalToPay = (milkCollectionD - (orderInstallmentsD));
-//
-//                }
-//                if (totalToPay > 0) {
-//                    txtPayout.setText(GeneralUtills.Companion.round(String.valueOf(totalToPay), 0));
-//                } else {
-//                    txtPayout.setText("0");
-//
-//                }
-//
-//
-//            }
-//        });
-//        edtOrderInstallment.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//                double installmentValue = 0.0;
-//
-//                if (editable != null) {
-//
-//                    edtOrderInstallment.getText().toString();
-//                    if (!TextUtils.isEmpty(edtOrderInstallment.getText().toString())) {
-//
-//                        try {
-//                            double value = Double.valueOf(edtOrderInstallment.getText().toString());
-//                            orderInstallmentsD = value;
-//
-//                        } catch (Exception nm) {
-//                            nm.printStackTrace();
-//                        }
-//
-//                    } else {
-//                        orderInstallmentsD = 0.0;
-//                    }
-//                } else {
-//                    orderInstallmentsD = 0.0;
-//                }
-//
-//
-//                if (isLoanEditable) {
-//                    totalToPay = (milkCollectionD - (loanInstallmentsd + orderInstallmentsD));
-//                    setInputLimiter(edtLoanInstallment, totalToPay);
-//                } else {
-//                    totalToPay = (milkCollectionD - (orderInstallmentsD));
-//
-//                }
-//                if (totalToPay > 0) {
-//                    txtPayout.setText(GeneralUtills.Companion.round(String.valueOf(totalToPay), 0));
-//                } else {
-//                    txtPayout.setText("0");
-//
-//                }
-//            }
-//        });
 
         edtLoanInstallment.setEnabled(false);
         edtOrderInstallment.setEnabled(false);
@@ -2788,6 +2666,8 @@ public class CommonFuncs {
         if (milkCollectionD >= (loanTotalD + orderTotalD)) {
 
             if (loanTotalD > 0) {
+                loanInstallmentsd = loanTotalD;
+
                 edtLoanInstallment.setText(GeneralUtills.Companion.roundD(loanTotalD, 0));
                 edtLoanInstallment.setVisibility(View.VISIBLE);
 
@@ -2796,6 +2676,8 @@ public class CommonFuncs {
 
             }
             if (orderTotalD > 0) {
+                orderInstallmentsD = orderTotalD;
+
                 edtOrderInstallment.setText(GeneralUtills.Companion.roundD(orderTotalD, 0));
                 edtOrderInstallment.setVisibility(View.VISIBLE);
             } else {
@@ -2804,6 +2686,7 @@ public class CommonFuncs {
             }
 
             txtPayout.setText(GeneralUtills.Companion.roundD(milkCollectionD - (loanTotalD + orderTotalD), 0));
+            totalToPay = 0.0;
 
 
 
@@ -2833,12 +2716,12 @@ public class CommonFuncs {
 
 
                     } else {
-                        edtOrderInstallment.setText(GeneralUtills.Companion.roundD(milkCollectionD - orderTotalD, 0));
+                        edtOrderInstallment.setText(GeneralUtills.Companion.roundD(milkCollectionD, 0));
                         edtOrderInstallment.setVisibility(View.VISIBLE);
                         txtPayout.setText(GeneralUtills.Companion.roundD(0.0, 0));
 
 
-                        orderInstallmentsD = milkCollectionD - orderTotalD;
+                        orderInstallmentsD = milkCollectionD;
                         loanInstallmentsd = 0.0;
                         totalToPay = 0.0;
                     }
@@ -2879,8 +2762,8 @@ public class CommonFuncs {
                         txtPayout.setText(GeneralUtills.Companion.roundD(milkCollectionD - loanTotalD, 0));
 
 
-                        orderInstallmentsD = loanTotalD;
-                        loanInstallmentsd = 0.0;
+                        loanInstallmentsd = loanTotalD;
+                        orderInstallmentsD = 0.0;
                         totalToPay = milkCollectionD - loanTotalD;
 
                     } else {
@@ -2889,8 +2772,8 @@ public class CommonFuncs {
                         txtPayout.setText(GeneralUtills.Companion.roundD(0.0, 0));
 
 
-                        orderInstallmentsD = milkCollectionD;
-                        loanInstallmentsd = 0.0;
+                        loanInstallmentsd = milkCollectionD;
+                        orderInstallmentsD = 0.0;
                         totalToPay = 0.0;
 
                     }
@@ -2948,30 +2831,28 @@ public class CommonFuncs {
         btnPositive.setOnClickListener(view -> {
 
 
-            if (totalToPay > 0 && loanInstallmentsd > 0 && orderInstallmentsD > 0) {
+            if (loanInstallmentsd > 0 && orderInstallmentsD > 0) {
                 listener.onApprove(0.0, model, totalToPay, loanInstallmentsd, orderInstallmentsD);
                 alertDialogAndroid.dismiss();
-            } else if (totalToPay > 0 && loanInstallmentsd > 0 && orderInstallmentsD < 1) {
+            } else if (loanInstallmentsd > 0 && orderInstallmentsD < 1) {
                 listener.onApprovePayLoan(0.0, model, totalToPay, loanInstallmentsd);
                 alertDialogAndroid.dismiss();
 
-            } else if (totalToPay > 0 && loanInstallmentsd < 1 && orderInstallmentsD > 0) {
+            } else if (loanInstallmentsd < 1 && orderInstallmentsD > 0) {
                 listener.onApprovePayOrder(0.0, model, totalToPay, orderInstallmentsD);
                 alertDialogAndroid.dismiss();
 
-            } else if (totalToPay > 0 && loanInstallmentsd < 1 && orderInstallmentsD < 1) {
+            } else if (loanInstallmentsd < 1 && orderInstallmentsD < 1) {
                 listener.onApprove(0.0, model, totalToPay);
                 alertDialogAndroid.dismiss();
 
             } else {
+
                 listener.onApprove(0.0, model);
                 alertDialogAndroid.dismiss();
             }
         });
-//        btnNeutral.setOnClickListener(view -> {
-//
-//            listener.onApproveDismiss();
-//        });
+
         btnNegative.setOnClickListener(view -> {
             listener.onApproveDismiss();
 
@@ -2979,6 +2860,146 @@ public class CommonFuncs {
         });
 
 
+    }
+
+    public static String insertLoanPayment(double toLoanInstallmentPayment,
+                                           BalncesViewModel balncesViewModel, FamerModel famerModel, String paymentMethod) {
+        Log.d("insertLoan", "to laon" + toLoanInstallmentPayment);
+        json = "";
+        List<LoanPayments> apploanPayments = new LinkedList<>();
+        List<FarmerLoansTable> farmerLoansTables = balncesViewModel.getFarmerLoanByPayoutNumberByFarmerByStatus(famerModel.getCode(), 0);
+
+        remaining = toLoanInstallmentPayment;
+
+        if (farmerLoansTables != null) {
+            for (int a = 0; a < farmerLoansTables.size(); a++) {
+                Log.d("insertLoan", "" + farmerLoansTables.size());
+
+
+                FarmerLoansTable farmerLoan = farmerLoansTables.get(a);
+                Double amp = Double.valueOf(farmerLoan.getLoanAmount());
+                Double inst = Double.valueOf(farmerLoan.getInstallmentAmount());
+
+
+                LoanPayments loanPayments = new LoanPayments();
+                loanPayments.setLoanCode(farmerLoan.getCode());
+                loanPayments.setPaymentMethod("Payout");
+                loanPayments.setRefNo("" + paymentMethod);
+                loanPayments.setPayoutCode("" + paymentMethod);
+                loanPayments.setTimeStamp(DateTimeUtils.Companion.getNow());
+                loanPayments.setCode(GeneralUtills.Companion.createCode(farmerLoan.getFarmerCode()));
+
+                Double valueToPay = 0.0;
+
+                if (inst >= remaining) {
+                    valueToPay = remaining;
+
+                    loanPayments.setAmountPaid("" + valueToPay);
+                    loanPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
+
+                    remaining = 0.0;
+                    apploanPayments.add(loanPayments);
+
+                    balncesViewModel.insertSingleLoanPayment(loanPayments);
+                    break;
+                } else {
+
+
+                    valueToPay = remaining - inst;
+
+                    loanPayments.setAmountPaid("" + valueToPay);
+                    loanPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
+                    remaining = toLoanInstallmentPayment - inst;
+
+                    apploanPayments.add(loanPayments);
+
+                    balncesViewModel.insertSingleLoanPayment(loanPayments);
+
+
+                }
+
+            }
+
+            Gson gson = new Gson();
+            Type type = new TypeToken<List<LoanPayments>>() {
+            }.getType();
+            json = gson.toJson(apploanPayments, type);
+            Log.d("insertLoan", "strig  " + json);
+
+        }
+        //  }
+        // });
+
+
+        return json;
+    }
+
+    public static String insertOrderPayment(double toOrderInstallmentPayment,
+                                            BalncesViewModel balncesViewModel, FamerModel famerModel, String paymentMethod) {
+        List<OrderPayments> appOrderPayments = new LinkedList<>();
+
+        List<FarmerOrdersTable> farmerOrdersTables = balncesViewModel.getFarmerOrderByPayoutNumberByFarmerByStatus(famerModel.getCode(), 0);
+
+        remainingOrderInstall = toOrderInstallmentPayment;
+
+        if (farmerOrdersTables != null) {
+            for (int a = 0; a < farmerOrdersTables.size(); a++) {
+
+
+                FarmerOrdersTable farmerOrders = farmerOrdersTables.get(a);
+                Double amp = Double.valueOf(farmerOrders.getOrderAmount());
+                Double inst = Double.valueOf(farmerOrders.getInstallmentAmount());
+
+                OrderPayments orderPayments = new OrderPayments();
+                orderPayments.setOrderCode(farmerOrders.getCode());
+                orderPayments.setPaymentMethod(paymentMethod);
+                orderPayments.setRefNo(paymentMethod);
+                orderPayments.setPayoutCode(paymentMethod);
+                orderPayments.setTimestamp(DateTimeUtils.Companion.getNow());
+
+                Double valueToPay = 0.0;
+
+                if (inst >= remainingOrderInstall) {
+
+                    valueToPay = remainingOrderInstall;
+
+                    orderPayments.setAmountPaid("" + valueToPay);
+                    orderPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
+
+
+                    remainingOrderInstall = 0.0;
+                    appOrderPayments.add(orderPayments);
+                    balncesViewModel.insertSingleOrderPayment(orderPayments);
+
+
+                    break;
+                } else {
+
+
+                    valueToPay = remainingOrderInstall - inst;
+
+                    orderPayments.setAmountPaid("" + valueToPay);
+                    orderPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
+                    remaining = toOrderInstallmentPayment - inst;
+
+                    appOrderPayments.add(orderPayments);
+
+                    balncesViewModel.insertSingleOrderPayment(orderPayments);
+
+
+                }
+
+            }
+
+            Gson gson = new Gson();
+            Type type = new TypeToken<List<OrderPayments>>() {
+            }.getType();
+            json = gson.toJson(appOrderPayments, type);
+        }
+        //  }
+        //  });
+
+        return json;
     }
 
     public static String getPreviousPayoutBalance(FamerModel famerModel, BalncesViewModel balncesViewModel) {
@@ -3233,14 +3254,19 @@ public class CommonFuncs {
     }
 
     public static boolean canApprovePayout(Payouts payouts) {
-        if (payouts.getStatus() == 1) {
-            return false;
+        try {
+            if (payouts.getStatus() == 1) {
+                return false;
 
-        } else {
-            return payouts.getEndDate().equals(DateTimeUtils.Companion.getToday()) ||
-                    DateTimeUtils.Companion.isPastLastDay(payouts.getEndDate());
+            } else {
+                return payouts.getEndDate().equals(DateTimeUtils.Companion.getToday()) ||
+                        DateTimeUtils.Companion.isPastLastDay(payouts.getEndDate());
+            }
+
+        } catch (Exception nm) {
+            nm.printStackTrace();
         }
-
+        return false;
     }
 
     public static void setUpView(Fragment fragment, FragmentManager manager) {

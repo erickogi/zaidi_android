@@ -435,6 +435,11 @@ public class TraderViewModel extends AndroidViewModel
         return farmerRepo.getFramerByCode(code);
     }
 
+    public FamerModel getFarmersByCodeOne(String code) {
+
+        return farmerRepo.getFramerByCodeOne(code);
+    }
+
     public int getFarmersCountByCycle(String code) {
         return (farmerRepo.getFarmersCountByCycle(code));
 
@@ -1001,14 +1006,9 @@ public class TraderViewModel extends AndroidViewModel
     public ResponseModel createCollectionsU(Collection collection) {
 
         ResponseModel responseModel = new ResponseModel();
-
         collection.setTraderCode(prefrenceManager.getTraderModel().getCode());
-
-
         Payouts p = getLastPayout(collection.getCycleCode());
         Payouts plastIfOne = getLastPayout();
-
-
         Cycles c = getCycleO(collection.getCycleCode());
         if (c == null) {
             c = insertCycles(collection.getCycleCode());

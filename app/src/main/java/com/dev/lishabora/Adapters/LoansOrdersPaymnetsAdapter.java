@@ -52,7 +52,7 @@ public class LoansOrdersPaymnetsAdapter extends RecyclerView.Adapter<LoanOrderPa
     public LoanOrderPaymentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = null;
 
-        itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.farmer_card_v2, parent, false);
+        itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.trader_loanorderpayment_card, parent, false);
         //itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.farmer_card_v1, parent, false);
 
         return new LoanOrderPaymentViewHolder(itemView, listener);
@@ -66,7 +66,6 @@ public class LoansOrdersPaymnetsAdapter extends RecyclerView.Adapter<LoanOrderPa
 
             LoanPayments model = modelListLoans.get(position);
             holder.txtDate.setText(DateTimeUtils.Companion.getDisplayDate(model.getTimeStamp()));
-            holder.farmer.setText("");
             holder.amount.setText(model.getAmountPaid());
             holder.balance.setText(model.getAmountRemaining());
 
@@ -74,7 +73,7 @@ public class LoansOrdersPaymnetsAdapter extends RecyclerView.Adapter<LoanOrderPa
         } else {
             OrderPayments model = modelListOrders.get(position);
             holder.txtDate.setText(DateTimeUtils.Companion.getDisplayDate(model.getTimestamp()));
-            holder.farmer.setText("");
+            //   holder.farmer.setText("");
             holder.amount.setText(model.getAmountPaid());
             holder.balance.setText(model.getAmountRemaining());
 

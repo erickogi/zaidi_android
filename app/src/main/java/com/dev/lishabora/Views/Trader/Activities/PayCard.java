@@ -16,6 +16,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -63,6 +64,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 import timber.log.Timber;
 
@@ -106,6 +108,52 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
     double remaining = 0.0;
     double remainingOrderInstall = 0.0;
 
+    String json = "";
+    private List<FamerModel> famerModelsBottom;
+    private List<Collection> collectionsBottom;
+
+    private void loadFarmers() {
+
+
+        try {
+            payoutsVewModel.getFarmersByCycle("" + payouts.getCycleCode()).observe(this, famerModels -> {
+                if (famerModels != null) {
+
+                    this.famerModelsBottom = famerModels;
+
+                    loadCollectionPayouts();
+
+                } else {
+
+                }
+            });
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+    }
+
+    private void loadCollectionPayouts() {
+
+        payoutsVewModel.getCollectionByDateByPayout("" + payouts.getCode()).observe(this, collections -> {
+            if (collections != null) {
+
+
+                this.collectionsBottom = collections;
+                setUpFarmerCollectionList();
+            }
+        });
+
+
+    }
+
+
+
+
+
+
+
+
+
 
     private void loadCollections(String payoutCode, String farmerCode) {
         payoutsVewModel.getCollectionByDateByPayoutByFarmer(payoutCode, farmerCode).observe(this, collections -> {
@@ -140,53 +188,23 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
 
     }
 
+    private void setUpFarmerCollectionList() {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pay_card);
-        payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
-        traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
-        balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
-        famerModel = (FamerModel) getIntent().getSerializableExtra("farmer");
+        List<PayoutFarmersCollectionModel> collectionModels = new LinkedList<>();
 
 
-        initList();
-        toolBar = findViewById(R.id.toolbar);
-
-        btnApprove = findViewById(R.id.btn_approve);
-        btnApprove.setVisibility(View.GONE);
-        txtApprovalStatus = findViewById(R.id.txt_approval_status);
+        for (FamerModel famerModel : famerModelsBottom) {
 
 
-        btnBack = findViewById(R.id.btn_back);
-        btnBack.setVisibility(View.GONE);
-
-        statusview = findViewById(R.id.status_view);
-        background = findViewById(R.id.background);
-        save = findViewById(R.id.save_btn);
-        save.setVisibility(View.GONE);
-        layoutBottomSheet = findViewById(R.id.bottom_sheet);
+            collectionModels.add(CommonFuncs.getFarmersCollectionModel(famerModel, collectionsBottom, payouts));
 
 
-        PayoutFarmersCollectionModel model = (PayoutFarmersCollectionModel) getIntent().getSerializableExtra("data");
-        payouts = (Payouts) getIntent().getSerializableExtra("payout");
-        setData(model);
-
-        String data = getIntent().getStringExtra("farmers");
-
-        if (data != null && !data.equals("null")) {
-
-            Gson gson = new Gson();
-            Type listType = new TypeToken<LinkedList<PayoutFarmersCollectionModel>>() {
-            }.getType();
-            setBottom();
-            initBottomList(gson.fromJson(data, listType));
-
-        } else {
-            layoutBottomSheet.setVisibility(View.GONE);
         }
 
+        Objects.requireNonNull(this).runOnUiThread(() -> initBottomList(collectionModels));
+
+        // initBottomList(collectionModels);
+        // setUpListBottom(collectionModels);
 
 
     }
@@ -391,90 +409,55 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
         });
     }
 
-    public void initList() {
-        recyclerView = findViewById(R.id.recyclerView);
-        mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(mStaggeredLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_pay_card);
+        payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
+        traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
+        balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
+        famerModel = (FamerModel) getIntent().getSerializableExtra("farmer");
 
 
-        if (dayCollectionModels == null) {
-            dayCollectionModels = new LinkedList<>();
+        initList();
+        toolBar = findViewById(R.id.toolbar);
+
+        btnApprove = findViewById(R.id.btn_approve);
+        btnApprove.setVisibility(View.GONE);
+        txtApprovalStatus = findViewById(R.id.txt_approval_status);
+
+
+        btnBack = findViewById(R.id.btn_back);
+        btnBack.setVisibility(View.GONE);
+
+        statusview = findViewById(R.id.status_view);
+        background = findViewById(R.id.background);
+        save = findViewById(R.id.save_btn);
+        save.setVisibility(View.GONE);
+        layoutBottomSheet = findViewById(R.id.bottom_sheet);
+
+
+        PayoutFarmersCollectionModel model = (PayoutFarmersCollectionModel) getIntent().getSerializableExtra("data");
+        payouts = (Payouts) getIntent().getSerializableExtra("payout");
+        setData(model);
+
+        String data = getIntent().getStringExtra("farmers");
+
+        if (data != null && !data.equals("null")) {
+
+//            Gson gson = new Gson();
+//            Type listType = new TypeToken<LinkedList<PayoutFarmersCollectionModel>>() {
+//            }.getType();
+//            setBottom();
+//            initBottomList(gson.fromJson(data, listType));
+
+            new Thread(this::loadFarmers).start();
+
+
+        } else {
+            layoutBottomSheet.setVisibility(View.GONE);
         }
 
-
-        listAdapter = new FarmerCollectionsAdapter(this, dayCollectionModels, new AdvancedOnclickRecyclerListener() {
-            @Override
-            public void onSwipe(int adapterPosition, int direction) {
-
-
-            }
-
-            @Override
-            public void onClickListener(int position) {
-
-
-            }
-
-            @Override
-            public void onLongClickListener(int position) {
-
-
-            }
-
-            @Override
-            public void onCheckedClickListener(int position) {
-
-            }
-
-            @Override
-            public void onMoreClickListener(int position) {
-
-            }
-
-            @Override
-            public void onClickListener(int adapterPosition, @NotNull View view) {
-
-
-            }
-
-            @Override
-            public void onEditTextChanged(int adapterPosition, int time, int type, View editable) {
-                if (Application.isTimeAutomatic()) {
-                    if (dayCollectionModels.get(adapterPosition).getPayoutStatus() == 0) {
-                        if (DateTimeUtils.Companion.isPastLastDay(dayCollectionModels.get(adapterPosition).getDate(), 1)) {
-
-
-                            CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
-                            editValue(true, adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
-
-
-                        } else {
-                            MyToast.toast("Future collections cannot be edited", PayCard.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
-
-                            // CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
-                            // editValue(false,adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
-
-                        }
-                    } else {
-                        CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
-                        editValue(false, adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
-
-                        MyToast.toast("Cards in an approved payout cannot be edited", PayCard.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
-
-                    }
-                } else {
-                    CommonFuncs.timeIs(PayCard.this);
-
-                }
-            }
-
-        }, false);
-
-
-        recyclerView.setAdapter(listAdapter);
-
-        listAdapter.notifyDataSetChanged();
 
 
     }
@@ -585,15 +568,102 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
 
     }
 
-    public String insertLoanPayment(double toLoanInstallmentPayment) {
-        List<LoanPayments> apploanPayments = new LinkedList<>();
-        balncesViewModel.getFarmerLoanByFarmerByStatus(famerModel.getCode(), 0).observe(PayCard.this, new Observer<List<FarmerLoansTable>>() {
+    public void initList() {
+        recyclerView = findViewById(R.id.recyclerView);
+        mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(mStaggeredLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+
+        if (dayCollectionModels == null) {
+            dayCollectionModels = new LinkedList<>();
+        }
+
+
+        listAdapter = new FarmerCollectionsAdapter(this, dayCollectionModels, new AdvancedOnclickRecyclerListener() {
             @Override
-            public void onChanged(@Nullable List<FarmerLoansTable> farmerLoansTables) {
+            public void onSwipe(int adapterPosition, int direction) {
+
+
+            }
+
+            @Override
+            public void onClickListener(int position) {
+
+
+            }
+
+            @Override
+            public void onLongClickListener(int position) {
+
+
+            }
+
+            @Override
+            public void onCheckedClickListener(int position) {
+
+            }
+
+            @Override
+            public void onMoreClickListener(int position) {
+
+            }
+
+            @Override
+            public void onClickListener(int adapterPosition, @NotNull View view) {
+
+
+            }
+
+            @Override
+            public void onEditTextChanged(int adapterPosition, int time, int type, View editable) {
+                if (Application.isTimeAutomatic()) {
+                    if (dayCollectionModels.get(adapterPosition).getPayoutStatus() == 0 && dayCollectionModels.get(adapterPosition).getCollectionStatus() == 0) {
+                        if (DateTimeUtils.Companion.isPastLastDay(dayCollectionModels.get(adapterPosition).getDate(), 1)) {
+
+
+                            CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
+                            editValue(true, adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
+
+
+                        } else {
+                            MyToast.toast("Future collections cannot be edited", PayCard.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+
+
+                        }
+                    } else {
+                        CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
+                        editValue(false, adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
+                        MyToast.toast("Cards in an approved payout cannot be edited", PayCard.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+
+                    }
+                } else {
+                    CommonFuncs.timeIs(PayCard.this);
+
+                }
+            }
+
+        }, false);
+
+
+        recyclerView.setAdapter(listAdapter);
+
+        listAdapter.notifyDataSetChanged();
+
+
+    }
+
+    public String insertLoanPayment(double toLoanInstallmentPayment) {
+        Log.d("insertLoan", "to laon" + toLoanInstallmentPayment);
+        json = "";
+        List<LoanPayments> apploanPayments = new LinkedList<>();
+        List<FarmerLoansTable> farmerLoansTables = balncesViewModel.getFarmerLoanByPayoutNumberByFarmerByStatus(famerModel.getCode(), 0);
+
                 remaining = toLoanInstallmentPayment;
 
                 if (farmerLoansTables != null) {
                     for (int a = 0; a < farmerLoansTables.size(); a++) {
+                        Log.d("insertLoan", "" + farmerLoansTables.size());
 
 
                         FarmerLoansTable farmerLoan = farmerLoansTables.get(a);
@@ -618,8 +688,9 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
                             loanPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
 
                             remaining = 0.0;
-                            balncesViewModel.insertSingleLoanPayment(loanPayments);
                             apploanPayments.add(loanPayments);
+
+                            balncesViewModel.insertSingleLoanPayment(loanPayments);
                             break;
                         } else {
 
@@ -629,31 +700,36 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
                             loanPayments.setAmountPaid("" + valueToPay);
                             loanPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
                             remaining = toLoanInstallmentPayment - inst;
-                            balncesViewModel.insertSingleLoanPayment(loanPayments);
 
                             apploanPayments.add(loanPayments);
+
+                            balncesViewModel.insertSingleLoanPayment(loanPayments);
+
 
 
                         }
 
                     }
-                }
-            }
-        });
 
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<LoanPayments>>() {
-        }.getType();
-        String json = gson.toJson(apploanPayments, type);
+                    Gson gson = new Gson();
+                    Type type = new TypeToken<List<LoanPayments>>() {
+                    }.getType();
+                    json = gson.toJson(apploanPayments, type);
+                    Log.d("insertLoan", "strig  " + json);
+
+                }
+        //  }
+        // });
+
+
         return json;
     }
 
     public String insertOrderPayment(double toOrderInstallmentPayment) {
         List<OrderPayments> appOrderPayments = new LinkedList<>();
 
-        balncesViewModel.getFarmerOrderByFarmerByStatus(famerModel.getCode(), 0).observe(PayCard.this, new Observer<List<FarmerOrdersTable>>() {
-            @Override
-            public void onChanged(@Nullable List<FarmerOrdersTable> farmerOrdersTables) {
+        List<FarmerOrdersTable> farmerOrdersTables = balncesViewModel.getFarmerOrderByPayoutNumberByFarmerByStatus(famerModel.getCode(), 0);
+
                 remainingOrderInstall = toOrderInstallmentPayment;
 
                 if (farmerOrdersTables != null) {
@@ -704,14 +780,15 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
                         }
 
                     }
-                }
-            }
-        });
 
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<OrderPayments>>() {
-        }.getType();
-        String json = gson.toJson(appOrderPayments, type);
+                    Gson gson = new Gson();
+                    Type type = new TypeToken<List<OrderPayments>>() {
+                    }.getType();
+                    json = gson.toJson(appOrderPayments, type);
+                }
+        //  }
+        //  });
+
         return json;
     }
 
@@ -736,6 +813,7 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
             }.getType();
             List<LoanPayments> fromJson = gson.fromJson(approvalRegisterModel.getLoanPaymentCode(), type);
 
+
             for (LoanPayments task : fromJson) {
                 LoanPayments p = balncesViewModel.getLoanPaymentByCodeOne(task.getCode());
                 balncesViewModel.deleteRecordLoanPayment(p);
@@ -751,7 +829,9 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
 
             for (OrderPayments task : fromJson) {
                 OrderPayments p = balncesViewModel.getOrderPaymentByCodeOne(task.getCode());
-                balncesViewModel.deleteRecordOrderPayment(p);
+                if (p != null) {
+                    balncesViewModel.deleteRecordOrderPayment(p);
+                }
             }
 
         }
@@ -779,7 +859,9 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
         alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
 
             cancelCollections(famerModel.getCode(), payouts.getCode());
-            cancelLoansandOrders(approvalRegisterModel);
+            if (approvalRegisterModel != null) {
+                cancelLoansandOrders(approvalRegisterModel);
+            }
             cancelBalance(approvalRegisterModel);
 
 
@@ -794,23 +876,26 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
 
     private void approve(Payouts payouts, PayoutFarmersCollectionModel model) {
 
+        PayoutFarmersCollectionModel farmersCollectionModel = model;
+        farmersCollectionModel.setMilktotalKsh(toolBar.getMilkTotalKsh());
+        farmersCollectionModel.setLoanTotal(toolBar.getLoanTotal());
+        farmersCollectionModel.setOrderTotal(toolBar.getOrderTotal());
 
-        model.setMilktotalKsh(toolBar.getMilkTotalKsh());
-        model.setLoanTotal(toolBar.getLoanTotal());
-        model.setOrderTotal(toolBar.getOrderTotal());
 
-
-        CommonFuncs.doAprove(PayCard.this, balncesViewModel, traderViewModel, model, famerModel, payouts, this, getBalance(toolBar.getMilkTotalKsh(), toolBar.getLoanTotal(), toolBar.getOrderTotal()));
+        CommonFuncs.doAprove(PayCard.this, balncesViewModel, traderViewModel, farmersCollectionModel, famerModel, payouts, this, getBalance(toolBar.getMilkTotalKsh(), toolBar.getLoanTotal(), toolBar.getOrderTotal()));
 
 
     }
 
     public void approvePayoutBalance() {
 
-        FarmerBalance farmerBalance = balncesViewModel.getByFarmerCodeByPayoutOne(famerModel.getCode(), payouts.getCode());
-        farmerBalance.setPayoutStatus(1);
 
-        balncesViewModel.updateRecord(farmerBalance);
+        FarmerBalance farmerBalance = balncesViewModel.getByFarmerCodeByPayoutOne(famerModel.getCode(), payouts.getCode());
+        if (farmerBalance != null) {
+            farmerBalance.setPayoutStatus(1);
+
+            balncesViewModel.updateRecord(farmerBalance);
+        }
         refreshFarmerBalance();
 
     }
@@ -858,10 +943,13 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
     }
 
     private void refreshFarmerBalance() {
-        FarmerBalance bal = CommonFuncs.getFarmerBalanceAfterPayoutCardApproval(famerModel, balncesViewModel, traderViewModel);
+        FarmerBalance bal;//= CommonFuncs.getFarmerBalanceAfterPayoutCardApproval(famerModel, balncesViewModel, traderViewModel,payouts);
 
-        famerModel.setTotalbalance(bal.getBalanceToPay());
-        traderViewModel.updateFarmer(famerModel, false, true);
+        bal = balncesViewModel.getByFarmerCodeByPayoutOne(famerModel.getCode(), payouts.getCode());
+        if (bal != null) {
+            famerModel.setTotalbalance(bal.getBalanceToPay());
+            traderViewModel.updateFarmer(famerModel, false, true);
+        }
 
 
 
@@ -869,33 +957,48 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
 
     @Override
     public void onApprove(double farmerBalance, PayoutFarmersCollectionModel model, Double totalKshToPay, Double toLoanInstallmentPayment, Double toOrderInstallmentPayment) {
+        Log.d("approve", " both loan and orders");
+
         String loanPaymnets = insertLoanPayment(toLoanInstallmentPayment);
         String orderPayments = insertOrderPayment(toOrderInstallmentPayment);
 
 
         approveCard(model, loanPaymnets, orderPayments);
 
+
     }
 
     @Override
     public void onApprovePayLoan(double farmerBalance, PayoutFarmersCollectionModel model, Double totalKshToPay, Double toLoanInstallmentPayment) {
+        Log.d("approve", " loan");
+
         String loanPaymnets = insertLoanPayment(toLoanInstallmentPayment);
         approveCard(model, loanPaymnets, null);
+
+
     }
 
     @Override
     public void onApprovePayOrder(double farmerBalance, PayoutFarmersCollectionModel model, Double totalKshToPay, Double toOrderInstallmentPayment) {
+        Log.d("approve", " order");
+
         String orderPayments = insertOrderPayment(toOrderInstallmentPayment);
         approveCard(model, null, orderPayments);
+
+
     }
 
     @Override
     public void onApprove(double farmerBalance, PayoutFarmersCollectionModel model, Double totalKshToPay) {
+        Log.d("approve", " null");
+
         approveCard(model, null, null);
     }
 
     @Override
     public void onApprove(double farmerBalance, PayoutFarmersCollectionModel model) {
+        Log.d("approve", " null");
+
         approveCard(model, null, null);
     }
 

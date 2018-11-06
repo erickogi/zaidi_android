@@ -211,11 +211,12 @@ public class EditOrder extends AppCompatActivity {
         dayCollectionModel = (DayCollectionModel) getIntent().getSerializableExtra("dayCollection");
         isEditable = getIntent().getBooleanExtra("isEditable", true);
         easyFlipView = findViewById(R.id.easyFlipView);
+        currentSide = EasyFlipView.FlipState.FRONT_SIDE;
+
         famerModel = OrderConstants.getFamerModel();
 
         initViewCustomDialog();
         setUpClear();
-        currentSide = EasyFlipView.FlipState.FRONT_SIDE;
 
 
         setFrontSideData();

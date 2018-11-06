@@ -54,6 +54,10 @@ public class OrderPaymentsRepo {
         return dao.getOrderPaymentByOrderCode(orderCode);
     }
 
+    public List<OrderPayments> getOrderPaymentByOrderCodeOne(String orderCode) {
+        return dao.getOrderPaymentByOrderCodeOne(orderCode);
+    }
+
     public LiveData<List<OrderPayments>> getOrderPaymentByPaout(String payoutCode) {
         return dao.getOrderPaymentByPaout(payoutCode);
     }

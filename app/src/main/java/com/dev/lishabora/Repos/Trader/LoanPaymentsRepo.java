@@ -54,6 +54,10 @@ public class LoanPaymentsRepo {
         return dao.getLoanPaymentByLoanCode(loanCode);
     }
 
+    public List<LoanPayments> getLoanPaymentByLoanCodeoOne(String loanCode) {
+        return dao.getLoanPaymentByLoanCodeOne(loanCode);
+    }
+
     public LiveData<List<LoanPayments>> getLoanPaymentByPaout(String payoutCode) {
         return dao.getLoanPaymentByPaout(payoutCode);
     }

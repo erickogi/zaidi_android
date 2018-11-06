@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -201,10 +202,12 @@ public class TraderActivity extends AppCompatActivity {
 
     private void listenOnSyncStatus() {
         TextView txt_network_state = d.getFooter().findViewById(R.id.txt_network_state);
+        TextView txt_version = d.getFooter().findViewById(R.id.txt_apk);
 
         viewModel.getTrader(traderPrefs.getCode()).observe(this, traderModel -> {
 
             if (traderModel != null) {
+
                 if (traderModel.getSynchingStatus() == 1) {
                     txt_network_state.setVisibility(View.VISIBLE);
                     txt_network_state.setText("Syncing data ....");
@@ -226,7 +229,20 @@ public class TraderActivity extends AppCompatActivity {
 
 
         });
+
+
+        PackageInfo pinfo;
+        try {
+            pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            String versionName = pinfo.versionName;
+            txt_version.setText(versionName);
+            //ET2.setText(versionNumber);
+        } catch (PackageManager.NameNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
+
 
 
     void setUpDrawer(Toolbar toolbar, String name, String email) {

@@ -13,6 +13,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
+import com.amitshekhar.DebugDB;
 import com.androidnetworking.AndroidNetworking;
 import com.dev.lishabora.COntrollers.LoginController;
 import com.dev.lishabora.Database.LMDatabase;
@@ -63,7 +64,6 @@ import com.dev.lishaboramobile.R;
 import com.evernote.android.job.JobManager;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.google.gson.Gson;
-import com.rohitss.uceh.UCEHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -75,6 +75,8 @@ import java.util.Random;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
+
+//import com.rohitss.uceh.UCEHandler;
 
 //import com.rohitss.uceh.UCEHandler;
 
@@ -860,8 +862,10 @@ public class Application extends MultiDexApplication {
 
         UpSyncJob.schedulePeriodic();
 
-        new UCEHandler.Builder(this).setTrackActivitiesEnabled(true).addCommaSeparatedEmailAddresses("eric@lishabora.com").build();
+        //  new UCEHandler.Builder(this).setTrackActivitiesEnabled(true).addCommaSeparatedEmailAddresses("eric@lishabora.com").build();
         initConnectivityListener();
+
+        DebugDB.getAddressLog();
 
 
     }

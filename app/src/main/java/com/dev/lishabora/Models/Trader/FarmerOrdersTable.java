@@ -6,6 +6,7 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Entity(tableName = "famersOrders", indices = {@Index(value = {"id", "code"}, unique = true)})
 
@@ -33,7 +34,18 @@ public class FarmerOrdersTable implements Serializable {
 
     private String code;
 
-//    public FarmerOrdersTable(String code,String collectionId, String payoutCode, String farmerCode, String orderAmount, String orderAmountPaid, String installmentAmount, String installmentNo, int status, String timestamp) {
+    @Ignore
+    private List<OrderPayments> orderPayments;
+
+    public List<OrderPayments> getOrderPayments() {
+        return orderPayments;
+    }
+
+    public void setOrderPayments(List<OrderPayments> orderPayments) {
+        this.orderPayments = orderPayments;
+    }
+
+    //    public FarmerOrdersTable(String code,String collectionId, String payoutCode, String farmerCode, String orderAmount, String orderAmountPaid, String installmentAmount, String installmentNo, int status, String timestamp) {
 //        this.code=code;
 //        this.collectionCode = collectionId;
 //        this.payoutCode = payoutCode;

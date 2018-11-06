@@ -157,6 +157,13 @@ class DateTimeUtils {
             return dateFormat.format(date)
         }
 
+        fun getNowSmall(): String {
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+            val date = Date()
+
+            return dateFormat.format(date)
+        }
+
 
         fun getRelativeTimeSpan(dateString: String, originalFormat: String): String {
 
@@ -248,6 +255,13 @@ class DateTimeUtils {
 
         fun isToday(date: DateTime): Boolean {
             if (date == DateTime()) {
+                return true
+            }
+            return false
+        }
+
+        fun isTodayN(date: DateTime): Boolean {
+            if (date == conver2Date(getNowSmall())) {
                 return true
             }
             return false

@@ -27,7 +27,7 @@ public class LoanOrderPaymentViewHolder extends RecyclerView.ViewHolder implemen
 
         balance = itemView.findViewById(R.id.txt_balance);
 
-        farmer = itemView.findViewById(R.id.txt_farmer);
+        // farmer = itemView.findViewById(R.id.txt_farmer);
 
         amount = itemView.findViewById(R.id.txt_amount);
 

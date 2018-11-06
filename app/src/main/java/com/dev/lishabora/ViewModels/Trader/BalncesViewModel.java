@@ -618,6 +618,10 @@ public class BalncesViewModel extends AndroidViewModel
         return loanPaymentsRepo.getLoanPaymentByLoanCode(loanCode);
     }
 
+    public List<LoanPayments> getLoanPaymentByLoanCodeOne(String loanCode) {
+        return loanPaymentsRepo.getLoanPaymentByLoanCodeoOne(loanCode);
+    }
+
     public LiveData<List<LoanPayments>> getLoanPaymentByPaout(String payoutNo) {
         return loanPaymentsRepo.getLoanPaymentByPaout(payoutNo);
     }
@@ -719,6 +723,11 @@ public class BalncesViewModel extends AndroidViewModel
     public LiveData<List<OrderPayments>> getOrderPaymentByOrderCode(String orderCode) {
         return orderPaymentsRepo.getOrderPaymentByOrderCode(orderCode);
     }
+
+    public List<OrderPayments> getOrderPaymentByOrderCodeOne(String orderCode) {
+        return orderPaymentsRepo.getOrderPaymentByOrderCodeOne(orderCode);
+    }
+
 
     public LiveData<List<OrderPayments>> getOrderPaymentByPaout(String payoutNo) {
         return orderPaymentsRepo.getOrderPaymentByPaout(payoutNo);

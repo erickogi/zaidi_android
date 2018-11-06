@@ -42,6 +42,10 @@ public interface OrderPaymentsDao {
     @Query("SELECT * FROM ORDERPAYMENTS WHERE orderCode =:orderCode")
     LiveData<List<OrderPayments>> getOrderPaymentByOrderCode(String orderCode);
 
+    @Query("SELECT * FROM ORDERPAYMENTS WHERE orderCode =:orderCode")
+    List<OrderPayments> getOrderPaymentByOrderCodeOne(String orderCode);
+
+
     @Query("SELECT * FROM ORDERPAYMENTS WHERE payoutCode =:payoutCode")
     LiveData<List<OrderPayments>> getOrderPaymentByPaout(String payoutCode);
 
