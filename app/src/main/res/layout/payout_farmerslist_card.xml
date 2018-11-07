@@ -204,7 +204,10 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="0.0 Ltrs" />
+                        android:text="0.0 Ltrs"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textSize="12.5sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
 

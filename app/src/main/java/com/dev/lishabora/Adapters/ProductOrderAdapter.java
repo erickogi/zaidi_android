@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.dev.lishabora.Adapters.ViewHolders.ProductOrderViewHolder;
 import com.dev.lishabora.Models.ProductOrderModel;
+import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
 
@@ -52,11 +53,24 @@ public class ProductOrderAdapter extends RecyclerView.Adapter<ProductOrderViewHo
     public void onBindViewHolder(ProductOrderViewHolder holder, int position) {
         ProductOrderModel productsModel = modelList.get(position);
 
-        holder.selling.setText(productsModel.getTotalprice());
+        String vTP = productsModel.getTotalprice();
+        String vBp = productsModel.getBuyingprice();
 
-        holder.name.setText(productsModel.getNames());
+
+        try {
+            vTP = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vTP, 0)));
+            vBp = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vBp, 0)));
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+
+
+        holder.selling.setText(String.format("%s %s", vTP, context.getString(R.string.ksh)));
+        holder.name.setText(String.format("%s %s", vBp, context.getString(R.string.ksh)));
+
+
+
         holder.cost.setText(productsModel.getBuyingprice());
-
         holder.txtQty.setText(productsModel.getQuantity());
 
     }

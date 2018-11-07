@@ -409,7 +409,7 @@ public class FragmentProductList extends Fragment {
 
 
                 try {
-                    editProduct(productsModel.get(position));
+                    editProduct(filteredProductsModel.get(position));
                 } catch (Exception nm) {
                     nm.printStackTrace();
                 }

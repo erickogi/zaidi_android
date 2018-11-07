@@ -99,6 +99,10 @@ public class LoansTableRepo {
         return dao.getFarmerLoanByFarmer(farmer);
     }
 
+    public List<FarmerLoansTable> getFarmerLoanByFarmerOne(String farmer) {
+        return dao.getFarmerLoanByFarmerOne(farmer);
+    }
+
     public List<FarmerLoansTable> getFarmerLoanByPayoutCodeListOne(String payoutCode) {
         return dao.getFarmerLoanByPayoutCodeListOne(payoutCode);
     }

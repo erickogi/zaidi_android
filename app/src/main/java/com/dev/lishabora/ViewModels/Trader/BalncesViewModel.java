@@ -250,7 +250,22 @@ public class BalncesViewModel extends AndroidViewModel
                 syncModel.setObject(new Gson().toJson(o, FarmerBalance.class));
 
                 break;
+
+            case AppConstants.ENTITY_LOAN_PAYMNENTS:
+
+                syncModel.setEntityTypeName("Loan Payments");
+                syncModel.setObject(new Gson().toJson(o, LoanPayments.class));
+
+                break;
+
+            case AppConstants.ENTITY_ORDER_PAYMENTS:
+
+                syncModel.setEntityTypeName("Order Payment");
+                syncModel.setObject(new Gson().toJson(o, OrderPayments.class));
+
+                break;
         }
+
 
         createSync(syncModel);
     }
@@ -333,6 +348,10 @@ public class BalncesViewModel extends AndroidViewModel
 
     public LiveData<List<FarmerLoansTable>> getFarmerLoanByFarmer(String farmer) {
         return loansTableRepo.getFarmerLoanByFarmer(farmer);
+    }
+
+    public List<FarmerLoansTable> getFarmerLoanByFarmerOne(String farmer) {
+        return loansTableRepo.getFarmerLoanByFarmerOne(farmer);
     }
 
     public List<FarmerLoansTable> getFarmerLoanByPayoutNumberListOne(String payoutNo) {
@@ -497,6 +516,10 @@ public class BalncesViewModel extends AndroidViewModel
         return ordersTableRepo.getFarmerOrderByFarmer(farmer);
     }
 
+    public List<FarmerOrdersTable> getFarmerOrderByFarmerOne(String farmer) {
+        return ordersTableRepo.getFarmerOrderByFarmerOne(farmer);
+    }
+
     public List<FarmerOrdersTable> getFarmerOrderByPayoutCodeListOne(String payoutNo) {
         return ordersTableRepo.getFarmerOrderByPayoutCodeListOne(payoutNo);
     }
@@ -589,6 +612,14 @@ public class BalncesViewModel extends AndroidViewModel
 
     public void insertSingleLoanPayment(LoanPayments loanPayments) {
         loanPaymentsRepo.insertSingle(loanPayments);
+        loanPayments.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
+        synch(AppConstants.INSERT, AppConstants.ENTITY_LOAN_PAYMNENTS, loanPayments, null, 1);
+
+    }
+
+    public void insertSingleLoanPaymentDirect(LoanPayments loanPayments) {
+        loanPaymentsRepo.insertSingleLoanPaymentDirect(loanPayments);
         loanPayments.setTraderCode(prefrenceManager.getTraderModel().getCode());
 
         synch(AppConstants.INSERT, AppConstants.ENTITY_LOAN_PAYMNENTS, loanPayments, null, 1);

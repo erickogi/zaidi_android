@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.ProductsAdapter;
 import com.dev.lishabora.Models.ProductsModel;
+import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
@@ -404,8 +405,6 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_edit_product, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         alertDialogBuilderUserInput.setView(mView);
-//        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
-//        alertDialogBuilderUserInput.setTitle("Route");
 
 
         avi = mView.findViewById(R.id.avi);
@@ -418,7 +417,20 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
         sellingPrice = mView.findViewById(R.id.edt_product_selling_prices);
 
         name.setText(model.getNames());
-        buyPrice.setText(model.getBuyingprice());
+
+        String vSP = model.getSellingprice();
+        String vBp = model.getBuyingprice();
+
+
+        try {
+            vSP = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vSP, 0)));
+            vBp = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vBp, 0)));
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+
+
+        buyPrice.setText(String.format("%s %s", vBp, getContext().getString(R.string.ksh)));
         sellingPrice.setText(model.getSellingprice());
 
 

@@ -3,10 +3,19 @@ package com.dev.lishabora.Models.Login;
 public class AuthModel {
     private String mobile;
     private String password;
+    private int passwordstatus;
     private String apikey;
     private String code;
     private String firebasetoken;
 
+
+    public int getPasswordstatus() {
+        return passwordstatus;
+    }
+
+    public void setPasswordstatus(int passwordstatus) {
+        this.passwordstatus = passwordstatus;
+    }
 
     public String getMobile() {
         return mobile;

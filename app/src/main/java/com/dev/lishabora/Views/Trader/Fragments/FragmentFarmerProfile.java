@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
@@ -141,12 +142,26 @@ public class FragmentFarmerProfile extends Fragment {
                 txtOrder.setText("");
                 txtBalance.setText(GeneralUtills.Companion.round(farmerModel.getTotalbalance(), 1));
                 txtTime.setText(famerModel.getLastCollectionTime());
+                txtTime.setText(DateTimeUtils.Companion.getDisplayDate(famerModel.getLastCollectionTime()));
+
 
                 try {
                     getActivity().setTitle(farmerModel.getNames());
                 } catch (Exception nm) {
                     nm.printStackTrace();
                 }
+
+                String vA = farmerModel.getTotalbalance();
+
+
+                try {
+                    vA = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vA, 0)));
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
+                txtBalance.setText(vA);
+
+
 
             });
             try {

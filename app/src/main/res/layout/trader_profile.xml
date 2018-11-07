@@ -87,7 +87,8 @@
                         <TextView
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
 
-                            android:layout_width="100dp"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="match_parent"
                             android:padding="2dp"
                             android:text="Names"
@@ -96,8 +97,9 @@
 
                         <TextView
                             android:id="@+id/txt_name"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="match_parent"
+                            android:layout_weight="1"
                             android:padding="3dp"
                             android:text="Your Names goes here"
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
@@ -112,7 +114,8 @@
                         <TextView
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
 
-                            android:layout_width="100dp"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="match_parent"
                             android:padding="2dp"
                             android:text="Code. (ID)"
@@ -121,7 +124,8 @@
 
                         <TextView
                             android:id="@+id/txt_code"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="match_parent"
                             android:padding="3dp"
                             android:text="4871"
@@ -137,7 +141,8 @@
                         <TextView
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
 
-                            android:layout_width="100dp"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="match_parent"
                             android:padding="2dp"
                             android:text="Phone Number"
@@ -146,7 +151,8 @@
 
                         <TextView
                             android:id="@+id/txt_phone"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="match_parent"
                             android:padding="3dp"
                             android:text="+254 706828557"
@@ -162,7 +168,8 @@
                         <TextView
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
 
-                            android:layout_width="100dp"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="match_parent"
                             android:padding="2dp"
                             android:text="Business Name"
@@ -171,7 +178,8 @@
 
                         <TextView
                             android:id="@+id/txt_business_name"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="match_parent"
                             android:padding="3dp"
                             android:text="+254 706828557"
@@ -222,7 +230,8 @@
                         <TextView
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
 
-                            android:layout_width="100dp"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="match_parent"
                             android:padding="2dp"
                             android:text="Route (No)"
@@ -231,7 +240,8 @@
 
                         <TextView
                             android:id="@+id/txt_routes"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="match_parent"
                             android:padding="3dp"
                             android:text="12"
@@ -246,7 +256,8 @@
 
                         <TextView
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                            android:layout_width="100dp"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="match_parent"
                             android:padding="2dp"
                             android:text="Products"
@@ -255,7 +266,8 @@
 
                         <TextView
                             android:id="@+id/txt_products"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="match_parent"
                             android:padding="3dp"
                             android:text="30"

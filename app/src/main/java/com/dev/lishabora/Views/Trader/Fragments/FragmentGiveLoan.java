@@ -56,9 +56,9 @@ public class FragmentGiveLoan extends Fragment implements CollectListener {
     String ampm = "";
     Cycles c;
     String StringValue = null;
-    //String PmStringValue = null;
+
     Double DoubleValue = 0.0;
-    // Double PmDoubleValue = 0.0;
+
     Collection collModel = null;
     // Collection PmCollModel = null;
     private FamerModel famerModel;
@@ -113,7 +113,6 @@ public class FragmentGiveLoan extends Fragment implements CollectListener {
             if (l != null) {
                 if (l.getLoanAmount() != null && !l.getLoanAmount().equals("0.0"))
                     txt.setText(l.getLoanAmount());
-                Log.d("loandebug", l.getLoanAmount());
 
                 txtPrice.setText(l.getInstallmentAmount());
                 txtQty.setText(l.getInstallmentsNo());
@@ -318,6 +317,11 @@ public class FragmentGiveLoan extends Fragment implements CollectListener {
             x = models.size();
         }
 
+        List<Collection> collections = payoutsVewModel.getCollectionByDateByPayoutByFarmerListOne(famerModel.getCurrentPayoutCode(), famerModel.getCode());//.observe(this);
+
+        if (collections != null) {
+
+        }
         setData(String.valueOf(milkTotal / x), String.valueOf(loanTotal / x), String.valueOf(OrderTotal / x));
 
     }

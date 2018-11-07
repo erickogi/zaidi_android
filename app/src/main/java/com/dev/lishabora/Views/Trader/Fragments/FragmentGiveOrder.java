@@ -526,8 +526,23 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
         qty = mView.findViewById(R.id.edt_product_quantity);
 
         name.setText(model.getNames());
-        buyPrice.setText(model.getBuyingprice());
-        sellingPrice.setText(model.getTotalprice());
+
+        String vSP = model.getSellingprice();
+        String vBp = model.getBuyingprice();
+
+
+        try {
+            vSP = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vSP, 0)));
+            vBp = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vBp, 0)));
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+
+
+        buyPrice.setText(String.format("%s %s", vBp, getContext().getString(R.string.ksh)));
+        sellingPrice.setText(model.getSellingprice());
+
+
         qty.setText(model.getQuantity());
 
 

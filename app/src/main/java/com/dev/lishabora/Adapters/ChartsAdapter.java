@@ -37,7 +37,6 @@ public class ChartsAdapter extends RecyclerView.Adapter<ChartsAdapter.MyViewHold
         this.listener = listener;
 
         Activity activity;
-        // activity.getSup
 
     }
 

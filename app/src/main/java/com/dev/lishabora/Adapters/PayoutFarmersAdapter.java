@@ -53,8 +53,6 @@ public class PayoutFarmersAdapter extends RecyclerView.Adapter<PayoutFarmerListV
     public void onBindViewHolder(PayoutFarmerListViewHolder holder, int position) {
         PayoutFarmersCollectionModel model = modelList.get(position);
 
-        holder.balance.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getBalance(), 1), context.getString(R.string.ksh)));
-        GeneralUtills.Companion.changeCOlor(model.getBalance(), holder.balance, 1);
 
 
         holder.id.setText(model.getFarmercode());
@@ -63,7 +61,26 @@ public class PayoutFarmersAdapter extends RecyclerView.Adapter<PayoutFarmerListV
         holder.status.setText(model.getStatusName());
 
 
-        holder.milk.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getMilktotalLtrs(), 1), context.getString(R.string.ltrs)));
+        String vB = model.getBalance();
+        String vL = model.getLoanTotal();
+        String vO = model.getOrderTotal();
+        String vM = model.getMilktotalKsh();
+
+
+        try {
+            vB = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vB, 0)));
+            vL = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vL, 0)));
+            vO = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vO, 0)));
+            vM = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vM, 0)));
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+
+
+        holder.balance.setText(String.format("%s %s", vB, context.getString(R.string.ksh)));
+        GeneralUtills.Companion.changeCOlor(model.getBalance(), holder.balance, 1);
+
+        holder.milk.setText(String.format("%s %s", vM, context.getString(R.string.ksh)));
         if (!model.getMilktotal().equals("0.0")) {
             holder.milk.setTextColor(context.getResources().getColor(R.color.colorPrimary));
             holder.milk.setTypeface(Typeface.DEFAULT_BOLD);
@@ -76,7 +93,7 @@ public class PayoutFarmersAdapter extends RecyclerView.Adapter<PayoutFarmerListV
         }
 
 
-        holder.loan.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getLoanTotal(), 1), context.getString(R.string.ksh)));
+        holder.loan.setText(String.format("%s %s", vL, context.getString(R.string.ksh)));
         if (!model.getLoanTotal().equals("0.0")) {
             holder.loan.setTextColor(context.getResources().getColor(R.color.colorPrimary));
             holder.loan.setTypeface(Typeface.DEFAULT_BOLD);
@@ -88,7 +105,7 @@ public class PayoutFarmersAdapter extends RecyclerView.Adapter<PayoutFarmerListV
 
         }
 
-        holder.order.setText(String.format("%s %s", model.getOrderTotal(), context.getString(R.string.ksh)));
+        holder.order.setText(String.format("%s %s", vO, context.getString(R.string.ksh)));
         if (!model.getOrderTotal().equals("0.0")) {
             holder.order.setTextColor(context.getResources().getColor(R.color.colorPrimary));
             holder.order.setTypeface(Typeface.DEFAULT_BOLD);

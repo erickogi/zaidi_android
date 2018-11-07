@@ -100,6 +100,10 @@ public class OrdersTableRepo {
         return dao.getFarmerOrderByFarmer(farmer);
     }
 
+    public List<FarmerOrdersTable> getFarmerOrderByFarmerOne(String farmer) {
+        return dao.getFarmerOrderByFarmerOne(farmer);
+    }
+
     public List<FarmerOrdersTable> getFarmerOrderByPayoutCodeListOne(String payoutCode) {
         return dao.getFarmerOrderByPayoutCodeListOne(payoutCode);
     }

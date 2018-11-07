@@ -62,10 +62,27 @@ public class PayoutesAdapter extends RecyclerView.Adapter<PayoutsViewHolder> {
 
         holder.cycleName.setText(model.getCyclename());
         holder.status.setText(model.getStatusName());
-        holder.milkTotal.setText(String.format("%s%s", GeneralUtills.Companion.round(model.getMilkTotalLtrs(), 1), context.getString(R.string.ltrs)));
-        holder.loanTotal.setText(String.format("%s%s", GeneralUtills.Companion.round(model.getLoanTotal(), 1), context.getString(R.string.ksh)));
-        holder.orderTotal.setText(String.format("%s%s", GeneralUtills.Companion.round(model.getOrderTotal(), 1), context.getString(R.string.ksh)));
-        holder.balance.setText(String.format("%s%s", GeneralUtills.Companion.round(model.getBalance(), 1), context.getString(R.string.ksh)));
+
+
+        String vB = model.getBalance();
+        String vL = model.getLoanTotal();
+        String vO = model.getOrderTotal();
+        String vM = model.getMilkTotalKsh();
+
+
+        try {
+            vB = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vB, 0)));
+            vL = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vL, 0)));
+            vO = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vO, 0)));
+            vM = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vM, 0)));
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+
+        holder.milkTotal.setText(String.format("%s%s", vM, context.getString(R.string.ksh)));
+        holder.loanTotal.setText(String.format("%s%s", vL, context.getString(R.string.ksh)));
+        holder.orderTotal.setText(String.format("%s%s", vO, context.getString(R.string.ksh)));
+        holder.balance.setText(String.format("%s%s", vB, context.getString(R.string.ksh)));
 
         GeneralUtills.Companion.changeCOlor(model.getBalance(), holder.balance, 1);
 

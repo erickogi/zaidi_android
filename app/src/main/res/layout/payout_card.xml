@@ -159,7 +159,7 @@
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                                     android:textColor="@color/textblack"
 
-                                    android:textStyle="normal" />
+                                    android:textStyle="bold" />
 
                                 <TextView
                                     android:id="@+id/txt_Bal_out"
@@ -169,8 +169,8 @@
                                     android:layout_weight="1"
                                     android:text="0.0 /="
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-
-                                    android:textStyle="normal" />
+                                    android:textSize="12.5sp"
+                                    android:textStyle="bold" />
 
                             </LinearLayout>
 

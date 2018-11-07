@@ -13,14 +13,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dev.lishabora.Models.Collection;
+import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.MyToast;
+import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.Views.CommonFuncs;
 import com.dev.lishabora.Views.Trader.PayoutConstants;
 import com.dev.lishaboramobile.R;
+
+import java.util.List;
 
 import static com.dev.lishabora.Views.CommonFuncs.setPayoutActionStatus;
 
@@ -32,6 +38,7 @@ public class FragmentPayoutSummary extends Fragment {
     private Payouts payouts;
     TextView txtApprovalStatus;
     private PayoutsVewModel payoutsVewModel;
+    private BalncesViewModel balncesViewModel;
     private MaterialButton btnApprove;
 
     @Override
@@ -52,6 +59,7 @@ public class FragmentPayoutSummary extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         this.view = view;
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
+        balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
 
         payouts = new Payouts();
         if (getArguments() != null) {
@@ -89,25 +97,150 @@ public class FragmentPayoutSummary extends Fragment {
 
     }
 
+    private void loadFarmers() {
+
+
+        try {
+            payoutsVewModel.getFarmersByCycle("" + payouts.getCycleCode()).observe(this, famerModels -> {
+                if (famerModels != null) {
+
+
+                    try {
+                        loadCollectionPayouts(famerModels);
+                    } catch (Exception nm) {
+                        nm.printStackTrace();
+                    }
+
+                } else {
+
+                }
+            });
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+    }
+
+    private void loadCollectionPayouts(List<FamerModel> famerModels) {
+
+        payoutsVewModel.getCollectionByDateByPayout("" + payouts.getCode()).observe(this, collections -> {
+            if (collections != null) {
+
+
+                try {
+                    setUpFarmerCollectionList(famerModels, collections);
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
+            }
+        });
+
+
+    }
+
+    private void setUpFarmerCollectionList(List<FamerModel> famerModels, List<Collection> collections) {
+
+
+        Double totalBalance = 0.0;
+        Double totalMilk = 0.0;
+        Double totalOrders = 0.0;
+        Double totalLoans = 0.0;
+
+        for (FamerModel famerModel : famerModels) {
+
+
+            PayoutFarmersCollectionModel p = CommonFuncs.getFarmersCollectionModel(famerModel, collections, payouts, balncesViewModel);
+
+
+            if (p != null) {
+
+                try {
+                    totalBalance = totalBalance + Double.valueOf(p.getBalance());
+
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
+                try {
+                    totalMilk = totalMilk + Double.valueOf(p.getMilktotalKsh());
+
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
+                try {
+                    totalLoans = totalLoans + Double.valueOf(p.getLoanTotal());
+
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
+                try {
+                    totalOrders = totalOrders + Double.valueOf(p.getOrderTotal());
+
+                } catch (Exception nm) {
+                    nm.printStackTrace();
+                }
+
+            }
+        }
+
+        setData(totalBalance, totalMilk, totalLoans, totalOrders);
+
+
+    }
+
+    private void setData(Double totalBalance, Double totalMilk, Double totalLoans, Double totalOrders) {
+
+        String vB = String.valueOf(totalBalance);
+        String vL = String.valueOf(totalLoans);
+        String vO = String.valueOf(totalOrders);
+        String vM = String.valueOf(totalMilk);
+
+
+        try {
+            vB = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vB, 0)));
+            vL = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vL, 0)));
+            vO = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vO, 0)));
+            vM = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vM, 0)));
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+
+
+        milkTotal.setText(String.format("%s %s", vM, this.getString(R.string.ksh)));
+        loanTotal.setText(String.format("%s %s", vL, this.getString(R.string.ksh)));
+        orderTotal.setText(String.format("%s %s", vO, this.getString(R.string.ksh)));
+        balance.setText(String.format("%s %s", vB, this.getString(R.string.ksh)));
+
+
+        GeneralUtills.Companion.changeCOlor(String.valueOf(totalBalance), balance, 1);
+
+
+    }
+
+
     public void setCardHeaderData(com.dev.lishabora.Models.Payouts model) {
         startDate.setText(DateTimeUtils.Companion.getDisplayDate(model.getStartDate(), DateTimeUtils.Companion.getDisplayDatePattern1()));
         endDate.setText(DateTimeUtils.Companion.getDisplayDate(model.getEndDate(), DateTimeUtils.Companion.getDisplayDatePattern1()));
         cycleName.setText(model.getCyclename());
 
 
-        milkTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getMilkTotalLtrs(), 1), this.getString(R.string.ltrs)));
-        loanTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getLoanTotal(), 1), this.getString(R.string.ksh)));
-        orderTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getOrderTotal(), 1), this.getString(R.string.ksh)));
-        balance.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getBalance(), 1), this.getString(R.string.ksh)));
-        GeneralUtills.Companion.changeCOlor(model.getBalance(), balance, 1);
+        try {
+            milkTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getMilkTotalLtrs(), 1), this.getString(R.string.ltrs)));
+            loanTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getLoanTotal(), 1), this.getString(R.string.ksh)));
+            orderTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getOrderTotal(), 1), this.getString(R.string.ksh)));
+            balance.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getBalance(), 1), this.getString(R.string.ksh)));
 
+
+            GeneralUtills.Companion.changeCOlor(model.getBalance(), balance, 1);
+
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
 
         approvedCount.setText(model.getApprovedCards());
         unApprovedCount.setText(model.getPendingCards());
 
 
         if (model.getStatus() == 1) {
-            // status.setText("Active");
+
             background.setBackgroundColor(this.getResources().getColor(R.color.green_color_picker));
 
 
@@ -117,6 +250,11 @@ public class FragmentPayoutSummary extends Fragment {
         } else {
             background.setBackgroundColor(this.getResources().getColor(R.color.blue_color_picker));
 
+        }
+        try {
+            loadFarmers();
+        } catch (Exception nm) {
+            nm.printStackTrace();
         }
 
     }

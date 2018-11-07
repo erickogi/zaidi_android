@@ -218,7 +218,7 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
 
     public PayoutFarmersCollectionModel getFarmersCollectionModel() {
 
-        return CommonFuncs.getFarmersCollectionModel(famerModel, collections, payouts);
+        return CommonFuncs.getFarmersCollectionModel(famerModel, collections, payouts, balncesViewModel);
 
     }
 
@@ -542,7 +542,7 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
         balncesViewModel.getFarmerLoanByFarmer(model.getFarmercode()).observe(this, farmerLoansTables -> {
             if (farmerLoansTables != null) {
 
-                toolBar.updateLoan(CommonFuncs.getCardLoan(farmerLoansTables));
+                toolBar.updateLoan(CommonFuncs.getCardLoan(farmerLoansTables, balncesViewModel));
                 setBalance(milkKsh);
             }
         });
@@ -550,7 +550,7 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
         balncesViewModel.getFarmerOrderByFarmer(model.getFarmercode()).observe(this, farmerOrderTables -> {
             if (farmerOrderTables != null) {
 
-                toolBar.updateOrder(CommonFuncs.getCardOrder(farmerOrderTables));
+                toolBar.updateOrder(CommonFuncs.getCardOrder(farmerOrderTables, balncesViewModel));
                 setBalance(milkKsh);
             }
         });
@@ -584,7 +584,6 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
 
         balncesViewModel.getFarmerLoanByFarmerByStatus(famerModel.getCode(), 0).observe(FragmentCurrentFarmerPayout.this, farmerLoansTables -> {
             remaining = toLoanInstallmentPayment;
-
             if (farmerLoansTables != null) {
                 for (int a = 0; a < farmerLoansTables.size(); a++) {
 
@@ -629,6 +628,8 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
 
 
                     }
+                    CommonFuncs.updateLoan(farmerLoan, balncesViewModel);
+
 
                 }
             }
@@ -694,6 +695,8 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
 
 
                     }
+                    CommonFuncs.updateOrder(farmerOrders, balncesViewModel);
+
 
                 }
             }

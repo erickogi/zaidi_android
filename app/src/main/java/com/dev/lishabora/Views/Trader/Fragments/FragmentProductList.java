@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.ProductsAdapter;
 import com.dev.lishabora.Models.ProductsModel;
+import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
@@ -584,7 +585,20 @@ public class FragmentProductList extends Fragment {
         sellingPrice = mView.findViewById(R.id.edt_product_selling_prices);
 
         name.setText(model.getNames());
-        buyPrice.setText(model.getBuyingprice());
+
+        String vSP = model.getSellingprice();
+        String vBp = model.getBuyingprice();
+
+
+        try {
+            vSP = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vSP, 0)));
+            vBp = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vBp, 0)));
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+
+
+        buyPrice.setText(String.format("%s %s", vBp, getContext().getString(R.string.ksh)));
         sellingPrice.setText(model.getSellingprice());
 
 
@@ -698,11 +712,11 @@ public class FragmentProductList extends Fragment {
         public void onClick(View v) {
             TextInputEditText name, buyPrice, sellingPrice;
 
-            name = dialog.findViewById(R.id.edt_product_names);
-            buyPrice = dialog.findViewById(R.id.edt_product_cost_price);
+            // name = dialog.findViewById(R.id.edt_product_names);
+            // buyPrice = dialog.findViewById(R.id.edt_product_cost_price);
             sellingPrice = dialog.findViewById(R.id.edt_product_selling_prices);
 
-            name = dialog.findViewById(R.id.edt_rout_names);
+            // name = dialog.findViewById(R.id.edt_rout_names);
 
 
             if (sellingPrice.getText().toString().isEmpty()) {

@@ -6,13 +6,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,10 +67,12 @@ public class FragmentTraderLoans extends Fragment {
     private EasyFlipView easyFlipView;
     private EasyFlipView.FlipState currentSide;
     private TraderViewModel traderViewModel;
+    String paymentMethod = "";
+    int paymentMethodId = 0;
 
 
     private void listPayments(FarmerLoansTable code) {
-
+        String vB = String.valueOf((Double.valueOf(code.getLoanAmount())) - Double.valueOf(code.getLoanAmountPaid()));
         payments = new LinkedList<>();
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_loan_order_payments, null);
@@ -75,8 +80,8 @@ public class FragmentTraderLoans extends Fragment {
         alertDialogBuilderUserInput.setView(mView);
         alertDialogBuilderUserInput.setCancelable(true);
 
-        alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
-        alertDialogBuilderUserInput.setTitle("Loan Payments");
+        //  alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
+        alertDialogBuilderUserInput.setTitle("Loan Payments  Balance " + vB);
 
         RecyclerView recyclerView = mView.findViewById(R.id.recyclerView);
 
@@ -87,10 +92,33 @@ public class FragmentTraderLoans extends Fragment {
         MaterialButton negative1 = mView.findViewById(R.id.btn_negative1);
 
         RadioGroup radioGroup = mView.findViewById(R.id.radiogroup);
+
         TextInputEditText value = mView.findViewById(R.id.edt_value);
+        TextInputEditText edt_ref = mView.findViewById(R.id.edt_ref);
+        TextInputLayout edtL = mView.findViewById(R.id.edtl);
 
         double bal = (Double.valueOf(code.getLoanAmount())) - Double.valueOf(code.getLoanAmountPaid());
         value.setFilters(new InputFilter[]{new InputFilterMinMax(1, (int) bal)});
+
+        value.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                if (editable != null && editable.length() > 0) {
+                    // if(editable)
+                }
+            }
+        });
 
         if (code.getStatus() == 1) {
             positive.setVisibility(View.GONE);
@@ -167,6 +195,7 @@ public class FragmentTraderLoans extends Fragment {
         AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
         alertDialogAndroid.setCancelable(true);
         alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        Objects.requireNonNull(alertDialogAndroid.getWindow()).setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         try {
             alertDialogAndroid.show();
@@ -174,24 +203,16 @@ public class FragmentTraderLoans extends Fragment {
             NM.printStackTrace();
         }
 
-        positive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        positive.setOnClickListener(v -> {
 
-                if (currentSide == EasyFlipView.FlipState.FRONT_SIDE) {
+            if (currentSide == EasyFlipView.FlipState.FRONT_SIDE) {
 
-                    easyFlipView.flipTheView();
-                }
+                easyFlipView.flipTheView();
             }
         });
 
 
-        negative.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialogAndroid.dismiss();
-            }
-        });
+        negative.setOnClickListener(v -> alertDialogAndroid.dismiss());
 
         positive1.setOnClickListener(v -> {
 
@@ -203,23 +224,92 @@ public class FragmentTraderLoans extends Fragment {
                 if (radioGroup.getCheckedRadioButtonId() == -1) {
                     MyToast.toast("Select Payment method", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
                 } else {
-                    radioGroup.getCheckedRadioButtonId();
+                    String ref = "";
+                    String paymentCode = "";
 
-                    FamerModel famerModel = traderViewModel.getFarmersByCodeOne(code.getFarmerCode());
-                    CommonFuncs.insertLoanPayment(Double.valueOf(valuea), balncesViewModel, famerModel, "");
-                    refreshFarmerBalance(famerModel, code.getPayoutCode());
-                    alertDialogAndroid.dismiss();
-                    getData();
+                    if (paymentMethodId == 1 || paymentMethodId == 3) {
+
+                        if (!TextUtils.isEmpty(edt_ref.getText())) {
+                            // edt_ref.requestFocus();
+                            // edt_ref.setError("Required");
+                            ref = edt_ref.getText().toString();
+                        }
+
+
+                        radioGroup.getCheckedRadioButtonId();
+
+                        FamerModel famerModel = traderViewModel.getFarmersByCodeOne(code.getFarmerCode());
+                        CommonFuncs.insertLoanPayment(Double.valueOf(valuea), balncesViewModel, famerModel, paymentMethod, ref, paymentCode);
+                        refreshFarmerBalance(famerModel, code.getPayoutCode());
+                        CommonFuncs.updateLoan(code, balncesViewModel);
+
+                        alertDialogAndroid.dismiss();
+                        getData();
+
+                    } else {
+
+                        radioGroup.getCheckedRadioButtonId();
+
+                        FamerModel famerModel = traderViewModel.getFarmersByCodeOne(code.getFarmerCode());
+                        CommonFuncs.insertLoanPayment(Double.valueOf(valuea), balncesViewModel, famerModel, paymentMethod, ref, paymentCode);
+                        refreshFarmerBalance(famerModel, code.getPayoutCode());
+                        CommonFuncs.updateLoan(code, balncesViewModel);
+
+                        alertDialogAndroid.dismiss();
+                        getData();
+                    }
                 }
 
 
             }
 
         });
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+
+            switch (checkedId) {
+                case R.id.radio_mpesa:
+                    paymentMethod = "Mpesa";
+                    paymentMethodId = 1;
+                    edt_ref.setVisibility(View.VISIBLE);
+                    edtL.setVisibility(View.VISIBLE);
+
+                    break;
+                case R.id.radio_cash:
+                    paymentMethod = "Cash";
+                    paymentMethodId = 2;
+
+                    edt_ref.setVisibility(View.GONE);
+                    edtL.setVisibility(View.GONE);
+
+                    break;
+
+                case R.id.radio_bank:
+                    paymentMethod = "Bank";
+                    paymentMethodId = 3;
+
+                    edt_ref.setVisibility(View.VISIBLE);
+                    edtL.setVisibility(View.VISIBLE);
+
+
+                    break;
+                default:
+                    paymentMethodId = 0;
+
+                    paymentMethod = "";
+                    edt_ref.setVisibility(View.GONE);
+                    edtL.setVisibility(View.GONE);
+
+
+            }
+        });
 
 
         negative1.setOnClickListener(v -> alertDialogAndroid.dismiss());
 
+        if (listAdapterP.getItemCount() < 1) {
+
+            MyToast.toast("No payment found", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+        }
 
 
     }

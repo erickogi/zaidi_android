@@ -31,6 +31,10 @@ public class LoanPaymentsRepo {
         dao.insertSingle(loanPayments);
     }
 
+    public void insertSingleLoanPaymentDirect(LoanPayments loanPayments) {
+        dao.insertSingle(loanPayments);
+    }
+
 
     public LiveData<List<LoanPayments>> fetchAllData() {
         return dao.fetchAllData();

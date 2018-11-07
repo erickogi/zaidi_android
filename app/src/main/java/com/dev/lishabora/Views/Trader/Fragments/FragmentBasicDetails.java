@@ -12,6 +12,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
 import com.dev.lishabora.COntrollers.LoginController;
@@ -37,53 +38,16 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        // TODO: Use the ViewModel
+
     }
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // setHasOptionsMenu(true);
 
     }
 
-//    @Override
-//    public void onPrepareOptionsMenu(Menu menu) {
-//        super.onPrepareOptionsMenu(menu);
-//
-//
-//    }
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        // Do something that differs the Activity's menu here
-//        super.onCreateOptionsMenu(menu, inflater);
-//
-//        //inflater.inflate(R.menu.menu_main, menu);
-//        MenuItem mEdit = menu.findItem(R.id.action_edit);
-//
-//
-//
-//
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//
-//            case R.id.action_edit:
-//                // Do Fragment menu item stuff here
-//
-//                return true;
-//
-//
-//            default:
-//                break;
-//        }
-//
-//        return false;
-//    }
-//
 
 
 
@@ -108,8 +72,7 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
     }
 
 
-    @Override
-    public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
+    public void next() {
         if (FarmerConst.getCreateFarmerIntentType() == 1 && FarmerConst.getFamerModel() != null) {
 
         } else {
@@ -119,11 +82,16 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
         String phoneNumber = edtMobile.getText().toString().replaceAll(" ", "").trim();
 
 
-
         FarmerConst.getFamerModel().setNames(GeneralUtills.Companion.capitalize(edtNames.getText().toString()));
         FarmerConst.getFamerModel().setMobile(phoneNumber);
 
 
+    }
+
+    @Override
+    public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
+
+        next();
         callback.goToNextStep();
     }
 
@@ -144,6 +112,11 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
     public VerificationError verifyStep() {
 
 
+        return verify();
+
+    }
+
+    public VerificationError verify() {
         if (verifyNames() && verifyMobile()) {
 
 
@@ -169,6 +142,18 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
         edtMobile = view.findViewById(R.id.edt_farmer_phone);
         defaultPayment = view.findViewById(R.id.spinnerPayments);
         txtKe = view.findViewById(R.id.txt_ke);
+
+        edtNames.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                //do something
+                if (verify() == null) {
+                    next();
+
+
+                }
+            }
+            return false;
+        });
 
 
         if (FarmerConst.getCreateFarmerIntentType() == 1) {

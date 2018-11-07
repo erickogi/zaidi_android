@@ -16,7 +16,6 @@ public class OrderPayments implements Serializable {
 
     @Ignore
     private String traderCode;
-
     private String orderCode;
     private String amountPaid;
     private String amountRemaining;

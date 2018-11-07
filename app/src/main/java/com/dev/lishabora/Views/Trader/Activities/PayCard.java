@@ -196,7 +196,7 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
         for (FamerModel famerModel : famerModelsBottom) {
 
 
-            collectionModels.add(CommonFuncs.getFarmersCollectionModel(famerModel, collectionsBottom, payouts));
+            collectionModels.add(CommonFuncs.getFarmersCollectionModel(famerModel, collectionsBottom, payouts, balncesViewModel));
 
 
         }
@@ -231,8 +231,12 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
 
             @Override
             public void onClickListener(int position) {
-                if (sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                try {
+                    if (sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    }
+                } catch (Exception NM) {
+                    NM.printStackTrace();
                 }
 
                 payoutsVewModel.getFarmerByCode(models.get(position).getFarmercode()).observe(PayCard.this, famerModel -> {
@@ -533,14 +537,14 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
         balncesViewModel.getFarmerLoanByFarmer(model.getFarmercode()).observe(this, farmerLoansTables -> {
             if (farmerLoansTables != null) {
 
-                toolBar.updateLoan(CommonFuncs.getCardLoan(farmerLoansTables));
+                toolBar.updateLoan(CommonFuncs.getCardLoan(farmerLoansTables, balncesViewModel));
                 setBalance(milkKsh);
             }
         });
         balncesViewModel.getFarmerOrderByFarmer(model.getFarmercode()).observe(this, farmerOrderTables -> {
             if (farmerOrderTables != null) {
 
-                toolBar.updateOrder(CommonFuncs.getCardOrder(farmerOrderTables));
+                toolBar.updateOrder(CommonFuncs.getCardOrder(farmerOrderTables, balncesViewModel));
                 setBalance(milkKsh);
             }
         });
@@ -708,6 +712,8 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
 
 
                         }
+                        CommonFuncs.updateLoan(farmerLoan, balncesViewModel);
+
 
                     }
 
@@ -746,6 +752,7 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
                         orderPayments.setRefNo(payouts.getCode());
                         orderPayments.setPayoutCode(payouts.getCode());
                         orderPayments.setTimestamp(DateTimeUtils.Companion.getNow());
+                        orderPayments.setCode(GeneralUtills.Companion.createCode(farmerOrders.getFarmerCode()));
 
                         Double valueToPay = 0.0;
 
@@ -778,6 +785,7 @@ public class PayCard extends AppCompatActivity implements ApproveFarmerPayCardLi
 
 
                         }
+                        CommonFuncs.updateOrder(farmerOrders, balncesViewModel);
 
                     }
 

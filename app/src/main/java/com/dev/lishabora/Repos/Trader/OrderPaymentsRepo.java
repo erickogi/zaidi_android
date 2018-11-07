@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
+import com.dev.lishabora.Database.FarmersLoansDao;
 import com.dev.lishabora.Database.LMDatabase;
 import com.dev.lishabora.Database.OrderPaymentsDao;
 import com.dev.lishabora.Models.Trader.OrderPayments;
@@ -13,6 +14,8 @@ import java.util.List;
 public class OrderPaymentsRepo {
 
     private OrderPaymentsDao dao;
+    private FarmersLoansDao farmersLoansDao;
+
 
 
     private LMDatabase db;
@@ -20,6 +23,7 @@ public class OrderPaymentsRepo {
 
     public OrderPaymentsRepo(Application application) {
         db = LMDatabase.getDatabase(application);
+        farmersLoansDao = db.farmersLoansDao();
         dao = db.orderPaymentsDao();
     }
 
@@ -28,7 +32,9 @@ public class OrderPaymentsRepo {
     }
 
     public void insertSingle(OrderPayments orderPayments) {
-        new insertAsyncTask(dao).execute(orderPayments);
+        //new insertAsyncTask(dao).execute(orderPayments);
+        dao.insertSingle(orderPayments);
+
     }
 
 

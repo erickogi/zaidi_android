@@ -12,7 +12,7 @@ import java.lang.ref.WeakReference;
 
 public class LoanOrderPaymentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
-    public TextView farmer, amount, balance, txtDate;
+    public TextView farmer, amount, balance, txtDate, txtMode;
     public View itemVew;
     private WeakReference<OnclickRecyclerListener> listenerWeakReference;
 
@@ -23,6 +23,7 @@ public class LoanOrderPaymentViewHolder extends RecyclerView.ViewHolder implemen
         listenerWeakReference = new WeakReference<>(onclickRecyclerListener);
 
         txtDate = itemView.findViewById(R.id.txt_date);
+        txtMode = itemView.findViewById(R.id.txt_payment);
 
 
         balance = itemView.findViewById(R.id.txt_balance);

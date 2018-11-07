@@ -294,6 +294,13 @@ public class PayoutsVewModel extends AndroidViewModel {
 
     }
 
+    public List<FamerModel> getFarmersByCycleOne(String code) {
+
+        return (farmerRepo.getFarmersByCycleOne(code));
+
+    }
+
+
     LiveData<Double> loanTotal;
 
     public LiveData<List<FamerModel>> getFarmers() {
@@ -391,6 +398,13 @@ public class PayoutsVewModel extends AndroidViewModel {
             collections = new MutableLiveData<>();
         }
         return collectionsRepo.getCollectionByPayout(payoutCode);
+    }
+
+    public List<Collection> getCollectionByDateByPayoutOne(String payoutCode) {
+        if (collections == null) {
+            collections = new MutableLiveData<>();
+        }
+        return collectionsRepo.getCollectionByPayoutOne(payoutCode);
     }
 
     public LiveData<List<Collection>> getCollectionsBetweenDates(Long date1, Long date2) {

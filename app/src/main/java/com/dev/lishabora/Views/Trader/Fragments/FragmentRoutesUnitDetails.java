@@ -142,7 +142,7 @@ public class FragmentRoutesUnitDetails extends Fragment implements BlockingStep 
 
         edtUnitMeasurement.setText(fm.getUnitcapacity());
         edtUnitName.setText(fm.getUnitname());
-        edtUnitPrice.setText(fm.getUnitprice());
+        //   edtUnitPrice.setText(fm.getUnitprice());
 
 
     }

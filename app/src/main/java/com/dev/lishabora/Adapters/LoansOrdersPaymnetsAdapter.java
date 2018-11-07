@@ -11,6 +11,7 @@ import com.dev.lishabora.Models.Trader.LoanPayments;
 import com.dev.lishabora.Models.Trader.OrderPayments;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.Draggable.helper.OnStartDragListener;
+import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
 
@@ -66,16 +67,43 @@ public class LoansOrdersPaymnetsAdapter extends RecyclerView.Adapter<LoanOrderPa
 
             LoanPayments model = modelListLoans.get(position);
             holder.txtDate.setText(DateTimeUtils.Companion.getDisplayDate(model.getTimeStamp()));
-            holder.amount.setText(model.getAmountPaid());
             holder.balance.setText(model.getAmountRemaining());
+
+            holder.txtMode.setText(model.getPaymentMethod());
+
+
+            String vA = model.getAmountPaid();
+
+            try {
+                vA = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vA, 0)));
+
+            } catch (Exception nm) {
+                nm.printStackTrace();
+            }
+            holder.amount.setText(String.format("%s %s", vA, context.getString(R.string.ksh)));
+
+
 
 
         } else {
             OrderPayments model = modelListOrders.get(position);
             holder.txtDate.setText(DateTimeUtils.Companion.getDisplayDate(model.getTimestamp()));
             //   holder.farmer.setText("");
-            holder.amount.setText(model.getAmountPaid());
             holder.balance.setText(model.getAmountRemaining());
+
+            holder.txtMode.setText(model.getPaymentMethod());
+
+            String vA = model.getAmountPaid();
+
+            try {
+                vA = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vA, 0)));
+
+            } catch (Exception nm) {
+                nm.printStackTrace();
+            }
+            holder.amount.setText(String.format("%s %s", vA, context.getString(R.string.ksh)));
+
+
 
 
         }

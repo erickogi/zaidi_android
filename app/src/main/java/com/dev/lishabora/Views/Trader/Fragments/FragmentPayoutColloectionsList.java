@@ -183,76 +183,13 @@ public class FragmentPayoutColloectionsList extends Fragment {
     }
 
     public void initCardHeader() {
-//        background = view.findViewById(R.id.background);
-//        startDate = view.findViewById(R.id.txt_date_start);
-//        endDate = view.findViewById(R.id.txt_date_end);
-//
-//
-//        cycleName = view.findViewById(R.id.txt_cycle);
-//
-//        milkTotal = view.findViewById(R.id.txt_milk_totals);
-//        loanTotal = view.findViewById(R.id.txt_loans_total);
-//        orderTotal = view.findViewById(R.id.txt_orders_total);
-//
-//        approvedCount = view.findViewById(R.id.txt_approved_farmers);
-//        unApprovedCount = view.findViewById(R.id.txt_pending_farmers);
-//        balance = view.findViewById(R.id.txt_Bal_out);
-
-//        if (payouts != null) {
-            setCardHeaderData(payouts);
-//        }
-//
-//
-//        if (CommonFuncs.canApprovePayout(payouts)) {
-//            btnApprove.setVisibility(View.VISIBLE);
-//        } else {
-//            btnApprove.setVisibility(View.GONE);
-//        }
-//
-//
-//
-//        btnApprove.setOnClickListener(view -> {
-//
-//            if (CommonFuncs.allCollectionsAreApproved(payoutsVewModel, payouts)) {
-//                payouts.setStatus(1);
-//                payouts.setStatusName("Approved");
-//                payoutsVewModel.updatePayout(payouts);
-//                starterPack();
-//            } else {
-//                MyToast.toast("Some farmer cards in this payout are not approved yet", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
-//            }
-//
-//        });
-//        setPayoutActionStatus(payouts, getContext(), btnApprove, txtApprovalStatus);
-
+        setCardHeaderData(payouts);
 
 
     }
 
     public void setCardHeaderData(Payouts model) {
-//        startDate.setText(model.getStartDate());
-//        endDate.setText(model.getEndDate());
-//        cycleName.setText(model.getCyclename());
-//        milkTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getMilkTotalLtrs(), 1), getActivity().getString(R.string.ltrs)));
-//        loanTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getLoanTotal(), 1), getActivity().getString(R.string.ksh)));
-//        orderTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getOrderTotal(), 1), getActivity().getString(R.string.ksh)));
-//        balance.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getBalance(), 1), getActivity().getString(R.string.ksh)));
-//
-//        approvedCount.setText(model.getApprovedCards());
-//        unApprovedCount.setText(model.getPendingCards());
-//
-//
-//        if (model.getStatus() == 1) {
-//            background.setBackgroundColor(getContext().getResources().getColor(R.color.green_color_picker));
-//
-//
-//        } else if (model.getStatus() == 0) {
-//            background.setBackgroundColor(getContext().getResources().getColor(R.color.red));
-//
-//        } else {
-//            background.setBackgroundColor(getContext().getResources().getColor(R.color.blue_color_picker));
-//
-//        }
+
 
     }
 

@@ -19,6 +19,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -428,6 +429,7 @@ public class TraderActivity extends AppCompatActivity {
 
         progressDialog.show();
 
+        Log.d("updatetrader", "" + jsonObject);
         Request.Companion.getResponse(ApiConstants.Companion.getUpdateTrader(), jsonObject, "",
                 new ResponseCallback() {
                     @Override

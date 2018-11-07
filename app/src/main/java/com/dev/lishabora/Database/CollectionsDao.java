@@ -41,6 +41,9 @@ public interface CollectionsDao {
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE payoutCode =:payoutCode")
     LiveData<List<Collection>> getCollectionByPayoutCode(String payoutCode);
 
+    @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE payoutCode =:payoutCode")
+    List<Collection> getCollectionByPayoutCodeOne(String payoutCode);
+
 
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE payoutCode =:payoutCode AND farmerCode =:farmer")
     LiveData<List<Collection>> getCollectionByPayoutCodeByFarmer(String payoutCode, String farmer);

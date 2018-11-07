@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.dev.lishabora.Adapters.ViewHolders.ProductsViewHolder;
 import com.dev.lishabora.Models.ProductsModel;
+import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
 
@@ -53,12 +54,29 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsViewHolder> {
     public void onBindViewHolder(ProductsViewHolder holder, int position) {
         ProductsModel productsModel = modelList.get(position);
 
-        holder.selling.setText(productsModel.getSellingprice());
+        String vSP = productsModel.getSellingprice();
+        String vBp = productsModel.getBuyingprice();
+
+
+        try {
+            vSP = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vSP, 0)));
+            vBp = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vBp, 0)));
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+
+
+        holder.selling.setText(String.format("%s %s", vSP, context.getString(R.string.ksh)));
+        holder.cost.setText(String.format("%s %s", vBp, context.getString(R.string.ksh)));
+
+
+
 
         holder.name.setText(productsModel.getNames());
-        holder.cost.setText(productsModel.getBuyingprice());
         holder.status.setText("" + productsModel.getStatus());
         holder.txtDate.setText("");
+
+
         if (productsModel.isSelected()) {
             holder.chk.setChecked(true);
         } else {

@@ -338,7 +338,7 @@ public class FragmentPayoutFarmersList extends Fragment {
         for (FamerModel famerModel : famerModels) {
 
 
-            collectionModels.add(CommonFuncs.getFarmersCollectionModel(famerModel, collections, payouts));
+            collectionModels.add(CommonFuncs.getFarmersCollectionModel(famerModel, collections, payouts, balncesViewModel));
 
 
         }

@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.location.Location;
+import android.os.Build;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
@@ -745,10 +746,7 @@ public class Application extends MultiDexApplication {
         for (SyncModel s : syncModels) {
 
             if (s.getEntityType() == AppConstants.ENTITY_FARMER) {
-
-
                 farmer(s);
-                Log.d("syncddoa", new Gson().toJson(s));
 
             }
             if (s.getEntityType() == AppConstants.ENTITY_TRADER) {
@@ -793,27 +791,23 @@ public class Application extends MultiDexApplication {
 
                     if (isConnectedToInternet) {
                         UpSyncJob.scheduleExact();
-
-                    } else {
-
-
                     }
-                });
+                }).dispose();
     }
 
     public static boolean isTimeAutomatic() {
 
-//        try {
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-//                return Settings.Global.getInt(context.getContentResolver(), Settings.Global.AUTO_TIME, 0) == 1;
-//            } else {
-//                return android.provider.Settings.System.getInt(context.getContentResolver(), android.provider.Settings.System.AUTO_TIME, 0) == 1;
-//            }
-//        } catch (Exception nm) {
-//            nm.printStackTrace();
-//            return true;
-//        }
-        return true;
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                return Settings.Global.getInt(context.getContentResolver(), Settings.Global.AUTO_TIME, 0) == 1;
+            } else {
+                return android.provider.Settings.System.getInt(context.getContentResolver(), android.provider.Settings.System.AUTO_TIME, 0) == 1;
+            }
+        } catch (Exception nm) {
+            nm.printStackTrace();
+            return true;
+        }
+        //   return true;
     }
 
     public static class hasSynced {

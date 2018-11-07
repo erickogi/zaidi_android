@@ -77,6 +77,10 @@ public interface FarmersLoansDao {
     @Query("SELECT * FROM FAMERSLOANS WHERE  farmerCode =:farmer ")
     LiveData<List<FarmerLoansTable>> getFarmerLoanByFarmer(String farmer);
 
+    @Query("SELECT * FROM FAMERSLOANS WHERE  farmerCode =:farmer ")
+    List<FarmerLoansTable> getFarmerLoanByFarmerOne(String farmer);
+
+
 
     @Query("SELECT * FROM FAMERSLOANS WHERE payoutCode =:payoutCode")
     List<FarmerLoansTable> getFarmerLoanByPayoutCodeListOne(String payoutCode);

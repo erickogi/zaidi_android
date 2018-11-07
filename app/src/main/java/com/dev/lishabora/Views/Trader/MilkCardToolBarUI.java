@@ -153,7 +153,17 @@ public class MilkCardToolBarUI extends RelativeLayout {
     }
 
     public void updateMilk(String v) {
-        txtMilkTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(v, 1), getResources().getString(R.string.ltrs)));
+
+        String vA = v;
+
+
+        try {
+            vA = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vA, 0)));
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+
+        txtMilkTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(vA, 1), getResources().getString(R.string.ksh)));
         setMilkTotal(v);
 
     }
@@ -217,6 +227,7 @@ public class MilkCardToolBarUI extends RelativeLayout {
 
     public void setMilkTotalKsh(String milkTotalKsh) {
         this.milkTotalKsh = milkTotalKsh;
+        updateMilk(milkTotalKsh);
     }
 
     public void setOnPayNoClickListener(OnClickListener clickListener) {

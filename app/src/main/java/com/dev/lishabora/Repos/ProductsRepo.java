@@ -45,7 +45,12 @@ public class ProductsRepo {
     public boolean insert(List<ProductsModel> productsModels) {
         productsDao = db.productsDao();
 
-        Log.d("insertmaneneo", "inserting repo" + productsModels.size());
+        if (productsModels != null) {
+            for (int a = 0; a < productsModels.size(); a++) {
+                productsModels.get(a).setSubscribed("1");
+                productsModels.get(a).setStatus(1);
+            }
+        }
         new insertProductsAsyncTask(productsDao).execute(productsModels);
 
         return true;

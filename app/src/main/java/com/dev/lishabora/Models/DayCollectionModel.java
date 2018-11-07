@@ -221,7 +221,11 @@ public class DayCollectionModel implements Serializable {
 
 
     public String getLoan() {
-        return loan;
+        if (loan != null) {
+            return loan;
+        } else {
+            return "0";
+        }
     }
 
     public void setLoan(String loan) {
@@ -237,7 +241,11 @@ public class DayCollectionModel implements Serializable {
     }
 
     public String getOrder() {
-        return order;
+        if (order != null) {
+            return order;
+        } else {
+            return "0";
+        }
     }
 
     public void setOrder(String order) {

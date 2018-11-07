@@ -10,19 +10,21 @@ import timber.log.Timber;
 
 public class PayoutsCyclesDatesUtills {
 
-    public static final int BI_WEEKLY_CYCLE_CODE = 2;
-    public static final int SEMI_MONTHLY_CYCLE_CODE = 3;
-    public static final int MONTHLY_CYCLE_CODE = 4;
+    // public static final int BI_WEEKLY_CYCLE_CODE = 2;
+    public static final int SEMI_MONTHLY_CYCLE_CODE = 2;
+    public static final int MONTHLY_CYCLE_CODE = 3;
+
+
+
     private static final int WEEKLY_CYCLE_CODE = 1;
 
     public static EndAndStart getPayoutStartEndDate(int cycleCode, @Nullable EndAndStart tradersEndAndStart, @Nullable EndAndStart lastEndStartDate) {
-        Timber.d("" + cycleCode);
 
         switch (cycleCode) {
             case WEEKLY_CYCLE_CODE:
                 return weeklyAlgorothim(tradersEndAndStart, lastEndStartDate);
-            case BI_WEEKLY_CYCLE_CODE:
-                return biWeeklyAlgorithm(tradersEndAndStart, lastEndStartDate);
+//            case BI_WEEKLY_CYCLE_CODE:
+//                return biWeeklyAlgorithm(tradersEndAndStart, lastEndStartDate);
             case SEMI_MONTHLY_CYCLE_CODE:
                 return semiMonthly();
             case MONTHLY_CYCLE_CODE:

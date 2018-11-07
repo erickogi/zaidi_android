@@ -73,6 +73,10 @@ public class CollectionsRepo {
         return collectionsDao.getCollectionByPayoutCode(payoutCode);
     }
 
+    public List<Collection> getCollectionByPayoutOne(String payoutCode) {
+        return collectionsDao.getCollectionByPayoutCodeOne(payoutCode);
+    }
+
     public LiveData<List<Collection>> getCollectionByPayoutByFarmer(String payoutCode, String farmer) {
         return collectionsDao.getCollectionByPayoutCodeByFarmer(payoutCode, farmer);
     }

@@ -2,9 +2,11 @@ package com.dev.lishabora.Utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.dev.lishabora.Models.Admin.AdminModel;
 import com.dev.lishabora.Models.Trader.TraderModel;
+import com.google.gson.Gson;
 
 public class PrefrenceManager {
 
@@ -42,6 +44,7 @@ public class PrefrenceManager {
     private static final String bussinesname = "bussinesname";
     private static final String mobile = "mobile";
     private static final String password = "password";
+    private static final String passwordstatus = "passwordstatus";
     private static final String apikey = "apikey";
     private static final String firebasetoken = "firebasetoken";
     private static final String status = "status";
@@ -117,6 +120,7 @@ public class PrefrenceManager {
     public void setIsLoggedIn(boolean isLoggedIn, int type) {
         editor.putBoolean(KEY_IS_LOGGED_IN, isLoggedIn);
         editor.putInt(KEY_TYPE_LOGGED_IN, type);
+        editor.clear();
         editor.commit();
     }
 
@@ -164,6 +168,8 @@ public class PrefrenceManager {
 
 
     public void setLoggedUser(TraderModel trader) {
+        Log.d("logTrader", "" + new Gson().toJson(trader));
+
         editor.putString(names, trader.getNames());
         editor.putString(mobile, trader.getMobile());
         editor.putString(bussinesname, trader.getBusinessname());
@@ -176,6 +182,7 @@ public class PrefrenceManager {
         editor.putInt(issynced, trader.getSynced());
         editor.putInt(isdummy, trader.getDummy());
         editor.putString(password, trader.getPassword());
+        editor.putInt(passwordstatus, trader.getPasswordstatus());
         editor.putString(apikey, trader.getApikey());
         //editor.putString(firebasetoken, trader.getFirebasetoken());
         editor.putString(status, trader.getStatus());
@@ -208,6 +215,7 @@ public class PrefrenceManager {
         traderModel.setSynced(pref.getInt(issynced, 0));
         traderModel.setDummy(pref.getInt(isdummy, 0));
         traderModel.setPassword(pref.getString(password, null));
+        traderModel.setPasswordstatus(pref.getInt(passwordstatus, 0));
         traderModel.setApikey(pref.getString(apikey, null));
         traderModel.setFirebasetoken(pref.getString(firebasetoken, "empty"));
         traderModel.setStatus(pref.getString(status, null));

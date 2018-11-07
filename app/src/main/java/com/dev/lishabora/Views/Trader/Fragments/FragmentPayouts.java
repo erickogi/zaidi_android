@@ -14,6 +14,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.dev.lishabora.Adapters.PayoutesAdapter;
@@ -44,6 +45,9 @@ public class FragmentPayouts extends Fragment {
     private PayoutsVewModel payoutsVewModel;
     private BalncesViewModel balncesViewModel;
     private Fragment fragment;
+    boolean type1 = false;
+    private Button btnSwitch;
+
 
     public void initList() {
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -152,6 +156,13 @@ public class FragmentPayouts extends Fragment {
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
         balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
 
+        btnSwitch = view.findViewById(R.id.btn_switch);
+        btnSwitch.setOnClickListener(v -> {
+
+            type1 = !type1;
+            fetch();
+
+        });
         try {
             Objects.requireNonNull(getActivity()).setTitle("Payouts List");
 
@@ -204,30 +215,55 @@ public class FragmentPayouts extends Fragment {
         if (payouts != null) {
 
 
-            LinkedList<Payouts> payouts1 = new LinkedList<>();
-            for (int a = 0; a < payouts.size(); a++) {
-                List<Collection> c = payoutsVewModel.getCollectionByDateByPayoutListOne(payouts.get(a).getCode());
-                payouts1.add(CommonFuncs.createPayouts(c, payouts.get(a), payoutsVewModel, balncesViewModel));
+            if (type1) {
+                LinkedList<Payouts> payouts1 = new LinkedList<>();
+                for (int a = 0; a < payouts.size(); a++) {
+                    List<Collection> c = payoutsVewModel.getCollectionByDateByPayoutListOne(payouts.get(a).getCode());
+                    payouts1.add(CommonFuncs.createPayouts(c, payouts.get(a), payoutsVewModel, balncesViewModel));
 
-
-            }
-            Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
-
-
-                if (this.payouts == null) {
-                    this.payouts = new LinkedList<>();
-                    this.payouts.addAll(payouts1);
-                    listAdapter.notifyDataSetChanged();
-                    emptyState(listAdapter.getItemCount() > 0);
-
-                } else {
-                    this.payouts.clear();
-                    this.payouts.addAll(payouts1);
-                    listAdapter.notifyDataSetChanged();
-                    emptyState(listAdapter.getItemCount() > 0);
 
                 }
-            });
+                Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
+
+
+                    if (this.payouts == null) {
+                        this.payouts = new LinkedList<>();
+                        this.payouts.addAll(payouts1);
+                        listAdapter.notifyDataSetChanged();
+                        emptyState(listAdapter.getItemCount() > 0);
+
+                    } else {
+                        this.payouts.clear();
+                        this.payouts.addAll(payouts1);
+                        listAdapter.notifyDataSetChanged();
+                        emptyState(listAdapter.getItemCount() > 0);
+
+                    }
+                });
+            } else {
+                LinkedList<Payouts> payouts1 = new LinkedList<>();
+
+                for (Payouts p : payouts) {
+                    payouts1.add(CommonFuncs.loadFarmers(p, payoutsVewModel, balncesViewModel));
+                }
+                Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
+
+
+                    if (this.payouts == null) {
+                        this.payouts = new LinkedList<>();
+                        this.payouts.addAll(payouts1);
+                        listAdapter.notifyDataSetChanged();
+                        emptyState(listAdapter.getItemCount() > 0);
+
+                    } else {
+                        this.payouts.clear();
+                        this.payouts.addAll(payouts1);
+                        listAdapter.notifyDataSetChanged();
+                        emptyState(listAdapter.getItemCount() > 0);
+
+                    }
+                });
+            }
         }
     }
 

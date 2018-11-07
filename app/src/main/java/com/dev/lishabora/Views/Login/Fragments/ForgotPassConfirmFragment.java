@@ -12,10 +12,12 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.dev.lishabora.Application;
 import com.dev.lishabora.COntrollers.LoginController;
@@ -51,6 +53,7 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
     private AdminModel adminModel = null;
     private TraderModel traderModel = null;
     private TraderViewModel traderViewModel;
+    private TextView txtTitle;
 
 
     //CARDS
@@ -117,6 +120,7 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
         edtNewPassword = view.findViewById(R.id.edt_new_password);
         edtConfirmPassword = view.findViewById(R.id.edt_new_confirm_password);
         btnNewPass = view.findViewById(R.id.btn_new_pass_next);
+        txtTitle = view.findViewById(R.id.txt_title);
 
         aviEnterPassword = view.findViewById(R.id.avi_new_pass);
 
@@ -157,6 +161,11 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
 
                     traderModel = gson.fromJson(gson.toJson(responseModel.getData()), TraderModel.class);
 
+                    if (traderModel != null) {
+                        if (txtTitle != null) {
+                            txtTitle.setText("Hello " + traderModel.getNames() + " please enter and confirm your desired password below");
+                        }
+                    }
                     phoneNumber = traderModel.getMobile();
 
                     break;
@@ -210,6 +219,7 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
             if (edtNewPassword.getText().toString().equals(edtConfirmPassword.getText().toString())) {
                 AuthModel authModel = new AuthModel();
                 authModel.setMobile(LoginConsts.getPhone());
+                authModel.setPasswordstatus(1);
                 authModel.setPassword(edtConfirmPassword.getText().toString());
                 JSONObject jsonObject = null;
                 try {
@@ -221,9 +231,12 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
                 aviEnterPassword.smoothToShow();
                 aviEnterPassword.setVisibility(View.VISIBLE);
 
+                Log.d("respons-edsa", new Gson().toJson(authModel));
+
                 mViewModel.newPassConfirm(jsonObject).observe(this, responseModel -> {
                     aviEnterPassword.smoothToHide();
                     aviEnterPassword.setVisibility(View.GONE);
+                    Log.d("responsedsa", new Gson().toJson(responseModel.getData()));
 
                     if (responseModel != null && responseModel.getResultCode() == 1) {
 
@@ -238,7 +251,7 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
                                 break;
                             case LoginController.TRADER:
 
-                                traderModel = gson.fromJson(gson.toJson(this.responseModel.getData()), TraderModel.class);
+                                TraderModel traderModel = gson.fromJson(gson.toJson(this.responseModel.getData()), TraderModel.class);
 
                                 loginTrader(traderModel);
                                 break;
@@ -270,6 +283,8 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
 
     private void loginTrader(TraderModel traderModel) {
         PrefrenceManager prefrenceManager = new PrefrenceManager(context);
+
+        traderModel.setPasswordstatus(1);
 
         prefrenceManager.setIsLoggedIn(true, LoginController.TRADER);
         prefrenceManager.setLoggedUser(traderModel);

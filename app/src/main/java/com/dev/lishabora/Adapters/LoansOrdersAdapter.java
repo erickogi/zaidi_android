@@ -12,6 +12,7 @@ import com.dev.lishabora.Models.Trader.FarmerLoansTable;
 import com.dev.lishabora.Models.Trader.FarmerOrdersTable;
 import com.dev.lishabora.Repos.Trader.FarmerRepo;
 import com.dev.lishabora.Utils.DateTimeUtils;
+import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishaboramobile.R;
 
@@ -56,9 +57,29 @@ public class LoansOrdersAdapter extends RecyclerView.Adapter<LoanOrderViewHolder
             FarmerLoansTable model = modelListLoans.get(position);
             holder.txtDate.setText(DateTimeUtils.Companion.getDisplayDate(model.getTimestamp()));
             holder.farmer.setText(new FarmerRepo(Application.context).getFramerByCodeOne(model.getFarmerCode()).getNames());
-            holder.amount.setText(model.getLoanAmount());
-            holder.installment.setText(model.getInstallmentAmount() + " Per Payout");
-            holder.balance.setText(String.valueOf((Double.valueOf(model.getLoanAmount())) - Double.valueOf(model.getLoanAmountPaid())));
+
+
+            String vA = model.getLoanAmount();
+            String vI = model.getInstallmentAmount();
+            String vB = String.valueOf((Double.valueOf(model.getLoanAmount())) - Double.valueOf(model.getLoanAmountPaid()));
+
+
+            try {
+                vA = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vA, 0)));
+                vI = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vI, 0)));
+                vB = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vB, 0)));
+            } catch (Exception nm) {
+                nm.printStackTrace();
+            }
+
+
+            holder.amount.setText(String.format("%s %s", vA, context.getString(R.string.ksh)));
+            holder.installment.setText(String.format("%s %s", vI + " Per ", context.getString(R.string.ksh)));
+            holder.balance.setText(String.valueOf(String.format("%s %s", vB, context.getString(R.string.ksh))));
+
+
+
+
 
             if (model.getStatus() == 1) {
                 holder.status.setText("Paid In Full");
@@ -74,9 +95,32 @@ public class LoansOrdersAdapter extends RecyclerView.Adapter<LoanOrderViewHolder
             FarmerOrdersTable model = modelListOrders.get(position);
             holder.txtDate.setText(DateTimeUtils.Companion.getDisplayDate(model.getTimestamp()));
             holder.farmer.setText(new FarmerRepo(Application.context).getFramerByCodeOne(model.getFarmerCode()).getNames());
-            holder.amount.setText(model.getOrderAmount());
-            holder.installment.setText(model.getInstallmentAmount() + " Per Payout");
-            holder.balance.setText(String.valueOf((Double.valueOf(model.getOrderAmount())) - Double.valueOf(model.getOrderAmountPaid())));
+
+
+            String vA = model.getOrderAmount();
+            String vI = model.getInstallmentAmount();
+            String vB = String.valueOf((Double.valueOf(model.getOrderAmount())) - Double.valueOf(model.getOrderAmountPaid()));
+
+
+            try {
+                vA = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vA, 0)));
+                vI = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vI, 0)));
+                vB = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vB, 0)));
+            } catch (Exception nm) {
+                nm.printStackTrace();
+            }
+
+
+            holder.amount.setText(String.format("%s %s", vA, context.getString(R.string.ksh)));
+            holder.installment.setText(String.format("%s %s", vI + " Per ", context.getString(R.string.ksh)));
+            holder.balance.setText(String.valueOf(String.format("%s %s", vB, context.getString(R.string.ksh))));
+
+
+
+
+
+
+
 
             if (model.getStatus() == 1) {
                 holder.status.setText("Paid In Full");
