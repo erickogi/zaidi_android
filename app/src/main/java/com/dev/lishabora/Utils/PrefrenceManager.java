@@ -4,9 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.dev.lishabora.Application;
 import com.dev.lishabora.Models.Admin.AdminModel;
 import com.dev.lishabora.Models.Trader.TraderModel;
 import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class PrefrenceManager {
 
@@ -318,6 +322,23 @@ public class PrefrenceManager {
     public void setFirebase(String refreshedToken) {
         editor.putString(firebasetoken, refreshedToken);
         editor.commit();
+
+        if (isLoggedIn()) {
+            if (getTraderModel() != null) {
+
+                TraderModel traderModel = getTraderModel();
+                traderModel.setFirebasetoken(refreshedToken);
+                JSONObject jsonObject = new JSONObject();
+
+
+                try {
+                    jsonObject = new JSONObject(new Gson().toJson(traderModel));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Application.updateTrader(jsonObject);
+            }
+        }
     }
 
     public void setIsFirebaseUdated(boolean b) {

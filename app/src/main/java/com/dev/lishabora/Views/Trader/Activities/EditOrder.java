@@ -1,9 +1,11 @@
 package com.dev.lishabora.Views.Trader.Activities;
 
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
@@ -30,6 +32,7 @@ import com.dev.lishabora.Adapters.ProductsAdapter;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.DayCollectionModel;
 import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.FarmerBalance;
 import com.dev.lishabora.Models.FarmerHistoryByDateModel;
 import com.dev.lishabora.Models.MonthsDates;
 import com.dev.lishabora.Models.OrderModel;
@@ -39,6 +42,7 @@ import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.InputFilterMinMax;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
+import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Trader.OrderConstants;
@@ -83,6 +87,7 @@ public class EditOrder extends AppCompatActivity {
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
     private PayoutsVewModel payoutsVewModel;
     private TraderViewModel traderViewModel;
+    private BalncesViewModel balncesViewModel;
     private View view;
     private List<FarmerHistoryByDateModel> modelsDA = new LinkedList<>();
     private DayCollectionModel dayCollectionModel;
@@ -195,6 +200,7 @@ public class EditOrder extends AppCompatActivity {
     private void setUpClear() {
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
         traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
+        balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
 
 
 
@@ -291,6 +297,36 @@ public class EditOrder extends AppCompatActivity {
 
     /****GIVE PRODUCTS     ****/
 
+    private void fetchBalance() {
+        balncesViewModel.getByFarmerCode(famerModel.getCode()).observe(this, new Observer<List<FarmerBalance>>() {
+            @Override
+            public void onChanged(@Nullable List<FarmerBalance> farmerBalances) {
+                if (farmerBalances != null) {
+                    calculate(farmerBalances);
+                }
+            }
+        });
+    }
+
+    private void calculate(List<FarmerBalance> farmerBalances) {
+        Double balance = 0.0;
+        for (FarmerBalance f : farmerBalances) {
+            balance = balance + Double.valueOf(f.getBalanceToPay());
+        }
+        try {
+            Double ave = balance / farmerBalances.size();
+            setAveareage(String.valueOf(ave));
+
+
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+    }
+
+    private void setAveareage(String s) {
+        milk.setText(GeneralUtills.Companion.round(s, 0));
+
+    }
 
     private void initView() {
         id = findViewById(R.id.txt_id);
@@ -305,9 +341,9 @@ public class EditOrder extends AppCompatActivity {
 
         payoutsVewModel.getCollectionByFarmer(famerModel.getCode()).observe(this, collections -> {
             if (collections != null && collections.size() > 0) {
-                createMonthlyList(collections);
+                // createMonthlyList(collections);
             } else {
-                initMonthlyList(new LinkedList<>());
+                // initMonthlyList(new LinkedList<>());
             }
         });
         btngetOrders.setOnClickListener(view -> traderViewModel.getProducts(false).observe(EditOrder.this, productsModels -> {
@@ -320,6 +356,7 @@ public class EditOrder extends AppCompatActivity {
             btngetOrders.setEnabled(false);
             //btngetOrders.setVisibility(View.GONE);
         }
+        fetchBalance();
     }
 
     private void filterList(List<ProductsModel> productsModels) {

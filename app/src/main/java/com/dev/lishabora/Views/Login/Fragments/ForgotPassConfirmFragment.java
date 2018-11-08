@@ -23,9 +23,13 @@ import com.dev.lishabora.Application;
 import com.dev.lishabora.COntrollers.LoginController;
 import com.dev.lishabora.Models.Admin.AdminModel;
 import com.dev.lishabora.Models.Login.AuthModel;
+import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.ResponseObject;
 import com.dev.lishabora.Models.Trader.TraderModel;
+import com.dev.lishabora.Network.ApiConstants;
+import com.dev.lishabora.Network.Request;
 import com.dev.lishabora.Utils.PrefrenceManager;
+import com.dev.lishabora.Utils.ResponseCallback;
 import com.dev.lishabora.ViewModels.Login.LoginViewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Admin.Activities.AdminsActivity;
@@ -233,38 +237,50 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
 
                 Log.d("respons-edsa", new Gson().toJson(authModel));
 
-                mViewModel.newPassConfirm(jsonObject).observe(this, responseModel -> {
-                    aviEnterPassword.smoothToHide();
-                    aviEnterPassword.setVisibility(View.GONE);
-                    Log.d("responsedsa", new Gson().toJson(responseModel.getData()));
+                Request.Companion.getResponseSingle(ApiConstants.Companion.getNewPassordConfirm(), jsonObject, "", new ResponseCallback() {
+                    @Override
+                    public void response(ResponseModel responseModel) {
 
-                    if (responseModel != null && responseModel.getResultCode() == 1) {
+                    }
 
-                        switch (responseModel.getType()) {
-                            case LoginController.ADMIN:
+                    @Override
+                    public void response(ResponseObject responseModel) {
 
-                                //adminModel = gson.fromJson(gson.toJson(responseModel.getData()), AdminModel.class);
-                                adminModel = gson.fromJson(gson.toJson(this.responseModel.getData()), AdminModel.class);
 
-                                loginAdmin(adminModel);
+                        // mViewModel.newPassConfirm(jsonObject).observe(this, responseModel -> {
 
-                                break;
-                            case LoginController.TRADER:
+                        aviEnterPassword.smoothToHide();
+                        aviEnterPassword.setVisibility(View.GONE);
+                        Log.d("responsedsa", new Gson().toJson(responseModel.getData()));
 
-                                TraderModel traderModel = gson.fromJson(gson.toJson(this.responseModel.getData()), TraderModel.class);
+                        if (responseModel != null && responseModel.getResultCode() == 1) {
 
-                                loginTrader(traderModel);
-                                break;
-                            default:
+                            switch (responseModel.getType()) {
+                                case LoginController.ADMIN:
+
+                                    //adminModel = gson.fromJson(gson.toJson(responseModel.getData()), AdminModel.class);
+                                    adminModel = gson.fromJson(gson.toJson(responseModel.getData()), AdminModel.class);
+
+                                    loginAdmin(adminModel);
+
+                                    break;
+                                case LoginController.TRADER:
+
+                                    TraderModel traderModel = gson.fromJson(gson.toJson(responseModel.getData()), TraderModel.class);
+
+                                    loginTrader(traderModel);
+                                    break;
+                                default:
+                            }
+
+
+                        } else {
+                            snack(responseModel.getResultDescription());
+
                         }
-
-
-                    } else {
-                        snack(responseModel.getResultDescription());
 
                     }
                 });
-
                 //   handlerOnNewPassword();
             } else {
                 snack("Passwords do not match");
@@ -281,21 +297,21 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
     }
 
 
-    private void loginTrader(TraderModel traderModel) {
+    private void loginTrader(TraderModel traderModl) {
         PrefrenceManager prefrenceManager = new PrefrenceManager(context);
 
-        traderModel.setPasswordstatus(1);
+        //traderModel.setPasswordstatus(1);
 
         prefrenceManager.setIsLoggedIn(true, LoginController.TRADER);
-        prefrenceManager.setLoggedUser(traderModel);
-        traderViewModel.createTrader(traderModel);
+        prefrenceManager.setLoggedUser(traderModl);
+        traderViewModel.createTrader(traderModl);
         if (!prefrenceManager.isFirebaseUpdated()) {
             traderModel.setFirebasetoken(prefrenceManager.getFirebase());
             JSONObject jsonObject = new JSONObject();
 
 
             try {
-                jsonObject = new JSONObject(new Gson().toJson(traderModel));
+                jsonObject = new JSONObject(new Gson().toJson(traderModl));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

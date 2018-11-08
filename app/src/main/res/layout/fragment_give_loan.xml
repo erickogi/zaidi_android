@@ -93,7 +93,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="(Monthly) Averages"
+                android:text="Averages"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
@@ -129,6 +129,8 @@
 
 
                 <LinearLayout
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:layout_width="match_parent"
 
                     android:layout_height="wrap_content"
@@ -138,13 +140,13 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Milk"
+                        android:text="Average Payout Balance"
                         android:textColor="@color/black" />
 
                     <TextView
                         android:textStyle="bold"
                         android:id="@+id/txt_milk"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0.0" />
                 </LinearLayout>
@@ -157,6 +159,7 @@
                     android:background="@color/divider" />
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:layout_width="match_parent"
 
                     android:layout_height="wrap_content"
@@ -190,6 +193,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
 
+                    android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical">
@@ -218,6 +222,7 @@
                     android:background="@color/divider" />
 
                 <LinearLayout
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 

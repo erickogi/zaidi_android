@@ -56,7 +56,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:counterEnabled="true"
-                app:counterMaxLength="11"
+                app:counterMaxLength="9"
 
                 android:textColorHint="@color/black">
 
@@ -67,7 +67,7 @@
                     android:hint="Phone(7** *** ***)"
                     android:inputType="number"
 
-                    android:maxLength="11"
+                    android:maxLength="9"
 
 
                     app:helperText="7** *** ***"

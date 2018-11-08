@@ -14,7 +14,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
-import com.amitshekhar.DebugDB;
 import com.androidnetworking.AndroidNetworking;
 import com.dev.lishabora.COntrollers.LoginController;
 import com.dev.lishabora.Database.LMDatabase;
@@ -77,6 +76,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
+//import com.amitshekhar.DebugDB;
+
 //import com.rohitss.uceh.UCEHandler;
 
 //import com.rohitss.uceh.UCEHandler;
@@ -104,7 +105,6 @@ public class Application extends MultiDexApplication {
         LMDatabase lmDatabase = LMDatabase.getDatabase(context);
         List<SyncModel> list = lmDatabase.syncDao().getAllByStatusRaw();
         if (list != null) {
-            Log.d("testSyncUp", "SYNC ITEMS ARE +" + list.size());
         }
 
 
@@ -405,6 +405,7 @@ public class Application extends MultiDexApplication {
                             if (_completeNotificationManager != null) {
                                 _completeNotificationManager.cancel(6);
                             }
+                            syncDown(true);
                             if (smo != null) {
                                 smo.setStatus(2);
                                 smo.setResponse(error);
@@ -859,7 +860,7 @@ public class Application extends MultiDexApplication {
         //  new UCEHandler.Builder(this).setTrackActivitiesEnabled(true).addCommaSeparatedEmailAddresses("eric@lishabora.com").build();
         initConnectivityListener();
 
-        DebugDB.getAddressLog();
+        // DebugDB.getAddressLog();
 
 
     }

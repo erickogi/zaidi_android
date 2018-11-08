@@ -253,6 +253,7 @@ public class FragmentCompleteGiveOrder extends Fragment implements BlockingStep 
     void initView() {
         id = view.findViewById(R.id.txt_id);
         name = view.findViewById(R.id.txt_name);
+        name.setVisibility(View.GONE);
 
         edtAmount = view.findViewById(R.id.edt_value);
         edtDeliveryFee = view.findViewById(R.id.edt_delivery);

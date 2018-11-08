@@ -12,7 +12,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
 import com.dev.lishabora.COntrollers.LoginController;
@@ -143,37 +142,18 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
         defaultPayment = view.findViewById(R.id.spinnerPayments);
         txtKe = view.findViewById(R.id.txt_ke);
 
-        edtNames.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                //do something
-                if (verify() == null) {
-                    next();
+//        edtNames.setOnEditorActionListener((v, actionId, event) -> {
+//            if (actionId == EditorInfo.IME_ACTION_DONE) {
+//                //do something
+//                if (verify() == null) {
+//                    next();
+//
+//
+//                }
+//            }
+//            return false;
+//        });
 
-
-                }
-            }
-            return false;
-        });
-
-
-        if (FarmerConst.getCreateFarmerIntentType() == 1) {
-            FamerModel fm = FarmerConst.getFamerModel();
-            if (fm != null) {
-                setEditData(fm);
-            }
-        }
-        initData();
-
-
-    }
-
-    private void setEditData(FamerModel fm) {
-        edtNames.setText(fm.getNames());
-        edtMobile.setText(fm.getMobile());
-    }
-
-    private void initData() {
-        defaultPayment.setItems("Payment Options", "Mpesa", "Cash", "Bank");
         final char space = ' ';
         edtMobile.addTextChangedListener(new TextWatcher() {
             @Override
@@ -202,7 +182,6 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
                 } catch (Exception nm) {
                     nm.printStackTrace();
                 }
-                //if (s.length() < 9) {
                 if (s.length() > 0 && (s.length() % 4) == 0) {
                     final char c = s.charAt(s.length() - 1);
                     if (space == c) {
@@ -219,6 +198,8 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
                     }
 
                 }
+
+
                 // }else {
                 // s.delete(9,9);
                 // edtMobile.setError("Tulia");
@@ -243,6 +224,48 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
                 }
             }
         });
+
+
+        if (FarmerConst.getCreateFarmerIntentType() == 1) {
+            FamerModel fm = FarmerConst.getFamerModel();
+            if (fm != null) {
+                setEditData(fm);
+            }
+        }
+        initData();
+
+
+    }
+
+    private void setEditData(FamerModel fm) {
+        edtNames.setText(fm.getNames());
+
+        edtMobile.setText(fm.getMobile());
+
+        final char space = ' ';
+
+//
+//        Editable s=edtMobile.getEditableText();
+//        if (s.length() > 0 && (s.length() % 4) == 0) {
+//            final char c = s.charAt(s.length() - 1);
+//            if (space == c) {
+//                s.delete(s.length() - 1, s.length());
+//            }
+//
+//        }
+//        // Insert char where needed.
+//        if (s.length() > 0 && (s.length() % 4) == 0) {
+//            char c = s.charAt(s.length() - 1);
+//            // Only if its a digit where there should be a space we insert a space
+//            if (Character.isDigit(c) && TextUtils.split(s.toString(), String.valueOf(space)).length <= 3) {
+//                s.insert(s.length() - 1, String.valueOf(space));
+//            }
+//
+//        }
+    }
+
+    private void initData() {
+        defaultPayment.setItems("Payment Options", "Mpesa", "Cash", "Bank");
 
 
     }

@@ -41,7 +41,7 @@ public class PayoutFarmersAdapter extends RecyclerView.Adapter<PayoutFarmerListV
 
     @Override
     public PayoutFarmerListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = null;
+        View itemView;
 
         itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.payout_farmerslist_card, parent, false);
 
@@ -57,7 +57,6 @@ public class PayoutFarmersAdapter extends RecyclerView.Adapter<PayoutFarmerListV
 
         holder.id.setText(model.getFarmercode());
         holder.name.setText(model.getFarmername());
-
         holder.status.setText(model.getStatusName());
 
 
@@ -87,7 +86,6 @@ public class PayoutFarmersAdapter extends RecyclerView.Adapter<PayoutFarmerListV
 
         } else {
             holder.milk.setTypeface(Typeface.DEFAULT);
-
             holder.milk.setTextColor(context.getResources().getColor(R.color.black));
 
         }
@@ -95,12 +93,13 @@ public class PayoutFarmersAdapter extends RecyclerView.Adapter<PayoutFarmerListV
 
         holder.loan.setText(String.format("%s %s", vL, context.getString(R.string.ksh)));
         if (!model.getLoanTotal().equals("0.0")) {
+
             holder.loan.setTextColor(context.getResources().getColor(R.color.colorPrimary));
             holder.loan.setTypeface(Typeface.DEFAULT_BOLD);
 
         } else {
-            holder.loan.setTypeface(Typeface.DEFAULT);
 
+            holder.loan.setTypeface(Typeface.DEFAULT);
             holder.loan.setTextColor(context.getResources().getColor(R.color.black));
 
         }

@@ -203,11 +203,10 @@ public class FragmentTraderOrders extends Fragment {
 
                     if (paymentMethodId == 1 || paymentMethodId == 3) {
 
-                        if (TextUtils.isEmpty(edt_ref.getText())) {
-                            edt_ref.requestFocus();
-                            edt_ref.setError("Required");
+                        if (!TextUtils.isEmpty(edt_ref.getText())) {
 
-                        } else {
+                            ref = edt_ref.getText().toString();
+                        }
 
                             FamerModel famerModel = traderViewModel.getFarmersByCodeOne(code.getFarmerCode());
                             CommonFuncs.insertOrderPayment(Double.valueOf(valuea), balncesViewModel, famerModel, paymentMethod, ref, paymentCode);
@@ -216,7 +215,7 @@ public class FragmentTraderOrders extends Fragment {
 
                             alertDialogAndroid.dismiss();
                             getData();
-                        }
+
                     } else {
 
                         FamerModel famerModel = traderViewModel.getFarmersByCodeOne(code.getFarmerCode());

@@ -66,11 +66,10 @@ public class ProductOrderAdapter extends RecyclerView.Adapter<ProductOrderViewHo
 
 
         holder.selling.setText(String.format("%s %s", vTP, context.getString(R.string.ksh)));
-        holder.name.setText(String.format("%s %s", vBp, context.getString(R.string.ksh)));
+        holder.name.setText(productsModel.getNames());
 
 
-
-        holder.cost.setText(productsModel.getBuyingprice());
+        holder.cost.setText(String.format("%s %s", vBp, context.getString(R.string.ksh)));
         holder.txtQty.setText(productsModel.getQuantity());
 
     }

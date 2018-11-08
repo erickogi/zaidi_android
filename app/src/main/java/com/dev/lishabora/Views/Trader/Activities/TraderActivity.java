@@ -28,6 +28,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dev.lishabora.About;
 import com.dev.lishabora.Adapters.ViewPagerAdapter;
 import com.dev.lishabora.Application;
 import com.dev.lishabora.Database.LMDatabase;
@@ -318,7 +319,9 @@ public class TraderActivity extends AppCompatActivity {
 
             @Override
             public void helpClicked() {
-                Application.syncChanges();
+                //    Application.syncChanges();
+                startActivity(new Intent(TraderActivity.this, About.class));
+
             }
 
             @Override

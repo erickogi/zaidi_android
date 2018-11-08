@@ -150,10 +150,6 @@ public class TraderRoutesInfoFragment extends Fragment implements BlockingStep {
 
         alertDialogAndroid.show();
 
-//        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
-//        theButton.setOnClickListener(new CustomListener(alertDialogAndroid));
-
-
         MaterialButton btnPositive, btnNegative, btnNeutral;
         TextView txtTitle;
         LinearLayout lTitle;

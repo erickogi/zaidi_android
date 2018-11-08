@@ -1,5 +1,6 @@
 package com.dev.lishabora.Views.Trader.Fragments;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,9 +27,9 @@ import com.dev.lishabora.AppConstants;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.FarmerBalance;
 import com.dev.lishabora.Models.FarmerHistoryByDateModel;
 import com.dev.lishabora.Models.LoanModel;
-import com.dev.lishabora.Models.MonthsDates;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.Trader.FarmerLoansTable;
 import com.dev.lishabora.Utils.CollectListener;
@@ -213,9 +214,9 @@ public class FragmentGiveLoan extends Fragment implements CollectListener {
 
         payoutsVewModel.getCollectionByFarmer(famerModel.getCode()).observe(this, collections -> {
             if (collections != null && collections.size() > 0) {
-                createMonthlyList(collections);
+                //  createMonthlyList(collections);
             } else {
-                initMonthlyList(null);
+                // initMonthlyList(null);
             }
         });
 
@@ -268,73 +269,111 @@ public class FragmentGiveLoan extends Fragment implements CollectListener {
                 giveLoan(edtAmount.getText().toString(), new Gson().toJson(loanModel));
             }
         });
+
+        fetchBalance();
     }
 
     private void createMonthlyList(List<Collection> collections) {
 
-        List<MonthsDates> monthsDates = DateTimeUtils.Companion.getMonths(12);
-        if (monthsDates != null && monthsDates.size() > 0) {
-
-            LinkedList<FarmerHistoryByDateModel> fmh = new LinkedList<>();
-
-            for (MonthsDates mds : monthsDates) {
-
-                String[] totals = CommonFuncs.getCollectionsTotals(mds, collections);
-                fmh.add(new FarmerHistoryByDateModel(mds, famerModel, totals[0], totals[1], totals[2], totals[3]));
-
-            }
-            initMonthlyList(fmh);
-
-        }
-
-
-    }
+//        List<MonthsDates> monthsDates = DateTimeUtils.Companion.getMonths(12);
+//        if (monthsDates != null && monthsDates.size() > 0) {
+//
+//            LinkedList<FarmerHistoryByDateModel> fmh = new LinkedList<>();
+//
+//            for (MonthsDates mds : monthsDates) {
+//
+//                String[] totals = CommonFuncs.getCollectionsTotals(mds, collections);
+//                fmh.add(new FarmerHistoryByDateModel(mds, famerModel, totals[0], totals[1], totals[2], totals[3]));
+//
+//            }
+//            initMonthlyList(fmh);
+//
+//        }
 
 
-    public void initMonthlyList(List<FarmerHistoryByDateModel> models) {
+        //PayoutFarmersCollectionModel collectionModels=CommonFuncs.getFarmersCollectionModel(famerModel, collections, payouts, balncesViewModel);
 
-        this.modelsDA = models;
-
-        double milkTotal = 0.0, loanTotal = 0, OrderTotal = 0;
-
-        if (models != null) {
-            for (FarmerHistoryByDateModel f : models) {
-                milkTotal = milkTotal + Double.valueOf(f.getMilktotal());
-
-                loanTotal = loanTotal + Double.valueOf(f.getLoanTotal());
-
-                OrderTotal = OrderTotal + Double.valueOf(f.getOrderTotal());
-            }
-
-        }
-
-        if (models == null) {
-            models = new LinkedList<>();
-        }
-
-        int x = 1;
-        if (models.size() > 0) {
-            x = models.size();
-        }
-
-        List<Collection> collections = payoutsVewModel.getCollectionByDateByPayoutByFarmerListOne(famerModel.getCurrentPayoutCode(), famerModel.getCode());//.observe(this);
-
-        if (collections != null) {
-
-        }
-        setData(String.valueOf(milkTotal / x), String.valueOf(loanTotal / x), String.valueOf(OrderTotal / x));
 
     }
 
-    private void setData(String s, String s1, String s2) {
-        id.setText(famerModel.getCode());
-        name.setText(famerModel.getNames());
+    private void fetchBalance() {
+        balncesViewModel.getByFarmerCode(famerModel.getCode()).observe(this, new Observer<List<FarmerBalance>>() {
+            @Override
+            public void onChanged(@Nullable List<FarmerBalance> farmerBalances) {
+                if (farmerBalances != null) {
+                    calculate(farmerBalances);
+                }
+            }
+        });
+    }
+
+    private void calculate(List<FarmerBalance> farmerBalances) {
+        Double balance = 0.0;
+        for (FarmerBalance f : farmerBalances) {
+            balance = balance + Double.valueOf(f.getBalanceToPay());
+
+        }
+        try {
+            Double ave = balance / farmerBalances.size();
+            setAveareage(String.valueOf(ave));
+
+
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+
+    }
+
+    private void setAveareage(String s) {
         milk.setText(GeneralUtills.Companion.round(s, 0));
-        loan.setText(GeneralUtills.Companion.round(s1, 0));
-        order.setText(GeneralUtills.Companion.round(s2, 0));
-
 
     }
+
+
+//    public void initMonthlyList(List<FarmerHistoryByDateModel> models) {
+//
+//        this.modelsDA = models;
+//
+//        double milkTotal = 0.0, loanTotal = 0, OrderTotal = 0;
+//
+//        if (models != null) {
+//            for (FarmerHistoryByDateModel f : models) {
+//                milkTotal = milkTotal + Double.valueOf(f.getMilktotal());
+//
+//                loanTotal = loanTotal + Double.valueOf(f.getLoanTotal());
+//
+//                OrderTotal = OrderTotal + Double.valueOf(f.getOrderTotal());
+//            }
+//
+//        }
+//
+//        if (models == null) {
+//            models = new LinkedList<>();
+//        }
+//
+//        int x = 1;
+//        if (models.size() > 0) {
+//            x = models.size();
+//        }
+//
+//        List<Collection> collections = payoutsVewModel.getCollectionByDateByPayoutByFarmerListOne(famerModel.getCurrentPayoutCode(), famerModel.getCode());//.observe(this);
+//
+//        if (collections != null) {
+//
+//        }
+//        setData(String.valueOf(milkTotal / x), String.valueOf(loanTotal / x), String.valueOf(OrderTotal / x));
+//
+//    }
+//
+//    private void setData(String s, String s1, String s2) {
+//        id.setText(famerModel.getCode());
+//        name.setText(famerModel.getNames());
+//        milk.setText(GeneralUtills.Companion.round(s, 0));
+//        loan.setText(GeneralUtills.Companion.round(s1, 0));
+//        order.setText(GeneralUtills.Companion.round(s2, 0));
+//
+//
+//    }
 
     private void setData(FarmerHistoryByDateModel farmerHistoryByDateModel) {
         id.setText(famerModel.getCode());

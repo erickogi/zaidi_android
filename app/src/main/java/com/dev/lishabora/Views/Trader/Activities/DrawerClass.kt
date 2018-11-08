@@ -154,7 +154,7 @@ class DrawerClass {
                     //.withSelectedItem(-1)
                     .addDrawerItems(
                             home,
-                            routes, loansAndorders, products, payout, notifications, transactions,
+                            routes, loansAndorders, products, payout, notifications,// transactions,
                             DividerDrawerItem(),
                             account,
                             // settings,

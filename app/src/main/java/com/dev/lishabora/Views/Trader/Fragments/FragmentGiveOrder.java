@@ -1,5 +1,6 @@
 package com.dev.lishabora.Views.Trader.Fragments;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,6 +26,7 @@ import com.dev.lishabora.Adapters.ProductOrderAdapter;
 import com.dev.lishabora.Adapters.ProductsAdapter;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.FarmerBalance;
 import com.dev.lishabora.Models.FarmerHistoryByDateModel;
 import com.dev.lishabora.Models.MonthsDates;
 import com.dev.lishabora.Models.OrderModel;
@@ -33,6 +35,7 @@ import com.dev.lishabora.Models.ProductsModel;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
+import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.CommonFuncs;
@@ -66,6 +69,7 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
     private PayoutsVewModel payoutsVewModel;
     private TraderViewModel traderViewModel;
+    private BalncesViewModel balncesViewModel;
     private View view;
     private List<FarmerHistoryByDateModel> modelsDA = new LinkedList<>();
 
@@ -75,6 +79,7 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
         super.onCreate(savedInstanceState);
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
         traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
+        balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
 
 
     }
@@ -120,9 +125,9 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
 
         payoutsVewModel.getCollectionByFarmer(famerModel.getCode()).observe(this, collections -> {
             if (collections != null && collections.size() > 0) {
-                createMonthlyList(collections);
+                //createMonthlyList(collections);
             } else {
-                initMonthlyList(new LinkedList<>());
+                //initMonthlyList(new LinkedList<>());
             }
         });
         btngetOrders.setOnClickListener(view -> {
@@ -132,6 +137,7 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
                 filterList(productsModels);
             }
         });
+        fetchBalance();
         //.observe(FragmentGiveOrder.this, productsModels -> {
 
         //  }));
@@ -227,6 +233,38 @@ public class FragmentGiveOrder extends Fragment implements BlockingStep {
         order.setText(farmerHistoryByDateModel.getOrderTotal());
 
     }
+
+    private void fetchBalance() {
+        balncesViewModel.getByFarmerCode(famerModel.getCode()).observe(this, new Observer<List<FarmerBalance>>() {
+            @Override
+            public void onChanged(@Nullable List<FarmerBalance> farmerBalances) {
+                if (farmerBalances != null) {
+                    calculate(farmerBalances);
+                }
+            }
+        });
+    }
+
+    private void calculate(List<FarmerBalance> farmerBalances) {
+        Double balance = 0.0;
+        for (FarmerBalance f : farmerBalances) {
+            balance = balance + Double.valueOf(f.getBalanceToPay());
+        }
+        try {
+            Double ave = balance / farmerBalances.size();
+            setAveareage(String.valueOf(ave));
+
+
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+    }
+
+    private void setAveareage(String s) {
+        milk.setText(GeneralUtills.Companion.round(s, 0));
+
+    }
+
 
 
     @Override
