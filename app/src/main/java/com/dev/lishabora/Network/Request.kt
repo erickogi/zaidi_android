@@ -1,23 +1,22 @@
 package com.dev.lishabora.Network
 
+import android.util.Log
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.StringRequestListener
-import com.dev.lishabora.Models.ResponseModel
-import com.dev.lishabora.Models.ResponseObject
-import com.dev.lishabora.Models.SyncDownResponse
-import com.dev.lishabora.Models.SyncResponseModel
+import com.dev.lishabora.Models.*
 import com.dev.lishabora.Models.Trader.Data
 import com.dev.lishabora.Utils.ResponseCallback
 import com.dev.lishabora.Utils.SyncChangesCallback
 import com.dev.lishabora.Utils.SyncDownResponseCallback
 import com.dev.lishabora.Utils.SyncResponseCallback
 import com.google.gson.Gson
+import okhttp3.OkHttpClient
 import org.json.JSONArray
 import org.json.JSONObject
 import timber.log.Timber
-import java.util.*
+import java.util.concurrent.TimeUnit
 
 class Request {
 
@@ -31,26 +30,26 @@ class Request {
 
         fun getResponse(url: String, jsonObject: JSONObject, token: String, responseCallback: ResponseCallback) {
             postRequest(url, jsonObject, token, object : RequestListener {
-                override fun onError(error: ANError) {
+                override fun onError(error: ANError, analytics: NetworkAnalytics) {
                     responseModel.data = null
                     responseModel.resultCode = 0
                     responseModel.resultDescription = ""
 
-                    responseCallback.response(responseModel)
+                    responseCallback.response(responseModel, analytics)
 
                 }
 
-                override fun onError(error: String) {
+                override fun onError(error: String, analytics: NetworkAnalytics) {
 
                     responseModel.data = null
                     responseModel.resultCode = 0
                     responseModel.resultDescription = error
 
-                    responseCallback.response(responseModel)
+                    responseCallback.response(responseModel, analytics)
 
                 }
 
-                override fun onSuccess(response: String) {
+                override fun onSuccess(response: String, analytics: NetworkAnalytics) {
                     try {
 
 
@@ -58,14 +57,14 @@ class Request {
                         responseModel = gson.fromJson(response, ResponseModel::class.java)
                         // Log.d("2ReTrRe", gson.toJson(responseModel))
 
-                        responseCallback.response(responseModel)
+                        responseCallback.response(responseModel, analytics)
 
 
                     } catch (e: Exception) {
                         responseModel.data = null
                         responseModel.resultCode = 0
                         responseModel.resultDescription = e.message
-                        responseCallback.response(responseModel)
+                        responseCallback.response(responseModel, analytics)
 
                         e.printStackTrace()
                     }
@@ -75,89 +74,43 @@ class Request {
 
         }
 
-        fun getResponse(url: String, jsonObject: JSONArray, token: String, responseCallback: ResponseCallback) {
-            postRequest(url, jsonObject, token, object : RequestListener {
-                override fun onError(error: ANError) {
-                    responseModel.data = null
-                    responseModel.resultCode = 0
-                    responseModel.resultDescription = error.toString()
-
-                    responseCallback.response(responseModel)
-
-                }
-
-                override fun onError(error: String) {
-
-                    responseModel.data = null
-                    responseModel.resultCode = 0
-                    responseModel.resultDescription = error
-
-                    responseCallback.response(responseModel)
-
-                }
-
-                override fun onSuccess(response: String) {
-                    try {
-
-
-                        val gson = Gson()
-                        responseModel = gson.fromJson(response, ResponseModel::class.java)
-                        // Log.d("2ReTrRe", gson.toJson(responseModel))
-
-                        responseCallback.response(responseModel)
-
-
-                    } catch (e: Exception) {
-                        responseModel.data = null
-                        responseModel.resultCode = 0
-                        responseModel.resultDescription = e.message
-                        responseCallback.response(responseModel)
-
-                        e.printStackTrace()
-                    }
-
-                }
-            })
-
-        }
 
         fun getResponseSingle(url: String, jsonObject: JSONObject, token: String, responseCallback: ResponseCallback) {
             postRequest(url, jsonObject, token, object : RequestListener {
-                override fun onError(error: ANError) {
+                override fun onError(error: ANError, analytics: NetworkAnalytics) {
                     responseModelSingle.data = null
                     responseModelSingle.resultCode = 0
                     responseModelSingle.resultDescription = error.toString()
 
-                    responseCallback.response(responseModelSingle)
+                    responseCallback.response(responseModelSingle, analytics)
 
                 }
 
-                override fun onError(error: String) {
+                override fun onError(error: String, analytics: NetworkAnalytics) {
 
                     responseModelSingle.data = null
                     responseModelSingle.resultCode = 0
                     responseModelSingle.resultDescription = error
 
-                    responseCallback.response(responseModelSingle)
+                    responseCallback.response(responseModelSingle, analytics)
 
                 }
 
-                override fun onSuccess(response: String) {
+                override fun onSuccess(response: String, analytics: NetworkAnalytics) {
                     try {
 
 
                         val gson = Gson()
                         responseModelSingle = gson.fromJson(response, ResponseObject::class.java)
-                        Timber.tag("2ReTrRe").d(gson.toJson(responseModelSingle))
 
-                        responseCallback.response(responseModelSingle)
+                        responseCallback.response(responseModelSingle, analytics)
 
 
                     } catch (e: Exception) {
                         responseModelSingle.data = null
                         responseModelSingle.resultCode = 0
                         responseModelSingle.resultDescription = e.message
-                        responseCallback.response(responseModelSingle)
+                        responseCallback.response(responseModelSingle, analytics)
 
                         e.printStackTrace()
                     }
@@ -169,26 +122,26 @@ class Request {
 
         fun getResponseSyncChanges(url: String, jsonObject: JSONObject, token: String, responseCallback: SyncChangesCallback) {
             postRequest(url, jsonObject, token, object : RequestListener {
-                override fun onError(error: ANError) {
+                override fun onError(error: ANError, analytics: NetworkAnalytics) {
                     responseModelSingle.data = null
                     responseModelSingle.resultCode = 0
                     responseModelSingle.resultDescription = error.toString()
 
-                    responseCallback.onError(error.toString())
+                    responseCallback.onError(error.toString(), analytics)
 
                 }
 
-                override fun onError(error: String) {
+                override fun onError(error: String, analytics: NetworkAnalytics) {
 
                     responseModelSingle.data = null
                     responseModelSingle.resultCode = 0
                     responseModelSingle.resultDescription = error
 
-                    responseCallback.onError(error)
+                    responseCallback.onError(error, analytics)
 
                 }
 
-                override fun onSuccess(response: String) {
+                override fun onSuccess(response: String, analytics: NetworkAnalytics) {
                     try {
 
 
@@ -196,14 +149,14 @@ class Request {
                         //SyncDownResponse r =
                         //Timber.tag("2ReTrRe").d(gson.toJson(responseModelSingle))
 
-                        responseCallback.onSucces(gson.fromJson(response, SyncDownResponse::class.java))
+                        responseCallback.onSucces(gson.fromJson(response, SyncDownResponse::class.java), analytics)
 
 
                     } catch (e: Exception) {
                         responseModelSingle.data = null
                         responseModelSingle.resultCode = 0
                         responseModelSingle.resultDescription = e.message
-                        responseCallback.onError("" + e.toString())
+                        responseCallback.onError("" + e.toString(), analytics)
 
                         e.printStackTrace()
                     }
@@ -215,20 +168,20 @@ class Request {
 
         fun getResponseSync(url: String, jsonObject: JSONObject, token: String, responseCallback: SyncResponseCallback) {
             postRequest(url, jsonObject, token, object : RequestListener {
-                override fun onError(error: ANError) {
+                override fun onError(error: ANError, analytics: NetworkAnalytics) {
 
-                    responseCallback.response(error.toString())
-
-                }
-
-                override fun onError(error: String) {
-
-
-                    responseCallback.response(error)
+                    responseCallback.response(error.toString(), analytics)
 
                 }
 
-                override fun onSuccess(response: String) {
+                override fun onError(error: String, analytics: NetworkAnalytics) {
+
+
+                    responseCallback.response(error, analytics)
+
+                }
+
+                override fun onSuccess(response: String, analytics: NetworkAnalytics) {
                     try {
 
 
@@ -238,11 +191,11 @@ class Request {
 
                         syncresponseModelSingle = gson.fromJson(response, SyncResponseModel::class.java)
                         Timber.tag("2ReTrRe").d(gson.toJson(syncresponseModelSingle))
-                        responseCallback.response(syncresponseModelSingle)
+                        responseCallback.response(syncresponseModelSingle, analytics)
 
 
                     } catch (e: Exception) {
-                        responseCallback.response(response)
+                        responseCallback.response(response, analytics)
 
                         e.printStackTrace()
                     }
@@ -254,20 +207,20 @@ class Request {
 
         fun getResponseSyncDown(url: String, jsonObject: JSONObject, token: String, responseCallback: SyncDownResponseCallback) {
             postRequest(url, jsonObject, token, object : RequestListener {
-                override fun onError(error: ANError) {
+                override fun onError(error: ANError, analytics: NetworkAnalytics) {
 
-                    responseCallback.response(error.toString())
-
-                }
-
-                override fun onError(error: String) {
-
-
-                    responseCallback.response(error)
+                    responseCallback.response(error.toString(), analytics)
 
                 }
 
-                override fun onSuccess(response: String) {
+                override fun onError(error: String, analytics: NetworkAnalytics) {
+
+
+                    responseCallback.response(error, analytics)
+
+                }
+
+                override fun onSuccess(response: String, analytics: NetworkAnalytics) {
                     try {
 
                         val gson = Gson()
@@ -280,11 +233,11 @@ class Request {
                         dataresponseModelSingle.resultDescription = responseModelSingle.resultDescription
 
                         // Timber.tag("Syncdown").d(gson.toJson(dataresponseModelSingle))
-                        responseCallback.response(dataresponseModelSingle)
+                        responseCallback.response(dataresponseModelSingle, analytics)
 
 
                     } catch (e: Exception) {
-                        responseCallback.response(response)
+                        responseCallback.response(response, analytics)
 
                         e.printStackTrace()
                     }
@@ -294,41 +247,9 @@ class Request {
 
         }
 
-        fun postRequest(url: String, params: HashMap<String, String>, token: String?, listener: RequestListener) {
-
-            var mtoken = ""
-            if (token != null) {
-
-                mtoken = token
-
-            }
-
-            AndroidNetworking.post(url)
-                    .addBodyParameter(params)
-
-                    .addHeaders("Authorization", "Bearer $mtoken")
-                    .addHeaders("Accept", "application/json")
 
 
-                    .setTag("test")
-                    .setPriority(Priority.HIGH)
-                    .build()
-                    .getAsString(object : StringRequestListener {
-                        override fun onResponse(response: String) {
-                            // do anything with response
-                            listener.onSuccess(response)
 
-                        }
-
-                        override fun onError(error: ANError) {
-                            // handle error
-
-                            Timber.tag("eww").d(error.toString())
-                            listener.onError(error)
-                            //  listener.onError(error)
-                        }
-                    })
-        }
 
         fun postRequest(url: String, params: JSONObject, token: String?, listener: RequestListener) {
 
@@ -338,7 +259,14 @@ class Request {
                 mtoken = token
 
             }
-            Timber.tag("ReTrReq").d("%s%s", params.toString() + " Url : ", url)
+            var analytics = NetworkAnalytics()
+
+            val okHttpClient = OkHttpClient().newBuilder()
+                    .connectTimeout(1000, TimeUnit.SECONDS)
+                    .readTimeout(1000, TimeUnit.SECONDS)
+                    .writeTimeout(1000, TimeUnit.SECONDS)
+                    .build()
+
 
 
             AndroidNetworking.post(url)
@@ -351,12 +279,24 @@ class Request {
 
                     .setTag("test")
                     .setPriority(Priority.HIGH)
+                    //.setOkHttpClient(okHttpClient)
+
                     .build()
+                    .setAnalyticsListener { timeTakenInMillis, bytesSent, bytesReceived, isFromCache ->
+                        Log.d("Analy12Kq", " timeTakenInMillis : " + timeTakenInMillis)
+                        Log.d("Analy12Kq", " bytesSent : " + bytesSent)
+                        Log.d("Analy12Kq", " bytesReceived : " + bytesReceived)
+                        Log.d("Analy12Kq", " isFromCache : " + isFromCache)
+
+                        analytics = (NetworkAnalytics(timeTakenInMillis, bytesSent, bytesReceived, isFromCache))
+
+                    }
+
                     .getAsString(object : StringRequestListener {
                         override fun onResponse(response: String) {
                             // do anything with response
                             Timber.tag("ReTrRe").d(response)
-                            listener.onSuccess(response)
+                            listener.onSuccess(response, analytics)
 
                         }
 
@@ -364,7 +304,7 @@ class Request {
                             // handle error
 
                             Timber.tag("ReTrRe").d(error.toString())
-                            listener.onError(error)
+                            listener.onError(error, analytics)
                             //  listener.onError(error)
                         }
                     })
@@ -378,10 +318,17 @@ class Request {
                 mtoken = token
 
             }
-            Timber.tag("ReTrReq").d(params.toString() + " Url : " + url)
+            var analytics = NetworkAnalytics()
+
+            val okHttpClient = OkHttpClient().newBuilder()
+                    .connectTimeout(1000, TimeUnit.SECONDS)
+                    .readTimeout(1000, TimeUnit.SECONDS)
+                    .writeTimeout(1000, TimeUnit.SECONDS)
+                    .build()
 
 
             AndroidNetworking.post(url)
+
                     .addJSONArrayBody(params)
 
 
@@ -391,134 +338,36 @@ class Request {
 
                     .setTag("test")
                     .setPriority(Priority.HIGH)
+                    .setOkHttpClient(okHttpClient)
+
                     .build()
+
+
+                    .setAnalyticsListener { timeTakenInMillis, bytesSent, bytesReceived, isFromCache ->
+                        Log.d("Analy12Kq", " timeTakenInMillis : " + timeTakenInMillis)
+                        Log.d("Analy12Kq", " bytesSent : " + bytesSent)
+                        Log.d("Analy12Kq", " bytesReceived : " + bytesReceived)
+                        Log.d("Analy12Kq", " isFromCache : " + isFromCache)
+
+                        analytics = (NetworkAnalytics(timeTakenInMillis, bytesSent, bytesReceived, isFromCache))
+                    }
+
                     .getAsString(object : StringRequestListener {
                         override fun onResponse(response: String) {
-                            // do anything with response
                             Timber.tag("ReTrRe").d(response)
-                            listener.onSuccess(response)
+                            listener.onSuccess(response, analytics)
 
                         }
 
                         override fun onError(error: ANError) {
-                            // handle error
 
                             Timber.tag("ReTrRe").d(error.toString())
-                            listener.onError(error)
-                            //  listener.onError(error)
+                            listener.onError(error, analytics)
                         }
                     })
         }
 
 
-        fun getRequest(url: String, token: String?, listener: RequestListener) {
-            var mtoken = ""
-            if (token != null) {
-
-                mtoken = token
-
-            }
-
-
-            AndroidNetworking.get(url)
-
-
-                    .addHeaders("Authorization", "Bearer $mtoken")
-                    .addHeaders("Accept", "application/json")
-
-
-                    .setTag("test")
-                    .setPriority(Priority.HIGH)
-                    .build()
-                    .getAsString(object : StringRequestListener {
-                        override fun onResponse(response: String) {
-                            // do anything with response
-                            listener.onSuccess(response)
-
-                        }
-
-                        override fun onError(error: ANError) {
-                            // handle error
-                            listener.onError(error.errorBody)
-                        }
-                    })
-        }
-
-
-        fun putRequest(url: String, params: JSONObject, token: String?, listener: RequestListener) {
-            var mtoken = ""
-            if (token != null) {
-
-                mtoken = token
-
-            }
-
-            Timber.tag("putrequest").d(params.toString())
-            Timber.tag("putrequest").d(url)
-
-            AndroidNetworking.put(url)
-
-
-                    .addHeaders("Authorization", "Bearer $mtoken")
-                    .addHeaders("Accept", "application/json")
-
-                    //.addBodyParameter(params)
-                    // .addApplicationJsonBody(params)
-
-                    .addJSONObjectBody(params)
-                    //.setContentType(ContentT)
-
-                    .setTag("test")
-                    .setPriority(Priority.HIGH)
-                    .build()
-                    .getAsString(object : StringRequestListener {
-                        override fun onResponse(response: String) {
-                            // do anything with response
-                            listener.onSuccess(response)
-
-                        }
-
-                        override fun onError(error: ANError) {
-                            // handle error
-                            listener.onError(error.errorBody)
-                        }
-                    })
-        }
-
-        fun deleteRequest(url: String, token: String?, listener: RequestListener) {
-            var mtoken = ""
-            if (token != null) {
-
-                mtoken = token
-
-            }
-            Timber.tag("deleterequest").d(url)
-            //Log.d("deleterequest", url)
-
-
-            AndroidNetworking.delete(url)
-
-
-                    .addHeaders("Authorization", "Bearer $mtoken")
-                    .addHeaders("Accept", "application/json")
-
-
-                    .setTag("test")
-                    .setPriority(Priority.HIGH)
-                    .build()
-                    .getAsString(object : StringRequestListener {
-                        override fun onResponse(response: String) {
-                            // do anything with response
-                            listener.onSuccess(response)
-
-                        }
-
-                        override fun onError(error: ANError) {
-                            // handle error
-                            listener.onError(error.errorBody)
-                        }
-                    })
-        }
 
 
     }

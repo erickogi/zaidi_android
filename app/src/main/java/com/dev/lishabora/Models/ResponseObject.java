@@ -21,6 +21,8 @@ public class ResponseObject implements Serializable {
     private TraderModel traderModel;
     private List<TraderModel> traderModels;
 
+    private NetworkAnalytics analytics;
+
 //    public List<SyncModel> getSyncModels() {
 //        return syncModels;
 //    }
@@ -35,6 +37,14 @@ public class ResponseObject implements Serializable {
         } else {
             return "";
         }
+    }
+
+    public NetworkAnalytics getAnalytics() {
+        return analytics;
+    }
+
+    public void setAnalytics(NetworkAnalytics analytics) {
+        this.analytics = analytics;
     }
 
     public void setCode(String code) {

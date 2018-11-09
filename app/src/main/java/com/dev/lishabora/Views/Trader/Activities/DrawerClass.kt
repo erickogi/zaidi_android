@@ -90,7 +90,7 @@ class DrawerClass {
                     .withIcon(R.drawable.ic_account_circle_black_24dp)
 
             val help = PrimaryDrawerItem().withIdentifier(10).withIcon(R.drawable.ic_help)
-                    .withName("Help").withTextColorRes(R.color.white)
+                    .withName("About").withTextColorRes(R.color.white)
 
             val sync = PrimaryDrawerItem().withIdentifier(11).withIcon(R.drawable.ic_sync_black_24dp)
                     .withName("Sync Works").withTextColorRes(R.color.white)
@@ -166,7 +166,9 @@ class DrawerClass {
                             //share
                             // sync,
                             help,
-                            logout
+                            logout,
+                            //DividerDrawerItem(),
+                            DividerDrawerItem()
                             // about
 
 

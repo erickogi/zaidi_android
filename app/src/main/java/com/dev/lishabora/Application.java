@@ -22,6 +22,7 @@ import com.dev.lishabora.Jobs.Evernote.UpSyncJob;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.FarmerBalance;
+import com.dev.lishabora.Models.NetworkAnalytics;
 import com.dev.lishabora.Models.ProductsModel;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.ResponseObject;
@@ -53,11 +54,14 @@ import com.dev.lishabora.Repos.Trader.PayoutsRepo;
 import com.dev.lishabora.Repos.Trader.TraderRepo;
 import com.dev.lishabora.Repos.Trader.UnitsRepo;
 import com.dev.lishabora.Utils.DateTimeUtils;
+import com.dev.lishabora.Utils.FetchDeviceData;
+import com.dev.lishabora.Utils.NetworkUtils;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.Utils.ResponseCallback;
 import com.dev.lishabora.Utils.SyncChangesCallback;
 import com.dev.lishabora.Utils.SyncDownResponseCallback;
 import com.dev.lishabora.Utils.SyncResponseCallback;
+import com.dev.lishabora.Utils.SystemInfo;
 import com.dev.lishabora.Views.Trader.Fragments.CollectMilk;
 import com.dev.lishaboramobile.BuildConfig;
 import com.dev.lishaboramobile.R;
@@ -137,6 +141,18 @@ public class Application extends MultiDexApplication {
                 s.setTime(DateTimeUtils.Companion.getNow());
 
 
+                //IF SENDING DATA
+                if (NetworkUtils.Companion.isConnectionFast(context)) {
+                    s.setSystemInfo(new FetchDeviceData().fetchDetails());
+                    Log.d("SystemInfo", new Gson().toJson(s.getSystemInfo()));
+                } else {
+                    Log.d("SystemInfo", "Connection is slow");
+
+                    s.setSystemInfo(new SystemInfo());
+                }
+
+
+
                 JSONObject jsonObject = null;
                 try {
                     jsonObject = new JSONObject(new Gson().toJson(s));
@@ -168,7 +184,7 @@ public class Application extends MultiDexApplication {
         try {
             Request.Companion.getResponseSync(ApiConstants.Companion.getSync(), jsonObject, "", new SyncResponseCallback() {
                 @Override
-                public void response(SyncResponseModel responseModel) {
+                public void response(SyncResponseModel responseModel, NetworkAnalytics analytics) {
 
 
                     if (traderModel != null) {
@@ -198,7 +214,7 @@ public class Application extends MultiDexApplication {
                 }
 
                 @Override
-                public void response(String error) {
+                public void response(String error, NetworkAnalytics analytics) {
                     if (traderModel != null) {
                         traderModel.setSynchingStatus(2);
                         traderModel.setLastsynchingMessage(error);
@@ -341,7 +357,7 @@ public class Application extends MultiDexApplication {
             Request.Companion.getResponseSyncDown(ApiConstants.Companion.getViewInfo(), jb, "",
                     new SyncDownResponseCallback() {
                         @Override
-                        public void response(Data responseModel) {
+                        public void response(Data responseModel, NetworkAnalytics analytics) {
                             if (_completeNotificationManager != null) {
                                 _completeNotificationManager.cancel(6);
                             }
@@ -401,7 +417,7 @@ public class Application extends MultiDexApplication {
                         }
 
                         @Override
-                        public void response(String error) {
+                        public void response(String error, NetworkAnalytics analytics) {
                             if (_completeNotificationManager != null) {
                                 _completeNotificationManager.cancel(6);
                             }
@@ -479,7 +495,7 @@ public class Application extends MultiDexApplication {
             }
             Request.Companion.getResponseSyncChanges(ApiConstants.Companion.getSyncDown(), jsonObject, "", new SyncChangesCallback() {
                 @Override
-                public void onSucces(SyncDownResponse response) {
+                public void onSucces(SyncDownResponse response, NetworkAnalytics analytics) {
                     if (!getIfHasSyncData()) {
                         syncChanges(response.getData());
                     } else {
@@ -502,7 +518,7 @@ public class Application extends MultiDexApplication {
                 }
 
                 @Override
-                public void onError(String error) {
+                public void onError(String error, NetworkAnalytics analytics) {
 
                 }
 
@@ -520,14 +536,14 @@ public class Application extends MultiDexApplication {
         Request.Companion.getResponse(ApiConstants.Companion.getUpdateTrader(), jsonObject, "",
                 new ResponseCallback() {
                     @Override
-                    public void response(ResponseModel responseModel) {
+                    public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                         if (responseModel.getResultCode() == 1) {
                             new PrefrenceManager(context).setIsFirebaseUdated(true);
                         }
                     }
 
                     @Override
-                    public void response(ResponseObject responseModel) {
+                    public void response(ResponseObject responseModel, NetworkAnalytics analytics) {
                         if (responseModel.getResultCode() == 1) {
                             new PrefrenceManager(context).setIsFirebaseUdated(true);
                         }
@@ -556,6 +572,14 @@ public class Application extends MultiDexApplication {
             } else {
 
             }
+        } else if (s.getActionType() == AppConstants.DELETE) {
+            if (s.getDataType() == 1) {
+                FamerModel famerModel = new Gson().fromJson(s.getObject(), FamerModel.class);
+                new FarmerRepo(mInstance).deleteRecord(famerModel);
+
+            } else {
+
+            }
         }
     }
 
@@ -573,6 +597,15 @@ public class Application extends MultiDexApplication {
             if (s.getDataType() == 1) {
                 TraderModel model = new Gson().fromJson(s.getObject(), TraderModel.class);
                 new TraderRepo(mInstance).upDateRecord(model);
+                new PrefrenceManager(context).setLoggedUser(model);
+
+            } else {
+
+            }
+        } else if (s.getActionType() == AppConstants.DELETE) {
+            if (s.getDataType() == 1) {
+                TraderModel model = new Gson().fromJson(s.getObject(), TraderModel.class);
+                new TraderRepo(mInstance).deleteRecord(model);
                 new PrefrenceManager(context).setLoggedUser(model);
 
             } else {
@@ -598,6 +631,14 @@ public class Application extends MultiDexApplication {
             } else {
 
             }
+        } else if (s.getActionType() == AppConstants.DELETE) {
+            if (s.getDataType() == 1) {
+                ProductsModel productsModel = new Gson().fromJson(s.getObject(), ProductsModel.class);
+                new ProductsRepo(mInstance).deleteRecord(productsModel);
+
+            } else {
+
+            }
         }
     }
 
@@ -614,6 +655,14 @@ public class Application extends MultiDexApplication {
             if (s.getDataType() == 1) {
                 RoutesModel routesModel = new Gson().fromJson(s.getObject(), RoutesModel.class);
                 new RoutesRepo(mInstance).upDateRecord(routesModel);
+
+            } else {
+
+            }
+        } else if (s.getActionType() == AppConstants.DELETE) {
+            if (s.getDataType() == 1) {
+                RoutesModel routesModel = new Gson().fromJson(s.getObject(), RoutesModel.class);
+                new RoutesRepo(mInstance).deleteRecord(routesModel);
 
             } else {
 
@@ -638,6 +687,14 @@ public class Application extends MultiDexApplication {
             } else {
 
             }
+        } else if (s.getActionType() == AppConstants.DELETE) {
+            if (s.getDataType() == 1) {
+                Collection collection = new Gson().fromJson(s.getObject(), Collection.class);
+                new CollectionsRepo(mInstance).deleteRecord(collection);
+
+            } else {
+
+            }
         }
     }
 
@@ -654,6 +711,14 @@ public class Application extends MultiDexApplication {
             if (s.getDataType() == 1) {
                 FarmerBalance balance = new Gson().fromJson(s.getObject(), FarmerBalance.class);
                 new BalanceRepo(mInstance).updateRecord(balance);
+
+            } else {
+
+            }
+        } else if (s.getActionType() == AppConstants.DELETE) {
+            if (s.getDataType() == 1) {
+                FarmerBalance balance = new Gson().fromJson(s.getObject(), FarmerBalance.class);
+                new BalanceRepo(mInstance).deleteRecord(balance);
 
             } else {
 
@@ -678,6 +743,14 @@ public class Application extends MultiDexApplication {
             } else {
 
             }
+        } else if (s.getActionType() == AppConstants.DELETE) {
+            if (s.getDataType() == 1) {
+                FarmerLoansTable loansTable = new Gson().fromJson(s.getObject(), FarmerLoansTable.class);
+                new LoansTableRepo(mInstance).deleteRecord(loansTable);
+
+            } else {
+
+            }
         }
     }
 
@@ -694,6 +767,14 @@ public class Application extends MultiDexApplication {
             if (s.getDataType() == 1) {
                 FarmerOrdersTable farmerOrdersTable = new Gson().fromJson(s.getObject(), FarmerOrdersTable.class);
                 new OrdersTableRepo(mInstance).updateRecord(farmerOrdersTable);
+
+            } else {
+
+            }
+        } else if (s.getActionType() == AppConstants.DELETE) {
+            if (s.getDataType() == 1) {
+                FarmerOrdersTable farmerOrdersTable = new Gson().fromJson(s.getObject(), FarmerOrdersTable.class);
+                new OrdersTableRepo(mInstance).deleteRecord(farmerOrdersTable);
 
             } else {
 
@@ -718,6 +799,14 @@ public class Application extends MultiDexApplication {
             } else {
 
             }
+        } else if (s.getActionType() == AppConstants.DELETE) {
+            if (s.getDataType() == 1) {
+                LoanPayments loanPayments = new Gson().fromJson(s.getObject(), LoanPayments.class);
+                new LoanPaymentsRepo(mInstance).deleteRecord(loanPayments);
+
+            } else {
+
+            }
         }
     }
 
@@ -734,6 +823,14 @@ public class Application extends MultiDexApplication {
             if (s.getDataType() == 1) {
                 OrderPayments orderPayments = new Gson().fromJson(s.getObject(), OrderPayments.class);
                 new OrderPaymentsRepo(mInstance).updateRecord(orderPayments);
+
+            } else {
+
+            }
+        } else if (s.getActionType() == AppConstants.DELETE) {
+            if (s.getDataType() == 1) {
+                OrderPayments orderPayments = new Gson().fromJson(s.getObject(), OrderPayments.class);
+                new OrderPaymentsRepo(mInstance).deleteRecord(orderPayments);
 
             } else {
 

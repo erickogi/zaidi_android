@@ -22,7 +22,17 @@ public class ResponseModel extends LiveData<ResponseModel> implements Serializab
     private List<ProductsModel> productsModels;
     private List<SyncModel> syncModels;
 
+    private NetworkAnalytics analytics;
+
     private String payoutCode;
+
+    public NetworkAnalytics getAnalytics() {
+        return analytics;
+    }
+
+    public void setAnalytics(NetworkAnalytics analytics) {
+        this.analytics = analytics;
+    }
 
     public List<SyncModel> getSyncModels() {
         return syncModels;

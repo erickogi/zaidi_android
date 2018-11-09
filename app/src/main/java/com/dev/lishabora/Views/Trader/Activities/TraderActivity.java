@@ -34,6 +34,7 @@ import com.dev.lishabora.Application;
 import com.dev.lishabora.Database.LMDatabase;
 import com.dev.lishabora.Jobs.Evernote.PayoutCheckerJob;
 import com.dev.lishabora.Jobs.Evernote.UpSyncJob;
+import com.dev.lishabora.Models.NetworkAnalytics;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.ResponseObject;
 import com.dev.lishabora.Models.Trader.TraderModel;
@@ -436,7 +437,7 @@ public class TraderActivity extends AppCompatActivity {
         Request.Companion.getResponse(ApiConstants.Companion.getUpdateTrader(), jsonObject, "",
                 new ResponseCallback() {
                     @Override
-                    public void response(ResponseModel responseModel) {
+                    public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                         progressDialog.dismiss();
                         if (responseModel.getResultCode() == 1) {
                             logOut();
@@ -447,7 +448,7 @@ public class TraderActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void response(ResponseObject responseModel) {
+                    public void response(ResponseObject responseModel, NetworkAnalytics analytics) {
                         progressDialog.dismiss();
 
                         if (responseModel.getResultCode() == 1) {

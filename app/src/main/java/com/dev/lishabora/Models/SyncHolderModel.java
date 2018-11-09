@@ -1,5 +1,7 @@
 package com.dev.lishabora.Models;
 
+import com.dev.lishabora.Utils.SystemInfo;
+
 import java.util.List;
 
 public class SyncHolderModel {
@@ -8,6 +10,15 @@ public class SyncHolderModel {
     private int syncType;
     private String time;
     private List<SyncModel> syncModels;
+    private SystemInfo systemInfo;
+
+    public SystemInfo getSystemInfo() {
+        return systemInfo;
+    }
+
+    public void setSystemInfo(SystemInfo systemInfo) {
+        this.systemInfo = systemInfo;
+    }
 
     public int getSyncType() {
         return syncType;

@@ -131,10 +131,6 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
     private List<RoutesModel> routesModels;
     private ItemTouchHelper mItemTouchHelper;
     private ActionMode mActionMode;
-//    private Button btnDrag;
-//    private boolean isDraggable = true;
-
-    // private CollectMilk collectMilk = null;
     private FamerModel selectedFarmer;
     private PayoutsVewModel payoutsVewModel;
 
@@ -736,18 +732,6 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
     }
 
-
-    private void getUnit() {
-        mViewModel.getUnits(true).observe(FragementFarmersList.this, new Observer<List<UnitsModel>>() {
-            @Override
-            public void onChanged(@Nullable List<UnitsModel> unitsModels) {
-                if (unitsModels != null) {
-                    //  FragementFarmersList.this.createFarmers();
-
-                }
-            }
-        });
-    }
 
 
     private int getSelectedAccountStatus() {

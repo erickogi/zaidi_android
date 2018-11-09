@@ -957,13 +957,13 @@ public class CommonFuncs {
         String milkTotalLtrs = m.getValueLtrs();
 
 
-        String loanTotal = CommonFuncs.getLoan(famerModel.getCode(), collections);
+        String loanTotal; //= CommonFuncs.getLoan(famerModel.getCode(), collections);
         List<FarmerLoansTable> farmerLoansTables = balncesViewModel.getFarmerLoanByFarmerOne(famerModel.getCode());
         loanTotal = CommonFuncs.getCardLoan(farmerLoansTables, balncesViewModel);
 
         List<FarmerOrdersTable> farmerOrdersTables = balncesViewModel.getFarmerOrderByFarmerOne(famerModel.getCode());
 
-        String orderTotal = CommonFuncs.getOrder(famerModel.getCode(), collections);
+        String orderTotal;// = CommonFuncs.getOrder(famerModel.getCode(), collections);
         orderTotal = CommonFuncs.getCardOrder(farmerOrdersTables, balncesViewModel);
 
 
@@ -2585,6 +2585,8 @@ public class CommonFuncs {
         for (FarmerOrdersTable f : farmerOrderTables) {
             if (f.getStatus() == 0) {
                 farmerOrderTablesNotPaid.add(f);
+
+
             }
         }
 
@@ -2617,6 +2619,10 @@ public class CommonFuncs {
             } else {
                 toPay = toPay + installmentAmount;
             }
+
+            List<OrderPayments> orderPayments = balncesViewModel.getOrderPaymentByOrderCodeOne(fg.getCode());
+
+
 
         }
         return String.valueOf(toPay);
@@ -3412,7 +3418,7 @@ public class CommonFuncs {
             if (payouts.getStatus() == 0 && (payouts.getEndDate().equals(DateTimeUtils.Companion.getToday()) ||
                     DateTimeUtils.Companion.isPastLastDay(payouts.getEndDate()))) {
                 notifications.add(new Notifications(0, DateTimeUtils.Companion.getNow(), payouts.getCyclename() + "  Payout Due ",
-                        "This payout was due on  " + DateTimeUtils.Companion.getDisplayDate(payouts.getEndDate()), "PGHTSE", 0, AppConstants.NOTIFICATION_TYPE_INDIVIDUAL_PAYOUT_PENDING, 11, payouts.getCode()));
+                        "This payout was due on  " + payouts.getEndDate(), "PGHTSE", 0, AppConstants.NOTIFICATION_TYPE_INDIVIDUAL_PAYOUT_PENDING, 11, payouts.getCode()));
             }
 
 

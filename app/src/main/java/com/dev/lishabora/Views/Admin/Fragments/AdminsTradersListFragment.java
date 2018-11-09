@@ -39,6 +39,7 @@ import android.widget.TextView;
 import com.dev.lishabora.Adapters.TradersAdapter;
 import com.dev.lishabora.COntrollers.LoginController;
 import com.dev.lishabora.Models.Admin.FetchTraderModel;
+import com.dev.lishabora.Models.NetworkAnalytics;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.Trader.Data;
 import com.dev.lishabora.Models.Trader.TraderModel;
@@ -236,7 +237,7 @@ public class AdminsTradersListFragment extends Fragment implements RecyclerTouch
             Request.Companion.getResponseSyncDown(ApiConstants.Companion.getViewInfo(), jb, "",
                     new SyncDownResponseCallback() {
                         @Override
-                        public void response(Data responseModel) {
+                        public void response(Data responseModel, NetworkAnalytics analytics) {
                             Timber.tag("Syncdownprefhj").d(gson.toJson(responseModel));
 
                             avi.smoothToHide();
@@ -251,7 +252,7 @@ public class AdminsTradersListFragment extends Fragment implements RecyclerTouch
                         }
 
                         @Override
-                        public void response(String error) {
+                        public void response(String error, NetworkAnalytics analytics) {
                             //Timber.tag("Syncdownprefnmm").d(error);
 
                             // avi.smoothToHide();

@@ -192,8 +192,10 @@ public class FragmentPayouts extends Fragment {
     }
 
     private void fetch() {
+        emptyState(true);
+
         new Thread(() -> {
-            emptyState(true);
+
             payoutsVewModel.fetchAll(false).observe(FragmentPayouts.this, FragmentPayouts.this::setData);
 
         }).start();

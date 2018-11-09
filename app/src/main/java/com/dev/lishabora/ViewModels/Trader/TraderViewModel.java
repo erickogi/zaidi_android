@@ -11,6 +11,7 @@ import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.FarmerRouteBalance;
+import com.dev.lishabora.Models.NetworkAnalytics;
 import com.dev.lishabora.Models.Notifications;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Models.ProductsModel;
@@ -324,12 +325,12 @@ public class TraderViewModel extends AndroidViewModel
             if (fetchFromOnline) {
                 Request.Companion.getResponse(ApiConstants.Companion.getProducts(), jsonObject, "", new ResponseCallback() {
                             @Override
-                            public void response(ResponseModel responseModel) {
+                            public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                                 productss.setValue(responseModel);
                             }
 
                             @Override
-                            public void response(ResponseObject responseModel) {
+                            public void response(ResponseObject responseModel, NetworkAnalytics analytics) {
 
                                 productss.setValue(responseModel);
                             }
@@ -487,7 +488,7 @@ public class TraderViewModel extends AndroidViewModel
         if (isOnline) {
             Request.Companion.getResponse(ApiConstants.Companion.getTraderRoutes(), getTraderRoutesObject(), "", new ResponseCallback() {
                         @Override
-                        public void response(ResponseModel responseModel) {
+                        public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                             if (responseModel.getResultCode() == 1) {
                                 JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
                                 Type listType = new TypeToken<LinkedList<RoutesModel>>() {
@@ -499,7 +500,7 @@ public class TraderViewModel extends AndroidViewModel
                         }
 
                         @Override
-                        public void response(ResponseObject responseModel) {
+                        public void response(ResponseObject responseModel, NetworkAnalytics analytics) {
                             JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
                             Type listType = new TypeToken<LinkedList<RoutesModel>>() {
                             }.getType();
@@ -538,7 +539,7 @@ public class TraderViewModel extends AndroidViewModel
             if (isOnline) {
                 Request.Companion.getResponse(ApiConstants.Companion.getUnits(), getTraderUnitObject(), "", new ResponseCallback() {
                             @Override
-                            public void response(ResponseModel responseModel) {
+                            public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                                 JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
                                 Type listType = new TypeToken<LinkedList<UnitsModel>>() {
                                 }.getType();
@@ -550,7 +551,7 @@ public class TraderViewModel extends AndroidViewModel
                             }
 
                             @Override
-                            public void response(ResponseObject responseModel) {
+                            public void response(ResponseObject responseModel, NetworkAnalytics analytics) {
                                 JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
                                 Type listType = new TypeToken<LinkedList<UnitsModel>>() {
                                 }.getType();
@@ -586,7 +587,7 @@ public class TraderViewModel extends AndroidViewModel
             if (isOnline) {
                 Request.Companion.getResponse(ApiConstants.Companion.getCycles(), getTraderCycleObject(), "", new ResponseCallback() {
                             @Override
-                            public void response(ResponseModel responseModel) {
+                            public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                                 try {
                                     JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
                                     Type listType = new TypeToken<LinkedList<Cycles>>() {
@@ -603,7 +604,7 @@ public class TraderViewModel extends AndroidViewModel
                             }
 
                             @Override
-                            public void response(ResponseObject responseModel) {
+                            public void response(ResponseObject responseModel, NetworkAnalytics analytics) {
                                 JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
                                 Type listType = new TypeToken<LinkedList<Cycles>>() {
                                 }.getType();
@@ -631,7 +632,7 @@ public class TraderViewModel extends AndroidViewModel
             if (isOnline) {
                 Request.Companion.getResponse(ApiConstants.Companion.getCycles(), getTraderCycleObject(), "", new ResponseCallback() {
                             @Override
-                            public void response(ResponseModel responseModel) {
+                            public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                                 JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
                                 Type listType = new TypeToken<LinkedList<Cycles>>() {
                                 }.getType();
@@ -643,7 +644,7 @@ public class TraderViewModel extends AndroidViewModel
                             }
 
                             @Override
-                            public void response(ResponseObject responseModel) {
+                            public void response(ResponseObject responseModel, NetworkAnalytics analytics) {
                                 JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
                                 Type listType = new TypeToken<LinkedList<Cycles>>() {
                                 }.getType();
@@ -724,14 +725,14 @@ public class TraderViewModel extends AndroidViewModel
         if (b) {
             Request.Companion.getResponse(ApiConstants.Companion.getCreateRoutes(), jsonObject, "", new ResponseCallback() {
                 @Override
-                public void response(ResponseModel responseModel) {
+                public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                     createRouteSuccess.setValue(responseModel);
                     routesRepo.insert(routesModel);
 
                 }
 
                 @Override
-                public void response(ResponseObject responseModel) {
+                public void response(ResponseObject responseModel, NetworkAnalytics analytics) {
                     createRouteSuccess.setValue(responseModel);
 
                     routesRepo.insert(routesModel);
@@ -766,14 +767,14 @@ public class TraderViewModel extends AndroidViewModel
         if (b) {
             Request.Companion.getResponse(ApiConstants.Companion.getCreateRoutes(), jsonObject, "", new ResponseCallback() {
                 @Override
-                public void response(ResponseModel responseModel) {
+                public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                     updateRouteSuccess.setValue(responseModel);
                     routesRepo.insert(routesModel);
 
                 }
 
                 @Override
-                public void response(ResponseObject responseModel) {
+                public void response(ResponseObject responseModel, NetworkAnalytics analytics) {
                     updateRouteSuccess.setValue(responseModel);
 
                     routesRepo.insert(routesModel);
@@ -808,14 +809,14 @@ public class TraderViewModel extends AndroidViewModel
         if (b) {
             Request.Companion.getResponse(ApiConstants.Companion.getCreateRoutes(), jsonObject, "", new ResponseCallback() {
                 @Override
-                public void response(ResponseModel responseModel) {
+                public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                     deleteRouteSuccess.setValue(responseModel);
                     routesRepo.insert(routesModel);
 
                 }
 
                 @Override
-                public void response(ResponseObject responseModel) {
+                public void response(ResponseObject responseModel, NetworkAnalytics analytics) {
                     deleteRouteSuccess.setValue(responseModel);
 
                     routesRepo.insert(routesModel);
@@ -1265,14 +1266,14 @@ public class TraderViewModel extends AndroidViewModel
         if (b) {
             Request.Companion.getResponse(ApiConstants.Companion.getCreateFarmer(), getFarmerJson(), "", new ResponseCallback() {
                 @Override
-                public void response(ResponseModel responseModel) {
+                public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                     createFarmerSuccess.setValue(responseModel);
                     farmerRepo.insert(famerModel);
 
                 }
 
                 @Override
-                public void response(ResponseObject responseModel) {
+                public void response(ResponseObject responseModel, NetworkAnalytics analytics) {
                     createFarmerSuccess.setValue(responseModel);
 
                     farmerRepo.insert(famerModel);
@@ -1327,14 +1328,14 @@ public class TraderViewModel extends AndroidViewModel
         if (isOnline) {
             Request.Companion.getResponse(ApiConstants.Companion.getCreateFarmer(), getFarmerJson(), "", new ResponseCallback() {
                 @Override
-                public void response(ResponseModel responseModel) {
+                public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                     updateFarmerSuccess.setValue(responseModel);
                     farmerRepo.upDateRecord(famerModel);
 
                 }
 
                 @Override
-                public void response(ResponseObject responseModel) {
+                public void response(ResponseObject responseModel, NetworkAnalytics analytics) {
                     updateFarmerSuccess.setValue(responseModel);
 
                     farmerRepo.upDateRecord(famerModel);

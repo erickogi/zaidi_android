@@ -7,6 +7,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
+import com.dev.lishabora.Models.NetworkAnalytics;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.ResponseObject;
 import com.dev.lishabora.Network.ApiConstants;
@@ -39,14 +40,17 @@ public class LoginViewModel extends AndroidViewModel {
 
         Request.Companion.getResponseSingle(ApiConstants.Companion.getPhoneAuth(), jsonObject, "", new ResponseCallback() {
             @Override
-            public void response(ResponseModel responseModel) {
+            public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
 
+                responseModel.setAnalytics(analytics);
                 phoneAuth.setValue(responseModel);
 
             }
 
             @Override
-            public void response(ResponseObject responseModel) {
+            public void response(ResponseObject responseModel, NetworkAnalytics analytics) {
+                responseModel.setAnalytics(analytics);
+
                 phoneAuth.setValue(responseModel);
 
             }
@@ -61,12 +65,14 @@ public class LoginViewModel extends AndroidViewModel {
         // }
         Request.Companion.getResponseSingle(ApiConstants.Companion.getPasswordAuth(), jsonObject, "", new ResponseCallback() {
             @Override
-            public void response(ResponseModel responseModel) {
+            public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
 
             }
 
             @Override
-            public void response(ResponseObject responseModel) {
+            public void response(ResponseObject responseModel, NetworkAnalytics analytics) {
+                responseModel.setAnalytics(analytics);
+
                 passAuth.setValue(responseModel);
 
             }
@@ -82,13 +88,17 @@ public class LoginViewModel extends AndroidViewModel {
         this.otpRequest = new MutableLiveData();
         Request.Companion.getResponseSingle(ApiConstants.Companion.getOtpRequest(), jsonObject, "", new ResponseCallback() {
             @Override
-            public void response(ResponseModel responseModel) {
+            public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
+                responseModel.setAnalytics(analytics);
+
                 otpRequest.setValue(responseModel);
 
             }
 
             @Override
-            public void response(ResponseObject responseModel) {
+            public void response(ResponseObject responseModel, NetworkAnalytics analytics) {
+                responseModel.setAnalytics(analytics);
+
                 otpRequest.setValue(responseModel);
 
             }
@@ -103,12 +113,12 @@ public class LoginViewModel extends AndroidViewModel {
         }
         Request.Companion.getResponseSingle(ApiConstants.Companion.getOtpRequest(), jsonObject, "", new ResponseCallback() {
             @Override
-            public void response(ResponseModel responseModel) {
+            public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
 
             }
 
             @Override
-            public void response(ResponseObject responseModel) {
+            public void response(ResponseObject responseModel, NetworkAnalytics analytics) {
                 otpConfirm.setValue(responseModel);
 
             }
@@ -123,12 +133,12 @@ public class LoginViewModel extends AndroidViewModel {
         //  }
         Request.Companion.getResponseSingle(ApiConstants.Companion.getNewPassordConfirm(), jsonObject, "", new ResponseCallback() {
             @Override
-            public void response(ResponseModel responseModel) {
+            public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
 
             }
 
             @Override
-            public void response(ResponseObject responseModel) {
+            public void response(ResponseObject responseModel, NetworkAnalytics analytics) {
                 newPassConfirm.setValue(responseModel);
 
             }

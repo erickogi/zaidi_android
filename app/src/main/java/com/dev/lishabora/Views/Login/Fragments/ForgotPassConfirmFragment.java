@@ -23,6 +23,7 @@ import com.dev.lishabora.Application;
 import com.dev.lishabora.COntrollers.LoginController;
 import com.dev.lishabora.Models.Admin.AdminModel;
 import com.dev.lishabora.Models.Login.AuthModel;
+import com.dev.lishabora.Models.NetworkAnalytics;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.ResponseObject;
 import com.dev.lishabora.Models.Trader.TraderModel;
@@ -239,12 +240,12 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
 
                 Request.Companion.getResponseSingle(ApiConstants.Companion.getNewPassordConfirm(), jsonObject, "", new ResponseCallback() {
                     @Override
-                    public void response(ResponseModel responseModel) {
+                    public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
 
                     }
 
                     @Override
-                    public void response(ResponseObject responseModel) {
+                    public void response(ResponseObject responseModel, NetworkAnalytics analytics) {
 
 
                         // mViewModel.newPassConfirm(jsonObject).observe(this, responseModel -> {

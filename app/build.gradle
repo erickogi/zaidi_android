@@ -8,8 +8,8 @@ android {
         applicationId "com.dev.lishaboramobile"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 4
-        versionName "1.02"
+        versionCode 5
+        versionName "1.03"
         multiDexEnabled true
 
         javaCompileOptions {
