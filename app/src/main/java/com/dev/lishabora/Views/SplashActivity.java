@@ -40,7 +40,14 @@ public class SplashActivity extends AppCompatActivity {
         //setContentView(R.layout.activity_trader);
 
         if (isTimeAutomatic()) {
-            start();
+            Application.init();
+
+            if (new PrefrenceManager(this).isGoogleAuthConnected()) {
+
+
+                start();
+
+            }
         } else {
             timeIs();
         }
@@ -64,13 +71,6 @@ public class SplashActivity extends AppCompatActivity {
 
                 });
 
-//                .setNegativeButton("Skip for now",
-//                        (dialogBox, id) -> {
-//                            //  dialogBox.cancel();
-//                            Intent intent = new Intent(this, TraderActivity.class);
-//                            startActivity(intent);
-//                            finish();
-//                        });
 
         AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
         alertDialogAndroid.setCancelable(false);

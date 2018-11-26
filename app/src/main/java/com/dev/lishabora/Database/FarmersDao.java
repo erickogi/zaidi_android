@@ -43,6 +43,10 @@ public interface FarmersDao {
     @Query("SELECT * FROM FARMERS ")
     LiveData<List<FamerModel>> fetchAllData();
 
+    @Query("SELECT * FROM FARMERS ")
+    List<FamerModel> fetchAll();
+
+
 
     @Query("SELECT * FROM FARMERS  WHERE routename LIKE :route")
     LiveData<List<FamerModel>> fetchAllData(String route);

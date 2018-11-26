@@ -105,6 +105,16 @@ public class CollectionsRepo {
 
     }
 
+    public Double getSumOfMilkFarmerByApproveStatusKsh(String farmercode, int status) {
+        return collectionsDao.getSumOfMilkFarmerByApproveStatusKsh(farmercode, status);
+
+    }
+
+    public Double getSumOfMilkFarmerByApproveStatusLtrs(String farmercode, int status) {
+        return collectionsDao.getSumOfMilkFarmerByApproveStatusLtrs(farmercode, status);
+
+    }
+
     public LiveData<Double> getSumOfLoanFarmerPayout(String farmercode, String payoutCode) {
         return collectionsDao.getSumOfLoanFarmerPayout(farmercode, payoutCode);
 

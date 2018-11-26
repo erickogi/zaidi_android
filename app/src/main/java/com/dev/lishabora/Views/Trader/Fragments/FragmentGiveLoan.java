@@ -399,7 +399,7 @@ public class FragmentGiveLoan extends Fragment implements CollectListener {
     }
 
     @Override
-    public void createCollection(Collection c, FamerModel famerModel, Double aDouble) {
+    public void createCollection(Collection c, FamerModel famerModel, Double aDouble, Double milk) {
         Log.d("Colllectionn", new Gson().toJson(c));
 
 
@@ -430,7 +430,7 @@ public class FragmentGiveLoan extends Fragment implements CollectListener {
 
 
     @Override
-    public void updateCollection(Collection c, FamerModel famerModel, Double aDouble) {
+    public void updateCollection(Collection c, FamerModel famerModel, Double aDouble, Double milk) {
 
 
         ResponseModel responseModel = traderViewModel.updateCollection(c);//.observe(FragmentGiveLoan.this, responseModel -> {

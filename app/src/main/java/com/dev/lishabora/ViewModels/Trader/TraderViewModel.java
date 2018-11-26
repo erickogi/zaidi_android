@@ -312,6 +312,21 @@ public class TraderViewModel extends AndroidViewModel
         //return milkTotalKsh;
     }
 
+
+    public Double getSumOfMilkFarmerByApproveStatusKsh(String farmercode, int status) {
+
+        return collectionsRepo.getSumOfMilkFarmerByApproveStatusKsh(farmercode, status);
+
+        //return milkTotalKsh;
+    }
+
+    public Double getSumOfMilkFarmerByApproveStatusLtrs(String farmercode, int status) {
+
+        return collectionsRepo.getSumOfMilkFarmerByApproveStatusLtrs(farmercode, status);
+
+        //return milkTotalKsh;
+    }
+
     public Collection getLastCollection(String cyclecode) {
 
 
@@ -368,6 +383,9 @@ public class TraderViewModel extends AndroidViewModel
     }
 
 
+    public List<FamerModel> fetchAllFarmers() {
+        return farmerRepo.fetchAll();
+    }
 
     public LiveData<List<FarmerRouteBalance>> getFarmerByStatusRouteJoined(int status, String route) {
 
@@ -1156,6 +1174,39 @@ public class TraderViewModel extends AndroidViewModel
 
     }
 
+    public void updateCollectionLocalOnly(Collection c) {
+        ResponseModel responseModel = new ResponseModel();
+
+        if (c != null && c.getPayoutCode() != null) {
+
+            c.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
+            collectionsRepo.upDateRecord(c);
+            // synch(AppConstants.UPDATE, AppConstants.ENTITY_COLLECTION, c, null, 1);
+
+
+            this.updateCollectionSuccess = new MutableLiveData();
+            responseModel.setResultCode(1);
+            responseModel.setPayoutCode(c.getPayoutCode());
+            responseModel.setResultDescription("Farmer updated successfully");
+
+        } else {
+            responseModel.setResultCode(0);
+            responseModel.setResultDescription("Collection not updated");
+
+        }
+
+
+        responseModel.setData(null);
+
+
+        // updateCollectionSuccess.setValue(responseModel);
+
+        // return responseModel;
+
+    }
+
+
 
     private String getCycleName(String cycleCode) {
         if (cycleCode.equals("1")) {
@@ -1423,6 +1474,10 @@ public class TraderViewModel extends AndroidViewModel
 
     public LiveData<Payouts> getPayoutByCode(String code) {
         return payoutsRepo.getPayoutByCode(code);
+    }
+
+    public Payouts getPayoutByCodeOne(String code) {
+        return payoutsRepo.getPayoutByCodeOne(code);
     }
 
     public LiveData<List<Payouts>> getPayoutsByCycleCode(String code) {

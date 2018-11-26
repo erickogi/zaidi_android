@@ -34,6 +34,7 @@ public class DayCollectionModel implements Serializable {
 
     private int payoutStatus;
     private int collectionStatus;
+    private int farmercardStatus;
 
 
     public DayCollectionModel(String payoutCode, String day, String date, String milkAm, String milkPm
@@ -98,6 +99,52 @@ public class DayCollectionModel implements Serializable {
         this.collectionStatus = collectionStatus;
 
 
+    }
+
+    public DayCollectionModel(String payoutCode, String day, String date, String milkAm, String milkPm
+            , String collectionCode,
+                              MilkModel milkModelAm,
+                              MilkModel milkModelPm, String loan, String order,
+                              String loanCollectionCode, LoanModel loanModel, String orderCollectionCode, OrderModel orderModel,
+                              int payoutStatus, String milkAmLtrs, String milkAmKsh, String milkPmLtrs, String milkPmKsh,
+                              int collectionStatus, int farmercardStatus) {
+        this.payoutCode = payoutCode;
+        this.day = day;
+        this.date = date;
+        this.milkAm = milkAm;
+        this.milkPm = milkPm;
+
+        this.collectionCode = collectionCode;
+
+        this.milkModelAm = milkModelAm;
+
+        this.milkModelPm = milkModelPm;
+
+        this.loan = loan;
+        this.order = order;
+
+        this.loanModel = loanModel;
+        this.orderModel = orderModel;
+        this.payoutStatus = payoutStatus;
+
+
+        this.milkAmLtrs = milkAmLtrs;
+        this.milkAmKsh = milkAmKsh;
+
+        this.milkPmLtrs = milkPmLtrs;
+        this.milkPmKsh = milkPmKsh;
+        this.collectionStatus = collectionStatus;
+        this.farmercardStatus = farmercardStatus;
+
+
+    }
+
+    public int getFarmercardStatus() {
+        return farmercardStatus;
+    }
+
+    public void setFarmercardStatus(int farmercardStatus) {
+        this.farmercardStatus = farmercardStatus;
     }
 
     public int getCollectionStatus() {

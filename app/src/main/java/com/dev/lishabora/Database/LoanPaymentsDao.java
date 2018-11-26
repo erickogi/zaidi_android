@@ -86,8 +86,12 @@ public interface LoanPaymentsDao {
     LiveData<List<LoanPayments>> getLoanPaymentsBetweenDates(Long date1, Long date2);
 
 
-    @Query("SELECT * FROM LOANPAYMENTS WHERE loanCode = :loanId AND  timestamp BETWEEN :date1 AND :date2")
+    @Query("SELECT * FROM LOANPAYMENTS WHERE loanCode = :loanId  AND ( timestamp BETWEEN :date1 AND :date2) ")
     LiveData<List<LoanPayments>> getLoanPaymentsBetweenDates(Long date1, Long date2, String loanId);
+
+    @Query("SELECT * FROM LOANPAYMENTS WHERE loanCode = :loanId  AND ( (timestamp BETWEEN :date1 AND :date2) OR (payoutCode =:payoutCode) ) ")
+    List<LoanPayments> getLoanPaymentsByLoanIdBetweenDatesorByPayoutCode(Long date1, Long date2, String loanId, String payoutCode);
+
 
 
 }

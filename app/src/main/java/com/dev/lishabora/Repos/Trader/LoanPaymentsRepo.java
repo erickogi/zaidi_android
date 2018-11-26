@@ -118,6 +118,10 @@ public class LoanPaymentsRepo {
         return dao.getLoanPaymentsBetweenDates(date1, date2, loanCode);
     }
 
+    public List<LoanPayments> getLoanPaymentsByLoanIdBetweenDatesorByPayoutCode(Long date1, Long date2, String loanCode, String payoutCode) {
+        return dao.getLoanPaymentsByLoanIdBetweenDatesorByPayoutCode(date1, date2, loanCode, payoutCode);
+    }
+
 
     private static class insertAsyncTask extends AsyncTask<LoanPayments, Void, Boolean> {
 

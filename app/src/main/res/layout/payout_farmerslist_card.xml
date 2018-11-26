@@ -13,283 +13,291 @@
 
     app:cardElevation="3dp">
     <RelativeLayout
-        android:id="@+id/background"
         android:layout_width="match_parent"
 
         android:layout_height="wrap_content"
-        android:background="@color/green_color_picker">
+        android:background="@color/white">
 
-        <LinearLayout
-            android:padding="3dp"
-            android:background="@color/white"
-            android:id="@+id/rl_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <RelativeLayout
+            android:id="@+id/rowFG"
 
-            android:gravity="start"
-            android:orientation="horizontal"
-            android:paddingStart="2dp"
-            android:paddingTop="2dp"
-            android:paddingEnd="2dp"
-            android:paddingBottom="2dp">
-
-            <TextView
-                android:id="@+id/txt_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Farmer Names"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/txt_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="2dp"
-                android:layout_weight="1"
-                android:text="34553"
-                android:textAlignment="viewEnd"
-                android:textStyle="italic" />
-
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/linear_totals"
             android:layout_width="match_parent"
 
             android:layout_height="wrap_content"
-            android:layout_below="@+id/rl_header"
-
-            android:background="@color/white"
-            android:orientation="vertical"
-            android:padding="3dp"
-            android:weightSum="4">
-
+            android:background="@color/white">
 
             <LinearLayout
-                android:layout_height="wrap_content"
+                android:id="@+id/rl_header"
                 android:layout_width="match_parent"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <TextView
-
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-
-                        android:text="Milk  :"
-
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                        android:textColor="@color/textblack"
-
-                        android:textStyle="bold" />
-
-
-                    <TextView
-                        android:id="@+id/txt_milk"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="0.0 Ltrs" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <TextView
-
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-
-                        android:text="Loans  :"
-
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                        android:textColor="@color/textblack"
-
-                        android:textStyle="bold" />
-
-
-                    <TextView
-                        android:id="@+id/txt_loans"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="0.0 Ltrs" />
-                </LinearLayout>
-
-
-            </LinearLayout>
-            <LinearLayout
                 android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:orientation="horizontal">
+                android:background="@color/white"
+                android:gravity="start"
 
-                <LinearLayout
-                    android:layout_width="0dp"
-
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <TextView
-
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-
-                        android:text="Orders  :"
-
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                        android:textColor="@color/textblack"
-
-                        android:textStyle="bold" />
-
-
-                    <TextView
-                        android:id="@+id/txt_orders"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="0.0 Ltrs" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <TextView
-
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-
-                        android:text="Balance  :"
-
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                        android:textColor="@color/textblack"
-
-                        android:textStyle="bold" />
-
-
-                    <TextView
-                        android:id="@+id/txt_balance"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="0.0 Ltrs"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                        android:textSize="12.5sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/linear_status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/linear_totals"
-
-
-            android:background="@color/white"
-            android:orientation="horizontal"
-            android:padding="3dp"
-            android:weightSum="3">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="start">
-
-                <View
-
-
-                    android:id="@+id/status_view"
-                    android:layout_width="10dp"
-
-                    android:layout_height="10dp"
-                    android:layout_marginEnd="4dp"
-                    android:background="@color/green_color_picker"
-                    android:visibility="gone" />
+                android:orientation="horizontal"
+                android:padding="3dp"
+                android:paddingStart="2dp"
+                android:paddingTop="2dp"
+                android:paddingEnd="2dp"
+                android:paddingBottom="2dp">
 
                 <TextView
-                    android:id="@+id/txt_status"
+                    android:id="@+id/txt_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Approved"
-                    android:textStyle="italic|normal" />
+                    android:layout_weight="1"
+                    android:text="Farmer Names"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txt_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_weight="1"
+                    android:text="34553"
+                    android:textAlignment="viewEnd"
+                    android:textStyle="italic" />
+
+
             </LinearLayout>
 
 
-            <View
-                android:visibility="gone"
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="3dp"
-                android:background="@color/divider" />
-
-            <TextView
-                android:visibility="gone"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:id="@+id/linear_totals"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Bal"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                android:layout_below="@+id/rl_header"
+                android:layout_toStartOf="@+id/sign"
 
-                android:textStyle="bold" />
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="3dp"
+                android:weightSum="4">
 
-            <TextView
-                android:visibility="gone"
-                android:layout_width="0dp"
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+
+                            android:text="Milk  :"
+
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                            android:textColor="@color/textblack"
+
+                            android:textStyle="bold" />
+
+
+                        <TextView
+                            android:id="@+id/txt_milk"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="0.0 Ltrs" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+
+                            android:text="Loans  :"
+
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                            android:textColor="@color/textblack"
+
+                            android:textStyle="bold" />
+
+
+                        <TextView
+                            android:id="@+id/txt_loans"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="0.0 Ltrs" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+
+                            android:text="Orders  :"
+
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                            android:textColor="@color/textblack"
+
+                            android:textStyle="bold" />
+
+
+                        <TextView
+                            android:id="@+id/txt_orders"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="0.0 Ltrs" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+
+                            android:text="Balance  :"
+
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                            android:textColor="@color/textblack"
+
+                            android:textStyle="bold" />
+
+
+                        <TextView
+                            android:id="@+id/txt_balance"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="0.0 Ltrs"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                            android:textSize="12.5sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/linear_status"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="30000 Ksh"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-
-                android:textStyle="bold" />
+                android:layout_below="@+id/linear_totals"
 
 
-        </LinearLayout>
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:padding="3dp"
+                android:weightSum="3">
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="start">
+
+                    <View
+
+
+                        android:id="@+id/status_view"
+                        android:layout_width="10dp"
+
+                        android:layout_height="10dp"
+                        android:layout_marginEnd="4dp"
+                        android:background="@color/green_color_picker"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/txt_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Approved"
+                        android:textStyle="italic|normal" />
+
+                </LinearLayout>
+
+
+                <android.support.design.button.MaterialButton
+                    android:id="@+id/btn_approve"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_alignParentEnd="true"
+
+                    android:layout_gravity="end"
+                    android:layout_margin="3dp"
+
+                    android:layout_marginEnd="3dp"
+                    android:text="APPROVE"
+                    android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
+
+                    android:textColor="@color/black"
+
+                    android:textSize="12.5sp"
+                    android:visibility="visible"
+                    app:cornerRadius="1dp"
+                    app:rippleColor="@color/accent"
+                    app:strokeColor="@color/black"
+
+                    app:strokeWidth="1dp" />
+
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
 
     </RelativeLayout>
 </android.support.design.card.MaterialCardView>

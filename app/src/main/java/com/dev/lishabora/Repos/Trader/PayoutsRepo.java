@@ -38,6 +38,10 @@ public class PayoutsRepo {
         return dao.getPayoutsByCode(code);
     }
 
+    public Payouts getPayoutByCodeOne(String code) {
+        return dao.getPayoutsByCodeOne(code);
+    }
+
     public LiveData<List<Payouts>> getPayoutsByCycleCode(String code) {
         return dao.getPayoutsByCycleCode(code);
     }

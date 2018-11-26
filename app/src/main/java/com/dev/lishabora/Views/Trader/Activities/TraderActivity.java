@@ -2,6 +2,7 @@ package com.dev.lishabora.Views.Trader.Activities;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -37,6 +39,7 @@ import com.dev.lishabora.Jobs.Evernote.UpSyncJob;
 import com.dev.lishabora.Models.NetworkAnalytics;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.ResponseObject;
+import com.dev.lishabora.Models.SyncModel;
 import com.dev.lishabora.Models.Trader.TraderModel;
 import com.dev.lishabora.Network.ApiConstants;
 import com.dev.lishabora.Network.Request;
@@ -76,6 +79,7 @@ import com.wang.avi.AVLoadingIndicatorView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.Objects;
 
 import static com.dev.lishabora.Application.collectMilk;
@@ -412,6 +416,15 @@ public class TraderActivity extends AppCompatActivity {
             }
 
 
+        });
+
+        viewModel.fetchByStatus(0).observe(this, new Observer<List<SyncModel>>() {
+            @Override
+            public void onChanged(@Nullable List<SyncModel> syncModels) {
+                if (syncModels != null) {
+                    DrawerClass.Companion.observeSyncObjects(syncModels.size());
+                }
+            }
         });
         viewModel.getNotifications(0).observe(this, notifications -> {
             if (notifications != null) {

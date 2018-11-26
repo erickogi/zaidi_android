@@ -10,6 +10,8 @@
     <android.support.design.button.MaterialButton
         android:id="@+id/btn_approve"
         style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
+
         android:layout_width="match_parent"
 
         android:layout_height="wrap_content"
@@ -19,7 +21,6 @@
         android:layout_marginBottom="10dp"
         android:layout_weight="1"
         android:text="APPROVE"
-        android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
 
         android:textColor="@color/black"
 

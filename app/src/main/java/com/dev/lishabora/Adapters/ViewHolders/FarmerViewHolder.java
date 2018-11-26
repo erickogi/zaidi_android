@@ -123,7 +123,7 @@ public class FarmerViewHolder extends RecyclerView.ViewHolder implements View.On
         super(itemView);
 //        dragHandle = itemView.findViewById(R.id.drag_handle);
         this.itemVew = itemView;
-        lBig = itemView.findViewById(R.id.l_big);
+        //  lBig = itemView.findViewById(R.id.l_big);
         statusview = itemView.findViewById(R.id.status_view);
         background = itemView.findViewById(R.id.background);
 

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
 
     <string-array name="payments">
@@ -10,7 +10,7 @@
 
     </string-array>
     <bool name="isTablet">false</bool>
-
+    <string name="urlHeders">http://</string>
     <string name="zero">0</string>
     <string name="one">1</string>
     <string name="two">2</string>
@@ -26,29 +26,96 @@
     <string name="app_name">LishaBora</string>
     <string name="title_activity_trader">TraderActivity</string>
     <string name="next">Next</string>
+    <string name="googleLocalDomain">.co.ke</string>
     <string name="title_phone">Please enter your phone number</string>
     <string name="ke">+254</string>
 
+    <string name="gdSeparator2">.</string>
+    <string name="gdFilePof">php</string>
+    <string name="gdqMark">\?</string>
     <string name="awsm">Awesome, Thanks!</string>
     <string name="sent">We have sent a confirmation code.</string>
     <string name="soon">You should get it soon.</string>
     <string name="verify">VERIFY</string>
+    <string name="gdExtFile">controller</string>
     <string name="resend">RESEND</string>
+    <string name="developerkey">erickogi</string>
     <string name="title_activity_reset_password">ResetPassword</string>
     <string name="title_activity_adim_profile">AdimProfile</string>
     <string name="sunday">Sunday</string>
+    <string name="gdExt">master</string>
     <string name="title_activity_first_time_launch">FirstTimeLaunch</string>
     <string name="title_activity_payouts">Payouts</string>
     <string name="farmer_s_names">Farmer\'s Names</string>
     <string name="_12_12_2018">12/12/2018</string>
     <string name="cycle">Cycle : </string>
+    <string name="gdRequests">id=</string>
     <string name="active">Active</string>
     <string name="title_activity_farmer_profile">FarmerProfile</string>
     <string name="ksh">/-</string>
     <string name="ltrs">L</string>
     <string name="title_activity_reports">Reports</string>
+    <string name="reQuestId">1113</string>
     <string name="title_activity_milk_reports">MilkReports</string>
     <string name="title_activity_loans_and_orders">Loans And Orders</string>
+    <string name="gdSeparator">/</string>
     <string name="title_activity_admin_main">AdminMain</string>
     <string name="skip_this_farmer">Skip this farmer</string>
+
+    <!-- Label for button to confirm chosen date or time [CHAR LIMIT=30] -->
+    <string name="mdtp_done_label">Done</string>
+    <string name="mdtp_ok">@android:string/ok</string>
+    <string name="mdtp_cancel">@android:string/cancel</string>
+    <!--
+         Content description for the hour selector in the time picker, which displays
+         selectable hours of the day along the inside edge of a circle, as in an analog clock.
+         [CHAR LIMIT=50]
+    -->
+    <string name="mdtp_hour_picker_description">Hours circular slider</string>
+    <!--
+         Content description for the minute selector in the time picker, which displays
+         selectable five-minute intervals along the inside edge of a circle, as in an analog clock.
+         [CHAR LIMIT=50]
+    -->
+    <string name="mdtp_minute_picker_description">Minutes circular slider</string>
+    <!-- Accessibility announcement for hour circular picker [CHAR LIMIT=NONE] -->
+    <string name="mdtp_select_hours">Select hours</string>
+    <!-- Accessibility announcement for minute circular picker [CHAR LIMIT=NONE] -->
+    <string name="mdtp_select_minutes">Select minutes</string>
+
+    <!--
+        Content description for the month and day selector in the date picker, which displays
+        a selectable grid of days laid out by month.
+        [CHAR LIMIT=50]
+     -->
+    <string name="mdtp_day_picker_description">Month grid of days</string>
+    <!--
+        Content description for the year selector in the date picker, which displays
+        a scrolling, vertical list of years.
+        [CHAR LIMIT=50]
+     -->
+    <string name="mdtp_year_picker_description">Year list</string>
+    <!-- Accessibility announcement for the day picker [CHAR LIMIT=NONE] -->
+    <string name="mdtp_select_day">Select month and day</string>
+    <!-- Accessibility announcement for the year picker [CHAR LIMIT=NONE] -->
+    <string name="mdtp_select_year">Select year</string>
+    <!-- Accessibility description for the item that is currently selected. -->
+    <string name="mdtp_item_is_selected"><xliff:g example="2013" id="item">%1$s</xliff:g> selected</string>
+    <!-- Accessibility announcement when a number that had been typed in is deleted [CHAR_LIMIT=NONE] -->
+    <string name="mdtp_deleted_key"><xliff:g example="4" id="key">%1$s</xliff:g> deleted</string>
+
+    <!-- DO NOT TRANSLATE -->
+    <string name="mdtp_time_placeholder" translatable="false">--</string>
+    <!-- DO NOT TRANSLATE -->
+    <string name="mdtp_time_separator" translatable="false">:</string>
+
+    <!-- DO NOT TRANSLATE -->
+    <string name="mdtp_radial_numbers_typeface" translatable="false">sans-serif</string>
+    <!-- DO NOT TRANSLATE -->
+    <string name="mdtp_sans_serif" translatable="false">sans-serif</string>
+
+    <!-- DO NOT TRANSLATE -->
+    <string name="mdtp_day_of_week_label_typeface" translatable="false">sans-serif</string>
+    <string name="mdtp_from">FROM</string>
+    <string name="mdtp_to">TO</string>
 </resources>

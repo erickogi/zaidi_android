@@ -8,8 +8,8 @@ android {
         applicationId "com.dev.lishaboramobile"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 5
-        versionName "1.03"
+        versionCode 7
+        versionName "1.05"
         multiDexEnabled true
 
         javaCompileOptions {
@@ -57,6 +57,9 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
+    implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
 
     //Gson
     implementation 'com.google.code.gson:gson:2.8.2'

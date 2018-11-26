@@ -410,10 +410,10 @@
 
                                                 android:id="@+id/txt_code_lbl"
                                                 android:layout_width="0dp"
-                                                android:layout_height="wrap_content"
+                                                android:layout_height="match_parent"
 
                                                 android:layout_weight="1"
-                                                android:text="Code : "
+                                                android:text="Milk : "
                                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                                                 android:textColor="@color/textblack"
                                                 android:textStyle="bold" />
@@ -486,7 +486,7 @@
                                                 android:layout_width="0dp"
                                                 android:layout_height="wrap_content"
                                                 android:layout_weight="1"
-                                                android:text="Balance : "
+                                                android:text="Bal : "
                                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                                                 android:textColor="@color/textblack"
 

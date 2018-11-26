@@ -330,6 +330,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
         context = getContext();
 
 
@@ -451,6 +452,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
             }
         }, null);
+
         onTouchListener = new RecyclerTouchListener(getActivity(), recyclerView);
         onTouchListener
 
@@ -673,6 +675,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
         listenOnSyncStatus();
 
+
     }
 
     private void routes(String s) {
@@ -829,6 +832,8 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
             collectMilk = new CollectMilk(getContext(), true);
 
         }
+        FarmerListBalanceFuncs.calCBalances(mViewModel, balncesViewModel, new LinkedList<>());
+
 
     }
 
@@ -1145,15 +1150,19 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
     }
 
     @Override
-    public void createCollection(Collection c, FamerModel famerModel, Double aDouble) {
+    public void createCollection(Collection c, FamerModel famerModel, Double aDouble, Double milk) {
 
 
         FamerModel m = famerModel;
         Double balance;
+        Double milkBalance;
         try {
             balance = Double.valueOf(famerModel.getTotalbalance());
+            milkBalance = Double.valueOf(famerModel.getMilkbalance());
             String bal = String.valueOf(balance + aDouble);
+            String balMilk = String.valueOf(milkBalance + milk);
             m.setTotalbalance(bal);
+            m.setMilkbalance(balMilk);
 
 
         } catch (Exception nm) {
@@ -1182,16 +1191,25 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
     }
 
     @Override
-    public void updateCollection(Collection c, FamerModel famerModel, Double aDouble) {
+    public void updateCollection(Collection c, FamerModel famerModel, Double aDouble, Double aDoubleMilk) {
 
         FamerModel m = famerModel;
         Double balance;
+        Double milkBalance;
         try {
             balance = Double.valueOf(famerModel.getTotalbalance());
+            milkBalance = Double.valueOf(famerModel.getMilkbalance());
+
+
             String bal = String.valueOf(balance + aDouble);
 
 
+            String balMilk = String.valueOf(milkBalance + aDoubleMilk);
+
+
+
             m.setTotalbalance(bal);
+            m.setMilkbalance(balMilk);
 
 
         } catch (Exception nm) {
@@ -1204,31 +1222,9 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
         c.setGpsPoint(prefrenceManager.getLastCordiantes());
         ResponseModel responseModel = mViewModel.updateCollection(c);//.observe(FragementFarmersList.this, responseModel -> {
-            if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
+        FarmerListBalanceFuncs.calCBalances(mViewModel, balncesViewModel, m);
 
 
-                boolean hasToSyncFarmer = false;
-
-                FamerModel fm = CommonFuncs.updateBalance(famerModel, mViewModel, balncesViewModel, c, responseModel.getPayoutCode(), AppConstants.MILK, null, null);
-
-//                if (!famerModel.getCurrentPayoutCode().equals(responseModel.getPayoutCode())) {
-//                    famerModel.setCurrentPayoutCode(responseModel.getPayoutCode());
-//
-//                    hasToSyncFarmer = true;
-//
-//                }
-//                mViewModel.updateFarmer(fm, false, true);
-//
-
-
-
-
-
-            } else {
-                snack(responseModel.getResultDescription());
-
-            }
-        // });
     }
 
     private void log(String msg) {
@@ -1264,6 +1260,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
             FamerModel fm = CommonFuncs.updateBalance(data[0].getFamerModel(), mViewModel, balncesViewModel, data[0].getCollection(), data[0].getCollection().getPayoutCode(), AppConstants.MILK, null, null);
 
+            FarmerListBalanceFuncs.calCBalances(mViewModel, balncesViewModel, fm);
 
             if (!data[0].getFamerModel().getTotalbalance().equals(fm.getTotalbalance())) {
                 return fm;

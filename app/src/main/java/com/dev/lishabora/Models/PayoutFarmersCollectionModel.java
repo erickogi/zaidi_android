@@ -26,6 +26,10 @@ public class PayoutFarmersCollectionModel implements Serializable {
     private String payoutStart;
     private String payoutEnd;
 
+    private FamerModel famerModel;
+
+    private boolean isChecked = false;
+
 
     public PayoutFarmersCollectionModel() {
     }
@@ -50,6 +54,69 @@ public class PayoutFarmersCollectionModel implements Serializable {
         this.payoutStart = payoutStart;
         this.payoutEnd = payoutEnd;
 
+    }
+
+    public PayoutFarmersCollectionModel(String farmercode, String farmername, String milktotal,
+                                        String loanTotal, String orderTotal, int cardstatus, int payoutStatus, String statusName,
+                                        String balance, String payoutCode, String cycleCode, String milktotalKsh,
+                                        String milktotalLtrs, String payoutStart, String payoutEnd, FamerModel famerModel) {
+        this.farmercode = farmercode;
+        this.farmername = farmername;
+        this.milktotal = milktotal;
+        this.loanTotal = loanTotal;
+        this.orderTotal = orderTotal;
+        this.cardstatus = cardstatus;
+        this.payoutStatus = payoutStatus;
+        this.statusName = statusName;
+        this.balance = balance;
+        this.payoutCode = payoutCode;
+        this.cycleCode = cycleCode;
+        this.milktotalKsh = milktotalKsh;
+        this.milktotalLtrs = milktotalLtrs;
+        this.payoutStart = payoutStart;
+        this.payoutEnd = payoutEnd;
+        this.famerModel = famerModel;
+
+    }
+
+    public PayoutFarmersCollectionModel(String farmercode, String farmername, String milktotal,
+                                        String loanTotal, String orderTotal, int cardstatus, int payoutStatus, String statusName,
+                                        String balance, String payoutCode, String cycleCode, String milktotalKsh,
+                                        String milktotalLtrs, String payoutStart, String payoutEnd, FamerModel famerModel, boolean isChecked) {
+        this.farmercode = farmercode;
+        this.farmername = farmername;
+        this.milktotal = milktotal;
+        this.loanTotal = loanTotal;
+        this.orderTotal = orderTotal;
+        this.cardstatus = cardstatus;
+        this.payoutStatus = payoutStatus;
+        this.statusName = statusName;
+        this.balance = balance;
+        this.payoutCode = payoutCode;
+        this.cycleCode = cycleCode;
+        this.milktotalKsh = milktotalKsh;
+        this.milktotalLtrs = milktotalLtrs;
+        this.payoutStart = payoutStart;
+        this.payoutEnd = payoutEnd;
+        this.famerModel = famerModel;
+
+        this.isChecked = isChecked;
+    }
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
+
+    public FamerModel getFamerModel() {
+        return famerModel;
+    }
+
+    public void setFamerModel(FamerModel famerModel) {
+        this.famerModel = famerModel;
     }
 
     public String getPayoutStart() {

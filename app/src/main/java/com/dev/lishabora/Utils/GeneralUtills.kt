@@ -211,7 +211,11 @@ class GeneralUtills {
                 return txt
             }
 
-            txt = txt.substring(0, 1).toUpperCase() + txt.substring(1).toLowerCase()
+            try {
+                txt = txt.substring(0, 1).toUpperCase() + txt.substring(1).toLowerCase()
+            } catch (e: Exception) {
+
+            }
             return txt
         }
 

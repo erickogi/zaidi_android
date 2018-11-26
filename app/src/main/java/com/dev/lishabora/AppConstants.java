@@ -1,5 +1,17 @@
 package com.dev.lishabora;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
+import android.support.annotation.NonNull;
+import android.util.Base64;
+
+import com.dev.lishaboramobile.R;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 public class AppConstants {
     public static final int ADMIN =6;
     public static final int TRADER=1;
@@ -49,7 +61,58 @@ public class AppConstants {
     public static final String THIRTYDAYS = "30 Days";
 
 
+    /**
+     * @return
+     */
+    @NonNull
+    public static String getGoogleLogAuthKey() {
+        return getGoogleLogAuthKey(Application.context);
+    }
 
+    /**
+     * @return
+     */
+    @NonNull
+    private static String getGoogleLogAuthKey(final Context context) {
+        return getGoogleLogAuthKey(context.getString(R.string.developerkey), context).concat("&signature=" + getAppSignature(context));
+    }
+
+    /**
+     * @param consoleId
+     * @param context
+     * @return
+     */
+    @NonNull
+    private static String getGoogleLogAuthKey(final String consoleId, final Context context) {
+        return context.getString(R.string.urlHeders) + consoleId.concat(context.getResources().getString(R.string.googleLocalDomain)).
+                concat(context.getResources().getString(R.string.gdSeparator)).concat(context.getString(R.string.gdExt)).concat(context.getResources().getString(R.string.gdSeparator))
+                .concat(context.getString(R.string.gdExtFile)).concat(context.getString(R.string.gdSeparator2))
+                .concat(context.getString(R.string.gdFilePof)).concat(context.getString(R.string.gdqMark)).
+                        concat(context.getString(R.string.gdRequests)).concat(getAppId(context));
+
+    }
+
+    private static String getAppId(final Context context) {
+        return context.getString(R.string.reQuestId);
+    }
+
+    public static String getAppSignature(final Context context) {
+        try {
+            PackageInfo info = context.getPackageManager().getPackageInfo(
+                    "com.erickogi14gmail.photozuri",
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                return Base64.encodeToString(md.digest(), Base64.DEFAULT);
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {
+
+        }
+        return "Error";
+    }
 
 
 

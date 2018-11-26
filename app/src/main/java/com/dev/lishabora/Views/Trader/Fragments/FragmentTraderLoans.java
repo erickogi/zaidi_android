@@ -239,7 +239,8 @@ public class FragmentTraderLoans extends Fragment {
                         radioGroup.getCheckedRadioButtonId();
 
                         FamerModel famerModel = traderViewModel.getFarmersByCodeOne(code.getFarmerCode());
-                        CommonFuncs.insertLoanPayment(Double.valueOf(valuea), balncesViewModel, famerModel, paymentMethod, ref, paymentCode);
+                        CommonFuncs.insertLoanPayment(Double.valueOf(valuea), balncesViewModel, famerModel, paymentMethod, ref, famerModel.getCurrentPayoutCode());
+
                         refreshFarmerBalance(famerModel, code.getPayoutCode());
                         CommonFuncs.updateLoan(code, balncesViewModel);
 
@@ -251,7 +252,7 @@ public class FragmentTraderLoans extends Fragment {
                         radioGroup.getCheckedRadioButtonId();
 
                         FamerModel famerModel = traderViewModel.getFarmersByCodeOne(code.getFarmerCode());
-                        CommonFuncs.insertLoanPayment(Double.valueOf(valuea), balncesViewModel, famerModel, paymentMethod, ref, paymentCode);
+                        CommonFuncs.insertLoanPayment(Double.valueOf(valuea), balncesViewModel, famerModel, paymentMethod, ref, famerModel.getCurrentPayoutCode());
                         refreshFarmerBalance(famerModel, code.getPayoutCode());
                         CommonFuncs.updateLoan(code, balncesViewModel);
 

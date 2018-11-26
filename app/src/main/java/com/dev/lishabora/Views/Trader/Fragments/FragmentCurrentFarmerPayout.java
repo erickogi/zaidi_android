@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.dev.lishabora.Adapters.FarmerCollectionsAdapter;
 import com.dev.lishabora.AppConstants;
 import com.dev.lishabora.Application;
@@ -28,7 +29,6 @@ import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Cycles;
 import com.dev.lishabora.Models.DayCollectionModel;
 import com.dev.lishabora.Models.FamerModel;
-import com.dev.lishabora.Models.FarmerBalance;
 import com.dev.lishabora.Models.LoanModel;
 import com.dev.lishabora.Models.OrderModel;
 import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
@@ -36,14 +36,11 @@ import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.Trader.FarmerLoansTable;
 import com.dev.lishabora.Models.Trader.FarmerOrdersTable;
-import com.dev.lishabora.Models.Trader.LoanPayments;
-import com.dev.lishabora.Models.Trader.OrderPayments;
 import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.Utils.AdvancedOnclickRecyclerListener;
-import com.dev.lishabora.Utils.ApproveFarmerPayCardListener;
+import com.dev.lishabora.Utils.ApproveListener;
 import com.dev.lishabora.Utils.CollectionCreateUpdateListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
-import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.MilkEditValueListener;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
@@ -54,13 +51,10 @@ import com.dev.lishabora.Views.Trader.Activities.EditOrder;
 import com.dev.lishabora.Views.Trader.MilkCardToolBarUI;
 import com.dev.lishabora.Views.Trader.OrderConstants;
 import com.dev.lishaboramobile.R;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -69,7 +63,7 @@ import static android.app.Activity.RESULT_OK;
 import static com.dev.lishabora.Views.CommonFuncs.getBalance;
 import static com.dev.lishabora.Views.CommonFuncs.setCardActionStatus;
 
-public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarmerPayCardListener {
+public class FragmentCurrentFarmerPayout extends Fragment {// implements ApproveFarmerPayCardListener {
 
     public TextView status;//, id, name, balance, milk, loan, order;
     public RelativeLayout background;
@@ -96,6 +90,8 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
     private View view;
     UnitsModel u = new UnitsModel();
     private MilkCardToolBarUI toolBar;
+    private MaterialDialog materialDialog;
+
 
     PayoutFarmersCollectionModel model;
     double remaining = 0.0;
@@ -185,11 +181,7 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
 
 
 
-    private View.OnClickListener payNoClicked = view -> {
 
-        CommonFuncs.doAprove(getContext(), balncesViewModel, traderViewModel, model, famerModel, payouts, this, getBalance(toolBar.getMilkTotalKsh(), toolBar.getLoanTotal(), toolBar.getOrderTotal()));
-
-    };
 
 
     private void initData() {
@@ -390,7 +382,7 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
 
 
                 if (Application.isTimeAutomatic()) {
-                    if (dayCollectionModels.get(adapterPosition).getPayoutStatus() == 0) {
+                    if (dayCollectionModels.get(adapterPosition).getPayoutStatus() == 0 && model.getCardstatus() == 0) {
                         if (DateTimeUtils.Companion.isPastLastDay(dayCollectionModels.get(adapterPosition).getDate(), 1)) {
 
 
@@ -454,21 +446,21 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
     }
 
 
-    public void approveCollections() {
-        for (Collection c : collections) {
-            c.setApproved(1);
-            traderViewModel.updateCollection(c);
-        }
-    }
-
-    public void approvePayoutBalance() {
-
-        FarmerBalance farmerBalance = balncesViewModel.getByFarmerCodeByPayoutOne(famerModel.getCode(), payouts.getCode());
-        farmerBalance.setPayoutStatus(1);
-
-        balncesViewModel.updateRecord(farmerBalance);
-        refreshFarmerBalance();
-    }
+//    public void approveCollections() {
+//        for (Collection c : collections) {
+//            c.setApproved(1);
+//            traderViewModel.updateCollection(c);
+//        }
+//    }
+//
+//    public void approvePayoutBalance() {
+//
+//        FarmerBalance farmerBalance = balncesViewModel.getByFarmerCodeByPayoutOne(famerModel.getCode(), payouts.getCode());
+//        farmerBalance.setPayoutStatus(1);
+//
+//        balncesViewModel.updateRecord(farmerBalance);
+//        refreshFarmerBalance();
+//    }
 
     private void cancelApprove(Payouts payouts, PayoutFarmersCollectionModel model, ApprovalRegisterModel approvalRegisterModel) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
@@ -477,10 +469,11 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
 
         alertDialog.setPositiveButton("Yes", (dialogInterface, i) -> {
 
-            cancelCollections(famerModel.getCode(), payouts.getCode());
-            cancelLoansandOrders(approvalRegisterModel);
-            cancelBalance(approvalRegisterModel);
+//            cancelCollections(famerModel.getCode(), payouts.getCode());
+//            cancelLoansandOrders(approvalRegisterModel);
+//            cancelBalance(approvalRegisterModel);
 
+            cancelCard(model, 0, approvalRegisterModel);
 
             dialogInterface.dismiss();
 
@@ -493,7 +486,6 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
 
     private void setBalance(Double milkKsh) {
         toolBar.setMilkTotalKsh(String.valueOf(milkKsh));
-
         toolBar.show(getBalance(String.valueOf(milkKsh), toolBar.getLoanTotal(), toolBar.getOrderTotal()));
 
     }
@@ -506,8 +498,7 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
         farmersCollectionModel.setOrderTotal(toolBar.getOrderTotal());
 
 
-        CommonFuncs.doAprove(getContext(), balncesViewModel, traderViewModel, farmersCollectionModel, famerModel, payouts, this, getBalance(toolBar.getMilkTotalKsh(), toolBar.getLoanTotal(), toolBar.getOrderTotal()));
-
+        approveCard(model, 0);
     }
 
     private void setData(PayoutFarmersCollectionModel model) {
@@ -525,16 +516,18 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
 
         }
 
-        toolBar.show(model.getMilktotal(), model.getLoanTotal(), model.getOrderTotal(), "", famerModel, payouts, isApproved, isPast);
+        toolBar.show(model.getMilktotalKsh(), model.getMilktotalLtrs(), model.getLoanTotal(), model.getOrderTotal(), "", famerModel, payouts, isApproved, isPast);
 
 
         payoutsVewModel.getSumOfMilkForPayoutLtrs(model.getFarmercode(), model.getPayoutCode()).observe(this, integer -> {
-            toolBar.updateMilk(String.valueOf(integer));
+            toolBar.updateMilkLtrs(String.valueOf(integer));
             setBalance(milkKsh);
         });
 
         payoutsVewModel.getSumOfMilkForPayoutKsh(model.getFarmercode(), model.getPayoutCode()).observe(this, integer -> {
             milkKsh = integer;
+            toolBar.updateMilkKsh(String.valueOf(integer));
+
             setBalance(milkKsh);
         });
 
@@ -559,9 +552,7 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
         btnApprove.setOnClickListener(view -> approve(payouts, model));
 
 
-        payoutsVewModel.getByFarmerPayoutCode(famerModel.getCode(), payouts.getCode()).observe(this, new Observer<ApprovalRegisterModel>() {
-            @Override
-            public void onChanged(@Nullable ApprovalRegisterModel approvalRegisterModel) {
+        ApprovalRegisterModel approvalRegisterModel = payoutsVewModel.getByFarmerPayoutCodeOne(famerModel.getCode(), payouts.getCode());//.observe(this, new Observer<ApprovalRegisterModel>() {
 
                 setCardActionStatus(model,
                         getContext(),
@@ -573,284 +564,379 @@ public class FragmentCurrentFarmerPayout extends Fragment implements ApproveFarm
 
                 btnBack.setOnClickListener(view1 -> cancelApprove(payouts, model, approvalRegisterModel));
 
-            }
-        });
-
 
     }
 
-    public String insertLoanPayment(double toLoanInstallmentPayment) {
-        List<LoanPayments> apploanPayments = new LinkedList<>();
 
-        balncesViewModel.getFarmerLoanByFarmerByStatus(famerModel.getCode(), 0).observe(FragmentCurrentFarmerPayout.this, farmerLoansTables -> {
-            remaining = toLoanInstallmentPayment;
-            if (farmerLoansTables != null) {
-                for (int a = 0; a < farmerLoansTables.size(); a++) {
-
-
-                    FarmerLoansTable farmerLoan = farmerLoansTables.get(a);
-                    Double amp = Double.valueOf(farmerLoan.getLoanAmount());
-                    Double inst = Double.valueOf(farmerLoan.getInstallmentAmount());
+    private void cancelCard(PayoutFarmersCollectionModel model, int position, ApprovalRegisterModel approvalRegisterModel) {
+        materialDialog = new MaterialDialog.Builder(Objects.requireNonNull(getActivity()))
+                .title("Canceling farmer's card")
+                .content("Please wait ..")
+                .cancelable(false)
+                .progress(true, 0).build();
 
 
-                    Double valueToPay = 0.0;
-                    LoanPayments loanPayments = new LoanPayments();
-                    loanPayments.setLoanCode(farmerLoan.getCode());
-                    loanPayments.setPaymentMethod("Payout");
-                    loanPayments.setRefNo("" + payouts.getCode());
-                    loanPayments.setPayoutCode("" + payouts.getCode());
-                    loanPayments.setTimeStamp(DateTimeUtils.Companion.getNow());
-                    loanPayments.setCode(GeneralUtills.Companion.createCode(farmerLoan.getFarmerCode()));
+        CancelFuncs.cancelCard(getActivity(), payouts.getCode(), model, approvalRegisterModel, traderViewModel, balncesViewModel, payoutsVewModel, new ApproveListener() {
+            @Override
+            public void onComplete() {
+                if (materialDialog != null) {
+                    materialDialog.dismiss();
+                }
+                model.setCardstatus(0);
+                model.setCardstatus(0);
+                model.setStatusName("Approval Canceled");
 
-                    if (inst >= remaining) {
-                        valueToPay = remaining;
+                model.setCardstatus(0);
+                setData(model);
+            }
 
-                        loanPayments.setAmountPaid("" + valueToPay);
-                        loanPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
+            @Override
+            public void onStart() {
 
-                        remaining = 0.0;
-                        apploanPayments.add(loanPayments);
-
-                        balncesViewModel.insertSingleLoanPayment(loanPayments);
-                        break;
-                    } else {
-
-
-                        valueToPay = remaining - inst;
-
-                        loanPayments.setAmountPaid("" + valueToPay);
-                        loanPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
-
-                        remaining = toLoanInstallmentPayment - inst;
-                        apploanPayments.add(loanPayments);
-
-                        balncesViewModel.insertSingleLoanPayment(loanPayments);
-
-
-                    }
-                    CommonFuncs.updateLoan(farmerLoan, balncesViewModel);
-
-
+                if (materialDialog != null) {
+                    materialDialog.show();
                 }
             }
-        });
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<LoanPayments>>() {
-        }.getType();
-        String json = gson.toJson(apploanPayments, type);
-        return json;
-    }
 
-    public String insertOrderPayment(double toOrderInstallmentPayment) {
-        List<OrderPayments> appOrderPayments = new LinkedList<>();
+            @Override
+            public void onProgress(int progress) {
 
-        balncesViewModel.getFarmerOrderByFarmerByStatus(famerModel.getCode(), 0).observe(FragmentCurrentFarmerPayout.this, farmerOrdersTables -> {
-            remainingOrderInstall = toOrderInstallmentPayment;
-
-            if (farmerOrdersTables != null) {
-                for (int a = 0; a < farmerOrdersTables.size(); a++) {
-
-
-                    FarmerOrdersTable farmerOrders = farmerOrdersTables.get(a);
-                    Double amp = Double.valueOf(farmerOrders.getOrderAmount());
-                    Double inst = Double.valueOf(farmerOrders.getInstallmentAmount());
-
-                    OrderPayments orderPayments = new OrderPayments();
-                    orderPayments.setOrderCode(farmerOrders.getCode());
-                    orderPayments.setPaymentMethod("Payout");
-                    orderPayments.setRefNo("" + payouts.getCode());
-                    orderPayments.setPayoutCode("" + payouts.getCode());
-                    orderPayments.setTimestamp(DateTimeUtils.Companion.getNow());
-                    orderPayments.setCode(GeneralUtills.Companion.createCode(farmerOrders.getFarmerCode()));
-
-
-                    Double valueToPay = 0.0;
-
-                    if (inst >= remainingOrderInstall) {
-
-                        valueToPay = remainingOrderInstall;
-
-                        orderPayments.setAmountPaid("" + valueToPay);
-                        orderPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
-
-
-                        remainingOrderInstall = 0.0;
-                        appOrderPayments.add(orderPayments);
-
-                        balncesViewModel.insertSingleOrderPayment(orderPayments);
-
-
-                        break;
-                    } else {
-
-
-                        valueToPay = remainingOrderInstall - inst;
-
-                        orderPayments.setAmountPaid("" + valueToPay);
-                        orderPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
-                        remaining = toOrderInstallmentPayment - inst;
-                        appOrderPayments.add(orderPayments);
-
-                        balncesViewModel.insertSingleOrderPayment(orderPayments);
-
-
-                    }
-                    CommonFuncs.updateOrder(farmerOrders, balncesViewModel);
-
-
+                if (materialDialog != null) {
+                    materialDialog.setProgress(progress);
                 }
             }
+
+            @Override
+            public void onError(String error) {
+                if (materialDialog != null) {
+                    materialDialog.dismiss();
+                }
+                MyToast.toast(error, getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+            }
         });
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<OrderPayments>>() {
-        }.getType();
-        String json = gson.toJson(appOrderPayments, type);
-        return json;
-    }
-
-    public void approveCard(PayoutFarmersCollectionModel model, String loanpayments, String orderPayments) {
-        payoutsVewModel.approveFarmersPayoutCard(model.getFarmercode(), model.getPayoutCode());
-
-
-        approveCollections();
-        approvePayoutBalance();
-
-        ApprovalRegisterModel app = new ApprovalRegisterModel();
-        app.setApprovedOn(DateTimeUtils.Companion.getNow());
-        app.setFarmerCode(famerModel.getCode());
-        app.setPayoutCode(payouts.getCode());
-
-
-        if (loanpayments != null && orderPayments != null) {
-            app.setLoanPaymentCode(loanpayments);
-            app.setOrderPaymentCode(orderPayments);
-        } else if (loanpayments == null && orderPayments != null) {
-            app.setOrderPaymentCode(orderPayments);
-            app.setLoanPaymentCode(null);
-        } else if (orderPayments == null && loanpayments != null) {
-            app.setLoanPaymentCode(loanpayments);
-            app.setOrderPaymentCode(null);
-        } else {
-            app.setOrderPaymentCode(null);
-            app.setLoanPaymentCode(null);
-        }
-
-        payoutsVewModel.insertDirect(app);
-
-        model.setCardstatus(1);
-        model.setStatusName("Approved");
-        setData(model);
-    }
-
-
-    @Override
-    public void onApproveError(String error) {
 
     }
 
-    @Override
-    public void onApproveDismiss() {
+    private void approveCard(PayoutFarmersCollectionModel model, int position) {
+        materialDialog = new MaterialDialog.Builder(getActivity())
+                .title("Approving farmer's card")
+                .content("Please wait ..")
+                .cancelable(false)
+                .progress(true, 0).build();
 
 
-    }
+        ApproveFuncs.approveCard(getActivity(), payouts.getCode(), model, traderViewModel, balncesViewModel, payoutsVewModel, new ApproveListener() {
+            @Override
+            public void onComplete() {
+                if (materialDialog != null) {
+                    materialDialog.dismiss();
+                }
+                model.setCardstatus(1);
+                model.setStatusName("Approved");
+                setData(model);
 
-
-    private void cancelCollections(String farmerCode, String payoutCode) {
-        payoutsVewModel.cancelFarmersPayoutCard(farmerCode, payoutCode);
-        model.setCardstatus(0);
-        model.setStatusName("Approval Canceled");
-        setData(model);
-
-
-    }
-
-    private void cancelLoansandOrders(ApprovalRegisterModel approvalRegisterModel) {
-        if (approvalRegisterModel.getLoanPaymentCode() != null) {
-            Gson gson = new Gson();
-            Type type = new TypeToken<List<LoanPayments>>() {
-            }.getType();
-            List<LoanPayments> fromJson = gson.fromJson(approvalRegisterModel.getLoanPaymentCode(), type);
-
-            for (LoanPayments task : fromJson) {
-                LoanPayments p = balncesViewModel.getLoanPaymentByCodeOne(task.getCode());
-                balncesViewModel.deleteRecordLoanPayment(p);
             }
 
-        }
+            @Override
+            public void onStart() {
 
-        if (approvalRegisterModel.getOrderPaymentCode() != null) {
-            Gson gson = new Gson();
-            Type type = new TypeToken<List<OrderPayments>>() {
-            }.getType();
-            List<OrderPayments> fromJson = gson.fromJson(approvalRegisterModel.getOrderPaymentCode(), type);
-
-            for (OrderPayments task : fromJson) {
-                OrderPayments p = balncesViewModel.getOrderPaymentByCodeOne(task.getCode());
-                balncesViewModel.deleteRecordOrderPayment(p);
+                if (materialDialog != null) {
+                    materialDialog.show();
+                }
             }
 
-        }
+            @Override
+            public void onProgress(int progress) {
 
-        payoutsVewModel.deleteRecord(approvalRegisterModel);
+                if (materialDialog != null) {
+                    materialDialog.setProgress(progress);
+                }
+            }
 
-    }
-
-    private void cancelBalance(ApprovalRegisterModel approvalRegisterModel) {
-
-        FarmerBalance farmerBalance = balncesViewModel.getByFarmerCodeByPayoutOne(famerModel.getCode(), payouts.getCode());
-        if (farmerBalance != null) {
-            farmerBalance.setPayoutStatus(0);
-            balncesViewModel.updateRecordDirect(farmerBalance);
-
-        }
-        refreshFarmerBalance();
-
-
-    }
-
-
-    private void refreshFarmerBalance() {
-        FarmerBalance bal = CommonFuncs.getFarmerBalanceAfterPayoutCardApproval(famerModel, balncesViewModel, traderViewModel);
-
-        if (bal != null) {
-            famerModel.setTotalbalance(bal.getBalanceToPay());
-            traderViewModel.updateFarmer(famerModel, false, true);
-        }
-
+            @Override
+            public void onError(String error) {
+                if (materialDialog != null) {
+                    materialDialog.dismiss();
+                }
+                MyToast.toast(error, getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+            }
+        });
 
     }
 
-    @Override
-    public void onApprove(double farmerBalance, PayoutFarmersCollectionModel model, Double totalKshToPay, Double toLoanInstallmentPayment, Double toOrderInstallmentPayment) {
-        String loanPaymnets = insertLoanPayment(toLoanInstallmentPayment);
-        String orderPayments = insertOrderPayment(toOrderInstallmentPayment);
 
-
-        approveCard(model, loanPaymnets, orderPayments);
-
-    }
-
-    @Override
-    public void onApprovePayLoan(double farmerBalance, PayoutFarmersCollectionModel model, Double totalKshToPay, Double toLoanInstallmentPayment) {
-        String loanPaymnets = insertLoanPayment(toLoanInstallmentPayment);
-        approveCard(model, loanPaymnets, null);
-    }
-
-    @Override
-    public void onApprovePayOrder(double farmerBalance, PayoutFarmersCollectionModel model, Double totalKshToPay, Double toOrderInstallmentPayment) {
-        String orderPayments = insertOrderPayment(toOrderInstallmentPayment);
-        approveCard(model, null, orderPayments);
-    }
-
-    @Override
-    public void onApprove(double farmerBalance, PayoutFarmersCollectionModel model, Double totalKshToPay) {
-        approveCard(model, null, null);
-    }
-
-    @Override
-    public void onApprove(double farmerBalance, PayoutFarmersCollectionModel model) {
-        approveCard(model, null, null);
-    }
+//    public String insertLoanPayment(double toLoanInstallmentPayment) {
+//        List<LoanPayments> apploanPayments = new LinkedList<>();
+//
+//        balncesViewModel.getFarmerLoanByFarmerByStatus(famerModel.getCode(), 0).observe(FragmentCurrentFarmerPayout.this, farmerLoansTables -> {
+//            remaining = toLoanInstallmentPayment;
+//            if (farmerLoansTables != null) {
+//                for (int a = 0; a < farmerLoansTables.size(); a++) {
+//
+//
+//                    FarmerLoansTable farmerLoan = farmerLoansTables.get(a);
+//                    Double amp = Double.valueOf(farmerLoan.getLoanAmount());
+//                    Double inst = Double.valueOf(farmerLoan.getInstallmentAmount());
+//
+//
+//                    Double valueToPay = 0.0;
+//                    LoanPayments loanPayments = new LoanPayments();
+//                    loanPayments.setLoanCode(farmerLoan.getCode());
+//                    loanPayments.setPaymentMethod("Payout");
+//                    loanPayments.setRefNo("" + payouts.getCode());
+//                    loanPayments.setPayoutCode("" + payouts.getCode());
+//                    loanPayments.setTimeStamp(DateTimeUtils.Companion.getNow());
+//                    loanPayments.setCode(GeneralUtills.Companion.createCode(farmerLoan.getFarmerCode()));
+//
+//                    if (inst >= remaining) {
+//                        valueToPay = remaining;
+//
+//                        loanPayments.setAmountPaid("" + valueToPay);
+//                        loanPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
+//
+//                        remaining = 0.0;
+//                        apploanPayments.add(loanPayments);
+//
+//                        balncesViewModel.insertSingleLoanPayment(loanPayments);
+//                        break;
+//                    } else {
+//
+//
+//                        valueToPay = remaining - inst;
+//
+//                        loanPayments.setAmountPaid("" + valueToPay);
+//                        loanPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
+//
+//                        remaining = toLoanInstallmentPayment - inst;
+//                        apploanPayments.add(loanPayments);
+//
+//                        balncesViewModel.insertSingleLoanPayment(loanPayments);
+//
+//
+//                    }
+//                    CommonFuncs.updateLoan(farmerLoan, balncesViewModel);
+//
+//
+//                }
+//            }
+//        });
+//        Gson gson = new Gson();
+//        Type type = new TypeToken<List<LoanPayments>>() {
+//        }.getType();
+//        String json = gson.toJson(apploanPayments, type);
+//        return json;
+//    }
+//
+//    public String insertOrderPayment(double toOrderInstallmentPayment) {
+//        List<OrderPayments> appOrderPayments = new LinkedList<>();
+//
+//        balncesViewModel.getFarmerOrderByFarmerByStatus(famerModel.getCode(), 0).observe(FragmentCurrentFarmerPayout.this, farmerOrdersTables -> {
+//            remainingOrderInstall = toOrderInstallmentPayment;
+//
+//            if (farmerOrdersTables != null) {
+//                for (int a = 0; a < farmerOrdersTables.size(); a++) {
+//
+//
+//                    FarmerOrdersTable farmerOrders = farmerOrdersTables.get(a);
+//                    Double amp = Double.valueOf(farmerOrders.getOrderAmount());
+//                    Double inst = Double.valueOf(farmerOrders.getInstallmentAmount());
+//
+//                    OrderPayments orderPayments = new OrderPayments();
+//                    orderPayments.setOrderCode(farmerOrders.getCode());
+//                    orderPayments.setPaymentMethod("Payout");
+//                    orderPayments.setRefNo("" + payouts.getCode());
+//                    orderPayments.setPayoutCode("" + payouts.getCode());
+//                    orderPayments.setTimestamp(DateTimeUtils.Companion.getNow());
+//                    orderPayments.setCode(GeneralUtills.Companion.createCode(farmerOrders.getFarmerCode()));
+//
+//
+//                    Double valueToPay = 0.0;
+//
+//                    if (inst >= remainingOrderInstall) {
+//
+//                        valueToPay = remainingOrderInstall;
+//
+//                        orderPayments.setAmountPaid("" + valueToPay);
+//                        orderPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
+//
+//
+//                        remainingOrderInstall = 0.0;
+//                        appOrderPayments.add(orderPayments);
+//
+//                        balncesViewModel.insertSingleOrderPayment(orderPayments);
+//
+//
+//                        break;
+//                    } else {
+//
+//
+//                        valueToPay = remainingOrderInstall - inst;
+//
+//                        orderPayments.setAmountPaid("" + valueToPay);
+//                        orderPayments.setAmountRemaining(String.valueOf(amp - valueToPay));
+//                        remaining = toOrderInstallmentPayment - inst;
+//                        appOrderPayments.add(orderPayments);
+//
+//                        balncesViewModel.insertSingleOrderPayment(orderPayments);
+//
+//
+//                    }
+//                    CommonFuncs.updateOrder(farmerOrders, balncesViewModel);
+//
+//
+//                }
+//            }
+//        });
+//        Gson gson = new Gson();
+//        Type type = new TypeToken<List<OrderPayments>>() {
+//        }.getType();
+//        String json = gson.toJson(appOrderPayments, type);
+//        return json;
+//    }
+//
+//    public void approveCard(PayoutFarmersCollectionModel model, String loanpayments, String orderPayments) {
+//        payoutsVewModel.approveFarmersPayoutCard(model.getFarmercode(), model.getPayoutCode());
+//
+//
+//        approveCollections();
+//        approvePayoutBalance();
+//
+//        ApprovalRegisterModel app = new ApprovalRegisterModel();
+//        app.setApprovedOn(DateTimeUtils.Companion.getNow());
+//        app.setFarmerCode(famerModel.getCode());
+//        app.setPayoutCode(payouts.getCode());
+//
+//
+//        if (loanpayments != null && orderPayments != null) {
+//            app.setLoanPaymentCode(loanpayments);
+//            app.setOrderPaymentCode(orderPayments);
+//        } else if (loanpayments == null && orderPayments != null) {
+//            app.setOrderPaymentCode(orderPayments);
+//            app.setLoanPaymentCode(null);
+//        } else if (orderPayments == null && loanpayments != null) {
+//            app.setLoanPaymentCode(loanpayments);
+//            app.setOrderPaymentCode(null);
+//        } else {
+//            app.setOrderPaymentCode(null);
+//            app.setLoanPaymentCode(null);
+//        }
+//
+//        payoutsVewModel.insertDirect(app);
+//
+//        model.setCardstatus(1);
+//        model.setStatusName("Approved");
+//        setData(model);
+//    }
+//
+//
+//    @Override
+//    public void onApproveError(String error) {
+//
+//    }
+//
+//    @Override
+//    public void onApproveDismiss() {
+//
+//
+//    }
+//
+//
+//    private void cancelCollections(String farmerCode, String payoutCode) {
+//        payoutsVewModel.cancelFarmersPayoutCard(farmerCode, payoutCode);
+//        model.setCardstatus(0);
+//        model.setStatusName("Approval Canceled");
+//        setData(model);
+//
+//
+//    }
+//
+//    private void cancelLoansandOrders(ApprovalRegisterModel approvalRegisterModel) {
+//        if (approvalRegisterModel.getLoanPaymentCode() != null) {
+//            Gson gson = new Gson();
+//            Type type = new TypeToken<List<LoanPayments>>() {
+//            }.getType();
+//            List<LoanPayments> fromJson = gson.fromJson(approvalRegisterModel.getLoanPaymentCode(), type);
+//
+//            for (LoanPayments task : fromJson) {
+//                LoanPayments p = balncesViewModel.getLoanPaymentByCodeOne(task.getCode());
+//                balncesViewModel.deleteRecordLoanPayment(p);
+//            }
+//
+//        }
+//
+//        if (approvalRegisterModel.getOrderPaymentCode() != null) {
+//            Gson gson = new Gson();
+//            Type type = new TypeToken<List<OrderPayments>>() {
+//            }.getType();
+//            List<OrderPayments> fromJson = gson.fromJson(approvalRegisterModel.getOrderPaymentCode(), type);
+//
+//            for (OrderPayments task : fromJson) {
+//                OrderPayments p = balncesViewModel.getOrderPaymentByCodeOne(task.getCode());
+//                balncesViewModel.deleteRecordOrderPayment(p);
+//            }
+//
+//        }
+//
+//        payoutsVewModel.deleteRecord(approvalRegisterModel);
+//
+//    }
+//
+//    private void cancelBalance(ApprovalRegisterModel approvalRegisterModel) {
+//
+//        FarmerBalance farmerBalance = balncesViewModel.getByFarmerCodeByPayoutOne(famerModel.getCode(), payouts.getCode());
+//        if (farmerBalance != null) {
+//            farmerBalance.setPayoutStatus(0);
+//            balncesViewModel.updateRecordDirect(farmerBalance);
+//
+//        }
+//        refreshFarmerBalance();
+//
+//
+//    }
+//
+//
+//    private void refreshFarmerBalance() {
+//        FarmerBalance bal = CommonFuncs.getFarmerBalanceAfterPayoutCardApproval(famerModel, balncesViewModel, traderViewModel);
+//
+//        if (bal != null) {
+//            famerModel.setTotalbalance(bal.getBalanceToPay());
+//            traderViewModel.updateFarmer(famerModel, false, true);
+//        }
+//
+//
+//    }
+//
+//    @Override
+//    public void onApprove(double farmerBalance, PayoutFarmersCollectionModel model, Double totalKshToPay, Double toLoanInstallmentPayment, Double toOrderInstallmentPayment) {
+//        String loanPaymnets = insertLoanPayment(toLoanInstallmentPayment);
+//        String orderPayments = insertOrderPayment(toOrderInstallmentPayment);
+//
+//
+//        approveCard(model, loanPaymnets, orderPayments);
+//
+//    }
+//
+//    @Override
+//    public void onApprovePayLoan(double farmerBalance, PayoutFarmersCollectionModel model, Double totalKshToPay, Double toLoanInstallmentPayment) {
+//        String loanPaymnets = insertLoanPayment(toLoanInstallmentPayment);
+//        approveCard(model, loanPaymnets, null);
+//    }
+//
+//    @Override
+//    public void onApprovePayOrder(double farmerBalance, PayoutFarmersCollectionModel model, Double totalKshToPay, Double toOrderInstallmentPayment) {
+//        String orderPayments = insertOrderPayment(toOrderInstallmentPayment);
+//        approveCard(model, null, orderPayments);
+//    }
+//
+//    @Override
+//    public void onApprove(double farmerBalance, PayoutFarmersCollectionModel model, Double totalKshToPay) {
+//        approveCard(model, null, null);
+//    }
+//
+//    @Override
+//    public void onApprove(double farmerBalance, PayoutFarmersCollectionModel model) {
+//        approveCard(model, null, null);
+//    }
 
 
 

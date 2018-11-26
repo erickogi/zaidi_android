@@ -2,6 +2,7 @@ package com.dev.lishabora.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,8 +68,9 @@ public class PayoutesAdapter extends RecyclerView.Adapter<PayoutsViewHolder> {
         String vB = model.getBalance();
         String vL = model.getLoanTotal();
         String vO = model.getOrderTotal();
-        String vM = model.getMilkTotalKsh();
+        String vM = model.getMilkTotalLtrs();
 
+        Log.d("fghh", vM);
 
         try {
             vB = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vB, 0)));
@@ -79,7 +81,7 @@ public class PayoutesAdapter extends RecyclerView.Adapter<PayoutsViewHolder> {
             nm.printStackTrace();
         }
 
-        holder.milkTotal.setText(String.format("%s%s", vM, context.getString(R.string.ksh)));
+        holder.milkTotal.setText(String.format("%s%s", vM, context.getString(R.string.ltrs)));
         holder.loanTotal.setText(String.format("%s%s", vL, context.getString(R.string.ksh)));
         holder.orderTotal.setText(String.format("%s%s", vO, context.getString(R.string.ksh)));
         holder.balance.setText(String.format("%s%s", vB, context.getString(R.string.ksh)));

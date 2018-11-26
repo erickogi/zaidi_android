@@ -1,14 +1,7 @@
 package com.dev.lishabora.Utils;
 
-import android.Manifest;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.os.Build;
-import android.provider.BaseColumns;
-import android.provider.CallLog;
-import android.support.v4.app.ActivityCompat;
 
 /**
  * Created by Eric on 1/8/2018.
@@ -91,39 +84,39 @@ public class FetchDeviceData {
 //    }
 
     private void getCallLogDetail(Context context) {
-        String[] projection = new String[]{
-                BaseColumns._ID,
-                CallLog.Calls.NUMBER,
-                CallLog.Calls.TYPE,
-                CallLog.Calls.DURATION
-        };
-        ContentResolver resolver = context.getContentResolver();
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        Cursor cur = resolver.query(
-                CallLog.Calls.CONTENT_URI,
-                projection,
-                null,
-                null,
-                CallLog.Calls.DEFAULT_SORT_ORDER);
-        if (!cur.isAfterLast()) {
-            int numberColumn = cur.getColumnIndex(CallLog.Calls.NUMBER);
-            int typeColumn = cur.getColumnIndex(CallLog.Calls.TYPE);
-            int durationcolumn = cur.getColumnIndex(CallLog.Calls.DURATION);
-            String number = cur.getString(numberColumn);
-            String type = cur.getString(typeColumn);
-            String duration = cur.getString(durationcolumn);
-            cur.moveToNext();
-
-        }
+//        String[] projection = new String[]{
+//                BaseColumns._ID,
+//                CallLog.Calls.NUMBER,
+//                CallLog.Calls.TYPE,
+//                CallLog.Calls.DURATION
+//        };
+//        ContentResolver resolver = context.getContentResolver();
+//        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
+//            // TODO: Consider calling
+//            //    ActivityCompat#requestPermissions
+//            // here to request the missing permissions, and then overriding
+//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//            //                                          int[] grantResults)
+//            // to handle the case where the user grants the permission. See the documentation
+//            // for ActivityCompat#requestPermissions for more details.
+//            return;
+//        }
+//        Cursor cur = resolver.query(
+//                CallLog.Calls.CONTENT_URI,
+//                projection,
+//                null,
+//                null,
+//                CallLog.Calls.DEFAULT_SORT_ORDER);
+//        if (!cur.isAfterLast()) {
+//            int numberColumn = cur.getColumnIndex(CallLog.Calls.NUMBER);
+//            int typeColumn = cur.getColumnIndex(CallLog.Calls.TYPE);
+//            int durationcolumn = cur.getColumnIndex(CallLog.Calls.DURATION);
+//            String number = cur.getString(numberColumn);
+//            String type = cur.getString(typeColumn);
+//            String duration = cur.getString(durationcolumn);
+//            cur.moveToNext();
+//
+//        }
 
     }
 

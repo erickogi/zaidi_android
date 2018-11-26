@@ -18,6 +18,8 @@ public class PrefrenceManager {
     // Shared preferences file name
 
     private static final String PREF_NAME = "lishaboraprefs";
+    private static final String googleAuthConnected = "googleAuthConnected";
+    private static final String googleAuthKey = "googleAuth";
 
     // All Shared Preferences Keys
 
@@ -96,6 +98,14 @@ public class PrefrenceManager {
     // Shared pref mode
     int PRIVATE_MODE = 0;
 
+    public boolean isGoogleAuthConnected() {
+        return pref.getBoolean(googleAuthConnected, true);
+    }
+
+    public void setGoogleAuthConnected(boolean authConnected) {
+        editor.putBoolean(googleAuthConnected, authConnected);
+        editor.commit();
+    }
 
     public PrefrenceManager(Context context) {
         this._context = context;
@@ -108,8 +118,19 @@ public class PrefrenceManager {
 
     }
 
+
     public void setDev_folder(String dev_folde) {
         editor.putString(dev_folder, dev_folde);
+        editor.commit();
+    }
+
+    public String getGoogleAuth() {
+        return pref.getString(googleAuthKey, "null");
+    }
+
+    public void setGoogleAuth(String auth) {
+        editor.putString(googleAuthKey, auth);
+
         editor.commit();
     }
 

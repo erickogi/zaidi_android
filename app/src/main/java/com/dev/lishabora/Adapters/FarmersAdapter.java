@@ -18,23 +18,12 @@ import com.dev.lishaboramobile.R;
 import java.util.LinkedList;
 import java.util.List;
 
-//import github.nisrulz.recyclerviewhelper.RVHAdapter;
-
-//import com.chauthai.swipereveallayout.ViewBinderHelper;
-//import com.daimajia.swipe.SimpleSwipeListener;
-//import com.daimajia.swipe.SwipeLayout;
-//import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
-
-// RecyclerView.Adapter<FarmerViewHolder> implements RVHAdapter {
 public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder>
 
 {
     private Context context;
     private List<FamerModel> modelList;
     private OnclickRecyclerListener listener;
-    private OnStartDragListener mDragStartListener;
-    private OnStartDragListener mmDragStartListener;
-    // private final ViewBinderHelper binderHelper = new ViewBinderHelper();
 
     public void updateFarmer(FamerModel famerModel, int position) {
         notifyItemChanged(position, famerModel);
@@ -94,30 +83,32 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder>
 
         }
 
-        if (pre > 0) {
-
-
-            holder.id.setText("Previous Bal : " + String.valueOf(pre));
-            holder.id.setTextColor(context.getResources().getColor(R.color.red));
-            holder.codeLbl.setVisibility(View.GONE);
-
-        } else {
+//        if (pre > 0) {
+//
+//
+//            holder.id.setText("Previous Bal : " + String.valueOf(pre));
+//            holder.id.setTextColor(context.getResources().getColor(R.color.red));
+//            holder.codeLbl.setVisibility(View.GONE);
+//
+//        } else {
 
 
             holder.id.setTextColor(context.getResources().getColor(R.color.textblack));
-            holder.id.setText(farmer.getCode());
             holder.codeLbl.setVisibility(View.VISIBLE);
-        }
+        //   }
 
         String v = farmer.getTotalbalance();
+        String mL = farmer.getMilkbalance();
 
 
         try {
             v = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(v, 0)));
+            mL = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(mL, 0)));
         } catch (Exception nm) {
             nm.printStackTrace();
         }
 
+        holder.id.setText(String.format("%s%s", mL, context.getString(R.string.ltrs)));
 
         holder.balance.setText(String.format("%s%s", v, context.getString(R.string.ksh)));
         GeneralUtills.Companion.changeCOlor(v, holder.balance, 1);

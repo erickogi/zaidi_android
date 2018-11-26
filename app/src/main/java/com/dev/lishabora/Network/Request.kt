@@ -248,7 +248,59 @@ class Request {
         }
 
 
+        fun getRequest(url: String, token: String?, listener: RequestListener) {
 
+            var mtoken = ""
+            if (token != null) {
+
+                mtoken = token
+
+            }
+            var analytics = NetworkAnalytics()
+
+            val okHttpClient = OkHttpClient().newBuilder()
+                    .connectTimeout(1000, TimeUnit.SECONDS)
+                    .readTimeout(1000, TimeUnit.SECONDS)
+                    .writeTimeout(1000, TimeUnit.SECONDS)
+                    .build()
+
+
+
+            AndroidNetworking.post(url)
+
+
+                    .addHeaders("Authorization", "Bearer $mtoken")
+                    .addHeaders("Accept", "application/json")
+
+
+                    .setTag("get")
+                    .setPriority(Priority.HIGH)
+                    //.setOkHttpClient(okHttpClient)
+
+                    .build()
+                    .setAnalyticsListener { timeTakenInMillis, bytesSent, bytesReceived, isFromCache ->
+
+                        analytics = (NetworkAnalytics(timeTakenInMillis, bytesSent, bytesReceived, isFromCache))
+
+                    }
+
+                    .getAsString(object : StringRequestListener {
+                        override fun onResponse(response: String) {
+                            // do anything with response
+                            Timber.tag("ReTrRe").d(response)
+                            listener.onSuccess(response, analytics)
+
+                        }
+
+                        override fun onError(error: ANError) {
+                            // handle error
+
+                            Timber.tag("ReTrRe").d(error.toString())
+                            listener.onError(error, analytics)
+                            //  listener.onError(error)
+                        }
+                    })
+        }
 
 
         fun postRequest(url: String, params: JSONObject, token: String?, listener: RequestListener) {

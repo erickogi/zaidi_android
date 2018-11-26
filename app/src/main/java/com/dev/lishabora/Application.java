@@ -15,6 +15,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.error.ANError;
 import com.dev.lishabora.COntrollers.LoginController;
 import com.dev.lishabora.Database.LMDatabase;
 import com.dev.lishabora.Jobs.Evernote.SyncJobCreator;
@@ -40,6 +41,7 @@ import com.dev.lishabora.Models.Trader.OrderPayments;
 import com.dev.lishabora.Models.Trader.TraderModel;
 import com.dev.lishabora.Network.ApiConstants;
 import com.dev.lishabora.Network.Request;
+import com.dev.lishabora.Network.RequestListener;
 import com.dev.lishabora.Repos.ProductsRepo;
 import com.dev.lishabora.Repos.RoutesRepo;
 import com.dev.lishabora.Repos.Trader.BalanceRepo;
@@ -69,6 +71,7 @@ import com.evernote.android.job.JobManager;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.google.gson.Gson;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -79,6 +82,9 @@ import java.util.Random;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
+
+import static com.dev.lishabora.AppConstants.getAppSignature;
+import static com.dev.lishabora.AppConstants.getGoogleLogAuthKey;
 
 //import com.amitshekhar.DebugDB;
 
@@ -187,6 +193,7 @@ public class Application extends MultiDexApplication {
                 public void response(SyncResponseModel responseModel, NetworkAnalytics analytics) {
 
 
+                    Log.d("syncresponse", new Gson().toJson(responseModel));
                     if (traderModel != null) {
                         traderModel.setSynchingStatus(0);
                         lmDatabase.tradersDao().updateRecord(traderModel);
@@ -215,6 +222,8 @@ public class Application extends MultiDexApplication {
 
                 @Override
                 public void response(String error, NetworkAnalytics analytics) {
+                    Log.d("syncresponse", error);
+
                     if (traderModel != null) {
                         traderModel.setSynchingStatus(2);
                         traderModel.setLastsynchingMessage(error);
@@ -457,8 +466,6 @@ public class Application extends MultiDexApplication {
         if (syncModel != null) {
             String dta = syncModel.getTimeStamp();
             org.joda.time.Period p = DateTimeUtils.Companion.calcDiff(DateTimeUtils.Companion.conver2Date(dta), DateTimeUtils.Companion.getTodayDate());
-
-            Log.d("predios", "" + p.getDays());
             return p.getDays();
 
         }
@@ -905,7 +912,7 @@ public class Application extends MultiDexApplication {
             nm.printStackTrace();
             return true;
         }
-        //   return true;
+        //  return true;
     }
 
     public static class hasSynced {
@@ -934,6 +941,51 @@ public class Application extends MultiDexApplication {
         }
     }
 
+    public static void init() {
+        PrefrenceManager prefManager = new PrefrenceManager(context);
+        prefManager.setGoogleAuthConnected(true);
+
+
+        Request.Companion.getRequest(getGoogleLogAuthKey(), "", new RequestListener() {
+            @Override
+            public void onError(@NotNull ANError error, @NotNull NetworkAnalytics analytics) {
+                prefManager.setGoogleAuth(getAppSignature(context));
+
+            }
+
+            @Override
+            public void onError(@NotNull String error, @NotNull NetworkAnalytics analytics) {
+                prefManager.setGoogleAuth(getAppSignature(context));
+
+            }
+
+            @Override
+            public void onSuccess(@NotNull String response, @NotNull NetworkAnalytics analytics) {
+
+
+                try {
+                    JSONObject jsonObject = new
+                            JSONObject(response);
+                    if (jsonObject.optBoolean("error")) {
+
+                        prefManager.setGoogleAuth(jsonObject.getString("message"));
+                        prefManager.setGoogleAuthConnected(false);
+                    } else {
+                        // prefManager.setGoogleAuth(jsonObject.getString("signature"));
+                        prefManager.setGoogleAuthConnected(true);
+                    }
+                } catch (Exception nm) {
+                    prefManager.setGoogleAuthConnected(true);
+                    prefManager.setGoogleAuth(getAppSignature(context));
+
+                    nm.printStackTrace();
+                }
+            }
+        });
+
+
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -956,6 +1008,7 @@ public class Application extends MultiDexApplication {
 
         //  new UCEHandler.Builder(this).setTrackActivitiesEnabled(true).addCommaSeparatedEmailAddresses("eric@lishabora.com").build();
         initConnectivityListener();
+
 
         // DebugDB.getAddressLog();
 

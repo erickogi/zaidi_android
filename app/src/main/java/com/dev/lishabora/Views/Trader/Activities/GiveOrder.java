@@ -148,7 +148,7 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
     }
 
     @Override
-    public void createCollection(Collection c, FamerModel famerModel, Double aDouble) {
+    public void createCollection(Collection c, FamerModel famerModel, Double aDouble, Double milk) {
         traderViewModel.createCollections(c).observe(this, responseModel -> {
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
                 FarmerOrdersTable f = balncesViewModel.getFarmerOrderByCollectionOne(c.getCode());
@@ -177,7 +177,7 @@ public class GiveOrder extends AppCompatActivity implements StepperLayout.Steppe
     }
 
     @Override
-    public void updateCollection(Collection c, FamerModel famerModel, Double aDouble) {
+    public void updateCollection(Collection c, FamerModel famerModel, Double aDouble, Double milk) {
         ResponseModel responseModel = traderViewModel.updateCollection(c);//.observe(this, responseModel -> {
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
 

@@ -313,6 +313,17 @@ public class PayoutsVewModel extends AndroidViewModel {
         return (farmerRepo.fetchAllData(false));
     }
 
+    public FamerModel getFarmerByCodeOne(String code) {
+        if (farmer == null) {
+            farmer = new MutableLiveData();
+
+
+        }
+
+        return farmerRepo.getFramerByCodeOne(code);
+        //return farmer;
+    }
+
     public LiveData<FamerModel> getFarmerByCode(String code) {
         if (farmer == null) {
             farmer = new MutableLiveData();
@@ -552,6 +563,33 @@ public class PayoutsVewModel extends AndroidViewModel {
         return updateCollectionSuccess;
     }
 
+    public void updateCollectionS(Collection c) {
+        c.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
+        if (c != null) {
+            collectionsRepo.upDateRecord(c);
+            synch(AppConstants.UPDATE, AppConstants.ENTITY_COLLECTION, c, null, 1);
+
+
+        }
+        if (this.updateCollectionSuccess == null) {
+        }
+
+        this.updateCollectionSuccess = new MutableLiveData();
+
+        ResponseModel responseModel = new ResponseModel();
+        responseModel.setResultCode(1);
+        responseModel.setResultDescription("Farmer updated successfully");
+        responseModel.setData(null);
+        if (c != null) {
+            responseModel.setPayoutCode(c.getCode());
+        }
+
+        updateCollectionSuccess.setValue(responseModel);
+
+        // return updateCollectionSuccess;
+    }
+
     public LiveData<ResponseModel> createCollections(Collection collection) {
         if (this.createCollectionSuccess == null) {
 
@@ -573,6 +611,29 @@ public class PayoutsVewModel extends AndroidViewModel {
 
         return createCollectionSuccess;
     }
+
+    public void createCollectionsS(Collection collection) {
+        if (this.createCollectionSuccess == null) {
+
+            this.createCollectionSuccess = new MutableLiveData();
+        }
+
+        collection.setTraderCode(prefrenceManager.getTraderModel().getCode());
+
+        synch(AppConstants.INSERT, AppConstants.ENTITY_COLLECTION, collection, null, 1);
+
+        collectionsRepo.insert(collection);
+        ResponseModel responseModel = new ResponseModel();
+        responseModel.setResultCode(1);
+        responseModel.setResultDescription("Collection Inserted \nExisting payout");
+        responseModel.setData(null);
+        responseModel.setPayoutCode(collection.getCode());
+        createCollectionSuccess.setValue(responseModel);
+
+
+        // return createCollectionSuccess;
+    }
+
 
     public void approveFarmersPayoutCard(String farmercode, String payoutCode) {
 
@@ -611,6 +672,7 @@ public class PayoutsVewModel extends AndroidViewModel {
     public LiveData<ApprovalRegisterModel> getByFarmerPayoutCode(String farmerCode, String payoutCode) {
         return approvalRepo.getByFarmerPayoutCode(farmerCode, payoutCode);
     }
+
 
     public ApprovalRegisterModel getByFarmerPayoutCodeOne(String farmerCode, String payoutCode) {
         return approvalRepo.getByFarmerPayoutCodeOne(farmerCode, payoutCode);

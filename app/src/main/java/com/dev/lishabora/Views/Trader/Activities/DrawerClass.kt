@@ -1,8 +1,6 @@
 package com.dev.lishabora.Views.Trader.Activities
 
 import android.app.Activity
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.TextView
@@ -22,21 +20,6 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 
 
 class DrawerClass {
-    private fun getBitmap(activity: Activity, img: String): Bitmap {
-
-
-        val thumnail = BitmapFactory.decodeResource(activity.resources, R.drawable.ic_person_black_24dp)
-
-        try {
-
-            return thumnail
-
-        } catch (nm: Exception) {
-            return thumnail
-        }
-
-
-    }
 
     companion object {
         internal lateinit var result: Drawer
@@ -174,7 +157,7 @@ class DrawerClass {
 
                     )
                     .withFooterClickable(true)
-                    //.withStickyFooter(R.layout.footer)
+
 
 
                     .withOnDrawerItemClickListener { view, position, drawerItem ->
@@ -283,11 +266,6 @@ class DrawerClass {
             }
         }
 
-        fun setOpened(b: Boolean) {
-            result.openDrawer()
-
-        }
-
         fun footer(traderModel: TraderModel) {
             var view = result.footer
 
@@ -313,5 +291,17 @@ class DrawerClass {
             }
 
         }
+
+        fun observeSyncObjects(size: Int) {
+
+            var view = result.footer
+
+            var txt_state: TextView = view.findViewById(R.id.txt_sync_objects)
+            txt_state.visibility = View.VISIBLE
+            txt_state.text = "" + size
+
+        }
+
+
     }
 }

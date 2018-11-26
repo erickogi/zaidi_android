@@ -89,9 +89,10 @@ public class Payouts extends AppCompatActivity {
 
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(fragment1, "all");
+        adapter.addFragment(fragment2, "all");
+        adapter.addFragment(fragment1, "sum");
         adapter.addFragment(fragment, "add");
-        adapter.addFragment(fragment2, "sum");
+
 
 
         viewPager.setOffscreenPageLimit(1);
@@ -100,9 +101,9 @@ public class Payouts extends AppCompatActivity {
 
     private void setupTabIcons() {
 
-        tabLayout.getTabAt(2).setText("Summary");
-        tabLayout.getTabAt(0).setText("Collections");
-        tabLayout.getTabAt(1).setText("Farmers");
+        tabLayout.getTabAt(0).setText("Summary");
+        tabLayout.getTabAt(1).setText("Collections");
+        tabLayout.getTabAt(2).setText("Farmers");
 
 
     }

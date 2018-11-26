@@ -23,9 +23,9 @@ public class MilkCardToolBarUI extends RelativeLayout {
     private TextView txtFarmersName, txtFarmesCode, txtPayoutNumber;
     private TextView txtStartDate, txtEndDate;
 
-    private TextView txtMilkTotal, txtLoanTotal, txtOrderTotal, txtBalance;
+    private TextView txtMilkTotalLtrs, txtMilkTotalKsh, txtLoanTotal, txtOrderTotal, txtBalance;
     private RelativeLayout rlTotals;
-    private String orderTotal, loanTotal, milkTotal;
+    private String orderTotal, loanTotal, milkTotalLtrs;
     private String milkTotalKsh;
 
     public MilkCardToolBarUI(Context context) {
@@ -89,7 +89,8 @@ public class MilkCardToolBarUI extends RelativeLayout {
         txtStartDate = findViewById(R.id.txt_card_start);
         txtEndDate = findViewById(R.id.txt_card_end);
 
-        txtMilkTotal = findViewById(R.id.txt_milk);
+        txtMilkTotalLtrs = findViewById(R.id.txt_milk_ltrs);
+        txtMilkTotalKsh = findViewById(R.id.txt_milk_ksh);
         txtLoanTotal = findViewById(R.id.txt_loans);
         txtOrderTotal = findViewById(R.id.txt_orders);
         txtBalance = findViewById(R.id.txt_balance);
@@ -114,7 +115,7 @@ public class MilkCardToolBarUI extends RelativeLayout {
 
     }
 
-    public void show(String milkTotals, String loaTotals, String orderTotal, String balance, FamerModel famerModel, Payouts payouts, boolean isApproved, boolean isPast) {
+    public void show(String milkTotalKsh, String milkTotalLtrs, String loaTotals, String orderTotal, String balance, FamerModel famerModel, Payouts payouts, boolean isApproved, boolean isPast) {
 
 
         setApproved(isApproved);
@@ -124,13 +125,15 @@ public class MilkCardToolBarUI extends RelativeLayout {
 
         setLoanTotal(loaTotals);
         setOrderTotal(orderTotal);
-        setMilkTotal(orderTotal);
+        setMilkTotalLtrs(milkTotalLtrs);
+        setMilkTotalKsh(milkTotalKsh);
 
 
         txtBalance.setText(String.format("%s %s", GeneralUtills.Companion.round(balance, 1), getResources().getString(R.string.ksh)));
         GeneralUtills.Companion.changeCOlor(balance, txtBalance, 1);
 
-        txtMilkTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(milkTotals, 1), getResources().getString(R.string.ltrs)));
+        txtMilkTotalLtrs.setText(String.format("%s %s", GeneralUtills.Companion.round(milkTotalLtrs, 1), getResources().getString(R.string.ltrs)));
+        txtMilkTotalKsh.setText(String.format("%s %s", GeneralUtills.Companion.round(milkTotalKsh, 1), getResources().getString(R.string.ltrs)));
         txtLoanTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(loaTotals, 1), getResources().getString(R.string.ltrs)));
         txtOrderTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(orderTotal, 1), getResources().getString(R.string.ltrs)));
 
@@ -152,7 +155,7 @@ public class MilkCardToolBarUI extends RelativeLayout {
 
     }
 
-    public void updateMilk(String v) {
+    public void updateMilkLtrs(String v) {
 
         String vA = v;
 
@@ -163,10 +166,27 @@ public class MilkCardToolBarUI extends RelativeLayout {
             nm.printStackTrace();
         }
 
-        txtMilkTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(vA, 1), getResources().getString(R.string.ksh)));
-        setMilkTotal(v);
+        txtMilkTotalLtrs.setText(String.format("%s %s", vA, getResources().getString(R.string.ltrs)));
+        setMilkTotalLtrs(v);
 
     }
+
+    public void updateMilkKsh(String v) {
+
+        String vA = v;
+
+
+        try {
+            vA = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vA, 0)));
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
+
+        txtMilkTotalKsh.setText(String.format("%s %s", vA, getResources().getString(R.string.ksh)));
+        setMilkTotalKsh(v);
+
+    }
+
 
     public void updateLoan(String v) {
         txtLoanTotal.setText(String.format("%s %s", GeneralUtills.Companion.round(v, 1), getResources().getString(R.string.ksh)));
@@ -209,16 +229,18 @@ public class MilkCardToolBarUI extends RelativeLayout {
         this.loanTotal = loanTotal;
     }
 
-    public String getMilkTotal() {
-        if (milkTotal != null) {
-            return milkTotal;
+    public String getMilkTotalLtrs() {
+        if (milkTotalLtrs != null) {
+            return milkTotalLtrs;
         } else {
             return "0";
         }
     }
 
-    public void setMilkTotal(String milkTotal) {
-        this.milkTotal = milkTotal;
+    public void setMilkTotalLtrs(String milkTotalLtrs) {
+        this.milkTotalLtrs = milkTotalLtrs;
+        // updateMilkLtrs(milkTotalLtrs);
+
     }
 
     public String getMilkTotalKsh() {
@@ -227,7 +249,7 @@ public class MilkCardToolBarUI extends RelativeLayout {
 
     public void setMilkTotalKsh(String milkTotalKsh) {
         this.milkTotalKsh = milkTotalKsh;
-        updateMilk(milkTotalKsh);
+        //updateMilkKsh(milkTotalKsh);
     }
 
     public void setOnPayNoClickListener(OnClickListener clickListener) {

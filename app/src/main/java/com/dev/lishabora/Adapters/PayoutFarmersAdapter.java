@@ -11,6 +11,7 @@ import com.dev.lishabora.Adapters.ViewHolders.PayoutFarmerListViewHolder;
 import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
+import com.dev.lishabora.Views.CommonFuncs;
 import com.dev.lishaboramobile.R;
 
 import java.util.List;
@@ -21,21 +22,17 @@ public class PayoutFarmersAdapter extends RecyclerView.Adapter<PayoutFarmerListV
     private Context context;
     private List<PayoutFarmersCollectionModel> modelList;
     private OnclickRecyclerListener listener;
-    private boolean isChk = false;
 
     public PayoutFarmersAdapter(Context context, List<PayoutFarmersCollectionModel> modelList, OnclickRecyclerListener listener) {
         this.context = context;
         this.modelList = modelList;
         this.listener = listener;
-        this.isChk = false;
-
     }
 
     public PayoutFarmersAdapter(Context context, List<PayoutFarmersCollectionModel> modelList, OnclickRecyclerListener listener, boolean isChk) {
         this.context = context;
         this.modelList = modelList;
         this.listener = listener;
-        this.isChk = isChk;
 
     }
 
@@ -64,6 +61,7 @@ public class PayoutFarmersAdapter extends RecyclerView.Adapter<PayoutFarmerListV
         String vL = model.getLoanTotal();
         String vO = model.getOrderTotal();
         String vM = model.getMilktotalKsh();
+        String vML = model.getMilktotalLtrs();
 
 
         try {
@@ -71,6 +69,7 @@ public class PayoutFarmersAdapter extends RecyclerView.Adapter<PayoutFarmerListV
             vL = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vL, 0)));
             vO = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vO, 0)));
             vM = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vM, 0)));
+            vML = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vML, 0)));
         } catch (Exception nm) {
             nm.printStackTrace();
         }
@@ -79,7 +78,7 @@ public class PayoutFarmersAdapter extends RecyclerView.Adapter<PayoutFarmerListV
         holder.balance.setText(String.format("%s %s", vB, context.getString(R.string.ksh)));
         GeneralUtills.Companion.changeCOlor(model.getBalance(), holder.balance, 1);
 
-        holder.milk.setText(String.format("%s %s", vM, context.getString(R.string.ksh)));
+        holder.milk.setText(String.format("%s %s", vML, context.getString(R.string.ltrs)));
         if (!model.getMilktotal().equals("0.0")) {
             holder.milk.setTextColor(context.getResources().getColor(R.color.colorPrimary));
             holder.milk.setTypeface(Typeface.DEFAULT_BOLD);
@@ -119,22 +118,33 @@ public class PayoutFarmersAdapter extends RecyclerView.Adapter<PayoutFarmerListV
         if (model.getCardstatus() == 1) {
             //  holder.status.setText("Active");
             holder.status.setTextColor(context.getResources().getColor(R.color.green_color_picker));
-            holder.background.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
+            // holder.background.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
             holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.green_color_picker));
 
+            holder.btnApprove.setVisibility(View.GONE);
 
         } else if (model.getCardstatus() == 0) {
 
+
+            holder.btnApprove.setVisibility(View.VISIBLE);
+
             //  holder.status.setText("Deleted");
             holder.status.setTextColor(context.getResources().getColor(R.color.red));
-            holder.background.setBackgroundColor(context.getResources().getColor(R.color.red));
+            // holder.background.setBackgroundColor(context.getResources().getColor(R.color.red));
             holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.red));
 
         } else {
             // holder.status.setText("In-Active");
             holder.status.setTextColor(context.getResources().getColor(R.color.blue_color_picker));
-            holder.background.setBackgroundColor(context.getResources().getColor(R.color.blue_color_picker));
+            // holder.background.setBackgroundColor(context.getResources().getColor(R.color.blue_color_picker));
             holder.statusview.setBackgroundColor(context.getResources().getColor(R.color.blue_color_picker));
+
+        }
+        if (model.getPayoutStatus() == 1) {
+            holder.btnApprove.setVisibility(View.GONE);
+        } else {
+            holder.btnApprove.setVisibility(View.VISIBLE);
+            CommonFuncs.setCardActionStatus(model, holder.btnApprove, model.getLoanTotal(), model.getOrderTotal());
 
         }
 

@@ -1,6 +1,5 @@
 package com.dev.lishabora.Views.Trader.Fragments;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -23,16 +23,25 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.dev.lishabora.Adapters.PayoutFarmersAdapter;
+import com.dev.lishabora.Models.ApprovalRegisterModel;
 import com.dev.lishabora.Models.Collection;
+import com.dev.lishabora.Models.DayCollectionModel;
 import com.dev.lishabora.Models.FamerModel;
+import com.dev.lishabora.Models.LoanModel;
+import com.dev.lishabora.Models.OrderModel;
 import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
 import com.dev.lishabora.Models.Payouts;
+import com.dev.lishabora.Utils.ApproveListener;
+import com.dev.lishabora.Utils.CollectionCreateUpdateListener;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.Utils.PrefrenceManager;
+import com.dev.lishabora.Utils.RecyclerTouchListener;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
+import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.CommonFuncs;
 import com.dev.lishabora.Views.Trader.Activities.PayCard;
 import com.dev.lishabora.Views.Trader.PayoutConstants;
@@ -63,6 +72,8 @@ public class FragmentPayoutFarmersList extends Fragment {
 //    public View statusview;
     private View view;
 
+    List<Integer> unclickableRows, unswipeableRows;
+    private RecyclerTouchListener onTouchListener;
     private PayoutFarmersAdapter listAdapter;
     private Context context;
     private RecyclerView recyclerView;
@@ -71,6 +82,7 @@ public class FragmentPayoutFarmersList extends Fragment {
     private Payouts payouts;
     private PayoutsVewModel payoutsVewModel;
     private BalncesViewModel balncesViewModel;
+    private TraderViewModel traderViewModel;
     private List<PayoutFarmersCollectionModel> dayCollectionModels;
     private List<PayoutFarmersCollectionModel> dayCollectionModels1;
     private List<FamerModel> famerModels;
@@ -83,17 +95,16 @@ public class FragmentPayoutFarmersList extends Fragment {
     private String filterText = "";
     private int SORTTYPE = 0;
 
+    private MaterialDialog materialDialog;
+
     public void initList() {
+        unclickableRows = new ArrayList<>();
+        unswipeableRows = new ArrayList<>();
+
+
+
+
         recyclerView = view.findViewById(R.id.recyclerView);
-        mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(mStaggeredLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-
-        if (dayCollectionModels == null) {
-            dayCollectionModels = new LinkedList<>();
-        }
-
         listAdapter = new PayoutFarmersAdapter(getActivity(), dayCollectionModels, new OnclickRecyclerListener() {
             @Override
             public void onMenuItem(int position, int menuItem) {
@@ -109,29 +120,31 @@ public class FragmentPayoutFarmersList extends Fragment {
             @Override
             public void onClickListener(int position) {
 
+                List<Collection> collections = payoutsVewModel.getCollectionByDateByPayoutByFarmerListOne(dayCollectionModels.get(position).getPayoutCode(), dayCollectionModels.get(position).getFarmercode());
+                if (collections.size() < 1) {
+                    CommonFuncs.silentValueMilk(1, 1, 1, CommonFuncs.setUpDayCollectionsModel(payouts, collections).get(0),
+                            (value, adapterPosition, time, type, dayCollectionModel, alertDialogAndroid) -> {
+                                updateCollectionValue(dayCollectionModels.get(position).getFamerModel(), value, time, type, dayCollectionModel, null, null, null);
+                            });
+                }
+
+
+
+
+
                 Gson gson = new Gson();
                 String element = gson.toJson(dayCollectionModels, new TypeToken<ArrayList<PayoutFarmersCollectionModel>>() {
                 }.getType());
-                payoutsVewModel.getFarmerByCode(dayCollectionModels.get(position).getFarmercode()).observe(FragmentPayoutFarmersList.this, new Observer<FamerModel>() {
-                    @Override
-                    public void onChanged(@Nullable FamerModel famerModel) {
-                        if (famerModel != null) {
-                            Gson g = new Gson();
+                Gson g = new Gson();
                             Timber.tag("farmerCilcked").d("clicked " + position);
                             Intent intent = new Intent(getActivity(), PayCard.class);
                             intent.putExtra("data", dayCollectionModels.get(position));
                             intent.putExtra("payout", payouts);
                             intent.putExtra("farmers", element);
-                            intent.putExtra("farmer", famerModel);
+                intent.putExtra("farmer", dayCollectionModels.get(position).getFamerModel());
 
                             startActivity(intent);
-                        } else {
-                            Timber.tag("farmerCilcked").d("clicked " + position + "  eRROR Farmern Not found");
 
-                        }
-
-                    }
-                });
 
 
             }
@@ -158,6 +171,73 @@ public class FragmentPayoutFarmersList extends Fragment {
 
             }
         });
+
+        onTouchListener = new RecyclerTouchListener(getActivity(), recyclerView);
+        onTouchListener
+                .setIndependentViews(R.id.btn_approve)
+                .setClickable(new RecyclerTouchListener.OnRowClickListener() {
+                    @Override
+                    public void onRowClicked(int position) {
+                        Timber.tag("farmerCilcked").d("clicked " + position);
+                        List<Collection> collections = payoutsVewModel.getCollectionByDateByPayoutByFarmerListOne(dayCollectionModels.get(position).getPayoutCode(), dayCollectionModels.get(position).getFarmercode());
+                        if (collections.size() < 1) {
+                            CommonFuncs.silentValueMilk(1, 1, 1, CommonFuncs.setUpDayCollectionsModel(payouts, collections).get(0), (value, adapterPosition, time, type, dayCollectionModel, alertDialogAndroid)
+                                    -> updateCollectionValue(dayCollectionModels.get(position).getFamerModel(), value, time, type, dayCollectionModel, null, null, null));
+                        }
+
+
+                        Gson gson = new Gson();
+                        String element = gson.toJson(dayCollectionModels, new TypeToken<ArrayList<PayoutFarmersCollectionModel>>() {
+                        }.getType());
+
+                        Timber.tag("farmerCilcked").d("clicked " + position);
+                        Intent intent = new Intent(getActivity(), PayCard.class);
+                        intent.putExtra("data", dayCollectionModels.get(position));
+                        intent.putExtra("payout", payouts);
+                        intent.putExtra("farmers", element);
+                        intent.putExtra("farmer", dayCollectionModels.get(position).getFamerModel());
+
+                        startActivity(intent);
+
+                    }
+
+                    @Override
+                    public void onIndependentViewClicked(int independentViewID, int position) {
+                        List<Collection> collections = payoutsVewModel.getCollectionByDateByPayoutByFarmerListOne(dayCollectionModels.get(position).getPayoutCode(), dayCollectionModels.get(position).getFarmercode());
+                        if (collections.size() < 1) {
+                            CommonFuncs.silentValueMilk(1, 1, 1, CommonFuncs.setUpDayCollectionsModel(payouts, collections).get(0), (value, adapterPosition, time, type, dayCollectionModel, alertDialogAndroid)
+                                    -> updateCollectionValue(dayCollectionModels.get(position).getFamerModel(), value, time, type, dayCollectionModel, null, null, null));
+                        }
+                        if (independentViewID == R.id.btn_approve) {
+                            if (dayCollectionModels.get(position).getCardstatus() == 1) {
+
+                                ApprovalRegisterModel approvalRegisterModel = payoutsVewModel.getByFarmerPayoutCodeOne(dayCollectionModels.get(position).getFarmercode(), payouts.getCode());//.observe(FragmentPayoutFarmersList.this, new Observer<ApprovalRegisterModel>() {
+
+                                cancelCard(dayCollectionModels.get(position), position, approvalRegisterModel);
+
+
+                            } else {
+                                approveCard(dayCollectionModels.get(position), position);
+                            }
+                        }
+
+                    }
+                })
+
+                .setLongClickable(true, position -> {
+
+                });
+
+
+        if (dayCollectionModels == null) {
+            dayCollectionModels = new LinkedList<>();
+        }
+
+
+        mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(mStaggeredLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
         recyclerView.setAdapter(listAdapter);
 
         listAdapter.notifyDataSetChanged();
@@ -189,6 +269,101 @@ public class FragmentPayoutFarmersList extends Fragment {
 
 
 
+    }
+
+
+    private void cancelCard(PayoutFarmersCollectionModel model, int position, ApprovalRegisterModel approvalRegisterModel) {
+        materialDialog = new MaterialDialog.Builder(getActivity())
+                .title("Canceling farmer's card")
+                .content("Please wait ..")
+                .cancelable(false)
+                .progress(true, 0).build();
+
+
+        CancelFuncs.cancelCard(getActivity(), payouts.getCode(), model, approvalRegisterModel, traderViewModel, balncesViewModel, payoutsVewModel, new ApproveListener() {
+            @Override
+            public void onComplete() {
+                if (materialDialog != null) {
+                    materialDialog.dismiss();
+                }
+                dayCollectionModels.get(position).setCardstatus(0);
+                model.setCardstatus(0);
+                dayCollectionModels.get(position).setStatusName("Approval Canceled");
+            }
+
+            @Override
+            public void onStart() {
+
+                if (materialDialog != null) {
+                    materialDialog.show();
+                }
+            }
+
+            @Override
+            public void onProgress(int progress) {
+
+                if (materialDialog != null) {
+                    materialDialog.setProgress(progress);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                if (materialDialog != null) {
+                    materialDialog.dismiss();
+                }
+                MyToast.toast(error, getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+            }
+        });
+
+    }
+
+    private void approveCard(PayoutFarmersCollectionModel model, int position) {
+        materialDialog = new MaterialDialog.Builder(getActivity())
+                .title("Approving farmer's card")
+                .content("Please wait ..")
+                .cancelable(false)
+                .progress(true, 0).build();
+
+
+        ApproveFuncs.approveCard(getActivity(), payouts.getCode(), model, traderViewModel, balncesViewModel, payoutsVewModel, new ApproveListener() {
+            @Override
+            public void onComplete() {
+                if (materialDialog != null) {
+                    materialDialog.dismiss();
+                }
+                dayCollectionModels.get(position).setCardstatus(0);
+
+            }
+
+            @Override
+            public void onStart() {
+
+                if (materialDialog != null) {
+                    materialDialog.show();
+                }
+            }
+
+            @Override
+            public void onProgress(int progress) {
+
+                if (materialDialog != null) {
+                    materialDialog.setProgress(progress);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                if (materialDialog != null) {
+                    materialDialog.dismiss();
+                }
+                MyToast.toast(error, getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+            }
+        });
+
+    }
+
+    private void action(int position, int i) {
     }
 
     @Override
@@ -267,6 +442,7 @@ public class FragmentPayoutFarmersList extends Fragment {
 
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
         balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
+        traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
 
 
         if (getArguments() != null) {
@@ -319,12 +495,37 @@ public class FragmentPayoutFarmersList extends Fragment {
             if (collections != null) {
 
 
+
                 FragmentPayoutFarmersList.this.collections = collections;
                 setUpFarmerCollectionList();
             }
         });
 
 
+    }
+
+    private void updateCollectionValue(FamerModel famerModel, String s, int time, int type, DayCollectionModel dayCollectionModel,
+                                       AlertDialog a, @Nullable LoanModel loanModel, @Nullable OrderModel orderModel) {
+        CommonFuncs.updateCollectionValue(s, time, type, dayCollectionModel, payoutsVewModel, payouts, famerModel, loanModel, orderModel, new CollectionCreateUpdateListener() {
+            @Override
+            public void createCollection(Collection c) {
+                payoutsVewModel.createCollectionsS(c);
+                CommonFuncs.addBalance(famerModel, traderViewModel, balncesViewModel, c, payouts.getCode(), type, null, null);
+
+            }
+
+            @Override
+            public void updateCollection(Collection c) {
+                payoutsVewModel.updateCollectionS(c);
+
+            }
+
+            @Override
+            public void error(String error) {
+                MyToast.toast(error, getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+
+            }
+        });
     }
 
     private void setUpFarmerCollectionList() {
@@ -354,11 +555,15 @@ public class FragmentPayoutFarmersList extends Fragment {
 
         for (FamerModel famerModel : famerModels) {
 
+            if (famerModel.getArchived() == 0 && famerModel.getDeleted() == 0 && famerModel.getDummy() == 0) {
 
-            collectionModels.add(CommonFuncs.getFarmersCollectionModel(famerModel, collections, payouts, balncesViewModel));
 
+                collectionModels.add(CommonFuncs.getFarmersCollectionModel(famerModel, collections, payouts, balncesViewModel));
+
+            }
 
         }
+
 
         setUpList(collectionModels);
 
@@ -373,9 +578,9 @@ public class FragmentPayoutFarmersList extends Fragment {
         this.dayCollectionModels = dayCollectionModels;
         this.dayCollectionModels1 = dayCollectionModels;
 
-        Objects.requireNonNull(getActivity()).runOnUiThread(() -> listAdapter.notifyDataSetChanged());
+        Objects.requireNonNull(getActivity()).runOnUiThread(() -> listAdapter.refresh(dayCollectionModels));
 
-        initList();
+        // initList();
     }
 
 
@@ -414,7 +619,7 @@ public class FragmentPayoutFarmersList extends Fragment {
 
     private void starterPack() {
         // initCardHeader();
-        initList();
+        //initList();
         new Thread(this::loadFarmers).start();
     }
 
@@ -493,5 +698,24 @@ public class FragmentPayoutFarmersList extends Fragment {
         }
         listAdapter.refresh(dayCollectionModels);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+
+        recyclerView.addOnItemTouchListener(onTouchListener);
+
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        filterText = "";
+        recyclerView.removeOnItemTouchListener(onTouchListener);
+
+    }
+
 
 }

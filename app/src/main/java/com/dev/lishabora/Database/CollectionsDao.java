@@ -132,4 +132,11 @@ public interface CollectionsDao {
 
     @Query("SELECT * FROM COLLECTIONTRANSACTIONS WHERE farmerCode = :code AND  dayDateLog BETWEEN :date1 AND :date2")
     List<Collection> getCollectionsBetweenDatesOne(Long date1, Long date2, String code);
+
+
+    @Query("SELECT SUM(milkCollectedValueKshAm+milkCollectedValueKshPm) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND approved = :approved")
+    Double getSumOfMilkFarmerByApproveStatusKsh(String farmercode, int approved);
+
+    @Query("SELECT SUM(milkCollectedValueLtrsAm+milkCollectedValueLtrsPm) FROM  COLLECTIONTRANSACTIONS  WHERE farmerCode = :farmercode AND approved = :approved")
+    Double getSumOfMilkFarmerByApproveStatusLtrs(String farmercode, int approved);
 }

@@ -61,6 +61,12 @@ public class FarmerRepo {
         }
     }
 
+    public List<FamerModel> fetchAll() {
+
+        farmersDao = db.farmersDao();
+        return farmersDao.fetchAll();
+
+    }
 
     public LiveData<List<FamerModel>> fetchAllData() {
 

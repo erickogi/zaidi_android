@@ -209,7 +209,7 @@ public class FragmentTraderOrders extends Fragment {
                         }
 
                             FamerModel famerModel = traderViewModel.getFarmersByCodeOne(code.getFarmerCode());
-                            CommonFuncs.insertOrderPayment(Double.valueOf(valuea), balncesViewModel, famerModel, paymentMethod, ref, paymentCode);
+                        CommonFuncs.insertOrderPayment(Double.valueOf(valuea), balncesViewModel, famerModel, paymentMethod, ref, famerModel.getCurrentPayoutCode());
                             refreshFarmerBalance(famerModel, code.getPayoutCode());
                             CommonFuncs.updateOrder(code, balncesViewModel);
 
@@ -219,7 +219,7 @@ public class FragmentTraderOrders extends Fragment {
                     } else {
 
                         FamerModel famerModel = traderViewModel.getFarmersByCodeOne(code.getFarmerCode());
-                        CommonFuncs.insertOrderPayment(Double.valueOf(valuea), balncesViewModel, famerModel, paymentMethod, ref, paymentCode);
+                        CommonFuncs.insertOrderPayment(Double.valueOf(valuea), balncesViewModel, famerModel, paymentMethod, ref, famerModel.getCurrentPayoutCode());
                         refreshFarmerBalance(famerModel, code.getPayoutCode());
                         CommonFuncs.updateOrder(code, balncesViewModel);
 

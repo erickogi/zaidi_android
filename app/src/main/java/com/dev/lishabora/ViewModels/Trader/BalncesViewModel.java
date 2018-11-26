@@ -717,6 +717,10 @@ public class BalncesViewModel extends AndroidViewModel
         return loanPaymentsRepo.getLoanPaymentsBetweenDates(date1, date2, loanCode);
     }
 
+    public List<LoanPayments> getLoanPaymentsByLoanIdBetweenDatesorByPayoutCode(Long date1, Long date2, String loanCode, String payoutCode) {
+        return loanPaymentsRepo.getLoanPaymentsByLoanIdBetweenDatesorByPayoutCode(date1, date2, loanCode, payoutCode);
+    }
+
 
     /*******ORDER PAYMENTS *****/
 
@@ -822,6 +826,10 @@ public class BalncesViewModel extends AndroidViewModel
 
     public LiveData<List<OrderPayments>> getOrderPaymentsBetweenDates(Long date1, Long date2, String loanCode) {
         return orderPaymentsRepo.getOrderPaymentsBetweenDates(date1, date2, loanCode);
+    }
+
+    public List<OrderPayments> getOrderPaymentsByLoanIdBetweenDatesorByPayoutCode(Long date1, Long date2, String orderCODE, String payoutCode) {
+        return orderPaymentsRepo.getOrderPaymentsByOrderIdBetweenDatesorByPayoutCode(date1, date2, orderCODE, payoutCode);
     }
 
 

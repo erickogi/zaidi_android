@@ -1323,13 +1323,12 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     }
 
     @Override
-    public void createCollection(Collection c, FamerModel famerModel, Double aDouble) {
+    public void createCollection(Collection c, FamerModel famerModel, Double aDouble, Double milk) {
 
 
         mViewModel.createCollections(c).observe(FragementFarmersList.this, responseModel -> {
 
 
-            //  mViewModel.getCollectionByDateByFarmerByTime(f)
 
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {
 
@@ -1360,7 +1359,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
     }
 
     @Override
-    public void updateCollection(Collection c, FamerModel famerModel, Double aDouble) {
+    public void updateCollection(Collection c, FamerModel famerModel, Double aDouble, Double milk) {
 
         ResponseModel responseModel = mViewModel.updateCollection(c);   //.observe(FragementFarmersList.this, responseModel -> {
             if (Objects.requireNonNull(responseModel).getResultCode() == 1) {

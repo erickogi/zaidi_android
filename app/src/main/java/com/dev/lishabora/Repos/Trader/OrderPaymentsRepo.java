@@ -120,6 +120,10 @@ public class OrderPaymentsRepo {
         return dao.getOrderPaymentsBetweenDates(date1, date2, loanCode);
     }
 
+    public List<OrderPayments> getOrderPaymentsByOrderIdBetweenDatesorByPayoutCode(Long date1, Long date2, String orderCODE, String payoutCode) {
+        return dao.getOrderPaymentsByOrderIdBetweenDatesorByPayoutCode(date1, date2, orderCODE, payoutCode);
+    }
+
 
     private static class insertAsyncTask extends AsyncTask<OrderPayments, Void, Boolean> {
 

@@ -90,5 +90,8 @@ public interface OrderPaymentsDao {
     @Query("SELECT * FROM ORDERPAYMENTS WHERE orderCode = :orderCode AND  timestamp BETWEEN :date1 AND :date2")
     LiveData<List<OrderPayments>> getOrderPaymentsBetweenDates(Long date1, Long date2, String orderCode);
 
+    @Query("SELECT * FROM ORDERPAYMENTS WHERE orderCode = :orderId  AND ( (timestamp BETWEEN :date1 AND :date2) OR (payoutCode =:payoutCode) ) ")
+    List<OrderPayments> getOrderPaymentsByOrderIdBetweenDatesorByPayoutCode(Long date1, Long date2, String orderId, String payoutCode);
+
 
 }

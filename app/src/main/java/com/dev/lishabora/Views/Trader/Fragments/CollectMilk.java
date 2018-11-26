@@ -291,9 +291,11 @@ public class CollectMilk implements View.OnClickListener {//implements{// Number
                 if (mode.getTodaysCollection() != null) {
                     if (mode.getTodaysCollection().getMilkCollectedValueKshAm() != null) {
                         previousCollectionnm.setMilkCollectedValueKshAm(mode.getTodaysCollection().getMilkCollectedValueKshAm());
+                        previousCollectionnm.setMilkCollectedValueLtrsAm(mode.getTodaysCollection().getMilkCollectedValueLtrsAm());
                     }
                     if (mode.getTodaysCollection().getMilkCollectedValueKshPm() != null) {
                         previousCollectionnm.setMilkCollectedValueKshPm(mode.getTodaysCollection().getMilkCollectedValueKshPm());
+                        previousCollectionnm.setMilkCollectedValueLtrsPm(mode.getTodaysCollection().getMilkCollectedValueLtrsPm());
                     }
                 }
 
@@ -681,9 +683,7 @@ public class CollectMilk implements View.OnClickListener {//implements{// Number
     }
 
 
-    //  @Override
-    public void onNumberClicked(int number) {
-        Log.d("numkc", "" + number);
+    private void onNumberClicked(int number) {
         new Thread(() -> {
             if (amountText.isEmpty() && number == 0) {
                 return;
@@ -693,16 +693,16 @@ public class CollectMilk implements View.OnClickListener {//implements{// Number
 
     }
 
-    //  @Override
-    public void onLeftAuxButtonClicked() {
+
+    private void onLeftAuxButtonClicked() {
         if (!hasComma(amountText)) {
             amountText = amountText.isEmpty() ? "0." : amountText + ".";
             showAmount(amountText);
         }
     }
 
-    // @Override
-    public void onRightAuxButtonClicked() {
+
+    private void onRightAuxButtonClicked() {
         if (amountText.isEmpty()) {
             return;
         }
@@ -858,18 +858,18 @@ public class CollectMilk implements View.OnClickListener {//implements{// Number
 
     private void doCollect(Collection c, FamerModel famerModel, int type) {
 
-        Double xChange = xChange(c, AppConstants.MILK);
+        Double[] xChange = xChange(c, AppConstants.MILK);
         if (type == 1) {
-            listener.createCollection(c, famerModel, xChange);
+            listener.createCollection(c, famerModel, xChange[0], xChange[1]);
 
         } else {
-            listener.updateCollection(c, famerModel, xChange);
+            listener.updateCollection(c, famerModel, xChange[0], xChange[1]);
         }
 
     }
 
 
-    private Double xChange(Collection nowCollection, int type) {
+    private Double[] xChange(Collection nowCollection, int type) {
         Double previusAm = 0.0;
         Double previousPm = 0.0;
 
@@ -877,6 +877,15 @@ public class CollectMilk implements View.OnClickListener {//implements{// Number
         Double nowPm = 0.0;
 
         Double xChange;
+
+        Double previusAmL = 0.0;
+        Double previousPmL = 0.0;
+
+        Double nowAmL = 0.0;
+        Double nowPmL = 0.0;
+
+        Double xChangeL;
+
 
 
         if (previousCollectionnm != null) {
@@ -886,6 +895,7 @@ public class CollectMilk implements View.OnClickListener {//implements{// Number
                     if (previousCollectionnm.getMilkCollectedValueKshAm() != null) {
                         try {
                             previusAm = Double.valueOf(previousCollectionnm.getMilkCollectedValueKshAm());
+                            previusAmL = Double.valueOf(previousCollectionnm.getMilkCollectedValueLtrsAm());
                         } catch (Exception nm) {
                             nm.printStackTrace();
                         }
@@ -894,6 +904,7 @@ public class CollectMilk implements View.OnClickListener {//implements{// Number
 
                         try {
                             previousPm = Double.valueOf(previousCollectionnm.getMilkCollectedValueKshPm());
+                            previousPmL = Double.valueOf(previousCollectionnm.getMilkCollectedValueLtrsPm());
                         } catch (Exception nm) {
                             nm.printStackTrace();
                         }
@@ -917,6 +928,7 @@ public class CollectMilk implements View.OnClickListener {//implements{// Number
                     if (nowCollection.getMilkCollectedValueKshAm() != null) {
                         try {
                             nowAm = Double.valueOf(nowCollection.getMilkCollectedValueKshAm());
+                            nowAmL = Double.valueOf(nowCollection.getMilkCollectedValueLtrsAm());
                         } catch (Exception nm) {
                             nm.printStackTrace();
                         }
@@ -927,6 +939,7 @@ public class CollectMilk implements View.OnClickListener {//implements{// Number
 
                         try {
                             nowPm = Double.valueOf(nowCollection.getMilkCollectedValueKshPm());
+                            nowPmL = Double.valueOf(nowCollection.getMilkCollectedValueLtrsPm());
                         } catch (Exception nm) {
                             nm.printStackTrace();
                         }
@@ -944,10 +957,13 @@ public class CollectMilk implements View.OnClickListener {//implements{// Number
         }
 
 
+        Log.d("mklls", " Now Am " + nowAmL + "  pREV  " + previusAmL);
         xChange = (nowAm + nowPm) - (previusAm + previousPm);
+        xChangeL = (nowAmL + nowPmL) - (previusAmL + previousPmL);
 
 
-        return xChange;
+        // return xChange;
+        return new Double[]{xChange, xChangeL};
     }
 
 
@@ -959,7 +975,6 @@ public class CollectMilk implements View.OnClickListener {//implements{// Number
                 onNumberClicked(0);
                 break;
             case R.id.kkey1:
-                Log.d("numvlc", "1");
                 onNumberClicked(1);
                 break;
             case R.id.kkey2:
