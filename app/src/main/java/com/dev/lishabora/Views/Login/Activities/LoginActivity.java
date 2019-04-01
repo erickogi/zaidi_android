@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
 
 import com.dev.lishabora.Utils.BasePermissionAppCompatActivity;
@@ -54,30 +53,15 @@ public class LoginActivity extends BasePermissionAppCompatActivity {
         setContentView(R.layout.login_activity);
 
 
+
         fragment = new LoginFragmentPhone();
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().setCustomAnimations(R.anim.left_enter, R.anim.right_out)
+        fragmentManager.beginTransaction()//.setCustomAnimations(R.anim.left_enter, R.anim.right_out)
                 .replace(R.id.container, fragment, "fragmentWelcome").commit();
 
 
         registerReceiver(codeReceiver, new IntentFilter("com.lisha.codereceived"));
-        getReadSMSPermission(new RequestPermissionAction() {
-            @Override
-            public void permissionDenied() {
-                // Call Back, when permission is Denied
-                // TODO, task after permission is not greante
-                Log.d("myPermissions", "not granted");
 
-            }
-
-            @Override
-            public void permissionGranted() {
-                Log.d("myPermissions", "granted");
-
-                // Call Back, when permission is Granted
-                // TODO, task after permission is greante
-            }
-        });
 
     }
 

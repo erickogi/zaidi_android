@@ -21,7 +21,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -85,9 +84,6 @@ import java.util.Objects;
 import static com.dev.lishabora.Application.collectMilk;
 
 public class TraderActivity extends AppCompatActivity {
-    private static final int PERMISSIONS_REQUEST = 1;
-    private GoogleApiClient googleApiClient;
-
 
     private static Fragment fragment = null;
     PrefrenceManager traderPrefs;
@@ -104,6 +100,10 @@ public class TraderActivity extends AppCompatActivity {
     private Drawer d;
     private static final String SAMPLE_DB_NAME = "lm_database";
     private static final String SAMPLE_TABLE_NAME = "Info";
+
+    private static final int PERMISSIONS_REQUEST = 1;
+    private GoogleApiClient googleApiClient;
+
 
     private void settings() {
 
@@ -352,29 +352,7 @@ public class TraderActivity extends AppCompatActivity {
                 fragment = new FragmentNotifications();
                 popOutFragments();
                 setUpView("Notifications");
-                // MyToast.toast("We are working on implementing this  \n sit tight", TraderActivity.this, R.drawable.ic_launcher, Toast.LENGTH_LONG);
-//
-//                private void exportDB(){
-//                File sd = Environment.getExternalStorageDirectory();
-//                File data = Environment.getDataDirectory();
-//                FileChannel source = null;
-//                FileChannel destination = null;
-//                String currentDBPath = "/data/" + "com.dev.lishaboramobile" + "/databases/" + SAMPLE_DB_NAME;
-//                String backupDBPath = SAMPLE_DB_NAME + ".db";
-//                File currentDB = new File(data, currentDBPath);
-//                File backupDB = new File(sd, backupDBPath);
-//                try {
-//                    source = new FileInputStream(currentDB).getChannel();
-//                    destination = new FileOutputStream(backupDB).getChannel();
-//                    destination.transferFrom(source, 0, source.size());
-//                    source.close();
-//                    destination.close();
-//                    Toast.makeText(TraderActivity.this, "DB Exported!", Toast.LENGTH_LONG).show();
-//                } catch (IOException e) {
-//                    Toast.makeText(TraderActivity.this, "DB  not Exported!" + e.toString(), Toast.LENGTH_LONG).show();
-//
-//                    e.printStackTrace();
-//                }
+
             }
 
 
@@ -435,7 +413,6 @@ public class TraderActivity extends AppCompatActivity {
             }
         });
 
-        //  DrawerClass.Companion.setOpened(true);
     }
 
     public void updateTrader(JSONObject jsonObject) {
@@ -446,7 +423,6 @@ public class TraderActivity extends AppCompatActivity {
 
         progressDialog.show();
 
-        Log.d("updatetrader", "" + jsonObject);
         Request.Companion.getResponse(ApiConstants.Companion.getUpdateTrader(), jsonObject, "",
                 new ResponseCallback() {
                     @Override

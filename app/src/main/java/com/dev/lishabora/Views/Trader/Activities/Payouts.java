@@ -30,10 +30,12 @@ import java.util.List;
 public class Payouts extends AppCompatActivity {
     private MaterialSpinner spinner;
     private RelativeLayout lspinner;
-    private static Fragment fragment = null;
     private com.dev.lishabora.Models.Payouts payouts;
     SearchView mSearchView;
     static Fragment page;
+
+    private static Fragment fragment = null;
+
     private static ViewPager viewPager;
     private TabLayout tabLayout;
 

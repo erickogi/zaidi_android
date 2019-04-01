@@ -310,6 +310,32 @@ public class AdminsViewModel extends AndroidViewModel {
         return createSuccess;
     }
 
+    public LiveData<ResponseObject> registerTrader(JSONObject requestData, boolean createOnline) {
+
+        if (this.createSuccess == null) {
+        }
+        this.createSuccess = new MutableLiveData();
+
+        if (createOnline) {
+            Request.Companion.getResponseSingle(ApiConstants.Companion.getCreateTrader(), requestData, "", new ResponseCallback() {
+                @Override
+                public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
+                    createSuccess.setValue(responseModel);
+                }
+
+                @Override
+                public void response(ResponseObject responseModel, NetworkAnalytics analytics) {
+                    createSuccess.setValue(responseModel);
+
+                }
+            });
+
+        } else {
+
+        }
+        return createSuccess;
+    }
+
     public LiveData<ResponseModel> updateAdmin(JSONObject jsonObject, boolean b) {
         if (this.updateAdminSuccess == null) {
 

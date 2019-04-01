@@ -194,42 +194,47 @@ public class FarmerListBalanceFuncs {
 
     private static double getSupposedToPay(double instalmentAmount, FarmerLoansTable loansTables, FarmerOrdersTable ordersTable, FamerModel famerModel, int i) {
 
+        try {
+            Payouts p = traderViewModel.getPayoutByCodeOne(famerModel.getCurrentPayoutCode());
 
-        Payouts p = traderViewModel.getPayoutByCodeOne(famerModel.getCurrentPayoutCode());
+            Long dat1 = DateTimeUtils.Companion.getLongDate(p.getStartDate());
+            Long dat2 = DateTimeUtils.Companion.getLongDate(p.getEndDate());
+            double paind = 0.0;
 
-        Long dat1 = DateTimeUtils.Companion.getLongDate(p.getStartDate());
-        Long dat2 = DateTimeUtils.Companion.getLongDate(p.getEndDate());
-        double paind = 0.0;
+            if (i == 1) {
+                List<LoanPayments> loanPayments = balncesViewModel.getLoanPaymentsByLoanIdBetweenDatesorByPayoutCode(dat1, dat2, loansTables.getCode(), famerModel.getCurrentPayoutCode());
 
-        if (i == 1) {
-            List<LoanPayments> loanPayments = balncesViewModel.getLoanPaymentsByLoanIdBetweenDatesorByPayoutCode(dat1, dat2, loansTables.getCode(), famerModel.getCurrentPayoutCode());
+                if (loanPayments != null) {
+                    for (int a = 0; a < loanPayments.size(); a++) {
+                        try {
+                            paind = paind + Double.valueOf(loanPayments.get(a).getAmountPaid());
+                        } catch (Exception nm) {
+                            nm.printStackTrace();
+                            Log.d("updatedcfg", nm.toString());
 
-            if (loanPayments != null) {
-                for (int a = 0; a < loanPayments.size(); a++) {
-                    try {
-                        paind = paind + Double.valueOf(loanPayments.get(a).getAmountPaid());
-                    } catch (Exception nm) {
-                        nm.printStackTrace();
-                        Log.d("updatedcfg", nm.toString());
+                        }
+                    }
+                }
+            } else {
+                List<OrderPayments> orderPayments = balncesViewModel.getOrderPaymentsByLoanIdBetweenDatesorByPayoutCode(dat1, dat2, ordersTable.getCode(), famerModel.getCurrentPayoutCode());
 
+                if (orderPayments != null) {
+                    for (int a = 0; a < orderPayments.size(); a++) {
+                        try {
+                            paind = paind + Double.valueOf(orderPayments.get(a).getAmountPaid());
+                        } catch (Exception nm) {
+                            nm.printStackTrace();
+                        }
                     }
                 }
             }
-        } else {
-            List<OrderPayments> orderPayments = balncesViewModel.getOrderPaymentsByLoanIdBetweenDatesorByPayoutCode(dat1, dat2, ordersTable.getCode(), famerModel.getCurrentPayoutCode());
-
-            if (orderPayments != null) {
-                for (int a = 0; a < orderPayments.size(); a++) {
-                    try {
-                        paind = paind + Double.valueOf(orderPayments.get(a).getAmountPaid());
-                    } catch (Exception nm) {
-                        nm.printStackTrace();
-                    }
-                }
-            }
+            double v = instalmentAmount - paind;
+            return v < 1 ? 0 : v;
+        } catch (Exception nm) {
+            nm.printStackTrace();
+            return 0;
         }
-        double v = instalmentAmount - paind;
-        return v < 1 ? 0 : v;
+
 
     }
 }

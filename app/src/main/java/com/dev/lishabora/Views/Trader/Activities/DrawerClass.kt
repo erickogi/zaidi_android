@@ -1,22 +1,12 @@
 package com.dev.lishabora.Views.Trader.Activities
 
 import android.app.Activity
-import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.TextView
 import com.dev.lishabora.Application
 import com.dev.lishabora.Application.isTimeAutomatic
 import com.dev.lishabora.Models.Trader.TraderModel
 import com.dev.lishaboramobile.R
-import com.mikepenz.materialdrawer.AccountHeader
-import com.mikepenz.materialdrawer.AccountHeaderBuilder
-import com.mikepenz.materialdrawer.Drawer
-import com.mikepenz.materialdrawer.DrawerBuilder
-import com.mikepenz.materialdrawer.holder.StringHolder
-import com.mikepenz.materialdrawer.model.DividerDrawerItem
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
-import com.mikepenz.materialdrawer.model.ProfileDrawerItem
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 
 
 class DrawerClass {
@@ -137,7 +127,7 @@ class DrawerClass {
                     //.withSelectedItem(-1)
                     .addDrawerItems(
                             home,
-                            routes, loansAndorders, products, payout, notifications,// transactions,
+                            routes, loansAndorders, products, payout,// notifications,// transactions,
                             DividerDrawerItem(),
                             account,
                             // settings,

@@ -4,6 +4,8 @@ package com.dev.lishabora.Views.Login.Fragments;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -152,6 +154,8 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
         edtPhone = view.findViewById(R.id.edt_phone);
         btnNextPhoneView = view.findViewById(R.id.btn_next_phone_view);
         aviPhone = view.findViewById(R.id.avi_phone);
+        TextView txtPrivacyPolicy = view.findViewById(R.id.privacy_policy);
+        txtPrivacyPolicy.setOnClickListener(view -> openPrivacyPolicy());
 
 
         edtPhone.setOnClickListener(this);
@@ -205,6 +209,15 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
         });
 
 
+    }
+
+    private void openPrivacyPolicy() {
+        try {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://calista.co.ke/sokoni/lishaboraprivacy_policy.html"));
+            startActivity(browserIntent);
+        } catch (Exception nm) {
+            nm.printStackTrace();
+        }
     }
 
 
@@ -281,9 +294,6 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
 
 
                 mViewModel.phoneAuth(jsonObject).observe(this, (ResponseObject responseModel) -> {
-
-                    //  snack(new Gson().toJson(responseModel.getAnalytics()));
-                    //  MyToast.toast(new Gson().toJson(responseModel.getAnalytics()),getContext(),R.drawable.ic_dehaze_black_24dp,Toast.LENGTH_LONG);
                     if (responseModel.getResultCode() == 1) {
                         handler();
                         Gson gson = new Gson();
@@ -312,8 +322,9 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
                         }
 
                     } else {
-                        snack(responseModel.getResultDescription());
+                        //snack(responseModel.getResultDescription());
                         aviPhone.smoothToHide();
+                        accountNotFoundFragment(responseModel);
                     }
                 });
 
@@ -355,7 +366,7 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
 
         fragment = LoginFragmentPassword.newInstance(responseModel);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        fragmentManager.beginTransaction().setCustomAnimations(R.anim.left_enter, R.anim.right_out)
+        fragmentManager.beginTransaction()//.setCustomAnimations(R.anim.left_enter, R.anim.right_out)
                 .replace(R.id.container, fragment, "fragmentWelcome").commit();
 
     }
@@ -364,8 +375,18 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
 
         fragment = ForgotPassConfirmFragment.newInstance(responseModel);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        fragmentManager.beginTransaction().setCustomAnimations(R.anim.left_enter, R.anim.right_out)
+        fragmentManager.beginTransaction()//.setCustomAnimations(R.anim.left_enter, R.anim.right_out)
                 .replace(R.id.container, fragment, "fragmentWelcome").addToBackStack(null).commit();
+
+
+    }
+
+    public void accountNotFoundFragment(ResponseObject responseModel) {
+
+        fragment = AccountNotFoundFragment.newInstance(responseModel.getResultDescription(), phoneNumber);
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.beginTransaction()//.setCustomAnimations(R.anim.left_enter, R.anim.right_out)
+                .replace(R.id.container, fragment, "accountNotound").addToBackStack(null).commit();
 
 
     }

@@ -307,16 +307,19 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
         prefrenceManager.setLoggedUser(traderModl);
         traderViewModel.createTrader(traderModl);
         if (!prefrenceManager.isFirebaseUpdated()) {
-            traderModel.setFirebasetoken(prefrenceManager.getFirebase());
-            JSONObject jsonObject = new JSONObject();
 
 
             try {
+
+                traderModl.setFirebasetoken(prefrenceManager.getFirebase());
+                JSONObject jsonObject = new JSONObject();
+
                 jsonObject = new JSONObject(new Gson().toJson(traderModl));
+                Application.updateTrader(jsonObject);
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Application.updateTrader(jsonObject);
         }
 
         Application.syncDown();

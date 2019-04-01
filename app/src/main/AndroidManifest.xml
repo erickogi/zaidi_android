@@ -27,8 +27,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.READ_SMS" />
 
     <application
         android:name="com.dev.lishabora.Application"
@@ -104,6 +102,11 @@
         <activity
             android:name="com.dev.lishabora.Views.Admin.Activities.CreateTrader"
             android:label="New Trader"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.dev.lishabora.Views.Trader.Activities.Register"
+            android:label="Register"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

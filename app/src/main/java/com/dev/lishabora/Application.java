@@ -193,7 +193,6 @@ public class Application extends MultiDexApplication {
                 public void response(SyncResponseModel responseModel, NetworkAnalytics analytics) {
 
 
-                    Log.d("syncresponse", new Gson().toJson(responseModel));
                     if (traderModel != null) {
                         traderModel.setSynchingStatus(0);
                         lmDatabase.tradersDao().updateRecord(traderModel);
@@ -313,7 +312,7 @@ public class Application extends MultiDexApplication {
             mBuilder = new NotificationCompat.Builder(com.dev.lishabora.Application.context);
             mBuilder.setSmallIcon(R.mipmap.ic_launcher);
             mBuilder.setContentTitle(context.getString(R.string.app_name))
-                    .setContentText("Syncing your back your data")
+                    .setContentText("Downloading server data")
                     .setAutoCancel(false)
 
                     .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
@@ -509,7 +508,7 @@ public class Application extends MultiDexApplication {
 
                         Notification notification = new NotificationCompat.Builder(Application.context)
                                 .setContentTitle("Sync Down issue")
-                                .setContentText("You've recieved new updates but we cant process them as you have un-synced data")
+                                .setContentText("You've received new updates but we cant process them as you have un-synced data")
                                 .setAutoCancel(true)
                                 // .setContentIntent(pi)
                                 .setSmallIcon(R.mipmap.ic_launcher)

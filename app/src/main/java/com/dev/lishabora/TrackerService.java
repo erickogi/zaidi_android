@@ -47,12 +47,13 @@ public class TrackerService extends Service {
     }
 
     private void buildNotification() {
-        String stop = "stop";
-        registerReceiver(stopReceiver, new IntentFilter(stop));
-        PendingIntent broadcastIntent = PendingIntent.getBroadcast(
-                this, 0, new Intent(stop), PendingIntent.FLAG_UPDATE_CURRENT);
 
         try {
+            String stop = "stop";
+            registerReceiver(stopReceiver, new IntentFilter(stop));
+            PendingIntent broadcastIntent = PendingIntent.getBroadcast(
+                    this, 0, new Intent(stop), PendingIntent.FLAG_UPDATE_CURRENT);
+
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                     .setContentTitle(getString(R.string.app_name))
                     .setContentText("Click here to stop Location monitoring service")

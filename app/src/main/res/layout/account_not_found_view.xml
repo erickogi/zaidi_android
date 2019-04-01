@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_phone_view"
+
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_centerInParent="true"
+    android:layout_weight="1"
+    android:orientation="vertical"
+
+    android:visibility="visible">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <com.dev.customfonts.MyTextView_Roboto_Bold
+            android:id="@+id/txt_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="You account was not found in our database . If your are new , please click on ' Register ' to proceed with registering into Lishabora"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textSize="16.8sp" />
+
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/avi_phone"
+
+            style="@style/AVLoadingIndicatorView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            app:indicatorColor="@color/colorPrimaryDark"
+            app:indicatorName="BallSpinFadeLoaderIndicator" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="3dp">
+
+            <android.support.design.button.MaterialButton
+
+                android:id="@+id/btn_login"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_margin="6dp"
+
+                android:layout_marginBottom="10dp"
+
+                android:layout_weight="1"
+                android:text="Back"
+                android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
+                android:textColor="@color/black"
+
+                android:textSize="16.5sp"
+                app:cornerRadius="5dp"
+                app:iconPadding="4dp"
+                app:iconTint="@color/black"
+                app:rippleColor="@color/accent"
+                app:strokeColor="@color/black"
+
+                app:strokeWidth="2dp" />
+
+            <android.support.design.button.MaterialButton
+
+                android:id="@+id/btn_register"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_margin="6dp"
+
+                android:layout_marginBottom="10dp"
+
+                android:layout_weight="1"
+                android:text="Register"
+                android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
+                android:textColor="@color/black"
+
+                android:textSize="16.5sp"
+                app:cornerRadius="5dp"
+                app:iconPadding="4dp"
+                app:iconTint="@color/black"
+                app:rippleColor="@color/accent"
+                app:strokeColor="@color/black"
+
+                app:strokeWidth="2dp" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</android.support.design.card.MaterialCardView>

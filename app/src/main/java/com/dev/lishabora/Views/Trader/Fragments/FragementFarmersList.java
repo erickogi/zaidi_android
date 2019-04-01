@@ -454,6 +454,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
         }, null);
 
         onTouchListener = new RecyclerTouchListener(getActivity(), recyclerView);
+
         onTouchListener
 
                 .setClickable(new RecyclerTouchListener.OnRowClickListener() {

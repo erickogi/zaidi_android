@@ -18,8 +18,6 @@ public class PrefrenceManager {
     // Shared preferences file name
 
     private static final String PREF_NAME = "lishaboraprefs";
-    private static final String googleAuthConnected = "googleAuthConnected";
-    private static final String googleAuthKey = "googleAuth";
 
     // All Shared Preferences Keys
 
@@ -83,6 +81,8 @@ public class PrefrenceManager {
     private static final String lastSyncTime = "lastSyncTime";
     private static final String lastCordinates = "lastLocationCordinates";
     private static final String isTraderFirstTime = "isTraderFirst";
+    private static final String googleAuthConnected = "googleAuthConnected";
+    private static final String googleAuthKey = "googleAuthKey";
     // Shared Preferences
 
     SharedPreferences pref;
