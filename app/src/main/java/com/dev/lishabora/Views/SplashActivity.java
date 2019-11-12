@@ -85,7 +85,7 @@ public class SplashActivity extends AppCompatActivity {
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(this);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(this));
         alertDialogBuilderUserInput.setTitle("Sync OverLoad ");
-        alertDialogBuilderUserInput.setMessage("It seems that you have not synced your data for  " + String.valueOf(days) + "  \nTo continue using the app fully, you will need to sync you data now .\n Press SYNC to do so  thank you.");
+        alertDialogBuilderUserInput.setMessage("It seems that you have not synced your data for  " + days + "  \nTo continue using the app fully, you will need to sync you data now .\n Press SYNC to do so  thank you.");
 
 
         alertDialogBuilderUserInput
@@ -120,40 +120,45 @@ public class SplashActivity extends AppCompatActivity {
             if (globalPrefs.isLoggedIn()) {
                 LMDatabase lmDatabase = LMDatabase.getDatabase(Application.context);
 
-                switch (globalPrefs.getTypeLoggedIn()) {
-                    case LoginController.ADMIN:
-                        intent = new Intent(SplashActivity.this, AdminsActivity.class);
+                if (lmDatabase != null && lmDatabase.tradersDao() != null && lmDatabase.tradersDao().getAllData().size() > 0) {
+                    switch (globalPrefs.getTypeLoggedIn()) {
+                        case LoginController.ADMIN:
+                            intent = new Intent(SplashActivity.this, AdminsActivity.class);
 
-                        break;
-                    case LoginController.TRADER:
-                        String xTime = globalPrefs.getLastTransactionTIme();
-                        if (xTime.equals("")) {
-                            intent = new Intent(SplashActivity.this, TraderActivity.class);
+                            break;
+                        case LoginController.TRADER:
+                            String xTime = globalPrefs.getLastTransactionTIme();
+                            if (xTime.equals("")) {
+                                intent = new Intent(SplashActivity.this, TraderActivity.class);
 
-                        } else {
-                            int daysBtwen = DateTimeUtils.Companion.calcDiff(DateTimeUtils.Companion.conver2Date(xTime), DateTimeUtils.Companion.getTodayDate()).getDays();
+                            } else {
+                                int daysBtwen = DateTimeUtils.Companion.calcDiff(DateTimeUtils.Companion.conver2Date(xTime), DateTimeUtils.Companion.getTodayDate()).getDays();
 
-                            try {
-                                if (daysBtwen > 7 && lmDatabase.syncDao().getCount() > 0) {
-                                    runOnUiThread(() -> sync(daysBtwen));
-                                } else {
+                                try {
+                                    if (daysBtwen > 7 && lmDatabase.syncDao().getCount() > 0) {
+                                        runOnUiThread(() -> sync(daysBtwen));
+                                    } else {
+                                        intent = new Intent(SplashActivity.this, TraderActivity.class);
+
+                                    }
+                                } catch (Exception nm) {
+                                    nm.printStackTrace();
                                     intent = new Intent(SplashActivity.this, TraderActivity.class);
 
                                 }
-                            } catch (Exception nm) {
-                                nm.printStackTrace();
-                                intent = new Intent(SplashActivity.this, TraderActivity.class);
-
                             }
-                        }
-                        break;
+                            break;
 
 
-                    default:
-                        intent = new Intent(SplashActivity.this, LoginActivity.class);
+                        default:
+                            intent = new Intent(SplashActivity.this, LoginActivity.class);
 
 
+                    }
+                } else {
+                    intent = new Intent(SplashActivity.this, LoginActivity.class);
                 }
+
             } else {
                 intent = new Intent(SplashActivity.this, LoginActivity.class);
 

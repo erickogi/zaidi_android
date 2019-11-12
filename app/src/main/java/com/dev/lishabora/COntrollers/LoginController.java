@@ -21,6 +21,7 @@ public class LoginController {
     }
 
     public static boolean isValidPhoneNumber(String mobile) {
+        Log.d("phonenumner", mobile);
         Log.d("enteredPhone", mobile);
         String regEx = "^[0-9]{9}$";
         return mobile.matches(regEx);

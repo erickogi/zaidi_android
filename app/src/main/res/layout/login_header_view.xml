@@ -14,20 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/img_cow"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="3"
-            android:scaleType="fitXY"
-            android:src="@drawable/header" />
-
-        <View
-            android:id="@+id/view_alpha"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#72000000"
-            android:visibility="visible" />
 
         <LinearLayout
             android:layout_width="match_parent"

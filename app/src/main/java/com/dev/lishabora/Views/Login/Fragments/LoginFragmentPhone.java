@@ -15,10 +15,8 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
-import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +37,7 @@ import com.dev.lishabora.ViewModels.Login.LoginViewModel;
 import com.dev.lishabora.Views.Login.LoginConsts;
 import com.dev.lishaboramobile.R;
 import com.google.gson.Gson;
+import com.hbb20.CountryCodePicker;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONException;
@@ -66,6 +65,7 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
 
     private String phoneNumber = "";
     private TextInputEditText edtPhone;
+    private CountryCodePicker ccp;
     private Button btnNextPhoneView;
     private int headerCardState = 0;
     private Fragment fragment;
@@ -133,16 +133,16 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
         headerCard = view.findViewById(R.id.card_header);
         phoneCard = view.findViewById(R.id.card_phone_view);
         txtKe = view.findViewById(R.id.txt_ke);
-        imageCow = view.findViewById(R.id.img_cow);
-        imageCow.setOnClickListener(view -> {
-
-            if (v >= 5) {
-                v = 0;
-                di();
-            }
-            v++;
-
-        });
+//        imageCow = view.findViewById(R.id.img_cow);
+//        imageCow.setOnClickListener(view -> {
+//
+//            if (v >= 5) {
+//                v = 0;
+//                di();
+//            }
+//            v++;
+//
+//        });
 
 
         initWidgets();
@@ -152,62 +152,65 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
 
     void initWidgets() {
         edtPhone = view.findViewById(R.id.edt_phone);
+        ccp = view.findViewById(R.id.ccp);
         btnNextPhoneView = view.findViewById(R.id.btn_next_phone_view);
         aviPhone = view.findViewById(R.id.avi_phone);
         TextView txtPrivacyPolicy = view.findViewById(R.id.privacy_policy);
         txtPrivacyPolicy.setOnClickListener(view -> openPrivacyPolicy());
 
 
+
         edtPhone.setOnClickListener(this);
         btnNextPhoneView.setOnClickListener(this);
         final char space = ' ';
 
-        edtPhone.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//        edtPhone.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                // if(s.length()>0&&editTextCarrierNumber.getText().toString().charAt(0)!='0') {
+//                try {
+//                    if (s.charAt(0) == '0') {
+//                        s.delete(s.length() - 1, s.length());
+//                        txtKe.setText("+254-0");
+//                    } else if (s != null && s.length() < 1) {
+//                        txtKe.setText("+254");
+//
+//                    }
+//
+//
+//                } catch (Exception nm) {
+//                    nm.printStackTrace();
+//                }
+//                if (s.length() > 0 && (s.length() % 4) == 0) {
+//                    final char c = s.charAt(s.length() - 1);
+//                    if (space == c) {
+//                        s.delete(s.length() - 1, s.length());
+//                    }
+//
+//                }
+//                // Insert char where needed.
+//                if (s.length() > 0 && (s.length() % 4) == 0) {
+//                    char c = s.charAt(s.length() - 1);
+//                    // Only if its a digit where there should be a space we insert a space
+//                    if (Character.isDigit(c) && TextUtils.split(s.toString(), String.valueOf(space)).length <= 3) {
+//                        s.insert(s.length() - 1, String.valueOf(space));
+//                    }
+//
+//                }
+//            }
+//        });
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                // if(s.length()>0&&editTextCarrierNumber.getText().toString().charAt(0)!='0') {
-                try {
-                    if (s.charAt(0) == '0') {
-                        s.delete(s.length() - 1, s.length());
-                        txtKe.setText("+254-0");
-                    } else if (s != null && s.length() < 1) {
-                        txtKe.setText("+254");
-
-                    }
-
-
-                } catch (Exception nm) {
-                    nm.printStackTrace();
-                }
-                if (s.length() > 0 && (s.length() % 4) == 0) {
-                    final char c = s.charAt(s.length() - 1);
-                    if (space == c) {
-                        s.delete(s.length() - 1, s.length());
-                    }
-
-                }
-                // Insert char where needed.
-                if (s.length() > 0 && (s.length() % 4) == 0) {
-                    char c = s.charAt(s.length() - 1);
-                    // Only if its a digit where there should be a space we insert a space
-                    if (Character.isDigit(c) && TextUtils.split(s.toString(), String.valueOf(space)).length <= 3) {
-                        s.insert(s.length() - 1, String.valueOf(space));
-                    }
-
-                }
-            }
-        });
-
+        ccp.registerCarrierNumberEditText(edtPhone);
 
     }
 
@@ -269,14 +272,21 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
 
     }
 
+    //private String phoneNumber = "";
     private void nextOnPhoneInputClicked() {
 
         if (!TextUtils.isEmpty(edtPhone.getText().toString())) {
-            String phoneNumber = edtPhone.getText().toString().replaceAll(" ", "").trim();
+            String phoneNumber1 = ccp.getFullNumber();
+            if (phoneNumber1.startsWith("25407")) {
+                phoneNumber = phoneNumber1.replace("2540", "");
+            }
+            if (phoneNumber1.startsWith("2547")) {
+                phoneNumber = phoneNumber1.replace("254", "");
+            }
             if (LoginController.isValidPhoneNumber(phoneNumber)
                 // && GeneralUtills.Companion.isValidPhoneNumber(edtPhone.getText().toString())
 
-                    ) {
+            ) {
 
                 aviPhone.setVisibility(View.VISIBLE);
                 aviPhone.smoothToShow();
@@ -290,7 +300,6 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
 
 
                 mViewModel.phoneAuth(jsonObject).observe(this, (ResponseObject responseModel) -> {

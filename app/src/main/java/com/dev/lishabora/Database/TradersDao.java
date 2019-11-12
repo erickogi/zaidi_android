@@ -27,7 +27,8 @@ public interface TradersDao {
     void insertSingleTrader(TraderModel traderModel);
 
 
-
+    @Query("SELECT * FROM TRADERS")
+    List<TraderModel> getAllData();
 
     @Query("SELECT * FROM TRADERS")
     LiveData<List<TraderModel>> fetchAllData();

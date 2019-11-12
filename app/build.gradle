@@ -8,8 +8,8 @@ android {
         applicationId "com.dev.lishaboramobile"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 11
-        versionName "1.06"
+        versionCode 12
+        versionName "1.07"
         multiDexEnabled true
 
         javaCompileOptions {
@@ -78,7 +78,7 @@ dependencies {
 
     //Navation
     implementation 'com.aurelhubert:ahbottomnavigation:2.1.0'
-    implementation('com.mikepenz:materialdrawer:5.9.5@aar') {
+    implementation('com.mikepenz:materialdrawer:6.0.9@aar') {
         transitive = true
         exclude group: 'com.android.support'
     }
@@ -138,7 +138,7 @@ dependencies {
     }
    // debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
     implementation 'com.google.android.gms:play-services-location:11.8.0'
-
+    implementation 'com.hbb20:ccp:2.0.0'
     implementation 'com.github.jrvansuita:MaterialAbout:0.2.3'
 }
 

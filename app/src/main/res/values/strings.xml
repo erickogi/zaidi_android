@@ -23,7 +23,7 @@
     <string name="nine">9</string>
 
 
-    <string name="app_name">LishaBora</string>
+    <string name="app_name">Zaidi</string>
     <string name="title_activity_trader">TraderActivity</string>
     <string name="next">Next</string>
     <string name="googleLocalDomain">.co.ke</string>
@@ -118,4 +118,5 @@
     <string name="mdtp_day_of_week_label_typeface" translatable="false">sans-serif</string>
     <string name="mdtp_from">FROM</string>
     <string name="mdtp_to">TO</string>
+    <string name="phone_hint">Phone</string>
 </resources>

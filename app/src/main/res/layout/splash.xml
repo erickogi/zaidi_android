@@ -6,9 +6,12 @@
     android:gravity="center"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.dev.lishabora.Views.SplashActivity"
-    android:background="@drawable/headermain">
+    android:background="@color/white">
 
     <ImageView
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:scaleType="fitXY"
         android:layout_centerHorizontal="true"
         android:src="@drawable/ic_launcher"
         android:visibility="visible"
@@ -35,7 +38,7 @@
         android:layout_centerHorizontal="true"
         android:text="Better business. Happy farmers."
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textStyle="bold" />
 
 

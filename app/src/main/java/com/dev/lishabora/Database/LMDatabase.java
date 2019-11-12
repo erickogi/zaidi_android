@@ -29,7 +29,7 @@ import com.dev.lishabora.Models.UnitsModel;
         UnitsModel.class, Cycles.class, ProductsModel.class, Collection.class,
         Payouts.class, SyncModel.class, FarmerLoansTable.class,
         FarmerOrdersTable.class, LoanPayments.class, OrderPayments.class,
-        FarmerBalance.class, Notifications.class, SyncDownObserver.class, ApprovalRegisterModel.class}, version = 49)
+        FarmerBalance.class, Notifications.class, SyncDownObserver.class, ApprovalRegisterModel.class}, version = 51)
 @TypeConverters(DateConverter.class)
 
 public abstract class LMDatabase extends RoomDatabase {

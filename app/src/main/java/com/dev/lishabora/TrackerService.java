@@ -43,7 +43,6 @@ public class TrackerService extends Service {
         super.onCreate();
         buildNotification();
         requestLocationUpdates();
-
     }
 
     private void buildNotification() {

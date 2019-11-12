@@ -3,10 +3,14 @@ package com.dev.lishabora.Adapters
 import android.content.Context
 import android.os.Bundle
 import android.support.annotation.IntRange
+import android.support.v4.app.FragmentManager
 import com.dev.lishabora.Views.Admin.Fragments.TraderBasicInfoFragment
 import com.dev.lishabora.Views.Admin.Fragments.TraderCyclesInfoFragment
 import com.dev.lishabora.Views.Admin.Fragments.TraderPasswordInfoFragment
 import com.dev.lishabora.Views.Admin.Fragments.TraderProductsnfoFragment
+import com.stepstone.stepper.Step
+import com.stepstone.stepper.adapter.AbstractFragmentStepAdapter
+import com.stepstone.stepper.viewmodel.StepViewModel
 
 class RegisterTraderAdapter(fm: FragmentManager, context: Context) : AbstractFragmentStepAdapter(fm, context) {
 
@@ -62,19 +66,13 @@ class RegisterTraderAdapter(fm: FragmentManager, context: Context) : AbstractFra
     }
 
     override fun getViewModel(@IntRange(from = 0) position: Int): StepViewModel {
-        //Override this method to set Step title for the Tabs, not necessary for other stepper types
         when (position) {
             0 -> return StepViewModel.Builder(context)
-
                     .setTitle("Basic Details ") //can be a CharSequence instead
                     .create()
             1 -> return StepViewModel.Builder(context)
                     .setTitle("Cycles") //can be a CharSequence instead
                     .create()
-//            2 -> return StepViewModel.Builder(context)
-//                    .setTitle("Routes") //can be a CharSequence instead
-//                    .create()
-
             2 -> return StepViewModel.Builder(context)
                     .setTitle("Products") //can be a CharSequence instead
                     .create()
