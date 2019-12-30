@@ -20,6 +20,7 @@ import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Trader.FarmerConst;
 import com.dev.lishaboramobile.R;
+import com.hbb20.CountryCodePicker;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
@@ -33,6 +34,7 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
     private TextInputEditText edtNames, edtMobile;
     private MaterialSpinner defaultPayment;
     private TraderViewModel mViewModel;
+    private CountryCodePicker ccp;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -70,6 +72,7 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
 
     }
 
+    private String phoneNumber = "";
 
     public void next() {
         if (FarmerConst.getCreateFarmerIntentType() == 1 && FarmerConst.getFamerModel() != null) {
@@ -78,11 +81,27 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
 
             FarmerConst.setFamerModel(new FamerModel());
         }
-        String phoneNumber = edtMobile.getText().toString().replaceAll(" ", "").trim();
+        if (!TextUtils.isEmpty(edtMobile.getText().toString())) {
+            String phoneNumber1 = ccp.getFullNumber();
+            if (phoneNumber1.startsWith("25407")) {
+                phoneNumber = phoneNumber1.replace("2540", "");
+            }
+            if (phoneNumber1.startsWith("2547")) {
+                phoneNumber = phoneNumber1.replace("254", "");
+            }
+            if (LoginController.isValidPhoneNumber(phoneNumber)
+                // && GeneralUtills.Companion.isValidPhoneNumber(edtPhone.getText().toString())
+
+            ) {
+                String phoneNumber = edtMobile.getText().toString().replaceAll(" ", "").trim();
+                FarmerConst.getFamerModel().setNames(GeneralUtills.Companion.capitalize(edtNames.getText().toString()));
+                FarmerConst.getFamerModel().setMobile(phoneNumber);
 
 
-        FarmerConst.getFamerModel().setNames(GeneralUtills.Companion.capitalize(edtNames.getText().toString()));
-        FarmerConst.getFamerModel().setMobile(phoneNumber);
+            }
+        }
+
+
 
 
     }
@@ -142,70 +161,10 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
         defaultPayment = view.findViewById(R.id.spinnerPayments);
         txtKe = view.findViewById(R.id.txt_ke);
 
-//        edtNames.setOnEditorActionListener((v, actionId, event) -> {
-//            if (actionId == EditorInfo.IME_ACTION_DONE) {
-//                //do something
-//                if (verify() == null) {
-//                    next();
-//
-//
-//                }
-//            }
-//            return false;
-//        });
-
-        final char space = ' ';
-        edtMobile.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                // if(s.length()>0&&editTextCarrierNumber.getText().toString().charAt(0)!='0') {
-                try {
-                    if (s.charAt(0) == '0') {
-                        s.delete(s.length() - 1, s.length());
-                        txtKe.setText("+254-0");
-                    } else if (s != null && s.length() < 1) {
-                        txtKe.setText("+254");
-
-                    }
+        ccp = view.findViewById(R.id.ccp);
+        ccp.registerCarrierNumberEditText(edtMobile);
 
 
-                } catch (Exception nm) {
-                    nm.printStackTrace();
-                }
-                if (s.length() > 0 && (s.length() % 4) == 0) {
-                    final char c = s.charAt(s.length() - 1);
-                    if (space == c) {
-                        s.delete(s.length() - 1, s.length());
-                    }
-
-                }
-                // Insert char where needed.
-                if (s.length() > 0 && (s.length() % 4) == 0) {
-                    char c = s.charAt(s.length() - 1);
-                    // Only if its a digit where there should be a space we insert a space
-                    if (Character.isDigit(c) && TextUtils.split(s.toString(), String.valueOf(space)).length <= 3) {
-                        s.insert(s.length() - 1, String.valueOf(space));
-                    }
-
-                }
-
-
-                // }else {
-                // s.delete(9,9);
-                // edtMobile.setError("Tulia");
-                // }
-            }
-        });
         edtNames.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -239,54 +198,34 @@ public class FragmentBasicDetails extends Fragment implements BlockingStep {
 
     private void setEditData(FamerModel fm) {
         edtNames.setText(fm.getNames());
-
         edtMobile.setText(fm.getMobile());
-
-        final char space = ' ';
-
-//
-//        Editable s=edtMobile.getEditableText();
-//        if (s.length() > 0 && (s.length() % 4) == 0) {
-//            final char c = s.charAt(s.length() - 1);
-//            if (space == c) {
-//                s.delete(s.length() - 1, s.length());
-//            }
-//
-//        }
-//        // Insert char where needed.
-//        if (s.length() > 0 && (s.length() % 4) == 0) {
-//            char c = s.charAt(s.length() - 1);
-//            // Only if its a digit where there should be a space we insert a space
-//            if (Character.isDigit(c) && TextUtils.split(s.toString(), String.valueOf(space)).length <= 3) {
-//                s.insert(s.length() - 1, String.valueOf(space));
-//            }
-//
-//        }
     }
 
     private void initData() {
         defaultPayment.setItems("Payment Options", "Mpesa", "Cash", "Bank");
-
-
     }
 
     private boolean verifyMobile() {
         if (!TextUtils.isEmpty(edtMobile.getText().toString())) {
-            String phoneNumber = edtMobile.getText().toString().replaceAll(" ", "").trim();
-            if (LoginController.isValidPhoneNumber(phoneNumber) && GeneralUtills.Companion.isValidPhoneNumber(phoneNumber)) {
+            String phoneNumber1 = ccp.getFullNumber();
+            if (phoneNumber1.startsWith("25407")) {
+                phoneNumber = phoneNumber1.replace("2540", "");
+            }
+            if (phoneNumber1.startsWith("2547")) {
+                phoneNumber = phoneNumber1.replace("254", "");
+            }
+            if (LoginController.isValidPhoneNumber(phoneNumber)) {
                 return true;
 
+            } else {
+                edtMobile.requestFocus();
+                edtMobile.setError("Invalid phone Number");
+                return false;
             }
-            edtMobile.requestFocus();
-            edtMobile.setError("Invalid phone Number");
-            return false;
-
         }
         edtMobile.requestFocus();
         edtMobile.setError("Valid phone required");
         return false;
-
-
     }
 
     private boolean verifyNames() {

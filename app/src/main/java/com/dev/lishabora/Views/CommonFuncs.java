@@ -32,7 +32,6 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dev.lishabora.AppConstants;
 import com.dev.lishabora.Models.ApprovalRegisterModel;
@@ -129,7 +128,7 @@ public class CommonFuncs {
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(activity);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(activity));
         alertDialogBuilderUserInput.setTitle("Sync Due");
-        alertDialogBuilderUserInput.setMessage("You  have not synched for " + String.valueOf(days) + " days .. \n For this app to run you need to enable internet and sync your data");
+        alertDialogBuilderUserInput.setMessage("You  have not synched for " + days + " days .. \n For this app to run you need to enable internet and sync your data");
 
 
         alertDialogBuilderUserInput
@@ -1018,7 +1017,7 @@ public class CommonFuncs {
         if (!hasComma(num)) {
             return 0;
         }
-        return num.substring(num.indexOf('.') + 1, num.length()).length();
+        return num.substring(num.indexOf('.') + 1).length();
     }
 
     private static boolean hasComma(String text) {
@@ -1919,9 +1918,7 @@ public class CommonFuncs {
             p.setBalance(String.valueOf(milkKsh - (loansInstallments + orderInstallments)));
 
 
-
-
-        int status[] = getApprovedCards(collections, p.getCycleCode(), payoutsVewModel);
+        int[] status = getApprovedCards(collections, p.getCycleCode(), payoutsVewModel);
         p.setMilkTotal(String.valueOf(milk));
 
         p.setMilkTotalKsh(String.valueOf(milkKsh));
@@ -2037,7 +2034,7 @@ public class CommonFuncs {
         p.setBalance(String.valueOf(milkKsh - (loansInstallments + orderInstallments)));
 
 
-        int status[] = getApprovedCards(collections, p.getCycleCode(), payoutsVewModel);
+        int[] status = getApprovedCards(collections, p.getCycleCode(), payoutsVewModel);
         p.setMilkTotal(String.valueOf(milk));
 
         p.setMilkTotalKsh(String.valueOf(milkKsh));
@@ -2153,7 +2150,7 @@ public class CommonFuncs {
 //        p.setBalance(String.valueOf(milkKsh - (loansInstallments + orderInstallments)));
 //
 
-        int status[] = getApprovedCards(collections, p.getCycleCode(), payoutsVewModel);
+        int[] status = getApprovedCards(collections, p.getCycleCode(), payoutsVewModel);
 //        p.setMilkTotal(String.valueOf(milk));
 //
 //        p.setMilkTotalKsh(String.valueOf(milkKsh));
@@ -3288,7 +3285,7 @@ public class CommonFuncs {
 
             }
 
-            farmerOrders.setOrderAmountPaid("" + String.valueOf(paid));
+            farmerOrders.setOrderAmountPaid("" + paid);
             //farmerLoansTables1.get(a).setLoanPayments(lm);
             Double amount = Double.valueOf(farmerOrders.getOrderAmount());
             try {
@@ -3320,7 +3317,7 @@ public class CommonFuncs {
 
             }
 
-            farmerLoan.setLoanAmountPaid("" + String.valueOf(paid));
+            farmerLoan.setLoanAmountPaid("" + paid);
             //farmerLoansTables1.get(a).setLoanPayments(g);
             Double amount = Double.valueOf(farmerLoan.getLoanAmount());
             try {
@@ -3564,7 +3561,7 @@ public class CommonFuncs {
 
             }
         } catch (Exception nm) {
-            MyToast.toast(nm.toString(), com.dev.lishabora.Application.context, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+            MyToast.errorToast(nm.toString(), com.dev.lishabora.Application.context);
             nm.printStackTrace();
         }
 

@@ -117,8 +117,9 @@ public class SplashActivity extends AppCompatActivity {
 
         new Thread(() -> {
             PrefrenceManager globalPrefs = new PrefrenceManager(SplashActivity.this);
+            LMDatabase lmDatabase = LMDatabase.getDatabase(Application.context);
+
             if (globalPrefs.isLoggedIn()) {
-                LMDatabase lmDatabase = LMDatabase.getDatabase(Application.context);
 
                 if (lmDatabase != null && lmDatabase.tradersDao() != null && lmDatabase.tradersDao().getAllData().size() > 0) {
                     switch (globalPrefs.getTypeLoggedIn()) {

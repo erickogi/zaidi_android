@@ -15,7 +15,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dev.lishabora.AppConstants;
 import com.dev.lishabora.Models.Collection;
@@ -427,7 +426,7 @@ public class CollectMilk implements View.OnClickListener {//implements{// Number
                         }
                         if (collModel != null) {
                             if (collModel.getApproved() == 1) {
-                                MyToast.toast("Current payout has already been approved", context, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                                MyToast.errorToast("Current payout has already been approved", context);
                                 keyboard.setEnabled(false);
                                 keyboard.setVisibility(View.GONE);
                             } else {
@@ -473,7 +472,7 @@ public class CollectMilk implements View.OnClickListener {//implements{// Number
 
                 if (collModel != null) {
                     if (collModel.getApproved() == 1) {
-                        MyToast.toast("Current payout has already been approved", context, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                        MyToast.errorToast("Current payout has already been approved", context);
                         keyboard.setEnabled(false);
 
                     } else {
@@ -735,7 +734,7 @@ public class CollectMilk implements View.OnClickListener {//implements{// Number
         if (!hasComma(num)) {
             return 0;
         }
-        return num.substring(num.indexOf('.') + 1, num.length()).length();
+        return num.substring(num.indexOf('.') + 1).length();
     }
 
     private boolean hasComma(String text) {

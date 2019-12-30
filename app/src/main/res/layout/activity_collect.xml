@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context="com.dev.lishabora.Views.Trader.Activities.ActivityCollect">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -27,9 +27,9 @@
                 app:indicatorColor="@color/colorPrimaryDark"
                 app:indicatorName="BallSpinFadeLoaderIndicator" />
 
-            <include layout="@layout/layout_custom_alert_button" />
 
             <LinearLayout
+                android:id="@+id/rl_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -119,12 +119,12 @@
 
 
             </LinearLayout>
-
             <ScrollView
 
+                android:id="@+id/main_view"
+                android:layout_below="@+id/rl_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:layout_marginBottom="50dp">
 
                 <LinearLayout
@@ -612,6 +612,12 @@
 
                 </LinearLayout>
             </ScrollView>
+
+            <include
+                layout="@layout/layout_custom_dialog_footer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/main_view" />
         </RelativeLayout>
     </LinearLayout>
 

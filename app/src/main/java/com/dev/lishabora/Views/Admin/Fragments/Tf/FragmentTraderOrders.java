@@ -18,7 +18,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.LoansOrdersAdapter;
 import com.dev.lishabora.Adapters.LoansOrdersPaymnetsAdapter;
@@ -175,7 +174,7 @@ public class FragmentTraderOrders extends Fragment {
                     listAdapterP.notifyDataSetChanged();
                 } else {
                     alertDialogAndroid.dismiss();
-                    MyToast.toast("There are no payments to this order", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                    MyToast.errorToast("There are no payments to this order", getContext());
                 }
             }
         });

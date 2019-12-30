@@ -20,7 +20,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.dev.lishabora.Adapters.FarmerCollectionsAdapter;
@@ -360,7 +359,7 @@ public class PayCard extends AppCompatActivity {
                         }
                         traderViewModel.updateFarmer(fm, false, true);
 
-                        MyToast.toast(responseModel.getResultDescription(), PayCard.this, R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                        MyToast.toast(responseModel.getResultDescription(), PayCard.this);
                     }
                 });
                 if (a != null) {
@@ -402,7 +401,7 @@ public class PayCard extends AppCompatActivity {
 
             @Override
             public void error(String error) {
-                MyToast.toast(error, PayCard.this, R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                MyToast.toast(error, PayCard.this);
                 if (a != null) {
                     a.dismiss();
                 }
@@ -634,14 +633,14 @@ public class PayCard extends AppCompatActivity {
 
 
                         } else {
-                            MyToast.toast("Future collections cannot be edited", PayCard.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                            MyToast.errorToast("Future collections cannot be edited", PayCard.this);
 
 
                         }
                     } else {
                         CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
                         editValue(false, adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
-                        MyToast.toast("Cards in an approved payout cannot be edited", PayCard.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                        MyToast.errorToast("Cards in an approved payout cannot be edited", PayCard.this);
 
                     }
                 } else {
@@ -946,7 +945,7 @@ public class PayCard extends AppCompatActivity {
                 if (materialDialog != null) {
                     materialDialog.dismiss();
                 }
-                MyToast.toast(error, PayCard.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                MyToast.errorToast(error, PayCard.this);
             }
         });
 
@@ -993,7 +992,7 @@ public class PayCard extends AppCompatActivity {
                 if (materialDialog != null) {
                     materialDialog.dismiss();
                 }
-                MyToast.toast(error, PayCard.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                MyToast.errorToast(error, PayCard.this);
             }
         });
 

@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.FarmersAdapter;
 import com.dev.lishabora.Models.FamerModel;
@@ -112,7 +111,7 @@ public class LoansAndOrders extends AppCompatActivity {
             if (famerModels != null && famerModels.size() > 0) {
                 displayFarmers(id, famerModels);
             } else {
-                MyToast.toast("You have no farmers", LoansAndOrders.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                MyToast.errorToast("You have no farmers", LoansAndOrders.this);
             }
         });
 

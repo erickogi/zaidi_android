@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.dev.lishabora.Adapters.PayoutFarmersPayAdapter;
@@ -263,7 +262,7 @@ public class FragmentPayoutSummary extends Fragment {
 
             @Override
             public void error(String error) {
-                MyToast.toast(error, getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                MyToast.toast(error, getContext());
 
             }
         });
@@ -287,7 +286,7 @@ public class FragmentPayoutSummary extends Fragment {
             @Override
             public void onComplete() {
 
-                MyToast.toast(models.get(a).getFarmername() + " Approval Complete", getContext(), R.drawable.ic_done_black_24dp, Toast.LENGTH_LONG);
+                MyToast.errorToast(models.get(a).getFarmername() + " Approval Complete", getContext());
                 doi(models, a);
 
                 }
@@ -309,7 +308,7 @@ public class FragmentPayoutSummary extends Fragment {
             @Override
             public void onError(String error) {
 
-                MyToast.toast(error, getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                MyToast.errorToast(error, getContext());
             }
         });
     }
@@ -424,11 +423,11 @@ public class FragmentPayoutSummary extends Fragment {
 
 
         try {
-            vB = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vB, 0)));
-            vL = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vL, 0)));
-            vO = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vO, 0)));
-            vM = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vM, 0)));
-            vML = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vML, 0)));
+            vB = GeneralUtills.Companion.addCommify(GeneralUtills.Companion.round(vB, 0));
+            vL = GeneralUtills.Companion.addCommify(GeneralUtills.Companion.round(vL, 0));
+            vO = GeneralUtills.Companion.addCommify(GeneralUtills.Companion.round(vO, 0));
+            vM = GeneralUtills.Companion.addCommify(GeneralUtills.Companion.round(vM, 0));
+            vML = GeneralUtills.Companion.addCommify(GeneralUtills.Companion.round(vML, 0));
         } catch (Exception nm) {
             nm.printStackTrace();
         }

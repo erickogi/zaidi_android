@@ -80,7 +80,7 @@ class AdminDrawerClass {
                             ProfileDrawerItem().withName(name).withEmail(email)
 
                                     //.withSelectedTextColorRes(R.color.colorPrimaryDark)
-                                    .withIcon(R.drawable.ic_launcher)
+                                    .withIcon(R.drawable.zaidi)
 
 
                     )

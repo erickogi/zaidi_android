@@ -30,7 +30,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.FarmersDragAdapter;
 import com.dev.lishabora.Models.Cycles;
@@ -401,7 +400,7 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
                 FragementFarmersDragList.this.createFarmers();
             } else {
                 initDataOffline(true, true, true);
-                MyToast.toast("Routes, Units and Cycles Not set Up", getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                MyToast.toast("Routes, Units and Cycles Not set Up", getContext());
             }
         });
         fab.hide();
@@ -557,7 +556,7 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
                 prefrenceManager.setIsRoutesListFirst(false);
                 if (routesModels != null && routesModels.size() > 0) {
                     FragementFarmersDragList.this.routesModels = routesModels;
-                    String routes[] = new String[routesModels.size() + 1];
+                    String[] routes = new String[routesModels.size() + 1];
                     routes[0] = "All";
 
                     for (int a = 1; a < routesModels.size() + 1; a++) {
@@ -581,7 +580,7 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
                 prefrenceManager.setIsRoutesListFirst(false);
                 if (routesModels != null && routesModels.size() > 0) {
                     FragementFarmersDragList.this.routesModels = routesModels;
-                    String routes[] = new String[routesModels.size() + 1];
+                    String[] routes = new String[routesModels.size() + 1];
                     routes[0] = "All";
 
                     for (int a = 1; a < routesModels.size() + 1; a++) {
@@ -984,7 +983,7 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
 //Units
             if (unitsModels != null && unitsModels.size() > 0) {
                 prefrenceManager.setIsRoutesListFirst(false);
-                String units[] = new String[unitsModels.size() + 1];
+                String[] units = new String[unitsModels.size() + 1];
 
                 units[0] = "Choose Unit ";
                 for (int a = 0; a < unitsModels.size(); a++) {
@@ -999,7 +998,7 @@ public class FragementFarmersDragList extends Fragment implements OnStartDragLis
             if (routesModels != null && routesModels.size() > 0) {
                 prefrenceManager.setIsRoutesListFirst(false);
 
-                String routes[] = new String[routesModels.size() + 1];
+                String[] routes = new String[routesModels.size() + 1];
 
                 routes[0] = "Choose Route";
                 for (int a = 0; a < routesModels.size(); a++) {

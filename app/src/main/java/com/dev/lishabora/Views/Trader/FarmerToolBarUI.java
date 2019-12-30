@@ -122,10 +122,10 @@ public class FarmerToolBarUI extends LinearLayout {
 
     public void initializeDefaults() {
         materialSpinnerCat.setItems("CHOOSE DAYS", "BY MONTH", "YEAR", "PAYOUTS");
-        materialSpinnerType.setItems("All", "Milk", "Loans", "Orders");
+        materialSpinnerType.setItems("All", "Milk", "Loans");
 
 
-        materialSpinnerType.setSelectedIndex(0);
+        materialSpinnerType.setSelectedIndex(1);
         materialSpinnerCat.setSelectedIndex(0);
 
 

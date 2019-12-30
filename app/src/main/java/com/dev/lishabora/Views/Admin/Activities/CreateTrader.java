@@ -8,7 +8,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -117,7 +116,6 @@ public class CreateTrader extends AppCompatActivity implements StepperLayout.Ste
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.d("createTrader", "" + jsonObject);
 
         progressDialog = new ProgressDialog(CreateTrader.this);
         progressDialog.setCancelable(false);
@@ -131,21 +129,22 @@ public class CreateTrader extends AppCompatActivity implements StepperLayout.Ste
 
 
             progressDialog.dismiss();
-            Log.d("createTrader", "" + responseModel);
 
-            if (responseModel.getResultCode() == 1) {
-                MyToast.toast(responseModel.getResultDescription(), CreateTrader.this, R.drawable.ic_account_circle_black_24dp, Toast.LENGTH_LONG);
+            if (responseModel != null) {
+                if (responseModel.getResultCode() == 1) {
+                    MyToast.toast(responseModel.getResultDescription(), CreateTrader.this, R.drawable.ic_account_circle_black_24dp, Toast.LENGTH_LONG);
 
-                Intent returnIntent = new Intent();
-
-
-                setResult(RESULT_OK, returnIntent);
-                finish();
+                    Intent returnIntent = new Intent();
 
 
-            } else {
-                MyToast.toast(responseModel.getResultDescription(), CreateTrader.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                    setResult(RESULT_OK, returnIntent);
+                    finish();
 
+
+                } else {
+                    MyToast.errorToast(responseModel.getResultDescription(), CreateTrader.this);
+
+                }
             }
 
         });

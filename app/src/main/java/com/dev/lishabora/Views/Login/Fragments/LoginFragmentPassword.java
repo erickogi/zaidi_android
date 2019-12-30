@@ -314,7 +314,7 @@ public class LoginFragmentPassword extends Fragment implements View.OnClickListe
     private void snack(String msg) {
         Snackbar.make(view, msg, Snackbar.LENGTH_LONG).show();
         if (context != null) {
-            MyToast.toast(msg, context, R.drawable.ic_launcher, Toast.LENGTH_SHORT);
+            MyToast.toast(msg, context, Toast.LENGTH_SHORT);
         }
     }
 

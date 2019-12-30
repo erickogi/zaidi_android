@@ -24,7 +24,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.ProductsAdapter;
 import com.dev.lishabora.Models.ProductsModel;
@@ -171,7 +170,7 @@ public class FragmentProductList extends Fragment {
         HashMap<String, ProductsModel> myImageHashMap = new HashMap<>();
 
         for (ProductsModel image : sortedList) {
-            String path = image.getNames() + "" + String.valueOf(image.getId());
+            String path = image.getNames() + "" + image.getId();
             myImageHashMap.put(path, image);
         }
 
@@ -591,8 +590,8 @@ public class FragmentProductList extends Fragment {
 
 
         try {
-            vSP = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vSP, 0)));
-            vBp = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vBp, 0)));
+            vSP = GeneralUtills.Companion.addCommify(GeneralUtills.Companion.round(vSP, 0));
+            vBp = GeneralUtills.Companion.addCommify(GeneralUtills.Companion.round(vBp, 0));
         } catch (Exception nm) {
             nm.printStackTrace();
         }
@@ -649,7 +648,7 @@ public class FragmentProductList extends Fragment {
         btnNeutral.setOnClickListener(view -> {
             mViewModel.deleteProduct(model, false).observe(FragmentProductList.this, responseModel -> {
                 avi.smoothToHide();
-                MyToast.toast(responseModel.getResultDescription(), getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                MyToast.toast(responseModel.getResultDescription(), getContext());
                 alertDialogAndroid.dismiss();
             });
         });

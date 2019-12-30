@@ -128,7 +128,7 @@ public class FarmerProfile extends AppCompatActivity {
         bottomNavigation.addItem(item1);
         bottomNavigation.addItem(item2);
         bottomNavigation.addItem(item3);
-        bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#0d5c53"));
+        bottomNavigation.setDefaultBackgroundColor(this.getResources().getColor(R.color.colorPrimary));
         bottomNavigation.setBehaviorTranslationEnabled(true);
         bottomNavigation.setInactiveColor(Color.parseColor("#FFFFFF"));
         bottomNavigation.setForceTint(true);

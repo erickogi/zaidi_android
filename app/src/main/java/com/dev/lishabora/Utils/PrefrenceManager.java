@@ -75,6 +75,7 @@ public class PrefrenceManager {
     private static final String isCyclesListFirst = "isCycleListFirst";
     private static final String isProductsListFirst = "isProductListFirst";
     private static final String isFirebaseUdated = "isFirebaseUpdated";
+    private static final String isFragmentFarmersListIntroShown = "isFragmentFarmersListIntroShown";
 
 
     private static final String sortType = "sortyfd";
@@ -397,5 +398,14 @@ public class PrefrenceManager {
 
     public String getLastCordiantes() {
         return pref.getString(lastCordinates, null);
+    }
+
+    public boolean isFarmersListFragmentIntroShown() {
+        return pref.getBoolean(isFragmentFarmersListIntroShown, false);
+    }
+
+    public void setFarmersListFragmentIntroShown(boolean b) {
+        editor.putBoolean(isFragmentFarmersListIntroShown, b);
+        editor.commit();
     }
 }

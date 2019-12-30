@@ -15,9 +15,9 @@
         app:indicatorColor="@color/colorPrimaryDark"
         app:indicatorName="BallSpinFadeLoaderIndicator" />
 
-    <include layout="@layout/layout_custom_alert_button" />
-
     <ScrollView
+        android:id="@+id/main_view"
+        android:layout_below="@+id/layout_custom_dialog_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="50dp">
@@ -167,5 +167,13 @@
                 android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
+
+    <include layout="@layout/layout_custom_dialog_header" />
+
+    <include
+        layout="@layout/layout_custom_dialog_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/main_view" />
 
 </RelativeLayout>

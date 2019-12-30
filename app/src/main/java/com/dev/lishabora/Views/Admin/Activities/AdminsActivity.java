@@ -21,7 +21,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dev.lishabora.Database.LMDatabase;
 import com.dev.lishabora.Models.Admin.AdminModel;
@@ -489,9 +488,9 @@ public class AdminsActivity extends AppCompatActivity {
                 if (responseModel.getResultCode() == 1) {
                     dialog.dismiss();
                     ///AdminModel adminModel1 = gson.fromJson(gson.toJson(responseModel.getData()), AdminModel.class);
-                    MyToast.toast("" + responseModel.getResultDescription(), AdminsActivity.this, R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                    MyToast.toast("" + responseModel.getResultDescription(), AdminsActivity.this);
                 } else {
-                    MyToast.toast("" + responseModel.getResultDescription(), AdminsActivity.this, R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                    MyToast.toast("" + responseModel.getResultDescription(), AdminsActivity.this);
 
                 }
             });

@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import com.dev.lishabora.Models.Trader.TraderModel;
 import com.dev.lishabora.Utils.MyToast;
@@ -181,7 +180,7 @@ public class TraderPasswordInfoFragment extends Fragment implements BlockingStep
     private void snack(String msg) {
         Snackbar.make(view, msg, Snackbar.LENGTH_LONG).show();
         if (getContext() != null) {
-            MyToast.toast(msg, getContext(), R.drawable.ic_launcher, Toast.LENGTH_SHORT);
+            MyToast.toast(msg, getContext());
         }
     }
 }

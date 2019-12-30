@@ -2,10 +2,8 @@ package com.dev.lishabora.Utils;
 
 import android.text.InputFilter;
 import android.text.Spanned;
-import android.widget.Toast;
 
 import com.dev.lishabora.Application;
-import com.dev.lishaboramobile.R;
 
 public class InputFilterMinMax implements InputFilter {
 
@@ -29,7 +27,7 @@ public class InputFilterMinMax implements InputFilter {
             if (isInRange(min, max, input)) {
                 return null;
             } else {
-                MyToast.toast("Value must be not be more than " + max, Application.context, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                MyToast.errorToast("Value must be not be more than " + max, Application.context);
             }
         } catch (NumberFormatException nfe) {
         }

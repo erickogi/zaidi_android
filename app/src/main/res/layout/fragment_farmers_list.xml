@@ -36,7 +36,7 @@
 
                 <com.jaredrummler.materialspinner.MaterialSpinner
                 android:id="@+id/spinner1"
-                    android:layout_height="40dp"
+                    android:layout_height="50dp"
                 android:layout_marginBottom="2dp"
                 app:ms_arrow_tint="@color/green_color_picker"
 
@@ -60,7 +60,7 @@
                 <com.jaredrummler.materialspinner.MaterialSpinner
                 android:id="@+id/spinner2"
 
-                    android:layout_height="40dp"
+                    android:layout_height="50dp"
                 app:ms_arrow_tint="@color/green_color_picker"
                     app:ms_dropdown_height="wrap_content"
                     app:ms_dropdown_max_height="1000dp"

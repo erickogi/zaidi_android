@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.dev.lishabora.Adapters.PayoutFarmersAdapter;
@@ -259,7 +258,7 @@ public class FragmentPayoutFarmersList extends Fragment {
                 payoutsVewModel.updatePayout(payouts);
                 starterPack();
             } else {
-                MyToast.toast("Some farmer cards in this payout are not approved yet", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                MyToast.errorToast("Some farmer cards in this payout are not approved yet", getContext());
             }
 
         });
@@ -312,7 +311,7 @@ public class FragmentPayoutFarmersList extends Fragment {
                 if (materialDialog != null) {
                     materialDialog.dismiss();
                 }
-                MyToast.toast(error, getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                MyToast.errorToast(error, getContext());
             }
         });
 
@@ -357,7 +356,7 @@ public class FragmentPayoutFarmersList extends Fragment {
                 if (materialDialog != null) {
                     materialDialog.dismiss();
                 }
-                MyToast.toast(error, getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                MyToast.errorToast(error, getContext());
             }
         });
 
@@ -522,7 +521,7 @@ public class FragmentPayoutFarmersList extends Fragment {
 
             @Override
             public void error(String error) {
-                MyToast.toast(error, getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                MyToast.toast(error, getContext());
 
             }
         });

@@ -46,7 +46,7 @@ class DrawerClass {
 
 
             val loansAndorders = PrimaryDrawerItem().withIdentifier(23)
-                    .withName("Loans/Orders").withTextColorRes(R.color.white).withIcon(R.drawable.ic_insert_chart_black_24dp)
+                    .withName("Loans").withTextColorRes(R.color.white).withIcon(R.drawable.ic_insert_chart_black_24dp)
 
             val payout = PrimaryDrawerItem().withIdentifier(21)
                     .withName("Payouts").withTextColorRes(R.color.white).withIcon(R.drawable.ic_attach_money_black_24dp)
@@ -95,7 +95,7 @@ class DrawerClass {
                             ProfileDrawerItem().withName(name).withEmail(email)
 
                                     //.withSelectedTextColorRes(R.color.colorPrimaryDark)
-                                    .withIcon(R.drawable.ic_launcher).withIdentifier(234)
+                                    .withIcon(R.drawable.zaidi).withIdentifier(234)
 
 
                     )
@@ -137,7 +137,10 @@ class DrawerClass {
                     //.withSelectedItem(-1)
                     .addDrawerItems(
                             home,
-                            routes, loansAndorders, products, payout,// notifications,// transactions,
+                            routes,
+                            loansAndorders,
+                            // products,
+                            payout,// notifications,// transactions,
                             DividerDrawerItem(),
                             account,
                             // settings,
@@ -244,7 +247,7 @@ class DrawerClass {
         fun observeChangesInProfile(traderModel: TraderModel) {
 
             try {
-                headerResult.updateProfile(ProfileDrawerItem().withIcon(R.drawable.ic_launcher).withName(traderModel.names).withEmail(traderModel.mobile).withIdentifier(234))
+                headerResult.updateProfile(ProfileDrawerItem().withIcon(R.drawable.zaidi).withName(traderModel.names).withEmail(traderModel.mobile).withIdentifier(234))
             } catch (nm: Exception) {
                 nm.printStackTrace()
             }

@@ -27,7 +27,6 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.RoutesAdapter;
 import com.dev.lishabora.Application;
@@ -198,11 +197,11 @@ public class FragmentRoutes extends Fragment {
 
 
         btnNeutral.setVisibility(View.GONE);
-        lTitle.setVisibility(View.GONE);
+        lTitle.setVisibility(View.VISIBLE);
         txtTitle.setVisibility(View.VISIBLE);
         imgIcon.setVisibility(View.VISIBLE);
         imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
-        txtTitle.setText("Route");
+        txtTitle.setText("Add New Route");
 
         btnPositive.setOnClickListener(new CustomListener(alertDialogAndroid));
         btnNeutral.setOnClickListener(view -> {
@@ -329,7 +328,7 @@ public class FragmentRoutes extends Fragment {
                 case R.id.delete:
 
                     if (mViewModel.noOfFarmersPerRoute(routesModel.getCode()) > 0) {
-                        MyToast.toast("A route with existing farmers cannot be deleted", getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                        MyToast.toast("A route with existing farmers cannot be deleted", getContext());
 
                     } else {
 
@@ -338,7 +337,7 @@ public class FragmentRoutes extends Fragment {
                         avi.smoothToShow();
                         mViewModel.deleteRoute(routesModel, null, false).observe(FragmentRoutes.this, responseModel -> {
                             avi.smoothToHide();
-                            MyToast.toast(responseModel.getResultDescription(), getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                            MyToast.toast(responseModel.getResultDescription(), getContext());
                         });
                     }
 
@@ -429,12 +428,14 @@ public class FragmentRoutes extends Fragment {
 
         btnNeutral.setVisibility(View.VISIBLE);
         btnNeutral.setText("Delete");
-        btnNeutral.setBackgroundColor(getContext().getResources().getColor(R.color.red));
-        lTitle.setVisibility(View.GONE);
+        btnNeutral.setTextColor(getContext().getResources().getColor(R.color.red));
+
+        lTitle.setVisibility(View.VISIBLE);
         txtTitle.setVisibility(View.VISIBLE);
         imgIcon.setVisibility(View.VISIBLE);
-        imgIcon.setImageResource(R.drawable.ic_add_black_24dp);
-        txtTitle.setText("Route");
+        imgIcon.setImageResource(R.drawable.ic_edit_24dp);
+        txtTitle.setText("Edit Route");
+        txtTitle.setTextColor(getContext().getResources().getColor(R.color.black));
 
         btnPositive.setOnClickListener(new EditCustomListener(alertDialogAndroid, routesModel));
         btnNeutral.setOnClickListener(view -> {
@@ -444,11 +445,11 @@ public class FragmentRoutes extends Fragment {
             if (routesModel.getFarmers() < 1 && count < 1) {
                 mViewModel.deleteRoute(routesModel, null, false).observe(FragmentRoutes.this, responseModel -> {
                     avi.smoothToHide();
-                    MyToast.toast(responseModel.getResultDescription(), getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                    MyToast.toast(responseModel.getResultDescription(), getContext());
                     alertDialogAndroid.dismiss();
                 });
             } else {
-                MyToast.toast("Route has farmers,\n CANNOT BE DELETED", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                MyToast.errorToast("Route has farmers,\n CANNOT BE DELETED", getContext());
             }
         });
         btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());

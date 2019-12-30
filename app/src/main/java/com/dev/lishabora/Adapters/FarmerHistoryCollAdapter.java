@@ -68,7 +68,7 @@ public class FarmerHistoryCollAdapter extends RecyclerView.Adapter<MonthsFarmerC
 
         if (which == FarmerToolBarUI.TYPE_ALL) {
 
-
+            holder.orderSection.setVisibility(View.GONE);
             holder.milk.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getMilktotal(), 1), context.getString(R.string.ltrs)));
             if (!model.getMilktotal().equals("0.0")) {
                 holder.milk.setTextColor(context.getResources().getColor(R.color.colorPrimary));
@@ -109,6 +109,13 @@ public class FarmerHistoryCollAdapter extends RecyclerView.Adapter<MonthsFarmerC
         } else {
             if (which == FarmerToolBarUI.TYPE_MILK) {
                 holder.milk.setVisibility(View.GONE);
+                holder.milkSection.setVisibility(View.GONE);
+
+
+                holder.orderSection.setVisibility(View.VISIBLE);
+                holder.loanSection.setVisibility(View.VISIBLE);
+
+
                 holder.loan.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getMilkAm(), 1), context.getString(ltrs)));
                 if (!model.getLoanTotal().equals("0.0")) {
 
@@ -139,6 +146,9 @@ public class FarmerHistoryCollAdapter extends RecyclerView.Adapter<MonthsFarmerC
                 holder.milk.setVisibility(View.GONE);
                 holder.loan.setVisibility(View.GONE);
 
+                holder.milk.setVisibility(View.GONE);
+                holder.loan.setVisibility(View.GONE);
+
                 holder.order.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getLoanTotal(), 1), context.getString(ksh)));
                 if (!model.getOrderTotal().equals("0.0")) {
                     holder.order.setTextColor(context.getResources().getColor(R.color.colorPrimary));
@@ -155,6 +165,10 @@ public class FarmerHistoryCollAdapter extends RecyclerView.Adapter<MonthsFarmerC
             } else if (which == FarmerToolBarUI.TYPE_ORDERS) {
                 holder.milk.setVisibility(View.GONE);
                 holder.loan.setVisibility(View.GONE);
+
+                holder.milkSection.setVisibility(View.GONE);
+                holder.loanSection.setVisibility(View.GONE);
+
 
                 holder.order.setText(String.format("%s %s", GeneralUtills.Companion.round(model.getOrderTotal(), 1), context.getString(ksh)));
                 if (!model.getOrderTotal().equals("0.0")) {

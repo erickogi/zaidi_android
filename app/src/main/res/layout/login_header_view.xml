@@ -5,7 +5,7 @@
     android:layout_height="0dp"
     android:layout_alignParentTop="true"
     android:layout_weight="1"
-
+    android:layout_marginBottom="5dp"
     android:orientation="vertical"
     android:visibility="visible">
 
@@ -24,13 +24,11 @@
 
             <ImageView
 
-
                 android:id="@+id/logo"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
                 android:src="@drawable/ic_launcher"
-
                 android:visibility="visible" />
 
             <com.dev.customfonts.MyTextView_Roboto_Bold
@@ -38,8 +36,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Better business. Happy farmers."
-                android:textColor="@color/white"
+                android:text="@string/tagline"
+                android:textColor="@color/black"
                 android:textSize="16.5sp"
                 android:textStyle="bold" />
         </LinearLayout>

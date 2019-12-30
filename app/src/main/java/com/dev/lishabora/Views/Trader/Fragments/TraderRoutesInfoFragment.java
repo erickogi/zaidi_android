@@ -17,7 +17,6 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +26,6 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.RoutesAdapter;
 import com.dev.lishabora.Models.ResponseModel;
@@ -52,6 +50,8 @@ import org.json.JSONObject;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+
+import timber.log.Timber;
 
 public class TraderRoutesInfoFragment extends Fragment implements BlockingStep {
     LinkedList<RoutesModel> filteredRoutesModels;
@@ -321,7 +321,7 @@ public class TraderRoutesInfoFragment extends Fragment implements BlockingStep {
                 case R.id.delete:
 
                     if (mViewModel.noOfFarmersPerRoute(routesModel.getCode()) > 0) {
-                        MyToast.toast("A route with existing farmers cannot be deleted", getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                        MyToast.toast("A route with existing farmers cannot be deleted", getContext());
 
                     } else {
 
@@ -330,7 +330,9 @@ public class TraderRoutesInfoFragment extends Fragment implements BlockingStep {
                         avi.smoothToShow();
                         mViewModel.deleteRoute(routesModel, null, false).observe(TraderRoutesInfoFragment.this, responseModel -> {
                             avi.smoothToHide();
-                            MyToast.toast(responseModel.getResultDescription(), getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                            if (responseModel != null) {
+                                MyToast.toast(responseModel.getResultDescription(), getContext());
+                            }
                         });
                     }
 
@@ -349,7 +351,7 @@ public class TraderRoutesInfoFragment extends Fragment implements BlockingStep {
                 case R.id.edit:
 
 
-                    Log.d("farmerdialog", "edit clicked");
+                    Timber.d("edit clicked");
                     editRoute(routesModel, pos);
                     break;
 
@@ -403,8 +405,6 @@ public class TraderRoutesInfoFragment extends Fragment implements BlockingStep {
 
         alertDialogAndroid.show();
 
-//        Button theButton = alertDialogAndroid.getButton(DialogInterface.BUTTON_POSITIVE);
-//        theButton.setOnClickListener(new EditCustomListener(alertDialogAndroid,routesModel));
 
 
         MaterialButton btnPositive, btnNegative, btnNeutral;
@@ -438,10 +438,7 @@ public class TraderRoutesInfoFragment extends Fragment implements BlockingStep {
 
     public void update(List<RoutesModel> routesModels) {
 
-        Log.d("ReTr", "routes started");
-
         if (this.routesModels != null && listAdapter != null) {
-            Log.d("ReTr", "routes started");
 
             this.routesModels.clear();
             this.routesModels.addAll(routesModels);

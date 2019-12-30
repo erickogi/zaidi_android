@@ -27,7 +27,6 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.RoutesAdapter;
 import com.dev.lishabora.Application;
@@ -328,7 +327,7 @@ public class FragmentRoutes extends Fragment {
                 case R.id.delete:
 
                     if (mViewModel.noOfFarmersPerRoute(routesModel.getCode()) > 0) {
-                        MyToast.toast("A route with existing farmers cannot be deleted", getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                        MyToast.toast("A route with existing farmers cannot be deleted", getContext());
 
                     } else {
 
@@ -337,7 +336,7 @@ public class FragmentRoutes extends Fragment {
                         avi.smoothToShow();
                         mViewModel.deleteRoute(routesModel, null, false).observe(FragmentRoutes.this, responseModel -> {
                             avi.smoothToHide();
-                            MyToast.toast(responseModel.getResultDescription(), getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                            MyToast.toast(responseModel.getResultDescription(), getContext());
                         });
                     }
 
@@ -443,11 +442,11 @@ public class FragmentRoutes extends Fragment {
             if (routesModel.getFarmers() < 1 && count < 1) {
                 mViewModel.deleteRoute(routesModel, null, false).observe(FragmentRoutes.this, responseModel -> {
                     avi.smoothToHide();
-                    MyToast.toast(responseModel.getResultDescription(), getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                    MyToast.toast(responseModel.getResultDescription(), getContext());
                     alertDialogAndroid.dismiss();
                 });
             } else {
-                MyToast.toast("Route has farmers,\n CANNOT BE DELETED", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                MyToast.toast("Route has farmers,\n CANNOT BE DELETED", getContext());
             }
         });
         btnNegative.setOnClickListener(view -> alertDialogAndroid.dismiss());

@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.LoansOrdersAdapter;
 import com.dev.lishabora.Adapters.LoansOrdersPaymnetsAdapter;
@@ -222,7 +221,7 @@ public class FragmentTraderLoans extends Fragment {
             } else {
                 String valuea = value.getText().toString();
                 if (radioGroup.getCheckedRadioButtonId() == -1) {
-                    MyToast.toast("Select Payment method", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                    MyToast.toast("Select Payment method", getContext());
                 } else {
                     String ref = "";
                     String paymentCode = "";
@@ -309,7 +308,7 @@ public class FragmentTraderLoans extends Fragment {
 
         if (listAdapterP.getItemCount() < 1) {
 
-            MyToast.toast("No payment found", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+            MyToast.errorToast("No payment found", getContext());
         }
 
 
@@ -444,7 +443,7 @@ public class FragmentTraderLoans extends Fragment {
                     }
 
 
-                    farmerLoansTables1.get(a).setLoanAmountPaid("" + String.valueOf(paid));
+                    farmerLoansTables1.get(a).setLoanAmountPaid("" + paid);
                     farmerLoansTables1.get(a).setLoanPayments(lm);
                     Double amount = Double.valueOf(farmerLoansTables1.get(a).getLoanAmount());
                     try {

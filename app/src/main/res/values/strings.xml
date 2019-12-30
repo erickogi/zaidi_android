@@ -119,4 +119,11 @@
     <string name="mdtp_from">FROM</string>
     <string name="mdtp_to">TO</string>
     <string name="phone_hint">Phone</string>
+    <string name="input_the_full_names_of_the_farmer">Input the full names of the farmer</string>
+    <string name="input_the_farmers_phone_number">Input the farmers phone number</string>
+    <string name="tagline">Better business. Happy farmers.</string>
+    <string name="invalid_phone">Invalid phone number</string>
+    <string name="please_enter_valid_phone_number">Please enter a valid phone</string>
+    <string name="dismiss_intro">Click on the highlighted icon to dismiss</string>
+    <string name="farmer_s_phone_number">Farmer\'s Contact</string>
 </resources>

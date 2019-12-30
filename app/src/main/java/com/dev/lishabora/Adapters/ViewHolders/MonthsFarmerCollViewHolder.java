@@ -17,6 +17,7 @@ public class MonthsFarmerCollViewHolder extends RecyclerView.ViewHolder implemen
     //  public RelativeLayout engineer_background;
 
     public TextView month, balance, milk, loan, order;
+    public LinearLayout milkSection, loanSection, orderSection;
     public RelativeLayout background;
     public View statusview;
     public View itemVew;
@@ -47,6 +48,9 @@ public class MonthsFarmerCollViewHolder extends RecyclerView.ViewHolder implemen
         order = itemView.findViewById(R.id.txt_orders);
 
 
+        milkSection = itemView.findViewById(R.id.milk_section);
+        loanSection = itemView.findViewById(R.id.loan_section);
+        orderSection = itemView.findViewById(R.id.order_section);
     }
 
 

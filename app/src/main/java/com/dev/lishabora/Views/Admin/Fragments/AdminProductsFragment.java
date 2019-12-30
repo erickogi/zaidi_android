@@ -29,7 +29,6 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.ProductsAdapter;
 import com.dev.lishabora.Models.ProductsModel;
@@ -548,7 +547,7 @@ public class AdminProductsFragment extends Fragment {
 
         }
         if (context != null) {
-            MyToast.toast(msg, context, R.drawable.ic_launcher, Toast.LENGTH_LONG);
+            MyToast.toast(msg, context);
         }
         Log.d("SnackMessage", msg);
     }

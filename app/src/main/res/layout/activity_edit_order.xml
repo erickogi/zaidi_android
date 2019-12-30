@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/white"
     tools:context="com.dev.lishabora.Views.Trader.Activities.EditOrder">
-
     <com.wajahatkarim3.easyflipview.EasyFlipView
+        android:layout_below="@+id/layout_custom_dialog_header"
         android:id="@+id/easyFlipView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,5 +28,8 @@
 
     </com.wajahatkarim3.easyflipview.EasyFlipView>
 
-    <include layout="@layout/layout_custom_alert_button" />
+    <include layout="@layout/layout_custom_dialog_header" />
+
+
+    <include layout="@layout/layout_custom_dialog_footer" />
 </RelativeLayout>

@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.dev.lishabora.Adapters.FarmerCollectionsAdapter;
@@ -195,7 +194,6 @@ public class FragmentCurrentFarmerPayout extends Fragment {// implements Approve
         if (payouts != null) {
             payoutsVewModel.getCollectionByDateByPayoutByFarmer("" + payouts.getCode(), famerModel.getCode()).observe(this, (List<Collection> collections) -> {
 
-
                 FragmentCurrentFarmerPayout.this.collections = collections;
                 setUpDayCollectionsModel(payouts, collections);
                 setData(getFarmersCollectionModel());
@@ -274,7 +272,7 @@ public class FragmentCurrentFarmerPayout extends Fragment {// implements Approve
                         }
                         traderViewModel.updateFarmer(fm, false, true);
 
-                        MyToast.toast(responseModel.getResultDescription(), getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                        MyToast.toast(responseModel.getResultDescription(), getContext());
                     }
                 });
                 if (a != null) {
@@ -311,7 +309,7 @@ public class FragmentCurrentFarmerPayout extends Fragment {// implements Approve
                             }
 
                             traderViewModel.updateFarmer(fm, false, true);
-                            MyToast.toast("Collection updated", getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                            MyToast.toast("Collection updated", getContext());
 
                         }
                     }
@@ -321,7 +319,7 @@ public class FragmentCurrentFarmerPayout extends Fragment {// implements Approve
 
             @Override
             public void error(String error) {
-                MyToast.toast(error, getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                MyToast.toast(error, getContext());
                 if (a != null) {
                     a.dismiss();
                 }
@@ -391,7 +389,7 @@ public class FragmentCurrentFarmerPayout extends Fragment {// implements Approve
 
 
                         } else {
-                            MyToast.toast("Future collections cannot be edited", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                            MyToast.errorToast("Future collections cannot be edited", getContext());
 
 
                         }
@@ -399,7 +397,7 @@ public class FragmentCurrentFarmerPayout extends Fragment {// implements Approve
                         CommonFuncs.ValueObject v = CommonFuncs.getValueObjectToEditFromDayCollection(dayCollectionModels.get(adapterPosition), time, type);
                         editValue(false, adapterPosition, time, type, v.getValue(), v.getO(), editable, dayCollectionModels.get(adapterPosition));
 
-                        MyToast.toast("Cards in an approved payout cannot be edited", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                        MyToast.errorToast("Cards in an approved payout cannot be edited", getContext());
 
                     }
                 } else {
@@ -611,7 +609,7 @@ public class FragmentCurrentFarmerPayout extends Fragment {// implements Approve
                 if (materialDialog != null) {
                     materialDialog.dismiss();
                 }
-                MyToast.toast(error, getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                MyToast.errorToast(error, getContext());
             }
         });
 
@@ -658,7 +656,7 @@ public class FragmentCurrentFarmerPayout extends Fragment {// implements Approve
                 if (materialDialog != null) {
                     materialDialog.dismiss();
                 }
-                MyToast.toast(error, getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                MyToast.errorToast(error, getContext());
             }
         });
 

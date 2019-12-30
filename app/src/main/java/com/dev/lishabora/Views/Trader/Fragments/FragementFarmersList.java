@@ -5,6 +5,8 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -22,10 +24,12 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.ActionMode;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,10 +39,10 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.FarmersAdapter;
 import com.dev.lishabora.AppConstants;
@@ -54,6 +58,7 @@ import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.Models.collectMod;
 import com.dev.lishabora.Utils.CollectListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
+import com.dev.lishabora.Utils.MaterialIntro;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnActivityTouchListener;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
@@ -70,6 +75,7 @@ import com.dev.lishabora.Views.Trader.FarmerConst;
 import com.dev.lishabora.Views.Trader.OrderConstants;
 import com.dev.lishabora.Views.Trader.PayoutConstants;
 import com.dev.lishaboramobile.R;
+import com.getkeepsafe.taptargetview.TapTarget;
 import com.google.gson.Gson;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -121,6 +127,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
     LinearLayout lspinner1, lspinner2;
     List<UnitsModel> getUnits = new LinkedList<>();
     private SearchView searchView;
+    private ImageButton helpView;
     List<RoutesModel> getRoutess = new LinkedList<>();
     List<Cycles> getCycles = new LinkedList<>();
     private TraderViewModel mViewModel;
@@ -280,7 +287,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
                 OrderConstants.setFamerModel(famerModel);
                 Intent intent2 = new Intent(getActivity(), GiveOrder.class);
                 intent2.putExtra("farmer", famerModel);
-                startActivity(intent2);
+                //   startActivity(intent2);
 
                 break;
             default:
@@ -336,6 +343,24 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
     }
 
+    public View getToolbarNavigationIcon(Toolbar toolbar) {
+        //check if contentDescription previously was set
+        boolean hadContentDescription = !TextUtils.isEmpty(toolbar.getNavigationContentDescription());
+        String contentDescription = hadContentDescription ? (String) toolbar.getNavigationContentDescription() : "navigationIcon";
+        toolbar.setNavigationContentDescription(contentDescription);
+        ArrayList<View> potentialViews = new ArrayList<View>();
+        //find the view based on it's content description, set programatically or with android:contentDescription
+        toolbar.findViewsWithText(potentialViews, contentDescription, View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+        //Nav icon is always instantiated at this point because calling setNavigationContentDescription ensures its existence
+        View navIcon = null;
+        if (potentialViews.size() > 0) {
+            navIcon = potentialViews.get(0); //navigation icon is ImageButton
+        }
+        //Clear content description if not previously present
+        if (!hadContentDescription)
+            toolbar.setNavigationContentDescription(null);
+        return navIcon;
+    }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
@@ -343,6 +368,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
 
         MenuItem mSearch = menu.findItem(R.id.action_search);
+        MenuItem mHelp = menu.findItem(R.id.action_help);
 
 
         MenuItem mAutomatically = menu.findItem(R.id.action_automatically);
@@ -359,7 +385,17 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
 
         searchView = (SearchView) mSearch.getActionView();
+        helpView = (ImageButton) mHelp.getActionView();
         searchView.setVisibility(View.GONE);
+        helpView.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_help));
+        helpView.setBackgroundColor(context.getResources().getColor(R.color.transparent));
+        if (!prefrenceManager.isFarmersListFragmentIntroShown()) {
+            showIntro();
+        }
+        helpView.setOnClickListener(v -> showIntro());
+
+
+
 
     }
 
@@ -455,9 +491,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
         onTouchListener = new RecyclerTouchListener(getActivity(), recyclerView);
 
-        onTouchListener
-
-                .setClickable(new RecyclerTouchListener.OnRowClickListener() {
+        onTouchListener.setClickable(new RecyclerTouchListener.OnRowClickListener() {
                     @Override
                     public void onRowClicked(int position) {
                         initCollect(position);
@@ -467,10 +501,8 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
                     public void onIndependentViewClicked(int independentViewID, int position) {
 
                     }
-                })
-                .setLongClickable(true, position -> {
-
-                })
+        }).setLongClickable(true, position -> {
+        })
                 .setLeftToRightSwipeable(R.id.rowFG, R.id.rowBG, (viewID, position) -> {
                     switch (viewID) {
 
@@ -513,10 +545,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
                     }
 
 
-                        }
-
-
-                );
+                });
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -677,6 +706,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
         listenOnSyncStatus();
 
 
+        //showIntro();
     }
 
     private void routes(String s) {
@@ -709,9 +739,51 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
             }
         });
 
+
     }
 
 
+    void showIntro() {
+
+        // We load a drawable and create a location to show a tap target here
+        // We need the display to get the width and height at this point in time
+        final Display display = getActivity().getWindowManager().getDefaultDisplay();
+
+//        final Drawable droid = ContextCompat.getDrawable(getContext(), R.drawable.ic_launcher);
+//        // Tell our droid buddy where we want him to appear
+//        final Rect droidTarget = new Rect(0, 0, droid.getIntrinsicWidth() * 2, droid.getIntrinsicHeight() * 2);
+//        // Using deprecated methods makes you look way cool
+//        droidTarget.offset(display.getWidth() / 2, display.getHeight() / 2);
+//
+
+        int canvasW = display.getWidth();
+        int canvasH = display.getHeight();
+        Point centerOfCanvas = new Point(canvasW / 2, canvasH / 2);
+        int rectW = 10;
+        int rectH = 10;
+        int left = centerOfCanvas.x - (rectW / 2);
+        int top = centerOfCanvas.y - (rectH / 2);
+        int right = centerOfCanvas.x + (rectW / 2);
+        int bottom = centerOfCanvas.y + (rectH / 2);
+        Rect rect = new Rect(left, top, right, bottom);
+        //     try {
+        List<TapTarget> targets = new ArrayList<>();
+        targets.add(TapTarget.forView(fab, "Click the + button to add new farmers ", getContext().getResources().getString(R.string.dismiss_intro)).cancelable(false).id(10).transparentTarget(true));
+        targets.add(TapTarget.forView(lspinner1, "Filter farmers by the account status ", getContext().getResources().getString(R.string.dismiss_intro)).cancelable(false).id(2).transparentTarget(true));
+        targets.add(TapTarget.forView(lspinner2, "Filter farmers by route ", getContext().getResources().getString(R.string.dismiss_intro)).cancelable(false).id(3).transparentTarget(true));
+        targets.add(TapTarget.forView(getToolbarNavigationIcon(getActivity().findViewById(R.id.toolbar)), "View more options (Menus) by swiping right ", getContext().getResources().getString(R.string.dismiss_intro)).cancelable(false).id(4).transparentTarget(true));
+        targets.add(TapTarget.forView(searchView, "Search for farmers by name, phone number or route", getContext().getResources().getString(R.string.dismiss_intro)).cancelable(false).id(5).transparentTarget(true));
+        targets.add(TapTarget.forView(helpView, "Click here to see this introduction again", getContext().getResources().getString(R.string.dismiss_intro)).cancelable(false).id(6).transparentTarget(true));
+        targets.add(TapTarget.forBounds(rect, "Swipe right to expose more actions on each farmer").cancelable(false).id(7).transparentTarget(true));
+        targets.add(TapTarget.forBounds(rect, "Long click on a farmer for options to call or text him/her").cancelable(false).id(8).transparentTarget(true));
+
+
+        MaterialIntro.Companion.showIntroSequence(getActivity(), targets);
+        new PrefrenceManager(getContext()).setFarmersListFragmentIntroShown(true);
+//        }catch (Exception ex){
+//            ex.printStackTrace();
+//        }
+    }
     void setUpView() {
         if (fragment != null) {
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -771,6 +843,11 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
                 return false;
             case R.id.action_search:
                 // Do Fragment menu item stuff here
+
+                return true;
+            case R.id.action_help:
+                MyToast.toast("helps", getContext());
+                showIntro();
 
                 return true;
             case R.id.action_automatically:
@@ -849,7 +926,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
                 prefrenceManager.setIsRoutesListFirst(false);
                 if (routesModels != null && routesModels.size() > 0) {
                     FragementFarmersList.this.routesModels = routesModels;
-                    String routes[] = new String[routesModels.size() + 1];
+                    String[] routes = new String[routesModels.size() + 1];
                     routes[0] = "All (Routes)";
 
                     for (int a = 1; a < routesModels.size() + 1; a++) {
@@ -957,6 +1034,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
             collectMilk = new CollectMilk(getContext(), true);
 
         }
+
 
     }
 
@@ -1115,7 +1193,6 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
     private void snack(String msg) {
         if (view != null) {
             Snackbar.make(view, msg, Snackbar.LENGTH_SHORT).setAction("Action", null);//.show();
-
             AlertDialog.Builder d = new AlertDialog.Builder(getContext());
             d.setMessage(msg);
             d.setCancelable(true);
@@ -1417,7 +1494,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
             if (canCollectBasedOnPayout(FarmerConst.getSearchFamerModels().get(selectedInt).getCyclecode())) {
                 collectMilk.collectMilk(getActivity(), FarmerConst.getSearchFamerModels().get(selectedInt), c, FragementFarmersList.this);
             } else {
-                MyToast.toast("Appropriate payout for this farmer has already being approved", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                MyToast.errorToast("Appropriate payout for this farmer has already being approved", getContext());
             }
 
 

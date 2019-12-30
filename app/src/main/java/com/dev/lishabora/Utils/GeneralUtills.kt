@@ -114,7 +114,7 @@ class GeneralUtills {
             if (type == 1) {
                 try {
                     txt = view
-                    value1 = java.lang.Double.valueOf(removeCommify(value))!!
+                    value1 = java.lang.Double.valueOf(removeCommify(value))
 
                 } catch (nm: Exception) {
 
@@ -122,7 +122,7 @@ class GeneralUtills {
             } else if (type == 2) {
                 try {
                     txt = view as TextInputEditText
-                    value1 = java.lang.Double.valueOf(removeCommify(value))!!
+                    value1 = java.lang.Double.valueOf(removeCommify(value))
 
                 } catch (nm: Exception) {
 
@@ -326,7 +326,10 @@ class GeneralUtills {
 
         }
 
-
+        fun getRandon(): Int {
+            val r = Random()
+            return r.nextInt(9999 - 1000 + 1) + 1000
+        }
     }
 
 
@@ -334,6 +337,11 @@ class GeneralUtills {
     fun getRandon(max: Int, min: Int): Int {
         val r = Random()
         return r.nextInt(max - min + 1) + min
+    }
+
+    fun getRandon(): Int {
+        val r = Random()
+        return r.nextInt(1000 - 999 + 1) + 999
     }
 
     /**
@@ -581,7 +589,7 @@ class GeneralUtills {
      * @param msg
      */
     private fun errorToast(msg: String) {
-        MyToast.toast(msg, context, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG)
+        MyToast.errorToast(msg, context)
     }
 
 

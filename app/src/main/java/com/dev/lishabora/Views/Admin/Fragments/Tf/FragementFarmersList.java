@@ -37,7 +37,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.FarmersAdapter;
 import com.dev.lishabora.AppConstants;
@@ -504,7 +503,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                             FragementFarmersList.this.createFarmers();
                         } else {
                             initDataOffline(true, true, true);
-                            MyToast.toast("Routes, Units and Cycles Not set Up", getContext(), R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                            MyToast.toast("Routes, Units and Cycles Not set Up", getContext());
                         }
                     }
                 } else {
@@ -894,7 +893,7 @@ public class FragementFarmersList extends Fragment implements OnStartDragListene
                 prefrenceManager.setIsRoutesListFirst(false);
                 if (routesModels != null && routesModels.size() > 0) {
                     FragementFarmersList.this.routesModels = routesModels;
-                    String routes[] = new String[routesModels.size() + 1];
+                    String[] routes = new String[routesModels.size() + 1];
                     routes[0] = "All (Routes)";
 
                     for (int a = 1; a < routesModels.size() + 1; a++) {

@@ -27,7 +27,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dev.lishabora.About;
 import com.dev.lishabora.Adapters.ViewPagerAdapter;
@@ -314,7 +313,7 @@ public class TraderActivity extends AppCompatActivity {
                     alertDialogAndroid.show();
 
                 } else {
-                    MyToast.toast("You have un-synced data... ", TraderActivity.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                    MyToast.errorToast("You have un-synced data... ", TraderActivity.this);
                     UpSyncJob.scheduleExact();
 
                 }
@@ -359,7 +358,7 @@ public class TraderActivity extends AppCompatActivity {
 
             @Override
             public void appSettingsClicked() {
-                MyToast.toast("We are working on implementing this  \n sit tight", TraderActivity.this, R.drawable.ic_launcher, Toast.LENGTH_LONG);
+                MyToast.toast("We are working on implementing this  \n sit tight", TraderActivity.this);
 
             }
 
@@ -432,7 +431,7 @@ public class TraderActivity extends AppCompatActivity {
                             logOut();
 
                         } else {
-                            MyToast.toast(responseModel.getResultDescription(), TraderActivity.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                            MyToast.errorToast(responseModel.getResultDescription(), TraderActivity.this);
                         }
                     }
 
@@ -443,7 +442,7 @@ public class TraderActivity extends AppCompatActivity {
                         if (responseModel.getResultCode() == 1) {
                             logOut();
                         } else {
-                            MyToast.toast(responseModel.getResultDescription(), TraderActivity.this, R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                            MyToast.errorToast(responseModel.getResultDescription(), TraderActivity.this);
                         }
                     }
                 });

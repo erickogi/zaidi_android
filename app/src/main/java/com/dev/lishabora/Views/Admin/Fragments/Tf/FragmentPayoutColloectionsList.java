@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.CollectionsAdapter;
 import com.dev.lishabora.Models.Collection;
@@ -225,7 +224,7 @@ public class FragmentPayoutColloectionsList extends Fragment {
                 payoutsVewModel.updatePayout(payouts);
                 starterPack();
             } else {
-                MyToast.toast("Some farmer cards in this payout are not approved yet", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                MyToast.errorToast("Some farmer cards in this payout are not approved yet", getContext());
             }
 
         });

@@ -24,13 +24,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dev.lishabora.COntrollers.LoginController;
 import com.dev.lishabora.Models.Login.AuthModel;
 import com.dev.lishabora.Models.ResponseObject;
 import com.dev.lishabora.Models.Trader.TraderModel;
-import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.NetworkUtils;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Login.LoginViewModel;
@@ -153,10 +151,12 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
     void initWidgets() {
         edtPhone = view.findViewById(R.id.edt_phone);
         ccp = view.findViewById(R.id.ccp);
+        ccp.registerCarrierNumberEditText(edtPhone);
+
         btnNextPhoneView = view.findViewById(R.id.btn_next_phone_view);
         aviPhone = view.findViewById(R.id.avi_phone);
-        TextView txtPrivacyPolicy = view.findViewById(R.id.privacy_policy);
-        txtPrivacyPolicy.setOnClickListener(view -> openPrivacyPolicy());
+//        TextView txtPrivacyPolicy = view.findViewById(R.id.privacy_policy);
+//        txtPrivacyPolicy.setOnClickListener(view -> openPrivacyPolicy());
 
 
 
@@ -210,7 +210,6 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
 //            }
 //        });
 
-        ccp.registerCarrierNumberEditText(edtPhone);
 
     }
 
@@ -320,7 +319,6 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
                                 traderModel = gson.fromJson(gson.toJson(responseModel.getData()), TraderModel.class);
                                 if (traderModel.getPasswordstatus() == 0) {
                                     newPassword(responseModel);
-                                    snack("Create Pass");
                                 } else {
                                     passWordFragment(responseModel);
                                 }
@@ -338,14 +336,14 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
                 });
 
             } else {
-                snack("Invalid phone");
+                snack(getString(R.string.invalid_phone));
                 edtPhone.requestFocus();
-                edtPhone.setError("Invalid phone");
+                edtPhone.setError(getString(R.string.invalid_phone));
 
             }
 
         } else {
-            snack("Please enter  phone");
+            snack(getString(R.string.please_enter_valid_phone_number));
             edtPhone.requestFocus();
             edtPhone.setError("Required");
 
@@ -363,7 +361,7 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
     private void snack(String msg) {
         Snackbar.make(view, msg, Snackbar.LENGTH_LONG).show();
         if (context != null) {
-            MyToast.toast(msg, context, R.drawable.ic_launcher, Toast.LENGTH_SHORT);
+            // MyToast.toast(msg, context, Toast.LENGTH_SHORT);
         }
     }
 

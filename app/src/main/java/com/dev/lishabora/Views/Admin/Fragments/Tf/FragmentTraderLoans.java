@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.dev.lishabora.Adapters.LoansOrdersAdapter;
 import com.dev.lishabora.Adapters.LoansOrdersPaymnetsAdapter;
@@ -137,7 +136,7 @@ public class FragmentTraderLoans extends Fragment {
             } else {
                 alertDialogAndroid.dismiss();
 
-                MyToast.toast("There are no payments to this loan", getContext(), R.drawable.ic_error_outline_black_24dp, Toast.LENGTH_LONG);
+                MyToast.errorToast("There are no payments to this loan", getContext());
             }
 
         });
