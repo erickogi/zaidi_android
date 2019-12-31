@@ -176,7 +176,6 @@ public class FarmerToolBarUI extends LinearLayout {
         materialSpinnerMonths.setOnItemSelectedListener(listener);
     }
 
-
     public void show() {
 
 
@@ -191,12 +190,17 @@ public class FarmerToolBarUI extends LinearLayout {
 
                 break;
             case TYPE_ALL:
-                lmlo.setVisibility(VISIBLE);
-                lddv.setVisibility(GONE);
+//                lmlo.setVisibility(VISIBLE);
+//                lddv.setVisibility(GONE);
+//
+//                txtValueLabel1.setVisibility(GONE);
+//                txtValueLabel2.setText("Value");
 
-                txtValueLabel1.setVisibility(GONE);
-                txtValueLabel2.setText("Value");
-
+                lmlo.setVisibility(GONE);
+                lddv.setVisibility(VISIBLE);
+                txtValueLabel1.setVisibility(VISIBLE);
+                txtValueLabel1.setText("  Milk");
+                txtValueLabel2.setText("  Loans");
 
                 break;
 
@@ -211,7 +215,6 @@ public class FarmerToolBarUI extends LinearLayout {
 
                 break;
             case TYPE_ORDERS:
-
                 lmlo.setVisibility(GONE);
                 lddv.setVisibility(VISIBLE);
                 txtValueLabel1.setVisibility(INVISIBLE);
@@ -258,7 +261,6 @@ public class FarmerToolBarUI extends LinearLayout {
         setDateTo(date);
         txtTo.setText("..To " + DateTimeUtils.Companion.getDisplayDate(date, DateTimeUtils.Companion.getDisplayDatePattern1()));
     }
-
 
     public int getWhichType() {
         return materialSpinnerType.getSelectedIndex();
