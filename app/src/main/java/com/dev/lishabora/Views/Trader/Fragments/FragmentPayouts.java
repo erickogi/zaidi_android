@@ -158,7 +158,6 @@ public class FragmentPayouts extends Fragment {
 
         btnSwitch = view.findViewById(R.id.btn_switch);
         btnSwitch.setOnClickListener(v -> {
-
             type1 = !type1;
             fetch();
 

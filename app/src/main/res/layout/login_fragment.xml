@@ -9,6 +9,9 @@
 
     <include layout="@layout/login_header_view" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp" />
 
     <include layout="@layout/login_phone_view" />
 
