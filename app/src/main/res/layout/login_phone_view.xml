@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_phone_view"
 
@@ -16,19 +17,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
 
-            android:visibility="visible">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-
-                <LinearLayout
                     android:background="@color/white"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -36,7 +25,18 @@
                     android:padding="12dp">
 
 
+                    <TextView
+                        android:id="@+id/txt_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="@string/title_phone"
+                        android:textColor="@color/black"
+                        android:textSize="16.8sp"
+                        android:textStyle="bold" />
+
                     <LinearLayout
+                        android:orientation="horizontal"
                         android:layout_margin="4dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/bg_gray"
@@ -44,6 +44,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="4dp">
+
+                        <com.hbb20.CountryCodePicker
+                            android:id="@+id/ccp"
+                            app:ccp_autoDetectCountry="true"
+                            app:ccp_autoDetectLanguage="true"
+                            app:ccp_countryPreference="us,in"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:ccp_customMasterCountries="KE,UG,TZ"
+                            />
 
                         <android.support.design.widget.TextInputEditText
                             android:id="@+id/edt_phone"
@@ -55,29 +65,10 @@
                             android:inputType="phone"
                             android:maxLength="11"
                             android:textColor="@android:color/black"
-                            android:textColorHint="@android:color/black" />
-
-                        <com.hbb20.CountryCodePicker
-                            android:id="@+id/ccp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:ccp_autoDetectCountry="true"
-                            app:ccp_autoDetectLanguage="true"
-                            app:ccp_countryPreference="us,in"
-                            app:ccp_customMasterCountries="KE,UG,TZ" />
+                            android:textColorHint="@android:color/black"/>
 
 
                     </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/txt_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:text="@string/title_phone"
-                        android:textColor="@color/black"
-                        android:textSize="16.8sp"
-                        android:textStyle="bold" />
 
                     <android.support.design.button.MaterialButton
                         android:id="@+id/btn_next_phone_view1"
@@ -111,14 +102,15 @@
                         android:layout_gravity="center"
                         android:visibility="gone"
                         app:indicatorColor="@color/colorPrimaryDark"
-                        app:indicatorName="BallSpinFadeLoaderIndicator" />
+                        app:indicatorName="BallSpinFadeLoaderIndicator"/>
 
 
                 </LinearLayout>
 
-            </LinearLayout>
 
-        </LinearLayout>
+
+        <include layout="@layout/loading_avi"/>
+
         <android.support.design.button.MaterialButton
             android:id="@+id/btn_next_phone_view"
             style="@style/Widget.MaterialComponents.Button.TextButton"
@@ -145,8 +137,6 @@
             app:strokeColor="@color/black"
 
             app:strokeWidth="2dp" />
-
-        <include layout="@layout/loading_avi" />
 
 
     </RelativeLayout>
