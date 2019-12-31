@@ -28,8 +28,6 @@ public class PayoutsRepo {
         if (isOnline) {
             return null;
         } else {
-
-
             return dao.fetchAllData();
         }
     }

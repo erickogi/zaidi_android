@@ -155,36 +155,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <TextView
-
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-
-                            android:text="Orders  :"
-
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                            android:textColor="@color/textblack"
-
-                            android:textStyle="bold" />
-
-
-                        <TextView
-                            android:id="@+id/txt_orders"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="0.0 Ltrs" />
-                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -218,6 +188,37 @@
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                             android:textSize="12.5sp"
                             android:textStyle="bold" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:visibility="invisible"
+                        android:layout_width="0dp"
+
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+
+                            android:text="Orders  :"
+
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                            android:textColor="@color/textblack"
+
+                            android:textStyle="bold" />
+
+
+                        <TextView
+                            android:id="@+id/txt_orders"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="0.0 Ltrs" />
                     </LinearLayout>
 
 

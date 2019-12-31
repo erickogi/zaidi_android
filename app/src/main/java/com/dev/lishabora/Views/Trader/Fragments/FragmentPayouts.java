@@ -195,8 +195,11 @@ public class FragmentPayouts extends Fragment {
         emptyState(true);
 
         try {
-            new Thread(() -> payoutsVewModel.fetchAll(false).observe(FragmentPayouts.this, FragmentPayouts.this::setData)).start();
+            // new Thread(() ->
+            payoutsVewModel.fetchAll(false).observe(FragmentPayouts.this, FragmentPayouts.this::setData);
+            //)
 
+            //.start();
         } catch (Exception xc) {
             xc.printStackTrace();
         }
@@ -227,8 +230,6 @@ public class FragmentPayouts extends Fragment {
 
                 }
                 Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
-
-
                     if (this.payouts == null) {
                         this.payouts = new LinkedList<>();
                         this.payouts.addAll(payouts1);
