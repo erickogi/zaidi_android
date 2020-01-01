@@ -162,7 +162,7 @@ public class FileLog {
     public static void d(final String message) {
 
         ensureInitied();
-        Log.d(tag, message);
+        Logs.Companion.d(tag, message);
         if (getInstance().streamWriter != null) {
             getInstance().logQueue.postRunnable(new Runnable() {
                 @Override

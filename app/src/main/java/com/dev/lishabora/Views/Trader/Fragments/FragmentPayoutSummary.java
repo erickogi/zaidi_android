@@ -11,6 +11,9 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -67,8 +70,7 @@ public class FragmentPayoutSummary extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -562,5 +564,43 @@ public class FragmentPayoutSummary extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Do something that differs the Activity's menu here
+        super.onCreateOptionsMenu(menu, inflater);
+
+        MenuItem mSearch = menu.findItem(R.id.action_search);
+        MenuItem mHelp = menu.findItem(R.id.action_help);
+
+
+        MenuItem mAutomatically = menu.findItem(R.id.action_automatically);
+        MenuItem mManually = menu.findItem(R.id.action_manually);
+        MenuItem mChronologically = menu.findItem(R.id.action_chronologically);
+        MenuItem mAlphabetically = menu.findItem(R.id.action_alphabetically);
+        MenuItem mRearrangeManually = menu.findItem(R.id.action_smanually);
+
+        mAutomatically.setVisible(false);
+        mChronologically.setVisible(false);
+        mManually.setVisible(false);
+        mAlphabetically.setVisible(false);
+        mRearrangeManually.setVisible(false);
+
+        mSearch.setVisible(false);
+        mHelp.setVisible(false);
+
+
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        return false;
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+    }
 
 }

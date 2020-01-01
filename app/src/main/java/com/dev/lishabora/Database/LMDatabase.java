@@ -29,7 +29,7 @@ import com.dev.lishabora.Models.UnitsModel;
         UnitsModel.class, Cycles.class, ProductsModel.class, Collection.class,
         Payouts.class, SyncModel.class, FarmerLoansTable.class,
         FarmerOrdersTable.class, LoanPayments.class, OrderPayments.class,
-        FarmerBalance.class, Notifications.class, SyncDownObserver.class, ApprovalRegisterModel.class}, version = 51)
+        FarmerBalance.class, Notifications.class, SyncDownObserver.class, ApprovalRegisterModel.class}, version = 1)
 @TypeConverters(DateConverter.class)
 
 public abstract class LMDatabase extends RoomDatabase {
@@ -50,7 +50,7 @@ public abstract class LMDatabase extends RoomDatabase {
             synchronized (LMDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            LMDatabase.class, "lm_database")
+                            LMDatabase.class, "zaidi_database")
                             .fallbackToDestructiveMigration()
                             //.addMigrations(MIGRATION_47_48)
                             .allowMainThreadQueries()

@@ -38,6 +38,7 @@ import com.dev.lishabora.Repos.Trader.TraderRepo;
 import com.dev.lishabora.Repos.Trader.UnitsRepo;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
+import com.dev.lishabora.Utils.Logs;
 import com.dev.lishabora.Utils.PayoutsCyclesDatesUtills;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.Utils.ResponseCallback;
@@ -1365,11 +1366,15 @@ public class TraderViewModel extends AndroidViewModel
         return deleteFarmerSuccess;
     }
 
-    public void updateFarmer(FamerModel famerModel) {
+    public void updateFarmer(String from,FamerModel famerModel) {
+        Logs.Companion.d("updatefarmer","D -> "+from,famerModel);
+
         farmerRepo.upDateRecordDirect(famerModel);
     }
 
-    public ResponseModel updateFarmer(FamerModel famerModel, boolean isOnline, boolean isFarmerProfileUpdate) {
+    public ResponseModel updateFarmer(String from,FamerModel famerModel, boolean isOnline, boolean isFarmerProfileUpdate) {
+        Logs.Companion.d("updatefarmer","N -> "+from,famerModel);
+
         if (this.updateFarmerSuccess == null) {
         }
         ResponseModel responseModel = new ResponseModel();
@@ -1410,6 +1415,11 @@ public class TraderViewModel extends AndroidViewModel
 
         }
         return responseModel;
+    }
+
+    public ResponseModel updateFarmer(FamerModel famerModel, boolean isOnline, boolean isFarmerProfileUpdate) {
+
+        return updateFarmer("UnDocumentedSource",famerModel,isOnline,isFarmerProfileUpdate);
     }
 
     private JSONObject getFarmerJson() {

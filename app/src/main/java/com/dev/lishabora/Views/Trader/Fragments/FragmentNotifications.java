@@ -11,7 +11,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ import com.dev.lishabora.AppConstants;
 import com.dev.lishabora.Models.Collection;
 import com.dev.lishabora.Models.Notifications;
 import com.dev.lishabora.Models.Payouts;
+import com.dev.lishabora.Utils.Logs;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
@@ -29,7 +29,6 @@ import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.CommonFuncs;
 import com.dev.lishabora.Views.Trader.PayoutConstants;
 import com.dev.lishaboramobile.R;
-import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -89,7 +88,7 @@ public class FragmentNotifications extends Fragment {
                             @Override
                             public void onChanged(@Nullable Payouts payouts) {
                                 if (payouts != null) {
-                                    Log.d("padfs", new Gson().toJson(payouts));
+                                    Logs.Companion.d("padfs", payouts);
                                     List<Collection> c = payoutsVewModel.getCollectionByDateByPayoutListOne(payouts.getCode());
                                     Payouts p = CommonFuncs.createPayouts(c, payouts, payoutsVewModel, balncesViewModel);
                                     Intent intent = new Intent(getActivity(), com.dev.lishabora.Views.Trader.Activities.Payouts.class);

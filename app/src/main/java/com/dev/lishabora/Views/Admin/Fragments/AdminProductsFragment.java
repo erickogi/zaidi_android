@@ -17,7 +17,6 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,6 +33,7 @@ import com.dev.lishabora.Adapters.ProductsAdapter;
 import com.dev.lishabora.Models.ProductsModel;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Utils.DateTimeUtils;
+import com.dev.lishabora.Utils.Logs;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.NetworkUtils;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
@@ -549,7 +549,7 @@ public class AdminProductsFragment extends Fragment {
         if (context != null) {
             MyToast.toast(msg, context);
         }
-        Log.d("SnackMessage", msg);
+        Logs.Companion.d("SnackMessage", msg);
     }
 
     void startAnim() {

@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,7 @@ import com.dev.lishabora.Models.FarmerHistoryByDateModel;
 import com.dev.lishabora.Models.MonthsDates;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Utils.DateTimeUtils;
+import com.dev.lishabora.Utils.Logs;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
@@ -375,7 +375,7 @@ public class FragmentHistory extends Fragment implements DatePickerDialog.OnDate
             @Override
             public void onChanged(@Nullable List<Collection> collections) {
 
-                Log.d("collDays", "" + collections.size());
+                Logs.Companion.d("collDays",  collections.size());
 
                 if (collections != null && collections.size() > 0) {
                     initList(CommonFuncs.createHistoryList(collections, null, false));

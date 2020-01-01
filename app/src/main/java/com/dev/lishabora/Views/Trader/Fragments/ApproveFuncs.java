@@ -1,7 +1,6 @@
 package com.dev.lishabora.Views.Trader.Fragments;
 
 import android.app.Activity;
-import android.util.Log;
 
 import com.dev.lishabora.Models.ApprovalRegisterModel;
 import com.dev.lishabora.Models.FamerModel;
@@ -15,6 +14,7 @@ import com.dev.lishabora.Utils.ApproveFarmerPayCardListener;
 import com.dev.lishabora.Utils.ApproveListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
+import com.dev.lishabora.Utils.Logs;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
@@ -153,7 +153,7 @@ public class ApproveFuncs {
     }
 
     static String insertLoanPayment(double toLoanInstallmentPayment) {
-        Log.d("insertLoan", "to laon" + toLoanInstallmentPayment);
+        Logs.Companion.d("insertLoan", "to laon" , toLoanInstallmentPayment);
         json = "";
         List<LoanPayments> apploanPayments = new LinkedList<>();
         List<FarmerLoansTable> farmerLoansTables = balncesViewModel.getFarmerLoanByPayoutNumberByFarmerByStatus(famerModel.getCode(), 0);
@@ -162,7 +162,7 @@ public class ApproveFuncs {
 
         if (farmerLoansTables != null) {
             for (int a = 0; a < farmerLoansTables.size(); a++) {
-                Log.d("insertLoan", "" + farmerLoansTables.size());
+                Logs.Companion.d("insertLoan", farmerLoansTables.size());
 
 
                 FarmerLoansTable farmerLoan = farmerLoansTables.get(a);
@@ -215,7 +215,7 @@ public class ApproveFuncs {
             Type type = new TypeToken<List<LoanPayments>>() {
             }.getType();
             json = gson.toJson(apploanPayments, type);
-            Log.d("insertLoan", "strig  " + json);
+            Logs.Companion.d("insertLoan", "strig  " , json);
 
         }
 

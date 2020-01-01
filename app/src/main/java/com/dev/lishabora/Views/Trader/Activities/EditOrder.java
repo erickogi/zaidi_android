@@ -17,7 +17,6 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -41,6 +40,7 @@ import com.dev.lishabora.Models.ProductsModel;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.InputFilterMinMax;
+import com.dev.lishabora.Utils.Logs;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
@@ -507,7 +507,7 @@ public class EditOrder extends AppCompatActivity {
 
     private void subscribeProduct(List<ProductsModel> productsModels) {
 
-        Log.d("ReTrReqd", " Dialog is has called");
+        Logs.Companion.d("ReTrReqd", " Dialog is has called");
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(this);
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_all_products_list, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(this));
@@ -1025,7 +1025,7 @@ public class EditOrder extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             if (selectedProducts != null && selectedProducts.size() > 0) {
-                Log.d("createproducts", " products" + selectedProducts.size() + selectedProducts.get(0).getNames());
+                Logs.Companion.d("createproducts", " products" , selectedProducts.size() + selectedProducts.get(0).getNames());
 
 
                 List<ProductOrderModel> productOrderModels = new LinkedList<>();

@@ -12,7 +12,6 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +28,7 @@ import com.dev.lishabora.Models.ResponseObject;
 import com.dev.lishabora.Models.Trader.TraderModel;
 import com.dev.lishabora.Network.ApiConstants;
 import com.dev.lishabora.Network.Request;
+import com.dev.lishabora.Utils.Logs;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.Utils.ResponseCallback;
 import com.dev.lishabora.ViewModels.Login.LoginViewModel;
@@ -236,7 +236,7 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
                 aviEnterPassword.smoothToShow();
                 aviEnterPassword.setVisibility(View.VISIBLE);
 
-                Log.d("respons-edsa", new Gson().toJson(authModel));
+                Logs.Companion.d("respons-edsa", authModel);
 
                 Request.Companion.getResponseSingle(ApiConstants.Companion.getNewPassordConfirm(), jsonObject, "", new ResponseCallback() {
                     @Override
@@ -252,7 +252,7 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
 
                         aviEnterPassword.smoothToHide();
                         aviEnterPassword.setVisibility(View.GONE);
-                        Log.d("responsedsa", new Gson().toJson(responseModel.getData()));
+                        Logs.Companion.d("responsedsa", responseModel.getData());
 
                         if (responseModel != null && responseModel.getResultCode() == 1) {
 

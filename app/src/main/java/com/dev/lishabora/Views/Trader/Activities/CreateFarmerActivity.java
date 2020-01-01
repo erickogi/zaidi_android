@@ -86,7 +86,7 @@ public class CreateFarmerActivity extends AppCompatActivity implements StepperLa
     }
 
     private void update() {
-        ResponseModel responseModel = mViewModel.updateFarmer(FarmerConst.getFamerModel(), false, true);
+        ResponseModel responseModel = mViewModel.updateFarmer("CreateFarmerActivity -> update ",FarmerConst.getFamerModel(), false, true);
         if (responseModel != null && responseModel.getResultCode() == 1) {
                     snack(responseModel.getResultDescription());
 

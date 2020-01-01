@@ -3,11 +3,11 @@ package com.dev.lishabora.Repos;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.dev.lishabora.Database.LMDatabase;
 import com.dev.lishabora.Database.ProductsDao;
 import com.dev.lishabora.Models.ProductsModel;
+import com.dev.lishabora.Utils.Logs;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class ProductsRepo {
         } else {
 
             productsDao = db.productsDao();
-            Log.d("fetchall", "fetching repo  " + isOnline);
+            Logs.Companion.d("fetchall", "fetching repo  " , isOnline);
 
             return productsDao.fetchAllData();
         }
@@ -154,7 +154,7 @@ public class ProductsRepo {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            Log.d("insertmaneneo", "inserting repo" + aBoolean);
+            Logs.Companion.d("insertmaneneo", "inserting repo" , aBoolean);
 
 
 

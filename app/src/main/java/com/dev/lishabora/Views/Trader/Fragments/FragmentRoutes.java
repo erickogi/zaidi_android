@@ -2,6 +2,8 @@ package com.dev.lishabora.Views.Trader.Fragments;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,7 +17,7 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -37,11 +40,14 @@ import com.dev.lishabora.Models.RoutesModel;
 import com.dev.lishabora.Repos.Trader.FarmerRepo;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
+import com.dev.lishabora.Utils.Logs;
+import com.dev.lishabora.Utils.MaterialIntro;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishaboramobile.R;
+import com.getkeepsafe.taptargetview.TapTarget;
 import com.google.gson.Gson;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -49,6 +55,7 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -64,6 +71,8 @@ public class FragmentRoutes extends Fragment {
     private AVLoadingIndicatorView avi;
     private String filterText = "";
     private SearchView searchView;
+    private ImageButton helpView;
+
     private LinearLayout empty_layout;
     private TextView emptyTxt, txt_network_state;
     private RecyclerView recyclerView;
@@ -149,6 +158,43 @@ public class FragmentRoutes extends Fragment {
             }
         });
 
+
+    }
+
+
+
+    void showIntro() {
+
+        // We load a drawable and create a location to show a tap target here
+        // We need the display to get the width and height at this point in time
+        final Display display = getActivity().getWindowManager().getDefaultDisplay();
+
+//        final Drawable droid = ContextCompat.getDrawable(getContext(), R.drawable.ic_launcher);
+//        // Tell our droid buddy where we want him to appear
+//        final Rect droidTarget = new Rect(0, 0, droid.getIntrinsicWidth() * 2, droid.getIntrinsicHeight() * 2);
+//        // Using deprecated methods makes you look way cool
+//        droidTarget.offset(display.getWidth() / 2, display.getHeight() / 2);
+//
+
+        int canvasW = display.getWidth();
+        int canvasH = display.getHeight();
+        Point centerOfCanvas = new Point(canvasW / 2, canvasH / 2);
+        int rectW = 10;
+        int rectH = 10;
+        int left = centerOfCanvas.x - (rectW / 2);
+        int top = centerOfCanvas.y - (rectH / 2);
+        int right = centerOfCanvas.x + (rectW / 2);
+        int bottom = centerOfCanvas.y + (rectH / 2);
+        Rect rect = new Rect(left, top, right, bottom);
+
+        List<TapTarget> targets = new ArrayList<>();
+        targets.add(TapTarget.forView(fab, "Click the + button to add a new route ", getContext().getResources().getString(R.string.dismiss_intro)).cancelable(false).id(9).transparentTarget(true));
+        targets.add(TapTarget.forBounds(rect, "Long click on a route to edit or delete it. \n *A route with existing farmers cannot be deleted*", getContext().getResources().getString(R.string.dismiss_intro)).cancelable(false).id(10).transparentTarget(true));
+        targets.add(TapTarget.forView(helpView, "Click here to see this introduction again", getContext().getResources().getString(R.string.dismiss_intro)).cancelable(false).id(11).transparentTarget(true));
+        targets.add(TapTarget.forView(searchView, "Search for a route by its name", getContext().getResources().getString(R.string.dismiss_intro)).cancelable(false).id(12).transparentTarget(true));
+
+        MaterialIntro.Companion.showIntroSequence(getActivity(), targets);
+        new PrefrenceManager(getContext()).setRoutesFragmentIntroShown(true);
 
     }
 
@@ -249,28 +295,6 @@ public class FragmentRoutes extends Fragment {
         super.onStop();
     }
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                filterText = s;
-                filterRoutes();
-
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                filterText = s;
-                filterRoutes();
-
-                return true;
-            }
-        });
-
-    }
 
     public void initList() {
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -356,7 +380,7 @@ public class FragmentRoutes extends Fragment {
                 case R.id.edit:
 
 
-                    Log.d("farmerdialog", "edit clicked");
+                    Logs.Companion.d("farmerdialog", "edit clicked");
                     editRoute(routesModel, pos);
                     break;
 
@@ -460,10 +484,10 @@ public class FragmentRoutes extends Fragment {
 
     public void update(List<RoutesModel> routesModels) {
 
-        Log.d("ReTr", "routes started");
+        Logs.Companion.d("ReTr", "routes started");
 
         if (this.routesModels != null && listAdapter != null) {
-            Log.d("ReTr", "routes started");
+            Logs.Companion.d("ReTr", "routes started");
 
             this.routesModels.clear();
             this.routesModels.addAll(routesModels);
@@ -504,6 +528,30 @@ public class FragmentRoutes extends Fragment {
         setHasOptionsMenu(true);
     }
 
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                filterText = s;
+                filterRoutes();
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                filterText = s;
+                filterRoutes();
+
+                return true;
+            }
+        });
+
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Do something that differs the Activity's menu here
@@ -511,9 +559,20 @@ public class FragmentRoutes extends Fragment {
 
         //inflater.inflate(R.menu.menu_main, menu);
         MenuItem mSearch = menu.findItem(R.id.action_search);
+
         searchView = (SearchView) mSearch.getActionView();
 
         searchView.setVisibility(View.GONE);
+
+        MenuItem mHelp = menu.findItem(R.id.action_help);
+
+        helpView = (ImageButton) mHelp.getActionView();
+        helpView.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_help));
+        helpView.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
+        if (!new PrefrenceManager(getContext()).isRoutesFragmentIntroShown()) {
+            showIntro();
+        }
+        helpView.setOnClickListener(v -> showIntro());
 
     }
 

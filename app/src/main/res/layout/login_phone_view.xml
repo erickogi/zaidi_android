@@ -6,7 +6,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="0dp"
-    android:layout_weight="1"
+    android:layout_weight="1.5"
     android:visibility="visible"
 
     android:orientation="vertical">
@@ -69,6 +69,31 @@
 
 
                     </LinearLayout>
+            <android.support.design.button.MaterialButton
+                android:id="@+id/btn_next_phone_view"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+
+                android:layout_gravity="end"
+
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/next"
+                android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/colorPrimary"
+                android:textSize="16.5sp"
+                app:cornerRadius="5dp"
+                app:icon="@drawable/ic_next"
+                app:iconPadding="4dp"
+                app:iconTint="@color/white"
+                app:rippleColor="@color/accent"
+                app:strokeColor="@color/black"
+
+                app:strokeWidth="2dp" />
 
                     <android.support.design.button.MaterialButton
                         android:id="@+id/btn_next_phone_view1"
@@ -111,32 +136,6 @@
 
         <include layout="@layout/loading_avi"/>
 
-        <android.support.design.button.MaterialButton
-            android:id="@+id/btn_next_phone_view"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="end"
-
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/next"
-            android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
-            android:textColor="@color/black"
-
-            android:textSize="16.5sp"
-            app:cornerRadius="5dp"
-            app:icon="@drawable/ic_next"
-            app:iconPadding="4dp"
-            app:iconTint="@color/black"
-            app:rippleColor="@color/accent"
-            app:strokeColor="@color/black"
-
-            app:strokeWidth="2dp" />
 
 
     </RelativeLayout>

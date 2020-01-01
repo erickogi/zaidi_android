@@ -1,8 +1,8 @@
 package com.dev.lishabora.Jobs.Evernote;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
+import com.dev.lishabora.Utils.Logs;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
 
@@ -13,7 +13,7 @@ public class SyncNotifierJob extends Job {
     static final String TAG = "sync_notifier_job";
 
     public static void schedulePeriodic() {
-        Log.d("jobadd", "job shedule periodic");
+        Logs.Companion.d("jobadd", "job shedule periodic");
         new JobRequest.Builder(SyncNotifierJob.TAG)
                 .setPeriodic(TimeUnit.MINUTES.toMillis(720), TimeUnit.MINUTES.toMillis(5))
                 .setUpdateCurrent(true)

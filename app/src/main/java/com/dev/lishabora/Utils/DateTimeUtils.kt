@@ -1,7 +1,6 @@
 package com.dev.lishabora.Utils
 
 import android.text.format.DateUtils
-import android.util.Log
 import com.dev.lishabora.Models.DaysDates
 import com.dev.lishabora.Models.MonthsDates
 import org.joda.time.DateTime
@@ -13,7 +12,6 @@ import timber.log.Timber
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 
 class DateTimeUtils {
@@ -355,7 +353,7 @@ class DateTimeUtils {
 
             val months = LinkedList<MonthsDates>()
             val today = DateTime().dayOfYear().withMinimumValue()
-            Log.d("datt", convert2String(today))
+            Logs.d("datt", today)
             //val today = DateTime().year().withMinimumValue().withTimeAtStartOfDay();
 
             val endOfMonth = today.dayOfMonth().withMaximumValue()

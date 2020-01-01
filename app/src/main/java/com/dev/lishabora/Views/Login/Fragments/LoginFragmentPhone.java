@@ -23,15 +23,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dev.lishabora.COntrollers.LoginController;
+import com.dev.lishabora.Models.Admin.AdminModel;
 import com.dev.lishabora.Models.Login.AuthModel;
 import com.dev.lishabora.Models.ResponseObject;
 import com.dev.lishabora.Models.Trader.TraderModel;
 import com.dev.lishabora.Utils.NetworkUtils;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Login.LoginViewModel;
+import com.dev.lishabora.Views.Admin.Activities.AdminsActivity;
 import com.dev.lishabora.Views.Login.LoginConsts;
 import com.dev.lishaboramobile.R;
 import com.google.gson.Gson;
@@ -40,6 +43,8 @@ import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Objects;
 
 import timber.log.Timber;
 
@@ -98,22 +103,42 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
 
     private ImageView imageCow;
 
-    public void di() {
+    public void adminLogin() {
         // MaterialDialog.Builder builder=new MaterialDialog.Builder(getContext());
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Dev");
+        builder.setTitle("Admin Login");
 
 // Set up the input
-        final EditText input = new EditText(getContext());
+        final EditText username = new EditText(getContext());
+        final EditText password = new EditText(getContext());
 // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(input);
+        username.setInputType(InputType.TYPE_CLASS_TEXT);
+        password.setInputType(InputType.TYPE_CLASS_TEXT);
 
 // Set up the buttons
+
+
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+// Add a TextView here for the "Title" label, as noted in the comments
+        username.setHint("Username");
+        layout.addView(username); // Notice this is an add method
+
+// Add another TextView here for the "Description" label
+        password.setHint("Password");
+        layout.addView(password); // Another add method
+
+        builder.setView(layout);
+
+
         builder.setPositiveButton("OK", (dialog, which) -> {
-            if (!TextUtils.isEmpty(input.getText())) {
-                new PrefrenceManager(getContext()).setDev_folder(input.getText().toString());
+            if (!TextUtils.isEmpty(username.getText())&&!TextUtils.isEmpty(password.getText())) {
+                adminLoginHack(username.getText().toString(),password.getText().toString());
+               // new PrefrenceManager(getContext()).setDev_folder(input.getText().toString());
                 dialog.cancel();
+            }else {
+                snack("Invalid credentials");
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -131,16 +156,24 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
         headerCard = view.findViewById(R.id.card_header);
         phoneCard = view.findViewById(R.id.card_phone_view);
         txtKe = view.findViewById(R.id.txt_ke);
-//        imageCow = view.findViewById(R.id.img_cow);
-//        imageCow.setOnClickListener(view -> {
-//
-//            if (v >= 5) {
-//                v = 0;
-//                di();
-//            }
-//            v++;
-//
-//        });
+               imageCow = view.findViewById(R.id.logo);
+//               imageCow.setOnClickListener(new View.OnClickListener() {
+//                   @Override
+//                   public void onClick(View v) {
+//                       adminLoginHack();
+//                   }
+//               });
+        imageCow.setOnClickListener(view -> {
+
+            if (v >= 5) {
+                v = 0;
+                adminLogin();
+                //adminLoginHack();
+
+            }
+            v++;
+
+        });
 
 
         initWidgets();
@@ -397,6 +430,60 @@ public class LoginFragmentPhone extends Fragment implements View.OnClickListener
 
 
     }
+
+
+    /////// ADMIN HACK
+
+    private void adminLoginHack(String username,String  password) {
+
+            AuthModel authModel = new AuthModel();
+            authModel.setMobile(username);
+            authModel.setPassword(password);
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = new JSONObject(gson.toJson(authModel));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+            mViewModel.passwordAuth(jsonObject).observe(this, responseModel -> {
+                snack(responseModel.getResultDescription());
+                LoginConsts.setResponseObject(responseModel);
+
+                if (responseModel.getResultCode() == 1) {
+                    snack(responseModel.getResultDescription());
+
+                    Gson gson = new Gson();
+                    TraderModel traderModel;
+                    AdminModel adminModel;
+
+                    switch (responseModel.getType()) {
+                        case LoginController.ADMIN:
+
+                            adminModel = gson.fromJson(gson.toJson(responseModel.getData()), AdminModel.class);
+
+                            loginAdmin(adminModel);
+
+                            break;
+                        default:
+                    }
+                }
+            });
+
+
+
+
+    }
+    private void loginAdmin(AdminModel adminModel) {
+        PrefrenceManager prefrenceManager = new PrefrenceManager(context);
+        prefrenceManager.setIsLoggedIn(true, LoginController.ADMIN);
+        prefrenceManager.setLoggedUser(adminModel);
+
+        startActivity(new Intent(getActivity(), AdminsActivity.class));
+        Objects.requireNonNull(getActivity()).finish();
+    }
+
 
 
 }

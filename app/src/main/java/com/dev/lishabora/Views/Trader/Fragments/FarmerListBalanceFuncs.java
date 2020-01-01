@@ -1,7 +1,5 @@
 package com.dev.lishabora.Views.Trader.Fragments;
 
-import android.util.Log;
-
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Models.FarmerBalance;
 import com.dev.lishabora.Models.Payouts;
@@ -81,18 +79,29 @@ public class FarmerListBalanceFuncs {
                                                   TraderViewModel traderViewModel,
                                                   FamerModel famerModel) {
 
-        Double totalMilkForCurrentPayout = 0.0;
+        double totalMilkForCurrentPayout = 0.0;
         Double totalMilkForUnApprovedLtrs = 0.0;
-        Double totalMilkForUnApprovedKsh = 0.0;
+        double totalMilkForUnApprovedKsh = 0.0;
         try {
             totalMilkForCurrentPayout = +traderViewModel.getSumOfMilkForPayoutKshD(famerModel.getCode(), famerModel.getCurrentPayoutCode());
-            totalMilkForUnApprovedLtrs = +traderViewModel.getSumOfMilkFarmerByApproveStatusLtrs(famerModel.getCode(), 0);
-            totalMilkForUnApprovedKsh = +traderViewModel.getSumOfMilkFarmerByApproveStatusKsh(famerModel.getCode(), 0);
-
         } catch (Exception nm) {
             nm.printStackTrace();
 
         }
+        try {
+            totalMilkForUnApprovedLtrs = +traderViewModel.getSumOfMilkFarmerByApproveStatusLtrs(famerModel.getCode(), 0);
+        } catch (Exception nm) {
+            nm.printStackTrace();
+
+        }
+        try {
+            totalMilkForUnApprovedKsh = +traderViewModel.getSumOfMilkFarmerByApproveStatusKsh(famerModel.getCode(), 0);
+        } catch (Exception nm) {
+            nm.printStackTrace();
+
+        }
+
+
         //  try {
         FarmerBalance farmerBalance = balncesViewModel.getByFarmerCodeByPayoutOne(famerModel.getCode(), famerModel.getCurrentPayoutCode());
         List<FarmerLoansTable> loansTables = balncesViewModel.getFarmerLoanByPayoutNumberByFarmerByStatus(famerModel.getCode(), 0);
@@ -146,7 +155,6 @@ public class FarmerListBalanceFuncs {
             farmerBalance = new FarmerBalance(GeneralUtills.Companion.createCode(famerModel.getCode()),
                     famerModel.getCode(), famerModel.getCurrentPayoutCode(), "", "", "", String.valueOf(loanTotalAmount), String.valueOf(orderTotalAmount), String.valueOf(totalMilkForCurrentPayout));
 
-            Log.d("vlkdd", "" + totalMilkForUnApprovedKsh);
             farmerBalance.setBalanceOwed(String.valueOf((totalMilkForCurrentPayout - ((loanTotalAmount - loanPaid) + (orderTotalAmount - orderPaid)))));
             farmerBalance.setBalanceToPay(String.valueOf((totalMilkForUnApprovedKsh - ((loanInstalmentAmount) + (orderInstalmentAmount)))));
 
@@ -159,9 +167,6 @@ public class FarmerListBalanceFuncs {
             famerModel.setMilkbalance(String.valueOf(totalMilkForUnApprovedLtrs));
 
         } else {
-            Log.d("vlkdd", "" + totalMilkForUnApprovedLtrs);
-
-
             farmerBalance.setBalanceOwed(String.valueOf((totalMilkForCurrentPayout - ((loanTotalAmount - loanPaid) + (orderTotalAmount - orderPaid)))));
             farmerBalance.setBalanceToPay(String.valueOf((totalMilkForUnApprovedKsh - ((loanInstalmentAmount) + (orderInstalmentAmount)))));
 
@@ -177,8 +182,7 @@ public class FarmerListBalanceFuncs {
         }
         famerModel.setMilkbalance(String.valueOf(totalMilkForUnApprovedLtrs));
 
-        Log.d("updatedcfg", famerModel.getMilkbalance());
-        traderViewModel.updateFarmer(famerModel);
+        traderViewModel.updateFarmer("FarmerListBalanceFuncs -> refreshTotalBalances ",famerModel);
 
         return famerModel;
 
@@ -210,7 +214,6 @@ public class FarmerListBalanceFuncs {
                             paind = paind + Double.valueOf(loanPayments.get(a).getAmountPaid());
                         } catch (Exception nm) {
                             nm.printStackTrace();
-                            Log.d("updatedcfg", nm.toString());
 
                         }
                     }

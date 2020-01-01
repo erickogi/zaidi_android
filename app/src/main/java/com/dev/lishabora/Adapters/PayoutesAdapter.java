@@ -2,7 +2,6 @@ package com.dev.lishabora.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +69,6 @@ public class PayoutesAdapter extends RecyclerView.Adapter<PayoutsViewHolder> {
         String vO = model.getOrderTotal();
         String vM = model.getMilkTotalLtrs();
 
-        Log.d("fghh", vM);
 
         try {
             vB = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vB, 0)));

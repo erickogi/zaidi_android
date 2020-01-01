@@ -1,11 +1,7 @@
 package com.dev.lishabora.Utils
 
 import android.app.Activity
-import android.util.Log
 import android.view.View
-import co.mobiwise.materialintro.shape.Focus
-import co.mobiwise.materialintro.shape.FocusGravity
-import co.mobiwise.materialintro.view.MaterialIntroView
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
 import java.io.Serializable
@@ -15,49 +11,49 @@ class MaterialIntro {
     companion object {
         fun showIntro(context: Activity, infoText: String, target: View, usageId: String = infoText) {
 
-            try {
-                MaterialIntroView.Builder(context)
-                        .dismissOnTouch(true)
-                        .enableDotAnimation(true)
-                        .enableIcon(true)
-                        .setFocusGravity(FocusGravity.CENTER)
-                        .setFocusType(Focus.MINIMUM)
-                        .setDelayMillis(500)
-                        .enableFadeAnimation(true)
-                        .performClick(true)
-                        .setInfoText(infoText)
-                        .setTarget(target)
-                        .setUsageId(usageId)
-                        .show()
-                //  BadgeView(context).bindTarget(inbox).badgeText = "2"
-
-            } catch (xc: Exception) {
-                xc.printStackTrace()
-            }
+//            try {
+//                MaterialIntroView.Builder(context)
+//                        .dismissOnTouch(true)
+//                        .enableDotAnimation(true)
+//                        .enableIcon(true)
+//                        .setFocusGravity(FocusGravity.CENTER)
+//                        .setFocusType(Focus.MINIMUM)
+//                        .setDelayMillis(500)
+//                        .enableFadeAnimation(true)
+//                        .performClick(true)
+//                        .setInfoText(infoText)
+//                        .setTarget(target)
+//                        .setUsageId(usageId)
+//                        .show()
+//                //  BadgeView(context).bindTarget(inbox).badgeText = "2"
+//
+//            } catch (xc: Exception) {
+//                xc.printStackTrace()
+//            }
         }
 
         fun showIntro(context: Activity, infoText: String, target: View) {
             var usageId = GeneralUtills(context).getRandon().toString()
 
-            try {
-                MaterialIntroView.Builder(context)
-                        .dismissOnTouch(true)
-                        .enableDotAnimation(true)
-                        .enableIcon(true)
-                        .setFocusGravity(FocusGravity.CENTER)
-                        .setFocusType(Focus.MINIMUM)
-                        .setDelayMillis(500)
-                        .enableFadeAnimation(true)
-                        .performClick(true)
-                        .setInfoText(infoText)
-                        .setTarget(target)
-                        .setUsageId(usageId)
-                        .show()
-                //  BadgeView(context).bindTarget(inbox).badgeText = "2"
-
-            } catch (xc: Exception) {
-                xc.printStackTrace()
-            }
+//            try {
+//                MaterialIntroView.Builder(context)
+//                        .dismissOnTouch(true)
+//                        .enableDotAnimation(true)
+//                        .enableIcon(true)
+//                        .setFocusGravity(FocusGravity.CENTER)
+//                        .setFocusType(Focus.MINIMUM)
+//                        .setDelayMillis(500)
+//                        .enableFadeAnimation(true)
+//                        .performClick(true)
+//                        .setInfoText(infoText)
+//                        .setTarget(target)
+//                        .setUsageId(usageId)
+//                        .show()
+//                //  BadgeView(context).bindTarget(inbox).badgeText = "2"
+//
+//            } catch (xc: Exception) {
+//                xc.printStackTrace()
+//            }
         }
 
         fun createTargets(context: Activity, targets: List<Target>) {
@@ -72,10 +68,7 @@ class MaterialIntro {
 
 
         fun showIntroSequence(context: Activity, targets: List<TapTarget>) {
-            for (tar in targets) {
-                Log.d("targets", " " + tar.id())
 
-            }
 
             TapTargetSequence(context)
                     .targets(targets)

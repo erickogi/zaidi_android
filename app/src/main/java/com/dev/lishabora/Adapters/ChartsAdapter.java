@@ -3,7 +3,6 @@ package com.dev.lishabora.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +68,6 @@ public class ChartsAdapter extends RecyclerView.Adapter<ChartsAdapter.MyViewHold
         for (int a = 0; a < chartModel.getLvModels().size(); a++) {
             LVModel lvModel = chartModel.getLvModels().get(a);
             entries.add(new PieEntry(lvModel.getValue(), lvModel.getLabel()));
-            Log.d("colll", lvModel.getColor());
             //colors[a]= Color.parseColor(lvModel.getColor());
             //count++;
         }

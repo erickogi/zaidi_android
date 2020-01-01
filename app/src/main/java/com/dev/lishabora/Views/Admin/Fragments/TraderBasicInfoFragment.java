@@ -7,9 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +19,9 @@ import android.widget.TextView;
 
 import com.dev.lishabora.COntrollers.LoginController;
 import com.dev.lishabora.Models.Trader.TraderModel;
-import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Views.Admin.CreateTraderConstants;
 import com.dev.lishaboramobile.R;
+import com.hbb20.CountryCodePicker;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
@@ -42,6 +40,8 @@ public class TraderBasicInfoFragment extends Fragment implements BlockingStep {
     Spinner spinnerPayment;
     TraderModel traderModel;
     private View view;
+    private CountryCodePicker ccp;
+
     //private PrefrenceManager prefrenceManager;
 
     public void hideKeyboardFrom(Context context, View view) {
@@ -84,60 +84,10 @@ public class TraderBasicInfoFragment extends Fragment implements BlockingStep {
 
         bussinessname = view.findViewById(R.id.edt_traders_business_name);
         name = view.findViewById(R.id.edt_traders_names);
-        phone = view.findViewById(R.id.edt_traders_phone);
-        txtKe = view.findViewById(R.id.txt_ke);
-        final char space = ' ';
+        phone = view.findViewById(R.id.edt_trader_phone);
 
-        phone.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                // if(s.length()>0&&editTextCarrierNumber.getText().toString().charAt(0)!='0') {
-                try {
-                    if (s.charAt(0) == '0') {
-                        s.delete(s.length() - 1, s.length());
-                        txtKe.setText("+254-0");
-                    } else if (s != null && s.length() < 1) {
-                        txtKe.setText("+254");
-
-                    }
-
-
-                } catch (Exception nm) {
-                    nm.printStackTrace();
-                }
-                //if (s.length() < 9) {
-                if (s.length() > 0 && (s.length() % 4) == 0) {
-                    final char c = s.charAt(s.length() - 1);
-                    if (space == c) {
-                        s.delete(s.length() - 1, s.length());
-                    }
-
-                }
-                // Insert char where needed.
-                if (s.length() > 0 && (s.length() % 4) == 0) {
-                    char c = s.charAt(s.length() - 1);
-                    // Only if its a digit where there should be a space we insert a space
-                    if (Character.isDigit(c) && TextUtils.split(s.toString(), String.valueOf(space)).length <= 3) {
-                        s.insert(s.length() - 1, String.valueOf(space));
-                    }
-
-                }
-                // }else {
-                // s.delete(9,9);
-                // edtMobile.setError("Tulia");
-                // }
-            }
-        });
+        ccp = view.findViewById(R.id.ccp);
+        ccp.registerCarrierNumberEditText(phone);
 
 
     }
@@ -157,21 +107,39 @@ public class TraderBasicInfoFragment extends Fragment implements BlockingStep {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
+    private String phoneNumber = "";
 
     @Override
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
-        String bs = "";
-        if (!bussinessname.getText().toString().isEmpty()) {
 
-            bs = bussinessname.getText().toString();
+        if (!TextUtils.isEmpty(phone.getText().toString())) {
+            String phoneNumber1 = ccp.getFullNumber();
+            if (phoneNumber1.startsWith("25407")) {
+                phoneNumber = phoneNumber1.replace("2540", "");
+            }
+            if (phoneNumber1.startsWith("2547")) {
+                phoneNumber = phoneNumber1.replace("254", "");
+            }
+            if (LoginController.isValidPhoneNumber(phoneNumber)
+
+            ) {
+                String bs = "";
+                if (!bussinessname.getText().toString().isEmpty()) {
+
+                    bs = bussinessname.getText().toString();
+                }
+                traderModel.setBusinessname(bs);
+                traderModel.setNames(name.getText().toString());
+                traderModel.setMobile(phoneNumber);
+                CreateTraderConstants.setTraderModel(traderModel);
+                callback.goToNextStep();
+
+            }
         }
-        traderModel.setBusinessname(bs);
-        traderModel.setNames(name.getText().toString());
-        String phoneNumber = phone.getText().toString().replaceAll(" ", "").trim();
 
-        traderModel.setMobile(phoneNumber);
-        CreateTraderConstants.setTraderModel(traderModel);
-        callback.goToNextStep();
+
+
+
     }
 
 
@@ -191,14 +159,35 @@ public class TraderBasicInfoFragment extends Fragment implements BlockingStep {
     @Nullable
     @Override
     public VerificationError verifyStep() {
-        if (verify()) {
+        if (verifyNames() && verifyMobile()) {
             return null;
-        } else {
-            return new VerificationError("Form has errors");
         }
+        return new VerificationError("Form has errors");
+    }
+    private boolean verifyMobile() {
+        if (!TextUtils.isEmpty(phone.getText().toString())) {
+            String phoneNumber1 = ccp.getFullNumber();
+            if (phoneNumber1.startsWith("25407")) {
+                phoneNumber = phoneNumber1.replace("2540", "");
+            }
+            if (phoneNumber1.startsWith("2547")) {
+                phoneNumber = phoneNumber1.replace("254", "");
+            }
+            if (LoginController.isValidPhoneNumber(phoneNumber)) {
+                return true;
+
+            } else {
+                phone.requestFocus();
+                phone.setError("Invalid phone Number");
+                return false;
+            }
+        }
+        phone.requestFocus();
+        phone.setError("Valid phone required");
+        return false;
     }
 
-    boolean verify() {
+    boolean verifyNames() {
         if (name.getText().toString().isEmpty()) {
             name.setError("Required");
             name.requestFocus();
@@ -206,18 +195,8 @@ public class TraderBasicInfoFragment extends Fragment implements BlockingStep {
         }
 
 
-        if (phone.getText().toString().isEmpty()) {
-            phone.setError("Required");
-            phone.requestFocus();
-            return false;
-        }
-        String phoneNumber = phone.getText().toString().replaceAll(" ", "").trim();
 
-        if (!LoginController.isValidPhoneNumber(phoneNumber) && GeneralUtills.Companion.isValidPhoneNumber(phoneNumber)) {
-            phone.requestFocus();
-            phone.setError("Invalid Phone number");
-            return false;
-        }
+
         return true;
 
 

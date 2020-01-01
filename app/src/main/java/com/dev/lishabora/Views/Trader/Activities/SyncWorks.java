@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -19,6 +18,7 @@ import com.dev.lishabora.Jobs.Evernote.UpSyncJob;
 import com.dev.lishabora.Models.SyncHolderModel;
 import com.dev.lishabora.Models.SyncModel;
 import com.dev.lishabora.Utils.DateTimeUtils;
+import com.dev.lishabora.Utils.Logs;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
@@ -149,7 +149,7 @@ public class SyncWorks extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.d("datasend", jsonObject.toString());
+        Logs.Companion.d("datasend", jsonObject.toString());
 
 
         generateNoteOnSD(SyncWorks.this, "synworks.json", new Gson().toJson(s, SyncHolderModel.class));

@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 import com.dev.lishabora.Application;
 import com.dev.lishabora.Models.Trader.TraderModel;
 import com.dev.lishabora.Repos.Trader.TraderRepo;
+import com.dev.lishabora.Utils.Logs;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Trader.Activities.FirstTimeLaunch;
@@ -105,7 +105,7 @@ public class FragmentTraderProfile extends Fragment {
 
             } catch (Exception nm) {
 
-                Log.d("nmsdf", nm.toString());
+                Logs.Companion.d("nmsdf", nm.toString());
                 nm.printStackTrace();
             }
 

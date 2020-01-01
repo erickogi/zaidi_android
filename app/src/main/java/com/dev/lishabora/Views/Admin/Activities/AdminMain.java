@@ -56,7 +56,7 @@ public class AdminMain extends AppCompatActivity {
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new FragmentTraderProfile(), "profile");
-        adapter.addFragment(new com.dev.lishabora.Views.Admin.Fragments.Tf.FragementFarmersList(), "farmers");
+       // adapter.addFragment(new com.dev.lishabora.Views.Admin.Fragments.Tf.FragementFarmersList(), "farmers");
         adapter.addFragment(new com.dev.lishabora.Views.Admin.Fragments.Tf.FragmentProductList(), "farmers");
         adapter.addFragment(new com.dev.lishabora.Views.Admin.Fragments.Tf.FragmentRoutes(), "farmers");
         adapter.addFragment(new com.dev.lishabora.Views.Admin.Fragments.Tf.FragmentPayouts(), "farmers");

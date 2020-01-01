@@ -1,7 +1,6 @@
 package com.dev.lishabora.Jobs.Evernote;
 
-import android.util.Log;
-
+import com.dev.lishabora.Utils.Logs;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobCreator;
 
@@ -14,21 +13,21 @@ public class SyncJobCreator implements JobCreator {
     @Override
     public Job create(String tag) {
 
-        Log.d("jobadd", "job added");
+        Logs.Companion.d("jobadd", "job added");
         switch (tag) {
 
             case UpSyncJob.TAG:
-                Log.d("jobadd", "job added upSync");
+                Logs.Companion.d("jobadd", "job added upSync");
                 return new UpSyncJob();
             case DownSyncJob.TAG:
-                Log.d("jobadd", "job added downSync");
+                Logs.Companion.d("jobadd", "job added downSync");
                 return new DownSyncJob();
             case SyncNotifierJob.TAG:
-                Log.d("jobadd", "job added syncnotifire");
+                Logs.Companion.d("jobadd", "job added syncnotifire");
                 return new SyncNotifierJob();
 
             case PayoutCheckerJob.TAG:
-                Log.d("jobadd", "job added paychecker");
+                Logs.Companion.d("jobadd", "job added paychecker");
                 return new PayoutCheckerJob();
             default:
                 return null;

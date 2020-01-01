@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager
 import com.dev.lishabora.Views.Admin.Fragments.TraderBasicInfoFragment
 import com.dev.lishabora.Views.Admin.Fragments.TraderCyclesInfoFragment
 import com.dev.lishabora.Views.Admin.Fragments.TraderPasswordInfoFragment
-import com.dev.lishabora.Views.Admin.Fragments.TraderProductsnfoFragment
 import com.stepstone.stepper.Step
 import com.stepstone.stepper.adapter.AbstractFragmentStepAdapter
 import com.stepstone.stepper.viewmodel.StepViewModel
@@ -48,14 +47,14 @@ class RegisterTraderAdapter(fm: FragmentManager, context: Context) : AbstractFra
 //
 //                return step3
 //            }
-            3 -> {
-                val step4 = TraderProductsnfoFragment()
-                val b4 = Bundle()
-                b4.putInt(CURRENT_STEP_POSITION_KEY, position)
-
-
-                return step4
-            }
+//            3 -> {
+//                val step4 = TraderProductsnfoFragment()
+//                val b4 = Bundle()
+//                b4.putInt(CURRENT_STEP_POSITION_KEY, position)
+//
+//
+//                return step4
+//            }
 
         }
         return null

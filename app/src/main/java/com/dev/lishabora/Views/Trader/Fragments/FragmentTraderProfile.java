@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,8 +101,6 @@ public class FragmentTraderProfile extends Fragment {
                 txtEndDate.setText(traderModel.getCycleEndDay());
 
             } catch (Exception nm) {
-
-                Log.d("nmsdf", nm.toString());
                 nm.printStackTrace();
             }
 

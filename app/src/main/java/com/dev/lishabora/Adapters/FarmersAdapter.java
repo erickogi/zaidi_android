@@ -102,8 +102,8 @@ public class FarmersAdapter extends RecyclerView.Adapter<FarmerViewHolder>
 
 
         try {
-            v = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(v, 0)));
-            mL = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(mL, 0)));
+            v = GeneralUtills.Companion.addCommify(GeneralUtills.Companion.round(v, 0));
+            mL = GeneralUtills.Companion.addCommify(GeneralUtills.Companion.round(mL, 0));
         } catch (Exception nm) {
             nm.printStackTrace();
         }

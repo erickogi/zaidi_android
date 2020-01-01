@@ -1,7 +1,6 @@
 package com.dev.lishabora.Utils;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -62,16 +61,13 @@ public class PayoutsCyclesDatesUtills {
         DateTime startOfMonth = today.dayOfMonth().withMinimumValue();
 
         int p = Days.daysBetween(startOfMonth.toLocalDate(), today.toLocalDate()).getDays();
-        Log.d("dayNumberIs", "" + p);
         if (p >= 15) {
-            Log.d("dayNumberIs", "TRUE");
 
             dates.setStartDate(DateTimeUtils.Companion.convert2String(DateTimeUtils.Companion.addDays(startOfMonth, 15)));
             dates.setEndDate(DateTimeUtils.Companion.convert2String(endOfMonth));
 
             return dates;
         } else {
-            Log.d("dayNumberIs", "False");
 
             dates.setStartDate(DateTimeUtils.Companion.convert2String(startOfMonth));
             dates.setEndDate(DateTimeUtils.Companion.convert2String(DateTimeUtils.Companion.addDays(startOfMonth, 14)));

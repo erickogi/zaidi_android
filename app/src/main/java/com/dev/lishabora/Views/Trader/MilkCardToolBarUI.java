@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ public class MilkCardToolBarUI extends RelativeLayout {
 
     private TextView txtFarmersName, txtFarmesCode, txtPayoutNumber;
     private TextView txtStartDate, txtEndDate;
+    private ImageView actionHelp;
 
     private TextView txtMilkTotalLtrs, txtMilkTotalKsh, txtLoanTotal, txtOrderTotal, txtBalance;
     private RelativeLayout rlTotals;
@@ -81,6 +83,8 @@ public class MilkCardToolBarUI extends RelativeLayout {
             return;
         }
 
+        actionHelp = findViewById(R.id.action_help);
+
         txtFarmersName = findViewById(R.id.txt_name);
         txtFarmesCode = findViewById(R.id.txt_code);
         txtPayoutNumber = findViewById(R.id.txt_payout_no);
@@ -96,7 +100,6 @@ public class MilkCardToolBarUI extends RelativeLayout {
         txtBalance = findViewById(R.id.txt_balance);
 
         rlTotals = findViewById(R.id.background);
-
 
         initializeDefaults();
     }

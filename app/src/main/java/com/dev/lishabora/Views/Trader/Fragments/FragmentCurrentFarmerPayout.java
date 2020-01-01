@@ -3,6 +3,8 @@ package com.dev.lishabora.Views.Trader.Fragments;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,8 +43,10 @@ import com.dev.lishabora.Utils.AdvancedOnclickRecyclerListener;
 import com.dev.lishabora.Utils.ApproveListener;
 import com.dev.lishabora.Utils.CollectionCreateUpdateListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
+import com.dev.lishabora.Utils.MaterialIntro;
 import com.dev.lishabora.Utils.MilkEditValueListener;
 import com.dev.lishabora.Utils.MyToast;
+import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
@@ -50,10 +55,12 @@ import com.dev.lishabora.Views.Trader.Activities.EditOrder;
 import com.dev.lishabora.Views.Trader.MilkCardToolBarUI;
 import com.dev.lishabora.Views.Trader.OrderConstants;
 import com.dev.lishaboramobile.R;
+import com.getkeepsafe.taptargetview.TapTarget;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -62,7 +69,8 @@ import static android.app.Activity.RESULT_OK;
 import static com.dev.lishabora.Views.CommonFuncs.getBalance;
 import static com.dev.lishabora.Views.CommonFuncs.setCardActionStatus;
 
-public class FragmentCurrentFarmerPayout extends Fragment {// implements ApproveFarmerPayCardListener {
+public class FragmentCurrentFarmerPayout extends Fragment {
+    // implements ApproveFarmerPayCardListener {
 
     public TextView status;//, id, name, balance, milk, loan, order;
     public RelativeLayout background;
@@ -136,6 +144,31 @@ public class FragmentCurrentFarmerPayout extends Fragment {// implements Approve
 
 
         status = view.findViewById(R.id.txt_status);
+        toolBar.findViewById(R.id.action_help).setOnClickListener(v -> showIntro());
+        if (!new PrefrenceManager(getContext()).isFarmerCurrentPayoutFragmentIntroShown()) {
+            showIntro();
+        }
+    }
+    void showIntro() {
+        final Display display = getActivity().getWindowManager().getDefaultDisplay();
+
+        int canvasW = display.getWidth();
+        int canvasH = display.getHeight();
+        Point centerOfCanvas = new Point(canvasW / 2, canvasH / 2);
+        int rectW = 10;
+        int rectH = 10;
+        int left = centerOfCanvas.x - (rectW / 2);
+        int top = centerOfCanvas.y - (rectH / 2);
+        int right = centerOfCanvas.x + (rectW / 2);
+        int bottom = centerOfCanvas.y + (rectH / 2);
+        Rect rect = new Rect(left, top, right, bottom);
+
+        List<TapTarget> targets = new ArrayList<>();
+        targets.add(TapTarget.forBounds(rect, "Click on any collection to edit .", getContext().getResources().getString(R.string.dismiss_intro)).cancelable(false).id(20).transparentTarget(true));
+        targets.add(TapTarget.forView(toolBar.findViewById(R.id.action_help), "Click here to see this introduction again", getContext().getResources().getString(R.string.dismiss_intro)).cancelable(false).id(21).transparentTarget(true));
+
+        MaterialIntro.Companion.showIntroSequence(getActivity(), targets);
+        new PrefrenceManager(getContext()).setFarmerCurrentPayoutFragmentIntroShown(true);
 
     }
 

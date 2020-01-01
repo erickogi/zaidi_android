@@ -1,7 +1,6 @@
 package com.dev.lishabora.FireBase;
 
-import android.util.Log;
-
+import com.dev.lishabora.Utils.Logs;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
@@ -27,7 +26,7 @@ public class Firebase extends FirebaseInstanceIdService {
 
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
 
-        Log.d(TAG, refreshedToken);
+        Logs.Companion.d(TAG, refreshedToken);
         new PrefrenceManager(getApplicationContext()).setFirebase(refreshedToken);
 
 

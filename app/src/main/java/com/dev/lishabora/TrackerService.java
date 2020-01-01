@@ -9,8 +9,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.IBinder;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
+import com.dev.lishabora.Utils.Logs;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -79,7 +79,7 @@ public class TrackerService extends Service {
                     Location location = locationResult.getLastLocation();
                     if (location != null) {
                         prefrenceManager.setLastCordinates("" + location.getLatitude() + ":" + location.getLongitude());
-                        Log.d(TAG, "location update " + location);
+                        Logs.Companion.d(TAG, "location update " , location);
                     }
                 }
             }, null);

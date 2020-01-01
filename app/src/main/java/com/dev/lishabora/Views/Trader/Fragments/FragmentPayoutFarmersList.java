@@ -19,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -91,6 +92,8 @@ public class FragmentPayoutFarmersList extends Fragment {
     private final int CHRONOLOGICAL = 1, ALPHABETICAL = 2, AUTOMATICALLY = 0, MANUALLY = 3;
     private PrefrenceManager prefrenceManager;
     private SearchView searchView;
+    private ImageButton helpView;
+
     private String filterText = "";
     private int SORTTYPE = 0;
 
@@ -603,11 +606,8 @@ public class FragmentPayoutFarmersList extends Fragment {
 
     private void filterFarmersManually() {
 
-
         Collections.sort(famerModels, farmerPosComparator);
         Objects.requireNonNull(getActivity()).runOnUiThread(() -> listAdapter.notifyDataSetChanged());
-
-
     }
 
     @Override
@@ -629,6 +629,7 @@ public class FragmentPayoutFarmersList extends Fragment {
 
         //inflater.inflate(R.menu.menu_main, menu);
         MenuItem mSearch = menu.findItem(R.id.action_search);
+        MenuItem mHelp = menu.findItem(R.id.action_help);
 
 
         MenuItem mAutomatically = menu.findItem(R.id.action_automatically);
@@ -641,7 +642,8 @@ public class FragmentPayoutFarmersList extends Fragment {
         mChronologically.setVisible(true);
         mManually.setVisible(true);
         mAlphabetically.setVisible(true);
-        mRearrangeManually.setVisible(true);
+        mRearrangeManually.setVisible(false);
+        mHelp.setVisible(false);
 
 
         searchView = (SearchView) mSearch.getActionView();
@@ -650,6 +652,9 @@ public class FragmentPayoutFarmersList extends Fragment {
         searchView = (SearchView) mSearch.getActionView();
         searchView.setVisibility(View.GONE);
 
+
+        helpView = (ImageButton) mHelp.getActionView();
+        helpView.setVisibility(View.GONE);
     }
 
 
@@ -678,12 +683,7 @@ public class FragmentPayoutFarmersList extends Fragment {
     }
 
     private void filterFarmers() {
-        if (dayCollectionModels1 == null) {
-
-            dayCollectionModels1 = new LinkedList<>();
-        }
-
-
+        if (dayCollectionModels1 == null) { dayCollectionModels1 = new LinkedList<>(); }
         dayCollectionModels.clear();
         if (dayCollectionModels1 != null && dayCollectionModels1.size() > 0) {
             for (PayoutFarmersCollectionModel famerModel : dayCollectionModels1) {

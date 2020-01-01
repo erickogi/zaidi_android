@@ -8,7 +8,6 @@ import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -276,7 +275,6 @@ public class CollectMilk implements View.OnClickListener {//implements{// Number
 
         this.listener = listener;
         new Thread(() -> {
-
 
             if (famerModel != null) {
                 unitsModel = new UnitsModel();
@@ -875,7 +873,7 @@ public class CollectMilk implements View.OnClickListener {//implements{// Number
         Double nowAm = 0.0;
         Double nowPm = 0.0;
 
-        Double xChange;
+        Double xChangeCash;
 
         Double previusAmL = 0.0;
         Double previousPmL = 0.0;
@@ -883,7 +881,7 @@ public class CollectMilk implements View.OnClickListener {//implements{// Number
         Double nowAmL = 0.0;
         Double nowPmL = 0.0;
 
-        Double xChangeL;
+        Double xChangeLitres;
 
 
 
@@ -955,14 +953,11 @@ public class CollectMilk implements View.OnClickListener {//implements{// Number
 
         }
 
-
-        Log.d("mklls", " Now Am " + nowAmL + "  pREV  " + previusAmL);
-        xChange = (nowAm + nowPm) - (previusAm + previousPm);
-        xChangeL = (nowAmL + nowPmL) - (previusAmL + previousPmL);
+        xChangeCash = (nowAm + nowPm) - (previusAm + previousPm);
+        xChangeLitres = (nowAmL + nowPmL) - (previusAmL + previousPmL);
 
 
-        // return xChange;
-        return new Double[]{xChange, xChangeL};
+        return new Double[]{xChangeCash, xChangeLitres};
     }
 
 

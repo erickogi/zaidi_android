@@ -14,7 +14,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.InputFilter;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -377,12 +376,10 @@ public class FragmentTraderOrders extends Fragment {
     }
 
     public void getData() {
-        Log.d("hhsdjh", "Called");
 
         balncesViewModel.getFarmerOrders().observe(this, farmerOrdersTables -> {
             List<FarmerOrdersTable> farmerOrdersTables1 = new LinkedList<>();
 
-            Log.d("hhsdjh", "" + farmerOrdersTables.size());
 
             if (farmerOrdersTables != null) {
                 for (FarmerOrdersTable f : farmerOrdersTables) {

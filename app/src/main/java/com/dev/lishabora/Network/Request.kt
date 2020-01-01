@@ -7,10 +7,7 @@ import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.StringRequestListener
 import com.dev.lishabora.Models.*
 import com.dev.lishabora.Models.Trader.Data
-import com.dev.lishabora.Utils.ResponseCallback
-import com.dev.lishabora.Utils.SyncChangesCallback
-import com.dev.lishabora.Utils.SyncDownResponseCallback
-import com.dev.lishabora.Utils.SyncResponseCallback
+import com.dev.lishabora.Utils.*
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import org.json.JSONArray
@@ -335,10 +332,10 @@ class Request {
 
                     .build()
                     .setAnalyticsListener { timeTakenInMillis, bytesSent, bytesReceived, isFromCache ->
-                        Log.d("Analy12Kq", " timeTakenInMillis : " + timeTakenInMillis)
-                        Log.d("Analy12Kq", " bytesSent : " + bytesSent)
-                        Log.d("Analy12Kq", " bytesReceived : " + bytesReceived)
-                        Log.d("Analy12Kq", " isFromCache : " + isFromCache)
+                        Logs.d("Analy12Kq", " timeTakenInMillis  " , timeTakenInMillis)
+                        Logs.d("Analy12Kq", " bytesSent  " , bytesSent)
+                        Logs.d("Analy12Kq", " bytesReceived  " , bytesReceived)
+                        Logs.d("Analy12Kq", " isFromCache  " , isFromCache)
 
                         analytics = (NetworkAnalytics(timeTakenInMillis, bytesSent, bytesReceived, isFromCache))
 

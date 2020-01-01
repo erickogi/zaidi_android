@@ -4,6 +4,8 @@ package com.dev.lishabora.Views.Trader.Activities;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +17,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -40,8 +43,10 @@ import com.dev.lishabora.Utils.AdvancedOnclickRecyclerListener;
 import com.dev.lishabora.Utils.ApproveListener;
 import com.dev.lishabora.Utils.CollectionCreateUpdateListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
+import com.dev.lishabora.Utils.MaterialIntro;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
+import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
@@ -51,10 +56,12 @@ import com.dev.lishabora.Views.Trader.Fragments.CancelFuncs;
 import com.dev.lishabora.Views.Trader.MilkCardToolBarUI;
 import com.dev.lishabora.Views.Trader.OrderConstants;
 import com.dev.lishaboramobile.R;
+import com.getkeepsafe.taptargetview.TapTarget;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -444,22 +451,40 @@ public class PayCard extends AppCompatActivity {
         String data = getIntent().getStringExtra("farmers");
 
         if (data != null && !data.equals("null")) {
-
-//            Gson gson = new Gson();
-//            Type listType = new TypeToken<LinkedList<PayoutFarmersCollectionModel>>() {
-//            }.getType();
-            //setBottom();
-//            initBottomList(gson.fromJson(data, listType));
-
             new Thread(this::loadFarmers).start();
-
-
         } else {
             //  layoutBottomSheet.setVisibility(View.GONE);
         }
 
 
 
+
+
+        toolBar.findViewById(R.id.action_help).setOnClickListener(v -> showIntro());
+        if (!new PrefrenceManager(this).isPayCardIntroShown()) {
+            showIntro();
+        }
+    }
+    void showIntro() {
+        final Display display = this.getWindowManager().getDefaultDisplay();
+
+        int canvasW = display.getWidth();
+        int canvasH = display.getHeight();
+        Point centerOfCanvas = new Point(canvasW / 2, canvasH / 2);
+        int rectW = 10;
+        int rectH = 10;
+        int left = centerOfCanvas.x - (rectW / 2);
+        int top = centerOfCanvas.y - (rectH / 2);
+        int right = centerOfCanvas.x + (rectW / 2);
+        int bottom = centerOfCanvas.y + (rectH / 2);
+        Rect rect = new Rect(left, top, right, bottom);
+
+        List<TapTarget> targets = new ArrayList<>();
+        targets.add(TapTarget.forBounds(rect, "Click on any collection to edit .", this.getResources().getString(R.string.dismiss_intro)).cancelable(false).id(20).transparentTarget(true));
+        targets.add(TapTarget.forView(toolBar.findViewById(R.id.action_help), "Click here to see this introduction again", this.getResources().getString(R.string.dismiss_intro)).cancelable(false).id(21).transparentTarget(true));
+
+        MaterialIntro.Companion.showIntroSequence(this, targets);
+        new PrefrenceManager(this).setPayCardIntroShown(true);
 
     }
 

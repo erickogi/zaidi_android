@@ -9,6 +9,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.dev.lishabora.Application;
+import com.dev.lishabora.Utils.Logs;
 import com.dev.lishabora.Views.Trader.Activities.TraderActivity;
 import com.dev.lishaboramobile.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -52,18 +53,18 @@ public class FirebaseService extends FirebaseMessagingService {
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+            Logs.Companion.d(TAG, "Message data payload: " , remoteMessage.getData());
 
             handleNow(remoteMessage.getData().toString());
 
         } else {
-            Log.d(TAG, "Message data payload: is lessssss");
+            Logs.Companion.d(TAG, "Message data payload: is less");
 
         }
 
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+            Logs.Companion.d(TAG, "Message Notification Body " , remoteMessage.getNotification().getBody());
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM

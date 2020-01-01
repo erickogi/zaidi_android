@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,6 +27,7 @@ import com.dev.lishabora.NumKey.NumberKeyboardListener;
 import com.dev.lishabora.Utils.CollectListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
+import com.dev.lishabora.Utils.Logs;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.CollectMilkConstants;
@@ -251,7 +251,7 @@ public class ActivityCollect extends AppCompatActivity implements NumberKeyboard
         for (Collection c : collections) {
 
 
-            Log.d("milkates", " Collecton Date " + c.getDayDate() + "\nSunday " + DateTimeUtils.Companion.getDatePrevious(2));
+            Logs.Companion.d("milkates", " Collecton Date " + c.getDayDate() + "\nSunday " + DateTimeUtils.Companion.getDatePrevious(2));
 
 
             if (c.getDayDate().contains(DateTimeUtils.Companion.getDatePrevious(3))) {

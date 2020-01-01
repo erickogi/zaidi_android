@@ -10,10 +10,13 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.dev.lishabora.Adapters.FarmerHistoryCollAdapter;
 import com.dev.lishabora.Adapters.PayoutesAdapter;
@@ -24,18 +27,22 @@ import com.dev.lishabora.Models.MonthsDates;
 import com.dev.lishabora.Models.PayoutFarmersCollectionModel;
 import com.dev.lishabora.Models.Payouts;
 import com.dev.lishabora.Utils.DateTimeUtils;
+import com.dev.lishabora.Utils.MaterialIntro;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
+import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.Views.CommonFuncs;
 import com.dev.lishabora.Views.Trader.Activities.PayCard;
 import com.dev.lishabora.Views.Trader.FarmerToolBarUI;
 import com.dev.lishaboramobile.R;
+import com.getkeepsafe.taptargetview.TapTarget;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,11 +63,10 @@ public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.
 
     private boolean isTO;
     private View.OnClickListener fromClicked = view -> {
-
         isTO = false;
         selectDate();
-
     };
+
     private View.OnClickListener toClicked = view -> {
         isTO = true;
         selectDate();
@@ -79,13 +85,59 @@ public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.
     private MaterialSpinner.OnItemSelectedListener spinnerTypeListener = (view, position, id, item) -> {
         toolbar.show();
         reload();
-
-
     };
 
+
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+
+    }
+    private ImageButton helpView;
+    private ImageButton editView;
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        MenuItem mHelp = menu.findItem(R.id.action_help);
+        MenuItem mEdit = menu.findItem(R.id.action_edit);
+        mEdit.setVisible(false);
+
+        helpView = (ImageButton) mHelp.getActionView();
+        helpView.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_help));
+        helpView.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
+        if (!new PrefrenceManager(getContext()).isFarmersHistoryFragmentIntroShown()) {
+            showIntro();
+        }
+        helpView.setOnClickListener(v -> showIntro());
+
+    }
+
+    void showIntro() {
+        List<TapTarget> targets = new ArrayList<>();
+        if(toolbar.findViewById(R.id.lspinner_type).getVisibility()==View.VISIBLE) {
+            targets.add(TapTarget.forView(toolbar.findViewById(R.id.lspinner_type), "Click here to filter by type (Milk,Loans,AAll)", getContext().getResources().getString(R.string.dismiss_intro)).cancelable(false).id(17).transparentTarget(true));
+        }
+        if(toolbar.findViewById(R.id.lspinner_cat).getVisibility()==View.VISIBLE) {
+            targets.add(TapTarget.forView(toolbar.findViewById(R.id.lspinner_cat), "Click here to filter Month, Year or Payout", getContext().getResources().getString(R.string.dismiss_intro)).cancelable(false).id(18).transparentTarget(true));
+        }
+        if(toolbar.findViewById(R.id.date_range).getVisibility()==View.VISIBLE) {
+            targets.add(TapTarget.forView(toolbar.findViewById(R.id.date_range), "Click here to select a date range", getContext().getResources().getString(R.string.dismiss_intro)).cancelable(false).id(18).transparentTarget(true));
+        }
+
+         targets.add(TapTarget.forView(helpView, "Click here to see this introduction again", getContext().getResources().getString(R.string.dismiss_intro)).cancelable(false).id(19).transparentTarget(true));
+
+        MaterialIntro.Companion.showIntroSequence(getActivity(), targets);
+        new PrefrenceManager(getContext()).setFarmersHistoryFragmentIntroShown(true);
+
+    }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
         payoutsVewModel = ViewModelProviders.of(this).get(PayoutsVewModel.class);
         balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
 
@@ -140,45 +192,7 @@ public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.
 
     private List<Payouts> listpayouts;
 
-    //    private void initByPayouts() {
-//
-//        payoutsVewModel.getPayoutsByCycleCode(famerModel.getCyclecode()).observe(this, payouts -> {
-//            if (payouts != null && payouts.size() > 0) {
-//
-//                getCollectionsPerPayout(payouts);
-//
-//            } else {
-//                initPayoutList();
-//
-//            }
-//        });
-//
-//    }
-//
-//    private void getCollectionsPerPayout(List<Payouts> payouts) {
-//
-//        List<Payouts> payoutsList = new LinkedList<>();
-//        PayoutesAdapter payoutesAdapter = initPayoutList();
-//
-//        for (Payouts p : payouts) {
-//            payoutsVewModel.getCollectionByDateByPayoutByFarmer(p.getCode(), famerModel.getCode()).observe(this, new Observer<List<Collection>>() {
-//                @Override
-//                public void onChanged(@Nullable List<Collection> collections) {
-//
-//                    if (collections != null) {
-//                        payoutsList.add(createPayoutsByCollection(collections, p, payoutsVewModel, balncesViewModel, famerModel.getCode(), true, null));
-//                        listpayouts = payoutsList;
-//                        payoutesAdapter.refresh(payoutsList);
-//
-//                    }
-//
-//                }
-//            });
-//
-//        }
-//
-//
-//    }
+
     private void fetch() {
         payoutsVewModel.getPayoutsByCycleCode(famerModel.getCyclecode()).observe(this, this::setData);
     }
@@ -420,8 +434,6 @@ public class FragmentFarmerHistory extends Fragment implements DatePickerDialog.
         payoutsVewModel.getCollectionsBetweenDates(DateTimeUtils.Companion.getLongDate(toolbar.getDateFrom()), DateTimeUtils.Companion.getLongDate(toolbar.getDateTo()), famerModel.getCode()).observe(FragmentFarmerHistory.this, new Observer<List<Collection>>() {
             @Override
             public void onChanged(@Nullable List<Collection> collections) {
-
-                Log.d("collDays", "" + collections.size());
 
                 if (collections != null && collections.size() > 0) {
                     initList(CommonFuncs.createHistoryList(collections, null, false));

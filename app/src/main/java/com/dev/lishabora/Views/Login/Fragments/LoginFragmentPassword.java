@@ -261,6 +261,14 @@ public class LoginFragmentPassword extends Fragment implements View.OnClickListe
         }
 
     }
+    private void loginAdmin(AdminModel adminModel) {
+        PrefrenceManager prefrenceManager = new PrefrenceManager(context);
+        prefrenceManager.setIsLoggedIn(true, LoginController.ADMIN);
+        prefrenceManager.setLoggedUser(adminModel);
+
+        startActivity(new Intent(getActivity(), AdminsActivity.class));
+        Objects.requireNonNull(getActivity()).finish();
+    }
 
     private void forgotPassword() {
 
@@ -302,14 +310,6 @@ public class LoginFragmentPassword extends Fragment implements View.OnClickListe
         Objects.requireNonNull(getActivity()).finish();
     }
 
-    private void loginAdmin(AdminModel adminModel) {
-        PrefrenceManager prefrenceManager = new PrefrenceManager(context);
-        prefrenceManager.setIsLoggedIn(true, LoginController.ADMIN);
-        prefrenceManager.setLoggedUser(adminModel);
-
-        startActivity(new Intent(getActivity(), AdminsActivity.class));
-        Objects.requireNonNull(getActivity()).finish();
-    }
 
     private void snack(String msg) {
         Snackbar.make(view, msg, Snackbar.LENGTH_LONG).show();

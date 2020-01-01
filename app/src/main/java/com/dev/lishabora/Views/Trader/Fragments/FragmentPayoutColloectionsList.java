@@ -64,18 +64,31 @@ public class FragmentPayoutColloectionsList extends Fragment {
         // Do something that differs the Activity's menu here
         super.onCreateOptionsMenu(menu, inflater);
 
-        //inflater.inflate(R.menu.menu_main, menu);
         MenuItem mSearch = menu.findItem(R.id.action_search);
+        MenuItem mHelp = menu.findItem(R.id.action_help);
 
 
-        searchView = (SearchView) mSearch.getActionView();
-        searchView.setVisibility(View.GONE);
+        MenuItem mAutomatically = menu.findItem(R.id.action_automatically);
+        MenuItem mManually = menu.findItem(R.id.action_manually);
+        MenuItem mChronologically = menu.findItem(R.id.action_chronologically);
+        MenuItem mAlphabetically = menu.findItem(R.id.action_alphabetically);
+        MenuItem mRearrangeManually = menu.findItem(R.id.action_smanually);
+
+        mAutomatically.setVisible(false);
+        mChronologically.setVisible(false);
+        mManually.setVisible(false);
+        mAlphabetically.setVisible(false);
+        mRearrangeManually.setVisible(false);
+
+        mSearch.setVisible(false);
+        mHelp.setVisible(false);
+
+
 
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
 
         return false;
     }
@@ -83,7 +96,6 @@ public class FragmentPayoutColloectionsList extends Fragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        searchView.setVisibility(View.GONE);
     }
 
 
@@ -146,9 +158,7 @@ public class FragmentPayoutColloectionsList extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
+        setHasOptionsMenu(true);
     }
 
     @Nullable

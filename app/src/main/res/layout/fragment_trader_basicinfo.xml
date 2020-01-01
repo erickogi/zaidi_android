@@ -16,12 +16,13 @@
             android:orientation="vertical">
 
 
-            <com.dev.customfonts.MyTextView_Roboto_Bold
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Please confirm that these details are correct"
-                android:textAlignment="center"
-                android:textSize="14.5sp" />
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="1dp"
+                android:text="@string/input_your_full_names"
+                android:textSize="10.5sp" />
 
             <android.support.design.widget.TextInputLayout
 
@@ -42,6 +43,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -94,7 +96,53 @@
 
             </LinearLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="1dp"
+                android:text="@string/input_your_phone_number"
+                android:textSize="10.5sp" />
+            <LinearLayout
+                android:layout_margin="4dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_black"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp">
 
+                <com.hbb20.CountryCodePicker
+                    android:id="@+id/ccp"
+                    app:ccp_autoDetectCountry="true"
+                    app:ccp_autoDetectLanguage="true"
+                    app:ccp_countryPreference="us,in"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:ccp_customMasterCountries="KE,UG,TZ"
+                    />
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edt_trader_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="3dp"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/phone_hint"
+                    android:inputType="phone"
+                    android:maxLength="11"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black"/>
+
+
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="1dp"
+                android:text="@string/input_the_name_of_your_business"
+                android:textSize="10.5sp" />
             <android.support.design.widget.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
 

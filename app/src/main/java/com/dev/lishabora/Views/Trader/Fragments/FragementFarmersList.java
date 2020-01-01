@@ -7,11 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.card.MaterialCardView;
@@ -56,6 +53,10 @@ import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.RoutesModel;
 import com.dev.lishabora.Models.UnitsModel;
 import com.dev.lishabora.Models.collectMod;
+import com.dev.lishabora.UseCases.CallPhoneNumberUseCase;
+import com.dev.lishabora.UseCases.CanCollectBasedOnPayoutUseCase;
+import com.dev.lishabora.UseCases.GetPreviousDaysCollectionsForDisplayOnCollectDialogUseCase;
+import com.dev.lishabora.UseCases.SendSmsUseCase;
 import com.dev.lishabora.Utils.CollectListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.MaterialIntro;
@@ -81,7 +82,6 @@ import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.jetbrains.annotations.NotNull;
-import org.joda.time.Interval;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
@@ -101,7 +101,9 @@ import static com.dev.lishabora.Models.FamerModel.farmerPosComparator;
 
 //import android.support.v7.view.ActionMode;
 
-public class FragementFarmersList extends Fragment implements CollectListener, RecyclerTouchListener.RecyclerTouchListenerHelper, RecyclerTouchListener.OnSwipeListener {
+public class FragementFarmersList extends Fragment implements CollectListener,
+        RecyclerTouchListener.RecyclerTouchListenerHelper,
+        RecyclerTouchListener.OnSwipeListener {
     FarmersAdapter listAdapter;
     List<Integer> unclickableRows, unswipeableRows;
     private RecyclerTouchListener onTouchListener;
@@ -165,14 +167,11 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
             switch (item.getItemId()) {
                 // Intent intent;
                 case R.id.call:
-                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "0" + selectedFarmer.getMobile()));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
-
+                    CallPhoneNumberUseCase.Companion.call(selectedFarmer.getMobile(),getContext());
                     return true;
 
                 case R.id.sms:
-                    sendSMS("0" + selectedFarmer.getMobile());
+                    SendSmsUseCase.Companion.sendSMS( selectedFarmer.getMobile(),getActivity());
                     return true;
                 default:
                     return false;
@@ -214,7 +213,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
                 famerModel.setArchived(1);
             }
             avi.smoothToShow();
-            mViewModel.updateFarmer(famerModel, false, true).observe(FragementFarmersList.this, responseModel -> avi.smoothToHide());
+            mViewModel.updateFarmer("FragmentFarmersList -> archiveFaarmer ",famerModel, false, true).observe(getViewLifecycleOwner(), responseModel -> avi.smoothToHide());
             avi.smoothToHide();
 
             // FragementFarmersList.this.fetchFarmers(FragementFarmersList.this.getSelectedAccountStatus(), FragementFarmersList.this.getSelectedRoute());//update(famerModel);
@@ -235,11 +234,21 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
                     if (FarmerConst.getSearchFamerModels().get(position).getDeleted() == 0 && FarmerConst.getSearchFamerModels().get(position).getArchived() == 0) {
                         selectedInt = position;
                         selectedFarmer = FarmerConst.getSearchFamerModels().get(position);
+                        GetPreviousDaysCollectionsForDisplayOnCollectDialogUseCase.Companion.execute(mViewModel,selectedFarmer.getCode(),new  GetPreviousDaysCollectionsForDisplayOnCollectDialogUseCase.Companion.CollectModListener(){
+                            @Override
+                            public void error(@NotNull String error) {
+                                MyToast.errorToast(error, getContext());
+                            }
 
-
-                        new DownloadFilesTask().execute(selectedFarmer.getCode());
-
-
+                            @Override
+                            public void onCollectionModelComputed(@NotNull collectMod colMod) {
+                                if (CanCollectBasedOnPayoutUseCase.Companion.canCollectBasedOnPayout(payoutsVewModel,FarmerConst.getSearchFamerModels().get(selectedInt).getCyclecode())) {
+                                    collectMilk.collectMilk(getActivity(), FarmerConst.getSearchFamerModels().get(selectedInt), colMod, FragementFarmersList.this);
+                                } else {
+                                    MyToast.errorToast("Appropriate payout for this farmer has already being approved", getContext());
+                                }
+                            }
+                        });
                     }
                 } catch (Exception nm) {
                     nm.printStackTrace();
@@ -258,7 +267,6 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
         FamerModel famerModel = FarmerConst.getSearchFamerModels().get(position);
         switch (ca) {
             case 4:
-
 
                 archiveFarmer(famerModel);
                 break;
@@ -429,7 +437,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
                 FamerModel fm = FarmerConst.getSearchFamerModels().get(adapterPosition);
                 fm.setLastCollectionTime(DateTimeUtils.Companion.getNow());
-                mViewModel.updateFarmer(fm, false, false);
+                mViewModel.updateFarmer("FragmentFarmersList -> initList -> onSwipe ",fm, false, false);
 
 
             }
@@ -462,19 +470,6 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
             @Override
             public void onClickListener(int adapterPosition, @NotNull View view) {
-//                try {
-//                    if (FarmerConst.getSearchFamerModels().get(adapterPosition).getDeleted() == 1) {
-//
-//                    } else {
-//                        try {
-                //popupMenu(adapterPosition, view, FarmerConst.getSearchFamerModels().get(adapterPosition));
-//                        } catch (Exception nm) {
-//                            nm.printStackTrace();
-//                        }
-//                    }
-//                } catch (Exception nm) {
-//                    nm.printStackTrace();
-//                }
 
                 if (mActionMode != null) {
                     // return false;
@@ -565,7 +560,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
     }
 
     private void listenOnSyncStatus() {
-        mViewModel.getTrader(prefrenceManager.getCode()).observe(this, traderModel -> {
+        mViewModel.getTrader(prefrenceManager.getCode()).observe(getViewLifecycleOwner(), traderModel -> {
 
             if (traderModel != null) {
                 if (traderModel.getSynchingStatus() == 1) {
@@ -591,31 +586,26 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
     }
 
     public void addRoutes(String mesg) {
-        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
-        alertDialogBuilderUserInput.setTitle("Routes");
+        alertDialogBuilderUserInput.setTitle("No routes found");
         alertDialogBuilderUserInput.setMessage(mesg);
-
-
         alertDialogBuilderUserInput
                 .setCancelable(false)
-                .setPositiveButton("Okay", (dialogBox, id) -> {
+                .setPositiveButton("Add route", (dialogBox, id) -> {
                     // ToDo get user input here
                     // startActivity(new Intent(SplashActivity.this, SyncWorks.class));
 
                     fragment = new FragmentRoutes();
                     popOutFragments();
                     setUpView();
-                });
-
-
+                })
+        .setNegativeButton("Dismiss", (dialogBox, id) -> {
+            dialogBox.dismiss();
+        });
         AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
-        alertDialogAndroid.setCancelable(false);
+        alertDialogAndroid.setCancelable(true);
         alertDialogAndroid.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
         alertDialogAndroid.show();
-
-
     }
 
     @Override
@@ -671,13 +661,13 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
                         if (spinner2.getItems().size() > 0) {
                             FragementFarmersList.this.createFarmers();
                         } else {
-                            routes("You have not added any routes");
+                            routes(getString(R.string.add_farmer_no_route_dialog_message));
 
 
                         }
                     } catch (Exception nm) {
                         nm.printStackTrace();
-                        routes("You have not added any routes");
+                        routes(getString(R.string.add_farmer_no_route_dialog_message));
 
                     }
 
@@ -768,7 +758,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
         Rect rect = new Rect(left, top, right, bottom);
         //     try {
         List<TapTarget> targets = new ArrayList<>();
-        targets.add(TapTarget.forView(fab, "Click the + button to add new farmers ", getContext().getResources().getString(R.string.dismiss_intro)).cancelable(false).id(10).transparentTarget(true));
+        targets.add(TapTarget.forView(fab, "Click the + button to add new farmers ", getContext().getResources().getString(R.string.dismiss_intro)).cancelable(false).id(1).transparentTarget(true));
         targets.add(TapTarget.forView(lspinner1, "Filter farmers by the account status ", getContext().getResources().getString(R.string.dismiss_intro)).cancelable(false).id(2).transparentTarget(true));
         targets.add(TapTarget.forView(lspinner2, "Filter farmers by route ", getContext().getResources().getString(R.string.dismiss_intro)).cancelable(false).id(3).transparentTarget(true));
         targets.add(TapTarget.forView(getToolbarNavigationIcon(getActivity().findViewById(R.id.toolbar)), "View more options (Menus) by swiping right ", getContext().getResources().getString(R.string.dismiss_intro)).cancelable(false).id(4).transparentTarget(true));
@@ -828,7 +818,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
         if (mViewModel == null) {
             mViewModel = ViewModelProviders.of(FragementFarmersList.this).get(TraderViewModel.class);
         }
-        mViewModel.getFarmerByStatusRoute(staus, route).observe(FragementFarmersList.this, famerModels -> update(famerModels));
+        mViewModel.getFarmerByStatusRoute(staus, route).observe(getViewLifecycleOwner(), famerModels -> update(famerModels));
 
 
 
@@ -913,6 +903,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
         FarmerListBalanceFuncs.calCBalances(mViewModel, balncesViewModel, new LinkedList<>());
 
 
+
     }
 
 
@@ -922,7 +913,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
     private void getRoutes() {
         if (mViewModel != null) {
-            mViewModel.getRoutes(false).observe(this, routesModels -> {
+            mViewModel.getRoutes(false).observe(getViewLifecycleOwner(), routesModels -> {
                 prefrenceManager.setIsRoutesListFirst(false);
                 if (routesModels != null && routesModels.size() > 0) {
                     FragementFarmersList.this.routesModels = routesModels;
@@ -1046,7 +1037,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
         ImageView imgRemove = view.findViewById(R.id.cancel_icon);
 
         imgRemove.setOnClickListener(view -> cardView.setVisibility(View.GONE));
-        mViewModel.getPayoutsByStatus("0").observe(this, payouts -> {
+        mViewModel.getPayoutsByStatus("0").observe(getViewLifecycleOwner(), payouts -> {
             if (payouts != null) {
                 cardView.setVisibility(View.VISIBLE);
 
@@ -1057,7 +1048,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
                         cardView.setVisibility(View.VISIBLE);
                         txtTitle.setText("Hi . " + prefrenceManager.getTraderModel().getNames());
-                        txtMsg.setText("You have " + notifications.size() + " Pending payouts that require approval");
+                        txtMsg.setText("You have (" + notifications.size() + ") Pending payouts that require approval");
                         cardView.setOnClickListener(view -> {
                             fragment = new FragmentPayouts();
                             popOutFragments();
@@ -1069,10 +1060,10 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
 
                         cardView.setVisibility(View.VISIBLE);
-                        txtTitle.setText("Hi . " + prefrenceManager.getTraderModel().getNames() + " You have 1 " + notifications.get(0).getTitle());
+                        txtTitle.setText("Hi . " + prefrenceManager.getTraderModel().getNames() + "You have (1)  " + notifications.get(0).getTitle());
                         txtMsg.setText(notifications.get(0).getMessage());
                         cardView.setOnClickListener(view -> {
-                            mViewModel.getPayoutByCode(notifications.get(0).getPayoutCode()).observe(FragementFarmersList.this, new Observer<Payouts>() {
+                            mViewModel.getPayoutByCode(notifications.get(0).getPayoutCode()).observe(getViewLifecycleOwner(), new Observer<Payouts>() {
                                 @Override
                                 public void onChanged(@Nullable Payouts payouts) {
                                     if (payouts != null) {
@@ -1202,30 +1193,6 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
         }
     }
 
-    private void sendSMS(String phone) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) // At least KitKat
-        {
-            String defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(getContext()); // Need to change the build to API 19
-
-            Intent sendIntent = new Intent(Intent.ACTION_SEND);
-            sendIntent.setType("text/plain");
-            sendIntent.putExtra(Intent.EXTRA_TEXT, "text");
-
-            if (defaultSmsPackageName != null)
-            {
-                sendIntent.setPackage(defaultSmsPackageName);
-            }
-            startActivity(sendIntent);
-
-        } else
-        {
-            Intent smsIntent = new Intent(android.content.Intent.ACTION_VIEW);
-            smsIntent.setType("vnd.android-dir/mms-sms");
-            smsIntent.putExtra("address", phone);
-            smsIntent.putExtra("sms_body", "message");
-            startActivity(smsIntent);
-        }
-    }
 
     @Override
     public void createCollection(Collection c, FamerModel famerModel, Double aDouble, Double milk) {
@@ -1244,14 +1211,18 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
 
         } catch (Exception nm) {
-
             nm.printStackTrace();
         }
-        mViewModel.updateFarmer(m, false, true);
 
+        if(c.getPayoutCode()!=null&&(m.getCurrentPayoutCode()==null||m.getCurrentPayoutCode().isEmpty())){
+            m.setCurrentPayoutCode(c.getPayoutCode());
+        }
+        mViewModel.updateFarmer("FragmentFarmersList -> createCollection overidmemethod ",m, false, true);
 
         c.setGpsPoint(prefrenceManager.getLastCordiantes());
         new Collect().execute(new CommonFuncs.createCollection(c, famerModel, null));
+
+      //  new Collect().execute(new CommonFuncs.createCollection(c, famerModel, null));
 
 
     }
@@ -1294,7 +1265,11 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
 
             nm.printStackTrace();
         }
-        mViewModel.updateFarmer(m, false, true);
+        if(c.getPayoutCode()!=null&&(m.getCurrentPayoutCode()==null||m.getCurrentPayoutCode().isEmpty())){
+            m.setCurrentPayoutCode(c.getPayoutCode());
+        }
+
+        mViewModel.updateFarmer("FragmentFarmersList -> updateCollection overidemethod ",m, false, true);
 
 
 
@@ -1344,6 +1319,7 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
                 return fm;
             }
 
+
             return null;
 
 
@@ -1353,32 +1329,14 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
         protected void onPostExecute(FamerModel msg) {
 
 
+
             if (msg != null) {
-                mViewModel.updateFarmer(msg, false, true);
+                mViewModel.updateFarmer("FragmentFarmersList->Balance->onPostExecute",msg, false, true);
             }
 
         }
     }
 
-    public boolean canCollectBasedOnPayout(String cycleCode) {
-        Payouts p = payoutsVewModel.getLastPayout(cycleCode);
-        if (p != null) {
-            String endDate = p.getEndDate();
-            String startDate = p.getStartDate();
-
-
-            Interval interval = new Interval(DateTimeUtils.Companion.conver2Date(startDate), DateTimeUtils.Companion.conver2Date(endDate));
-
-            if (interval.containsNow() || DateTimeUtils.Companion.isTodayN(Objects.requireNonNull(DateTimeUtils.Companion.conver2Date(endDate)))) {
-                return p.getStatus() != 1;
-            } else {
-                return true;
-            }
-
-        } else {
-            return true;
-        }
-    }
 
     private class Collect extends AsyncTask<CommonFuncs.createCollection, Integer, CommonFuncs.createCollection> {
         protected CommonFuncs.createCollection doInBackground(CommonFuncs.createCollection... data) {
@@ -1412,92 +1370,6 @@ public class FragementFarmersList extends Fragment implements CollectListener, R
                 snack(c.getResponseModel().getResultDescription());
 
             }
-        }
-    }
-
-    private class DownloadFilesTask extends AsyncTask<String, Integer, collectMod> {
-        protected collectMod doInBackground(String... data) {
-
-            List<Collection> collections = mViewModel.getCollectionsBetweenDatesOne(DateTimeUtils.Companion.getLongDate(DateTimeUtils.Companion.getDatePrevious(4)), DateTimeUtils.Companion.getLongDate(DateTimeUtils.Companion.getToday()), data[0]);
-            collectMod mod = new collectMod();
-            if (collections != null) {
-                for (Collection c : collections) {
-                    if (c.getDayDate().contains(DateTimeUtils.Companion.getDatePrevious(3))) {
-                        if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
-                            //day1am.setText(c.getMilkCollectedAm());
-
-
-                            mod.setDay1Ams(c.getMilkCollectedAm());
-                        }
-                        if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
-                            mod.setDay1pms(c.getMilkCollectedPm());
-
-                        }
-                    } else if (c.getDayDate().contains(DateTimeUtils.Companion.getDatePrevious(2))) {
-                        if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
-                            // day2am.setText(c.getMilkCollectedAm());
-                            mod.setDay2Ams(c.getMilkCollectedAm());
-
-                        }
-                        if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
-                            // day2pm.setText(c.getMilkCollectedPm());
-                            mod.setDay2pms(c.getMilkCollectedPm());
-
-                        }
-                    } else if (c.getDayDate().contains(DateTimeUtils.Companion.getDatePrevious(1))) {
-                        if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
-                            // day3am.setText(c.getMilkCollectedAm());
-                            mod.setDay3Ams(c.getMilkCollectedAm());
-
-
-                        }
-                        if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
-                            // day3pm.setText(c.getMilkCollectedPm());
-                            mod.setDay3pms(c.getMilkCollectedPm());
-
-
-                        }
-                    } else if (c.getDayDate().contains(DateTimeUtils.Companion.getToday())) {
-                        mod.setTodaysCollection(c);
-                        if (c.getMilkCollectedAm() != null && !c.getMilkCollectedAm().equals("0.0") && !c.getMilkCollectedAm().equals("0")) {
-
-                            mod.setDay4Ams(c.getMilkCollectedAm());
-
-                        }
-                        if (c.getMilkCollectedPm() != null && !c.getMilkCollectedPm().equals("0.0") && !c.getMilkCollectedPm().equals("0")) {
-                            mod.setDay4pms(c.getMilkCollectedPm());
-
-
-                        }
-                    }
-
-                }
-            }
-
-
-            return mod;
-
-
-
-
-
-
-
-
-
-
-        }
-
-
-        protected void onPostExecute(collectMod c) {
-
-            if (canCollectBasedOnPayout(FarmerConst.getSearchFamerModels().get(selectedInt).getCyclecode())) {
-                collectMilk.collectMilk(getActivity(), FarmerConst.getSearchFamerModels().get(selectedInt), c, FragementFarmersList.this);
-            } else {
-                MyToast.errorToast("Appropriate payout for this farmer has already being approved", getContext());
-            }
-
-
         }
     }
 

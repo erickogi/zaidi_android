@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ import com.dev.lishabora.Utils.PayoutsCyclesDatesUtills;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishaboramobile.R;
-import com.google.gson.Gson;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
@@ -213,9 +211,6 @@ public class TraderCyclesInfoFragment extends Fragment implements BlockingStep, 
         traderModel.setCycleEndDayNumber(endDayNumber);
         prefrenceManager.setLoggedUser(traderModel);
         traderViewModel.updateTraderDirect(traderModel);
-
-
-        Log.d("traderoncuc", new Gson().toJson(traderModel));
         traderViewModel.synch(AppConstants.UPDATE, AppConstants.ENTITY_TRADER, traderModel, null, 1);
 
 

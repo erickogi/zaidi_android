@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.design.card.MaterialCardView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,7 @@ import com.dev.lishabora.COntrollers.LoginController;
 import com.dev.lishabora.Models.Admin.AdminModel;
 import com.dev.lishabora.Models.ResponseObject;
 import com.dev.lishabora.Models.Trader.TraderModel;
+import com.dev.lishabora.Utils.Logs;
 import com.dev.lishabora.ViewModels.Login.LoginViewModel;
 import com.dev.lishabora.Views.Login.LoginConsts;
 import com.dev.lishaboramobile.R;
@@ -111,7 +111,7 @@ public class ForgotPassOtpFragment extends Fragment implements View.OnClickListe
 
         otpView.setListener(s -> {
 
-            Log.d("ReTrReq", "Sucees " + s);
+            Logs.Companion.d("ReTrReq", "Sucees " , s);
             btnNextOtpVerify.setEnabled(true);
 //            btnNextOtpResend.setEnabled(false);
             startVerify(s);

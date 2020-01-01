@@ -13,16 +13,23 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.dev.lishabora.Models.FamerModel;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
+import com.dev.lishabora.Utils.MaterialIntro;
+import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Trader.Activities.CreateFarmerActivity;
 import com.dev.lishabora.Views.Trader.FarmerConst;
 import com.dev.lishaboramobile.R;
+import com.getkeepsafe.taptargetview.TapTarget;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -38,8 +45,6 @@ public class FragmentFarmerProfile extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setHasOptionsMenu(true);
 
     }
@@ -50,27 +55,45 @@ public class FragmentFarmerProfile extends Fragment {
 
 
     }
+    private ImageButton helpView;
+    private ImageButton editView;
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
         super.onCreateOptionsMenu(menu, inflater);
-
+        MenuItem mHelp = menu.findItem(R.id.action_help);
         MenuItem mEdit = menu.findItem(R.id.action_edit);
 
+        helpView = (ImageButton) mHelp.getActionView();
+        helpView.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_help));
+        helpView.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
+
+        helpView.setOnClickListener(v -> showIntro());
+
+        editView = (ImageButton) mEdit.getActionView();
+        editView.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_edit_black_24dp));
+        editView.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
+        editView.setOnClickListener(v -> editProfile());
+        if (!new PrefrenceManager(getContext()).isFarmersProfileFragmentIntroShown()) {
+            showIntro();
+        }
+
+    }
+
+    void showIntro() {
+        List<TapTarget> targets = new ArrayList<>();
+        targets.add(TapTarget.forView(editView, "Click here to update farmers profile", getContext().getResources().getString(R.string.dismiss_intro)).cancelable(false).id(15).transparentTarget(true));
+        targets.add(TapTarget.forView(helpView, "Click here to see this introduction again", getContext().getResources().getString(R.string.dismiss_intro)).cancelable(false).id(16).transparentTarget(true));
+        MaterialIntro.Companion.showIntroSequence(getActivity(), targets);
+        new PrefrenceManager(getContext()).setFarmersProfileFragmentIntroShown(true);
 
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
             case R.id.action_edit:
-                Intent intent = new Intent(getActivity(), CreateFarmerActivity.class);
-                intent.putExtra("type", 1);
-                intent.putExtra("farmer", famerModel);
-
-                startActivityForResult(intent, 1001);
+                editProfile();
                 return true;
 
 
@@ -79,6 +102,13 @@ public class FragmentFarmerProfile extends Fragment {
         }
 
         return false;
+    }
+
+    private void editProfile(){
+        Intent intent = new Intent(getActivity(), CreateFarmerActivity.class);
+        intent.putExtra("type", 1);
+        intent.putExtra("farmer", famerModel);
+        startActivityForResult(intent, 1001);
     }
 
     @Nullable

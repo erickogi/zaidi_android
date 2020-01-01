@@ -2,10 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-
-
         android:id="@+id/action_edit"
         android:icon="@drawable/ic_edit_black_24dp"
         android:title="Edit"
+        app:actionViewClass="android.support.v7.widget.AppCompatImageButton"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_help"
+        android:icon="@android:drawable/ic_menu_help"
+        android:title="Help"
+        app:actionViewClass="android.support.v7.widget.AppCompatImageButton"
+        app:showAsAction="always" />
+
 </menu>

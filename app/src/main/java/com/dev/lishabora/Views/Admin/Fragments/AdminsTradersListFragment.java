@@ -22,7 +22,6 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -47,6 +46,7 @@ import com.dev.lishabora.Network.ApiConstants;
 import com.dev.lishabora.Network.Request;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
+import com.dev.lishabora.Utils.Logs;
 import com.dev.lishabora.Utils.NetworkUtils;
 import com.dev.lishabora.Utils.OnActivityTouchListener;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
@@ -476,7 +476,7 @@ public class AdminsTradersListFragment extends Fragment implements RecyclerTouch
                     .setAction("Action", null).show();
 
         }
-        Log.d("SnackMessage", msg);
+        Logs.Companion.d("SnackMessage", msg);
     }
 
     void initConnectivityListener() {

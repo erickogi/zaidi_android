@@ -10,7 +10,6 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +23,7 @@ import com.dev.lishabora.Models.RPFSearchModel;
 import com.dev.lishabora.Models.ResponseModel;
 import com.dev.lishabora.Models.RoutesModel;
 import com.dev.lishabora.Models.Trader.TraderModel;
+import com.dev.lishabora.Utils.Logs;
 import com.dev.lishabora.ViewModels.Admin.AdminsViewModel;
 import com.dev.lishaboramobile.R;
 import com.google.gson.Gson;
@@ -207,7 +207,7 @@ public class FragmentTradersBasicProfile extends Fragment {
                 }.getType();
                 productsModel = gson.fromJson(jsonArray, listType);
 
-                Log.d("ReTrUp", "Product update called" + responseModel.getResultDescription());
+                Logs.Companion.d("ReTrUp", "Product update called" , responseModel.getResultDescription());
 
                 fragmentTradersProducts.update(productsModel);
 
@@ -234,7 +234,7 @@ public class FragmentTradersBasicProfile extends Fragment {
                 famerModel = gson.fromJson(jsonArray, listType);
 
 
-                Log.d("ReTrUp", "farmers update called");
+                Logs.Companion.d("ReTrUp", "farmers update called");
                 fragmentTradersFarmers.update(famerModel);
 
             }
@@ -259,7 +259,7 @@ public class FragmentTradersBasicProfile extends Fragment {
                 Type listType = new TypeToken<LinkedList<RoutesModel>>() {
                 }.getType();
                 routesModel = gson.fromJson(jsonArray, listType);
-                Log.d("ReTrUp", "routes update called");
+                Logs.Companion.d("ReTrUp", "routes update called");
                 fragmentTradersRoutes.update(routesModel);
 
 

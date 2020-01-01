@@ -15,7 +15,6 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +35,7 @@ import com.dev.lishabora.Utils.CollectListener;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.InputFilterMinMax;
+import com.dev.lishabora.Utils.Logs;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
 import com.dev.lishabora.ViewModels.Trader.PayoutsVewModel;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
@@ -400,7 +400,7 @@ public class FragmentGiveLoan extends Fragment implements CollectListener {
 
     @Override
     public void createCollection(Collection c, FamerModel famerModel, Double aDouble, Double milk) {
-        Log.d("Colllectionn", new Gson().toJson(c));
+        Logs.Companion.d("Colllectionn",c);
 
 
         traderViewModel.createCollections(c).observe(FragmentGiveLoan.this, responseModel -> {

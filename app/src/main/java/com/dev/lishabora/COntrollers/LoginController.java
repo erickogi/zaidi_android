@@ -1,7 +1,6 @@
 package com.dev.lishabora.COntrollers;
 
 import android.content.Context;
-import android.util.Log;
 
 public class LoginController {
 
@@ -21,8 +20,6 @@ public class LoginController {
     }
 
     public static boolean isValidPhoneNumber(String mobile) {
-        Log.d("phonenumner", mobile);
-        Log.d("enteredPhone", mobile);
         String regEx = "^[0-9]{9}$";
         return mobile.matches(regEx);
     }

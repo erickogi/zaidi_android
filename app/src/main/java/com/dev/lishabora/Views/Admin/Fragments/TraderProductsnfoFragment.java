@@ -14,7 +14,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +25,7 @@ import android.widget.TextView;
 
 import com.dev.lishabora.Adapters.ProductsAdapter;
 import com.dev.lishabora.Models.ProductsModel;
+import com.dev.lishabora.Utils.Logs;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.ViewModels.Trader.TraderViewModel;
 import com.dev.lishabora.Views.Admin.CreateTraderConstants;
@@ -158,7 +158,7 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
 
     private void subscribeProduct(LinkedList<ProductsModel> productsModels) {
 
-        Log.d("ReTrReqd", " Dialog is has called");
+        Logs.Companion.d("ReTrReqd", " Dialog is has called");
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getContext());
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_all_products_list, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
@@ -424,10 +424,10 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
 
     public void update(List<ProductsModel> productsModel) {
 
-        Log.d("ReTr", "update started");
+        Logs.Companion.d("ReTr", "update started");
 
         if (listAdapter != null) {
-            Log.d("ReTr", "update started" + productsModel.size());
+            Logs.Companion.d("ReTr", "update started" , productsModel.size());
 
             this.productsModel.clear();
             this.productsModel.addAll(productsModel);
@@ -501,7 +501,7 @@ public class TraderProductsnfoFragment extends Fragment implements BlockingStep 
 
 
             if (selectedProducts != null && selectedProducts.size() > 0) {
-                Log.d("createproducts", " products" + selectedProducts.size() + selectedProducts.get(0).getNames());
+                Logs.Companion.d("createproducts", " products" , selectedProducts.size() + selectedProducts.get(0).getNames());
 
                 CreateTraderConstants.addTraderProducts(selectedProducts);
                 getProducts();

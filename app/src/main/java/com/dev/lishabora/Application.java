@@ -12,7 +12,6 @@ import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
@@ -57,6 +56,7 @@ import com.dev.lishabora.Repos.Trader.TraderRepo;
 import com.dev.lishabora.Repos.Trader.UnitsRepo;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.FetchDeviceData;
+import com.dev.lishabora.Utils.Logs;
 import com.dev.lishabora.Utils.NetworkUtils;
 import com.dev.lishabora.Utils.PrefrenceManager;
 import com.dev.lishabora.Utils.ResponseCallback;
@@ -70,6 +70,7 @@ import com.dev.lishaboramobile.R;
 import com.evernote.android.job.JobManager;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.google.gson.Gson;
+import com.rohitss.uceh.UCEHandler;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -150,9 +151,9 @@ public class Application extends MultiDexApplication {
                 //IF SENDING DATA
                 if (NetworkUtils.Companion.isConnectionFast(context)) {
                     s.setSystemInfo(new FetchDeviceData().fetchDetails());
-                    Log.d("SystemInfo", new Gson().toJson(s.getSystemInfo()));
+                    Logs.Companion.d("SystemInfo",s.getSystemInfo());
                 } else {
-                    Log.d("SystemInfo", "Connection is slow");
+                    Logs.Companion.d("SystemInfo", "Connection is slow");
 
                     s.setSystemInfo(new SystemInfo());
                 }
@@ -221,7 +222,7 @@ public class Application extends MultiDexApplication {
 
                 @Override
                 public void response(String error, NetworkAnalytics analytics) {
-                    Log.d("syncresponse", error);
+                    Logs.Companion.d("syncresponse", error);
 
                     if (traderModel != null) {
                         traderModel.setSynchingStatus(2);
@@ -1005,11 +1006,11 @@ public class Application extends MultiDexApplication {
 
         UpSyncJob.schedulePeriodic();
 
-        //  new UCEHandler.Builder(this).setTrackActivitiesEnabled(true).addCommaSeparatedEmailAddresses("eric@lishabora.com").build();
+        new UCEHandler.Builder(this).setTrackActivitiesEnabled(true).addCommaSeparatedEmailAddresses("erickogi14@gmail.com.com").build();
         initConnectivityListener();
 
 
-        // DebugDB.getAddressLog();
+       //Log.d("DebDb", DebugDB.getAddressLog());
 
 
     }

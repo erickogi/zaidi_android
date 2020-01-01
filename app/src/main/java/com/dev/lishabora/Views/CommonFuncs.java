@@ -8,7 +8,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,7 +23,6 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -70,6 +68,7 @@ import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
 import com.dev.lishabora.Utils.InputFilterMinMax;
 import com.dev.lishabora.Utils.LoanEditValueListener;
+import com.dev.lishabora.Utils.Logs;
 import com.dev.lishabora.Utils.MilkEditValueListener;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.ViewModels.Trader.BalncesViewModel;
@@ -549,7 +548,7 @@ public class CommonFuncs {
 
                 }
 
-                Log.d("collectionUponUpdateNew", new Gson().toJson(c));
+                Logs.Companion.d("collectionUponUpdateNew", c);
 
 
             } else if (type == 2) {
@@ -596,7 +595,7 @@ public class CommonFuncs {
                     collection.setMilkCollectedValueLtrsPm(milkModel.getValueLtrs());
                     collection.setMilkDetailsPm(new Gson().toJson(milkModel));
                 }
-                Log.d("collectionUponUpdate", new Gson().toJson(collection));
+                Logs.Companion.d("collectionUponUpdate", collection);
 
                 return collection;
             } else if (type == 2) {
@@ -690,7 +689,6 @@ public class CommonFuncs {
 
         for (Collection collection : collections) {
             if (DateTimeUtils.Companion.isInMonth(collection.getDayDate(), mds.getMonthName())) {
-                Log.d("eroordebug", "Coll" + new Gson().toJson(collection));
                 if (collection.getMilkCollectedValueLtrsAm() != null) {
                     milk = milk + (Double.valueOf(collection.getMilkCollectedValueLtrsAm()) + Double.valueOf(collection.getMilkCollectedValueLtrsPm()));
                 }
@@ -728,7 +726,6 @@ public class CommonFuncs {
 
         for (Collection collection : collections) {
             if (DateTimeUtils.Companion.isInMonth(collection.getDayDate(), mds.getMonthName())) {
-                Log.d("eroordebug", "Coll" + new Gson().toJson(collection));
                 if (collection.getMilkCollectedValueLtrsAm() != null) {
                     milk = milk + (Double.valueOf(collection.getMilkCollectedValueLtrsAm()) + Double.valueOf(collection.getMilkCollectedValueLtrsPm()));
                 }
@@ -2562,11 +2559,7 @@ public class CommonFuncs {
 
     }
 
-    private static void handler(TraderViewModel traderViewModel, FamerModel famerModel) {
-        int spalsh_time_out = 500;
-        new Handler().postDelayed(() -> traderViewModel.updateFarmer(famerModel, false, false), spalsh_time_out);
 
-    }
 
 
     private static FamerModel refreshLoanStatus(BalncesViewModel balncesViewModel, String id, int type, FarmerLoansTable farmerLoansTable, TraderViewModel traderViewModel, Collection c, FamerModel famerModel) {
@@ -2791,7 +2784,6 @@ public class CommonFuncs {
             String milkPm = milkModelPm.getUnitQty();
 
             LoanModel loanModel = CommonFuncs.getLoanForDay(d.getDate(), collections);
-            Log.d("loanTotsl", d.getDate() + " " + new Gson().toJson(loanModel));
 
             int colStatus = getCollectionStatus(d.getDate(), collections);
 
@@ -3113,7 +3105,7 @@ public class CommonFuncs {
                                            String paymentMethod,
                                            String ref,
                                            String payoutCOde) {
-        Log.d("insertLoan", "to laon" + toLoanInstallmentPayment);
+        Logs.Companion.d("insertLoan", "to laon" , toLoanInstallmentPayment);
         json = "";
         List<LoanPayments> apploanPayments = new LinkedList<>();
         List<FarmerLoansTable> farmerLoansTables = balncesViewModel.getFarmerLoanByPayoutNumberByFarmerByStatus(famerModel.getCode(), 0);
@@ -3122,7 +3114,7 @@ public class CommonFuncs {
 
         if (farmerLoansTables != null) {
             for (int a = 0; a < farmerLoansTables.size(); a++) {
-                Log.d("insertLoan", "" + farmerLoansTables.size());
+                Logs.Companion.d("insertLoan",  farmerLoansTables.size());
 
 
                 FarmerLoansTable farmerLoan = farmerLoansTables.get(a);
@@ -3173,7 +3165,7 @@ public class CommonFuncs {
             Type type = new TypeToken<List<LoanPayments>>() {
             }.getType();
             json = gson.toJson(apploanPayments, type);
-            Log.d("insertLoan", "strig  " + json);
+            Logs.Companion.d("insertLoan", "strig  " , json);
 
         }
         //  }
@@ -3420,7 +3412,7 @@ public class CommonFuncs {
 
 
             for (FarmerLoansTable fl : loansTables) {
-                Log.d("DebugUpdateERROR", new Gson().toJson(fl));
+                Logs.Companion.d("DebugUpdateERROR", fl);
 
                 loanTotalAmount = +(Double.valueOf(fl.getLoanAmount()));
                 loanInstalmentAmount = +(Double.valueOf(fl.getInstallmentAmount()));
@@ -3533,7 +3525,7 @@ public class CommonFuncs {
             if (payouts.getStatus() == 0 && (payouts.getEndDate().equals(DateTimeUtils.Companion.getToday()) ||
                     DateTimeUtils.Companion.isPastLastDay(payouts.getEndDate()))) {
                 notifications.add(new Notifications(0, DateTimeUtils.Companion.getNow(), payouts.getCyclename() + "  Payout Due ",
-                        "This payout was due on  " + payouts.getEndDate(), "PGHTSE", 0, AppConstants.NOTIFICATION_TYPE_INDIVIDUAL_PAYOUT_PENDING, 11, payouts.getCode()));
+                        "payout due on  " + payouts.getEndDate(), "PGHTSE", 0, AppConstants.NOTIFICATION_TYPE_INDIVIDUAL_PAYOUT_PENDING, 11, payouts.getCode()));
             }
 
 
@@ -3546,7 +3538,7 @@ public class CommonFuncs {
 
             } else if (notifications.size() > 1) {
                 String txtTitle = "Un-Approved Payouts ";
-                String mes = "You have " + notifications.size() + " Pending payouts that require approval";
+                String mes = "You have (" + notifications.size() + ") Pending payouts that require approval";
 
                 Notifications n = notifications.get(0);
                 n.setTitle(txtTitle);

@@ -118,7 +118,7 @@
     <string name="mdtp_day_of_week_label_typeface" translatable="false">sans-serif</string>
     <string name="mdtp_from">FROM</string>
     <string name="mdtp_to">TO</string>
-    <string name="phone_hint">Phone</string>
+    <string name="phone_hint">Phone number</string>
     <string name="input_the_full_names_of_the_farmer">Input the full names of the farmer</string>
     <string name="input_the_farmers_phone_number">Input the farmers phone number</string>
     <string name="tagline">Better business. Happy farmers.</string>
@@ -126,4 +126,11 @@
     <string name="please_enter_valid_phone_number">Please enter a valid phone</string>
     <string name="dismiss_intro">Click on the highlighted icon to dismiss</string>
     <string name="farmer_s_phone_number">Farmer\'s Contact</string>
+    <string name="add_farmer_no_route_dialog_message">You have not added any routes,    You need to add a route first before creating a farmer.</string>
+    <string name="select_the_cycle_type_for_the_new_farmer_from_the_dropdown_below">Select the cycle type for the new farmer from the dropdown below</string>
+    <string name="click_on_the_day_you_want_the_cycle_to_start">Click on the day you want the cycle to start</string>
+    <string name="input_your_full_names">Input your full names</string>
+    <string name="input_your_phone_number">Input your phone number</string>
+    <string name="input_the_name_of_your_business">Input the name of your business</string>
+    <string name="hello_please_enter_and_confirm_your_desired_password_below">Hello please enter and confirm your desired password below</string>
 </resources>

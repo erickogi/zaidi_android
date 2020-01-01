@@ -3,7 +3,6 @@ package com.dev.lishabora.Repos.Trader;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.dev.lishabora.Database.CollectionsDao;
 import com.dev.lishabora.Database.LMDatabase;
@@ -150,7 +149,6 @@ public class CollectionsRepo {
 
     public boolean insert(List<Collection> collections) {
 
-        Log.d("insertmaneneo", "inserting repo" + collections.size());
         new insertsAsyncTask(collectionsDao).execute(collections);
 
         return true;
@@ -259,7 +257,6 @@ public class CollectionsRepo {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            Log.d("insertmaneneo", "inserting repo" + aBoolean);
 
 
         }

@@ -3,7 +3,6 @@ package com.dev.lishabora.Repos.Trader;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.dev.lishabora.Database.LMDatabase;
 import com.dev.lishabora.Database.PayoutsDao;
@@ -141,7 +140,6 @@ public class PayoutsRepo {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            Log.d("insertmaneneo", "inserting repo" + aBoolean);
 
 
         }

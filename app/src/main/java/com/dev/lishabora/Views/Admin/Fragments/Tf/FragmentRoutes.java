@@ -15,7 +15,6 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,6 +36,7 @@ import com.dev.lishabora.Models.RoutesModel;
 import com.dev.lishabora.Repos.Trader.FarmerRepo;
 import com.dev.lishabora.Utils.DateTimeUtils;
 import com.dev.lishabora.Utils.GeneralUtills;
+import com.dev.lishabora.Utils.Logs;
 import com.dev.lishabora.Utils.MyToast;
 import com.dev.lishabora.Utils.OnclickRecyclerListener;
 import com.dev.lishabora.Utils.PrefrenceManager;
@@ -355,7 +355,7 @@ public class FragmentRoutes extends Fragment {
                 case R.id.edit:
 
 
-                    Log.d("farmerdialog", "edit clicked");
+                    Logs.Companion.d("farmerdialog", "edit clicked");
                     editRoute(routesModel, pos);
                     break;
 
@@ -457,10 +457,10 @@ public class FragmentRoutes extends Fragment {
 
     public void update(List<RoutesModel> routesModels) {
 
-        Log.d("ReTr", "routes started");
+        Logs.Companion.d("ReTr", "routes started");
 
         if (this.routesModels != null && listAdapter != null) {
-            Log.d("ReTr", "routes started");
+            Logs.Companion.d("ReTr", "routes started");
 
             this.routesModels.clear();
             this.routesModels.addAll(routesModels);

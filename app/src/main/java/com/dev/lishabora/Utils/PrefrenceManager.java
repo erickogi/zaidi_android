@@ -2,7 +2,6 @@ package com.dev.lishabora.Utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.dev.lishabora.Application;
 import com.dev.lishabora.Models.Admin.AdminModel;
@@ -17,7 +16,7 @@ public class PrefrenceManager {
 
     // Shared preferences file name
 
-    private static final String PREF_NAME = "lishaboraprefs";
+    private static final String PREF_NAME = "zaidiAndroidAppPrefs";
 
     // All Shared Preferences Keys
 
@@ -75,7 +74,18 @@ public class PrefrenceManager {
     private static final String isCyclesListFirst = "isCycleListFirst";
     private static final String isProductsListFirst = "isProductListFirst";
     private static final String isFirebaseUdated = "isFirebaseUpdated";
+
     private static final String isFragmentFarmersListIntroShown = "isFragmentFarmersListIntroShown";
+    private static final String isRoutesFragmentIntroShown = "isRoutesFragmentIntroShown";
+    private static final String isPayoutsFragmentIntroShown = "isPayoutsFragmentIntroShown";
+
+    //FARMERS PROFILE INTRO
+    private static final String isFarmersProfileFragmentIntroShown = "isFarmersProfileFragmentIntroShown";
+    private static final String isFarmersHistoryFragmentIntroShown = "isFarmersHistoryFragmentIntroShown";
+    private static final String isFarmerCurrentPayoutFragmentIntroShown = "isFarmerCurrentPayoutFragmentIntroShown";
+
+    //PAYCARD
+    private static final String isPayCardIntroShown = "isPayCardIntroShown";
 
 
     private static final String sortType = "sortyfd";
@@ -194,7 +204,7 @@ public class PrefrenceManager {
 
 
     public void setLoggedUser(TraderModel trader) {
-        Log.d("logTrader", "" + new Gson().toJson(trader));
+        Logs.Companion.d("logTrader", trader);
 
         editor.putString(names, trader.getNames());
         editor.putString(mobile, trader.getMobile());
@@ -407,5 +417,55 @@ public class PrefrenceManager {
     public void setFarmersListFragmentIntroShown(boolean b) {
         editor.putBoolean(isFragmentFarmersListIntroShown, b);
         editor.commit();
+    }
+    public boolean isRoutesFragmentIntroShown() {
+        return pref.getBoolean(isRoutesFragmentIntroShown, false);
+    }
+
+    public void setRoutesFragmentIntroShown(boolean b) {
+        editor.putBoolean(isRoutesFragmentIntroShown, b);
+        editor.commit();
+    }
+
+
+
+    public void setPayoutsFragmentIntroShown(boolean b) {
+        editor.putBoolean(isPayoutsFragmentIntroShown, b);
+        editor.commit();
+    }
+    public boolean isPayoutsFragmentIntroShown() {
+        return pref.getBoolean(isPayoutsFragmentIntroShown, false);
+    }
+
+    public void setFarmersProfileFragmentIntroShown(boolean b) {
+        editor.putBoolean(isFarmersProfileFragmentIntroShown, b);
+        editor.commit();
+    }
+    public boolean isFarmersProfileFragmentIntroShown() {
+        return pref.getBoolean(isFarmersProfileFragmentIntroShown, false);
+    }
+
+    public void setFarmersHistoryFragmentIntroShown(boolean b) {
+        editor.putBoolean(isFarmersHistoryFragmentIntroShown, b);
+        editor.commit();
+    }
+    public boolean isFarmersHistoryFragmentIntroShown() {
+        return pref.getBoolean(isFarmersHistoryFragmentIntroShown, false);
+    }
+
+    public void setFarmerCurrentPayoutFragmentIntroShown(boolean b) {
+        editor.putBoolean(isFarmerCurrentPayoutFragmentIntroShown, b);
+        editor.commit();
+    }
+    public boolean isFarmerCurrentPayoutFragmentIntroShown() {
+        return pref.getBoolean(isFarmerCurrentPayoutFragmentIntroShown, false);
+    }
+
+    public void setPayCardIntroShown(boolean b) {
+        editor.putBoolean(isPayCardIntroShown, b);
+        editor.commit();
+    }
+    public boolean isPayCardIntroShown() {
+        return pref.getBoolean(isPayCardIntroShown, false);
     }
 }
