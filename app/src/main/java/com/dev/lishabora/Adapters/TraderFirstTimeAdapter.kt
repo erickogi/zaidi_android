@@ -6,7 +6,6 @@ import android.support.annotation.IntRange
 import android.support.v4.app.FragmentManager
 import com.dev.lishabora.Views.Trader.Fragments.TraderBasicInfoFragment
 import com.dev.lishabora.Views.Trader.Fragments.TraderCyclesInfoFragment
-import com.dev.lishabora.Views.Trader.Fragments.TraderProductsnfoFragment
 import com.dev.lishabora.Views.Trader.Fragments.TraderRoutesInfoFragment
 import com.stepstone.stepper.Step
 import com.stepstone.stepper.adapter.AbstractFragmentStepAdapter
@@ -40,21 +39,21 @@ class TraderFirstTimeAdapter(fm: FragmentManager, context: Context) : AbstractFr
 
                 return step3
             }
-            3 -> {
-                val step4 = TraderProductsnfoFragment()
-                val b4 = Bundle()
-                b4.putInt(CURRENT_STEP_POSITION_KEY, position)
-
-
-                return step4
-            }
+//            3 -> {
+//                val step4 = TraderProductsnfoFragment()
+//                val b4 = Bundle()
+//                b4.putInt(CURRENT_STEP_POSITION_KEY, position)
+//
+//
+//                return step4
+//            }
 
         }
         return null
     }
 
     override fun getCount(): Int {
-        return 4
+        return 3
     }
 
     override fun getViewModel(@IntRange(from = 0) position: Int): StepViewModel {

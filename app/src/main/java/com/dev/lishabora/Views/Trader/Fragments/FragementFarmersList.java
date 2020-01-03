@@ -688,7 +688,7 @@ public class FragementFarmersList extends Fragment implements CollectListener,
 
 
         try {
-            Objects.requireNonNull(getActivity()).setTitle("Farmers List");
+            Objects.requireNonNull(getActivity()).setTitle("My Farmers");
         } catch (Exception nm) {
             nm.printStackTrace();
         }

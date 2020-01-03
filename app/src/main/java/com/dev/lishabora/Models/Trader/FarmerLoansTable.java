@@ -36,6 +36,9 @@ public class FarmerLoansTable implements Serializable {
     @Ignore
     private List<LoanPayments> loanPayments;
 
+    @Ignore
+    private String farmerName;
+
     public List<LoanPayments> getLoanPayments() {
         return loanPayments;
     }
@@ -154,5 +157,14 @@ public class FarmerLoansTable implements Serializable {
 
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
+    }
+
+
+    public String getFarmerName() {
+        return farmerName;
+    }
+
+    public void setFarmerName(String farmerName) {
+        this.farmerName = farmerName;
     }
 }

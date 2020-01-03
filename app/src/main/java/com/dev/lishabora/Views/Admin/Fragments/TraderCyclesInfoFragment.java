@@ -203,6 +203,14 @@ public class TraderCyclesInfoFragment extends Fragment implements BlockingStep, 
     @Override
     public void onCompleteClicked(StepperLayout.OnCompleteClickedCallback callback) {
 
+        traderModel.setCycleStartDay(PayoutsCyclesDatesUtills.getDayByNumber(startDayNumber));
+        traderModel.setCycleEndDay(PayoutsCyclesDatesUtills.getDayByNumber(endDayNumber));
+
+        traderModel.setCycleStartDayNumber(startDayNumber);
+        traderModel.setCycleEndDayNumber(endDayNumber);
+
+        CreateTraderConstants.setTraderModel(traderModel);
+
         callback.complete();
     }
 

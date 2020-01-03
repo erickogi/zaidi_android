@@ -17,9 +17,10 @@
             app:indicatorName="BallSpinFadeLoaderIndicator" />
 
         <LinearLayout
+            android:id="@+id/dialog_title"
             android:background="@color/primary"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_alignParentTop="true"
             android:layout_gravity="center"
             android:gravity="center"
@@ -39,6 +40,7 @@
                     android:src="@drawable/ic_account_box_black_24dp" />
 
                 <TextView
+                    android:paddingStart="7dp"
                     android:id="@+id/txt_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -46,7 +48,6 @@
                     android:lines="1"
                     android:singleLine="true"
                     android:text="Names"
-
                     android:textColor="@color/white"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -111,11 +112,10 @@
         </LinearLayout>
 
         <ScrollView
-
+            android:layout_below="@+id/dialog_title"
             android:id="@+id/scroll"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -251,6 +251,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:padding="2dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -305,6 +306,7 @@
 
                 <LinearLayout
 
+                    android:padding="2dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -889,6 +891,7 @@
                 <!--android:visibility="gone" />-->
 
                 <TextView
+                    android:visibility="gone"
                     android:id="@+id/txt_skip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -902,25 +905,29 @@
             </LinearLayout>
         </ScrollView>
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--    android:layout_alignParentBottom="true"-->
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/layout_custom_alert_button"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
+        android:layout_marginTop="20dp"
             android:background="@color/white"
-
+            android:layout_below="@+id/scroll"
             android:orientation="vertical">
 
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:layout_marginStart="7dp"
-                android:layout_marginEnd="7dp"
+                android:background="@color/md_light_blue_50"
+
+                android:paddingStart="7dp"
+                android:paddingEnd="7dp"
                 android:orientation="horizontal">
 
                 <android.support.design.button.MaterialButton
+
                     android:id="@+id/btn_neutral"
                     style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
                     android:layout_width="wrap_content"
@@ -945,11 +952,12 @@
                 <android.support.design.button.MaterialButton
                     android:id="@+id/btn_negative"
 
-                    style="@style/Widget.MaterialComponents.Button"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|center"
                     android:layout_weight="1"
+                    android:textColor="@color/red"
 
                     android:background="@color/white"
 
@@ -957,16 +965,33 @@
                     android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
                     android:textSize="14sp"
                     android:textStyle="bold" />
+                <android.support.design.button.MaterialButton
+                    android:id="@+id/btn_skip"
+
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center"
+                    android:layout_weight="1"
+                    android:textColor="@color/mdtp_dark_gray"
+
+                    android:background="@color/white"
+
+                    android:text="Skip"
+                    android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
                 <View
+
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
                 <android.support.design.button.MaterialButton
                     android:id="@+id/btn_positive"
-                    style="@style/Widget.MaterialComponents.Button"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
                     android:layout_width="wrap_content"
 
                     android:layout_height="wrap_content"

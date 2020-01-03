@@ -11,16 +11,23 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.dev.lishabora.Adapters.LoansOrdersAdapter;
 import com.dev.lishabora.Adapters.LoansOrdersPaymnetsAdapter;
@@ -70,6 +77,14 @@ public class FragmentTraderLoans extends Fragment {
     int paymentMethodId = 0;
 
 
+    private String filterText = "";
+    private SearchView searchView;
+    private ImageButton helpView;
+
+    LinkedList<FarmerLoansTable> filteredLoans;
+    private LinkedList<FarmerLoansTable> loansModels;
+
+
     private void listPayments(FarmerLoansTable code) {
         String vB = String.valueOf((Double.valueOf(code.getLoanAmount())) - Double.valueOf(code.getLoanAmountPaid()));
         payments = new LinkedList<>();
@@ -80,7 +95,7 @@ public class FragmentTraderLoans extends Fragment {
         alertDialogBuilderUserInput.setCancelable(true);
 
         //  alertDialogBuilderUserInput.setIcon(R.drawable.ic_add_black_24dp);
-        alertDialogBuilderUserInput.setTitle("Loan Payments  Balance " + vB);
+       // alertDialogBuilderUserInput.setTitle("Loan Payments  Balance " + vB);
 
         RecyclerView recyclerView = mView.findViewById(R.id.recyclerView);
 
@@ -96,6 +111,7 @@ public class FragmentTraderLoans extends Fragment {
         TextInputEditText edt_ref = mView.findViewById(R.id.edt_ref);
         TextInputLayout edtL = mView.findViewById(R.id.edtl);
 
+        TextView txtTitle = mView.findViewById(R.id.txt_title);
         double bal = (Double.valueOf(code.getLoanAmount())) - Double.valueOf(code.getLoanAmountPaid());
         value.setFilters(new InputFilter[]{new InputFilterMinMax(1, (int) bal)});
 
@@ -135,6 +151,7 @@ public class FragmentTraderLoans extends Fragment {
 
         currentSide = EasyFlipView.FlipState.FRONT_SIDE;
 
+        txtTitle.setText("Loan Payments  Balance " + vB);
 
 
         mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
@@ -325,7 +342,7 @@ public class FragmentTraderLoans extends Fragment {
 
 
     }
-    public void initList(List<FarmerLoansTable> farmerLoansTables) {
+    public void initList() {
         unclickableRows = new ArrayList<>();
         unswipeableRows = new ArrayList<>();
 
@@ -336,7 +353,7 @@ public class FragmentTraderLoans extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
 
-        listAdapter = new LoansOrdersAdapter(getActivity(), farmerLoansTables, null, new OnclickRecyclerListener() {
+        listAdapter = new LoansOrdersAdapter(getActivity(), filteredLoans, null, new OnclickRecyclerListener() {
             @Override
             public void onMenuItem(int position, int menuItem) {
 
@@ -351,7 +368,7 @@ public class FragmentTraderLoans extends Fragment {
 
             @Override
             public void onClickListener(int position) {
-                listPayments(farmerLoansTables.get(position));
+                listPayments(filteredLoans.get(position));
 
 
             }
@@ -386,6 +403,20 @@ public class FragmentTraderLoans extends Fragment {
         listAdapter.notifyDataSetChanged();
 
 
+        emptyState(listAdapter.getItemCount() > 0);
+
+    }
+
+    private void emptyState(boolean listHasData) {
+        LinearLayout empty_layout;
+        empty_layout = view.findViewById(R.id.empty_layout);
+
+        if (listHasData) {
+            empty_layout.setVisibility(View.GONE);
+        } else {
+            empty_layout.setVisibility(View.VISIBLE);
+
+        }
     }
 
     @Nullable
@@ -402,15 +433,12 @@ public class FragmentTraderLoans extends Fragment {
         this.view = view;
         balncesViewModel = ViewModelProviders.of(this).get(BalncesViewModel.class);
         traderViewModel = ViewModelProviders.of(this).get(TraderViewModel.class);
-
         getData();
-
     }
 
     void getData() {
         balncesViewModel.getFarmerLoans().observe(this, farmerLoansTables -> {
             if (farmerLoansTables != null) {
-
                 List<FarmerLoansTable> farmerLoansTables1 = new LinkedList<>();
                 for (FarmerLoansTable f : farmerLoansTables) {
                     if (f.getLoanAmount() != null && Double.valueOf(f.getLoanAmount()) > 0) {
@@ -422,9 +450,9 @@ public class FragmentTraderLoans extends Fragment {
                 getPayments(farmerLoansTables1);
 
             } else {
+                emptyState(false);
             }
         });
-
     }
 
     private void getPayments(List<FarmerLoansTable> farmerLoansTables1) {
@@ -456,22 +484,132 @@ public class FragmentTraderLoans extends Fragment {
                         nm.printStackTrace();
                     }
                 }
-
+                farmerLoansTables1.get(a).setFarmerName(traderViewModel.getFarmersByCodeOne(farmerLoansTables1.get(a).getFarmerCode()).getNames());
             }
 
         }
-        initList(farmerLoansTables1);
+        update(farmerLoansTables1);
     }
 
-    private void filter(List<FarmerLoansTable> farmerLoansTables) {
 
 
-        setUplist(farmerLoansTables);
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
-    private void setUplist(List<FarmerLoansTable> farmerLoansTables) {
 
-        this.farmerLoansTables = farmerLoansTables;
-        this.farmerOrdersTables = null;
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                filterText = s;
+                filterLoans();
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                filterText = s;
+                filterLoans();
+
+                return true;
+            }
+        });
+
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Do something that differs the Activity's menu here
+        super.onCreateOptionsMenu(menu, inflater);
+
+        //inflater.inflate(R.menu.menu_main, menu);
+        MenuItem mSearch = menu.findItem(R.id.action_search);
+
+        searchView = (SearchView) mSearch.getActionView();
+
+        searchView.setVisibility(View.GONE);
+
+        MenuItem mHelp = menu.findItem(R.id.action_help);
+        mHelp.setVisible(false);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                // Not implemented here
+                return false;
+            case R.id.action_search:
+                // Do Fragment menu item stuff here
+                return true;
+            default:
+                break;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (loansModels == null) {
+            loansModels = new LinkedList<>();
+        }
+        if (filteredLoans == null) {
+            filteredLoans = new LinkedList<>();
+        }
+
+        initList();
+
+
+
+
+    }
+    public void update(List<FarmerLoansTable> loansModels) {
+
+
+        if (this.loansModels != null && listAdapter != null) {
+
+            this.loansModels.clear();
+            this.loansModels.addAll(loansModels);
+            filterLoans();
+
+
+        } else {
+            filteredLoans.clear();
+            loansModels.clear();
+
+
+        }
+    }
+
+    private void filterLoans() {
+        filteredLoans.clear();
+        if (loansModels != null && loansModels.size() > 0) {
+            for (FarmerLoansTable loan : loansModels) {
+                if (loan.getCode().toLowerCase().contains(filterText) ||
+                        loan.getFarmerCode().toLowerCase().contains(filterText) ||
+                        loan.getFarmerName().toLowerCase().contains(filterText) ||
+                        loan.getLoanAmount().toLowerCase().contains(filterText)) {
+                    filteredLoans.add(loan);
+                }
+
+            }
+            listAdapter.notifyDataSetChanged();
+            recyclerView.scrollToPosition(listAdapter.getItemCount() - 1);
+        } else {
+            listAdapter.notifyDataSetChanged();
+        }
+        emptyState(listAdapter.getItemCount() > 0);
+
+    }
+
 }

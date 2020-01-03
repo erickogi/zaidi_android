@@ -30,9 +30,6 @@ import com.dev.lishaboramobile.R;
 import com.google.gson.Gson;
 
 import org.joda.time.DateTime;
-import org.joda.time.Period;
-import org.joda.time.format.PeriodFormatter;
-import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.util.Date;
 import java.util.Objects;
@@ -53,7 +50,7 @@ public class CollectMilk implements View.OnClickListener {//implements{// Number
     private boolean hasAmChanged = false;
     private boolean hasPmChanged = false;
     private AlertDialog alertDialogAndroid;
-    private MaterialButton btnPositive, btnNegative, btnNeutral;
+    private MaterialButton btnPositive, btnNegative, btnNeutral,btnSkip;
     private TextView names, balance, day1, day2, day3, day1am, day1pm, day2am, day2pm, day3am, day3pm, today, unitName, unitPrice, unitTotal;
     private TextInputEditText edtTodayAm, edtTodayPm;
 
@@ -114,22 +111,6 @@ public class CollectMilk implements View.OnClickListener {//implements{// Number
         }
     }
 
-    private void log(String msg) {
-
-        PeriodFormatter mPeriodFormat = new PeriodFormatterBuilder().appendYears()
-                .appendMinutes().appendSuffix(" Mins")
-                .appendSeconds().appendSuffix(" Secs")
-                .appendMillis().appendSuffix("Mil")
-                .toFormatter();
-        if (previousdate == null) {
-            previousdate = DateTimeUtils.Companion.getDateNow();
-        }
-
-        Period length = DateTimeUtils.Companion.calcDiff(previousdate, new Date());
-
-        previousdate = new Date();
-
-    }
 
     private void setUpCollDialog() {
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
@@ -168,12 +149,14 @@ public class CollectMilk implements View.OnClickListener {//implements{// Number
         txtSkip = mView.findViewById(R.id.txt_skip);
 
         btnPositive = mView.findViewById(R.id.btn_positive);
+        btnSkip = mView.findViewById(R.id.btn_skip);
         btnNegative = mView.findViewById(R.id.btn_negative);
         btnNeutral = mView.findViewById(R.id.btn_neutral);
         btnNegative.setOnClickListener(view -> {
             alertDialogAndroid.hide();
 
         });
+
 
 
         btnNeutral.setVisibility(View.GONE);
@@ -491,29 +474,29 @@ public class CollectMilk implements View.OnClickListener {//implements{// Number
 
 
         });
-        txtSkip.setOnClickListener(view -> {
-            String milkAm = "0";
-            String milkPm = "0";
-            if (!TextUtils.isEmpty(edtTodayAm.getText().toString())) {
-                milkAm = edtTodayAm.getText().toString();
+        txtSkip.setOnClickListener(view -> skip(famerModel));
+        btnSkip.setOnClickListener(view -> skip(famerModel));
 
-            }
-            if (!TextUtils.isEmpty(edtTodayPm.getText().toString())) {
-                milkPm = edtTodayPm.getText().toString();
+    }
 
+    private void  skip(FamerModel famerModel){
+        String milkAm = "0";
+        String milkPm = "0";
+        if (!TextUtils.isEmpty(edtTodayAm.getText().toString())) {
+            milkAm = edtTodayAm.getText().toString();
 
-            }
-            alertDialogAndroid.hide();
-            if (unitsModel != null) {
-                doCollect(famerModel, unitsModel, milkAm, milkPm);
+        }
+        if (!TextUtils.isEmpty(edtTodayPm.getText().toString())) {
+            milkPm = edtTodayPm.getText().toString();
+        }
 
-            } else {
-                // listener.error("Unit model is null");
-            }
+        alertDialogAndroid.hide();
+        if (unitsModel != null) {
+            doCollect(famerModel, unitsModel, milkAm, milkPm);
 
-
-        });
-
+        } else {
+            // listener.error("Unit model is null");
+        }
 
     }
 

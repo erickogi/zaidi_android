@@ -62,12 +62,13 @@ import java.util.Objects;
 
 public class FragmentRoutes extends Fragment {
     LinkedList<RoutesModel> filteredRoutesModels;
+    private LinkedList<RoutesModel> routesModels;
+
     Gson gson = new Gson();
     RoutesAdapter listAdapter;
     FloatingActionButton fab;
     private View view;
     private TraderViewModel mViewModel;
-    private LinkedList<RoutesModel> routesModels;
     private AVLoadingIndicatorView avi;
     private String filterText = "";
     private SearchView searchView;
@@ -338,8 +339,6 @@ public class FragmentRoutes extends Fragment {
                 popupMenu(adapterPosition, view, filteredRoutesModels.get(adapterPosition));
             }
         });
-
-
     }
 
     private void popupMenu(int pos, View view, RoutesModel routesModel) {

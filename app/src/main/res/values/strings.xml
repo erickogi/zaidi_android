@@ -133,4 +133,7 @@
     <string name="input_your_phone_number">Input your phone number</string>
     <string name="input_the_name_of_your_business">Input the name of your business</string>
     <string name="hello_please_enter_and_confirm_your_desired_password_below">Hello please enter and confirm your desired password below</string>
+    <string name="click_on_a_loan_to_view_more_its_payment_or_add_a_payment">Click on a loan to view more its payment or add a payment</string>
+    <string name="copyright_info">Zaidi Technologies\nCopyright © 2020 .</string>
+
 </resources>

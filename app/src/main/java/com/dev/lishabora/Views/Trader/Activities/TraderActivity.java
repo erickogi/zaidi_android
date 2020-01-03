@@ -58,6 +58,7 @@ import com.dev.lishabora.Views.Trader.Fragments.FragmentNotifications;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentPayouts;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentProductList;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentRoutes;
+import com.dev.lishabora.Views.Trader.Fragments.FragmentTraderLoans;
 import com.dev.lishabora.Views.Trader.Fragments.FragmentTraderProfile;
 import com.dev.lishaboramobile.R;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -265,8 +266,13 @@ public class TraderActivity extends AppCompatActivity {
 
             @Override
             public void loansAndOrders() {
-                startActivity(new Intent(TraderActivity.this, LoansAndOrders.class));
-
+                //startActivity(new Intent(TraderActivity.this, LoansAndOrders.class));
+                fragment = new FragmentTraderLoans();
+                Bundle args = new Bundle();
+                args.putSerializable("data", "");
+                fragment.setArguments(args);
+                popOutFragments();
+                setUpView("Loans");
             }
 
             @Override

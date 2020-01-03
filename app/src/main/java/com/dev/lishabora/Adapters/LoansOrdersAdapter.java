@@ -56,7 +56,7 @@ public class LoansOrdersAdapter extends RecyclerView.Adapter<LoanOrderViewHolder
 
             FarmerLoansTable model = modelListLoans.get(position);
             holder.txtDate.setText(DateTimeUtils.Companion.getDisplayDate(model.getTimestamp()));
-            holder.farmer.setText(new FarmerRepo(Application.context).getFramerByCodeOne(model.getFarmerCode()).getNames());
+            holder.farmer.setText(model.getFarmerName());
 
 
             String vA = model.getLoanAmount();
