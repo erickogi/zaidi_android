@@ -19,6 +19,7 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -104,6 +105,7 @@ public class FragmentCurrentFarmerPayout extends Fragment {
     double remaining = 0.0;
     double remainingOrderInstall = 0.0;
 
+    private ImageView arrowBack;
 
 
     @Override
@@ -143,6 +145,10 @@ public class FragmentCurrentFarmerPayout extends Fragment {
         background = view.findViewById(R.id.background);
 
 
+
+        arrowBack =  toolBar.findViewById(R.id.arrow_back);
+        arrowBack.setVisibility(View.VISIBLE);
+        arrowBack.setOnClickListener(v -> getActivity().onBackPressed());
         status = view.findViewById(R.id.txt_status);
         toolBar.findViewById(R.id.action_help).setOnClickListener(v -> showIntro());
         if (!new PrefrenceManager(getContext()).isFarmerCurrentPayoutFragmentIntroShown()) {

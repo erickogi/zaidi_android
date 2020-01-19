@@ -429,7 +429,7 @@ public class FragmentPayoutSummary extends Fragment {
             vL = GeneralUtills.Companion.addCommify(GeneralUtills.Companion.round(vL, 0));
             vO = GeneralUtills.Companion.addCommify(GeneralUtills.Companion.round(vO, 0));
             vM = GeneralUtills.Companion.addCommify(GeneralUtills.Companion.round(vM, 0));
-            vML = GeneralUtills.Companion.addCommify(GeneralUtills.Companion.round(vML, 0));
+            vML = GeneralUtills.Companion.addCommify(GeneralUtills.Companion.round(vML, 1));
         } catch (Exception nm) {
             nm.printStackTrace();
         }

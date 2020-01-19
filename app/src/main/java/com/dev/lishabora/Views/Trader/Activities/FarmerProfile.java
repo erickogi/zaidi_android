@@ -87,15 +87,19 @@ public class FarmerProfile extends AppCompatActivity {
             nm.printStackTrace();
         }
 
-        Bundle bundle = new Bundle();
-        bundle.putInt("type", 1);
-        bundle.putSerializable("farmer", FarmerConst.getFamerModel());
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show());
 
-        fragment = new FragmentFarmerProfile();
+//        fragment = new FragmentFarmerProfile();
+//        fragment.setArguments(bundle);
+
+        Bundle bundle = new Bundle();
+        bundle.putInt("type", 1);
+        bundle.putSerializable("farmer", FarmerConst.getFamerModel());
+
+        fragment = new FragmentCurrentFarmerPayout();
         fragment.setArguments(bundle);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -104,11 +108,9 @@ public class FarmerProfile extends AppCompatActivity {
         Intent i = getIntent();
         try {
             if (i != null && i.getStringExtra("type").equals("history")) {
-                bottomNavigation.setCurrentItem(1);
-
+                bottomNavigation.setCurrentItem(2);
                 popOutFragments();
                 fragment = new FragmentFarmerHistory();
-
                 fragment.setArguments(bundle);
                 setFragment();
             }
@@ -122,15 +124,20 @@ public class FarmerProfile extends AppCompatActivity {
         bottomNavigation = findViewById(R.id.bottom_navigation);
 
 // Create items
-        AHBottomNavigationItem item1 = new AHBottomNavigationItem("Profile", R.drawable.ic_account_circle_black_24dp, R.color.white);
-        item2 = new AHBottomNavigationItem("History", R.drawable.ic_history_black_24dp, R.color.white);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem("Card", R.drawable.ic_timeline, R.color.white);
-        bottomNavigation.addItem(item1);
-        bottomNavigation.addItem(item2);
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem("Profile", R.drawable.ic_account_circle_black_24dp, R.color.black);
+        item2 = new AHBottomNavigationItem("History", R.drawable.ic_history_black_24dp, R.color.black);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem("Card", R.drawable.ic_timeline, R.color.black);
+
+
         bottomNavigation.addItem(item3);
+        bottomNavigation.addItem(item2);
+        bottomNavigation.addItem(item1);
+
+
         bottomNavigation.setDefaultBackgroundColor(this.getResources().getColor(R.color.colorPrimary));
         bottomNavigation.setBehaviorTranslationEnabled(true);
         bottomNavigation.setInactiveColor(Color.parseColor("#FFFFFF"));
+        bottomNavigation.setAccentColor(this.getResources().getColor(R.color.black));
         bottomNavigation.setForceTint(true);
         bottomNavigation.setCurrentItem(0);
         bottomNavigation.setNotificationBackgroundColor(Color.parseColor("#F63D2B"));
@@ -139,12 +146,16 @@ public class FarmerProfile extends AppCompatActivity {
             Bundle bundle = new Bundle();
             switch (position) {
                 case 0:
-                    fragment = new FragmentFarmerProfile();
                     popOutFragments();
-                    bundle.putInt("type", 0);
+                    fragment = new FragmentCurrentFarmerPayout();
+                    bundle.putInt("type", 1);
                     bundle.putSerializable("farmer", FarmerConst.getFamerModel());
+
                     fragment.setArguments(bundle);
                     setFragment();
+
+
+
                     break;
                 case 1:
                     popOutFragments();
@@ -158,10 +169,12 @@ public class FarmerProfile extends AppCompatActivity {
 
                 case 2:
                     popOutFragments();
-                    fragment = new FragmentCurrentFarmerPayout();
-                    bundle.putInt("type", 1);
-                    bundle.putSerializable("farmer", FarmerConst.getFamerModel());
 
+
+                    fragment = new FragmentFarmerProfile();
+                    popOutFragments();
+                    bundle.putInt("type", 0);
+                    bundle.putSerializable("farmer", FarmerConst.getFamerModel());
                     fragment.setArguments(bundle);
                     setFragment();
                     break;

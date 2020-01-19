@@ -43,14 +43,14 @@
     <item
         android:id="@+id/action_alphabetically"
         android:orderInCategory="100"
-        android:title="Alphabetically"
+        android:title="Order By Name"
         android:visible="false"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_chronologically"
         android:orderInCategory="100"
-        android:title="Chronologicaly"
+        android:title="Order By Collection"
         android:visible="false"
         app:showAsAction="never" />
 

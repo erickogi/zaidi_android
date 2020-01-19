@@ -24,6 +24,7 @@ public class MilkCardToolBarUI extends RelativeLayout {
     private TextView txtFarmersName, txtFarmesCode, txtPayoutNumber;
     private TextView txtStartDate, txtEndDate;
     private ImageView actionHelp;
+    private ImageView arrowBack;
 
     private TextView txtMilkTotalLtrs, txtMilkTotalKsh, txtLoanTotal, txtOrderTotal, txtBalance;
     private RelativeLayout rlTotals;
@@ -84,6 +85,7 @@ public class MilkCardToolBarUI extends RelativeLayout {
         }
 
         actionHelp = findViewById(R.id.action_help);
+        arrowBack = findViewById(R.id.arrow_back);
 
         txtFarmersName = findViewById(R.id.txt_name);
         txtFarmesCode = findViewById(R.id.txt_code);
@@ -164,7 +166,7 @@ public class MilkCardToolBarUI extends RelativeLayout {
 
 
         try {
-            vA = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vA, 0)));
+            vA = GeneralUtills.Companion.addCommify(GeneralUtills.Companion.round(vA, 1));
         } catch (Exception nm) {
             nm.printStackTrace();
         }
@@ -180,7 +182,7 @@ public class MilkCardToolBarUI extends RelativeLayout {
 
 
         try {
-            vA = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vA, 0)));
+            vA = GeneralUtills.Companion.addCommify(GeneralUtills.Companion.round(vA, 0));
         } catch (Exception nm) {
             nm.printStackTrace();
         }

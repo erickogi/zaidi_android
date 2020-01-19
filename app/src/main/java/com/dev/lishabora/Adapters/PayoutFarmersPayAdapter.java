@@ -77,7 +77,7 @@ public class PayoutFarmersPayAdapter extends RecyclerView.Adapter<PayoutFarmersP
             vD = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vD, 0)));
 
 
-            vML = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vML, 0)));
+            vML = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vML, 1)));
         } catch (Exception nm) {
             nm.printStackTrace();
         }

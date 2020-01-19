@@ -17,6 +17,7 @@
         android:textStyle="bold" />
 
     <LinearLayout
+        android:visibility="gone"
         android:layout_below="@+id/txt_"
         android:id="@+id/linear_titles"
         android:layout_width="match_parent"

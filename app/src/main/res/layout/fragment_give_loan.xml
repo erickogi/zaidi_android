@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <android.support.design.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
@@ -19,11 +18,7 @@
         android:foreground="?attr/selectableItemBackground"
         app:cardCornerRadius="6dp"
         app:cardElevation="4dp">
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
-        </ScrollView>
 
         <LinearLayout
             android:id="@+id/background"
@@ -121,11 +116,6 @@
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="3dp"
-                    android:background="@color/divider" />
 
 
                 <LinearLayout
@@ -152,11 +142,7 @@
                 </LinearLayout>
 
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="3dp"
-                    android:background="@color/divider" />
+
 
                 <LinearLayout
                     android:visibility="gone"
@@ -184,11 +170,7 @@
                 </LinearLayout>
 
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="3dp"
-                    android:background="@color/divider" />
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -215,11 +197,6 @@
 
                 </LinearLayout>
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="3dp"
-                    android:background="@color/divider" />
 
                 <LinearLayout
 
@@ -248,14 +225,9 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/divider" />
 
 
             <include layout="@layout/loan_main_view" />
-
 
             <android.support.v7.widget.RecyclerView
 

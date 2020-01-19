@@ -900,7 +900,7 @@ public class FragementFarmersList extends Fragment implements CollectListener,
             collectMilk = new CollectMilk(getContext(), true);
 
         }
-        FarmerListBalanceFuncs.calCBalances(mViewModel, balncesViewModel, new LinkedList<>());
+       // FarmerListBalanceFuncs.calCBalances(mViewModel, balncesViewModel, new LinkedList<>());
 
 
 

@@ -186,14 +186,6 @@ public class FarmerListBalanceFuncs {
 
         return famerModel;
 
-//        } catch (Exception nm) {
-//            Log.d("updatedcfg",nm.toString());
-//
-//            nm.printStackTrace();
-//
-//            return null;
-//        }
-
     }
 
     private static double getSupposedToPay(double instalmentAmount, FarmerLoansTable loansTables, FarmerOrdersTable ordersTable, FamerModel famerModel, int i) {

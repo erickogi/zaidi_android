@@ -75,13 +75,13 @@ public class CollectionsAdapter extends RecyclerView.Adapter<CollectionViewHolde
 
 
         try {
-            vL = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vL, 0)));
-            vO = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vO, 0)));
+            vL = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vL, 1)));
+            vO = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vO, 1)));
 
             vMKA = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vMKA, 0)));
             vMKP = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vMKP, 0)));
-            vMLA = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vMLA, 0)));
-            vMLP = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vMLP, 0)));
+            vMLA = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vMLA, 1)));
+            vMLP = GeneralUtills.Companion.addCommify(String.valueOf(GeneralUtills.Companion.round(vMLP, 1)));
         } catch (Exception nm) {
             nm.printStackTrace();
         }

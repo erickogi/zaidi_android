@@ -63,7 +63,7 @@
                             android:background="@android:color/transparent"
                             android:hint="@string/phone_hint"
                             android:inputType="phone"
-                            android:maxLength="11"
+                            android:maxLength="15"
                             android:textColor="@android:color/black"
                             android:textColorHint="@android:color/black"/>
 

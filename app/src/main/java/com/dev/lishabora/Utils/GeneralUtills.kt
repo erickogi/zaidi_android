@@ -144,15 +144,15 @@ class GeneralUtills {
         }
 
         fun isValidPhoneNumber(value: String): Boolean {
-            val inputPhoneNumber = value
-            var validPhoneNumber: String? = null
-
-            val pattern = Pattern.compile("^(?:254|\\+254|0)?(7(?:(?:[129][0-9])|(?:0[0-8])|(4[0-1]))[0-9]{6})\$")
-            val matcher = pattern.matcher(inputPhoneNumber)
-            if (matcher.matches()) {
-                validPhoneNumber = "254" + matcher.group(1)
-                return true
-            }
+//            val inputPhoneNumber = value
+//            var validPhoneNumber: String? = null
+//
+//            val pattern = Pattern.compile("^(?:254|\\+254|0)?(7(?:(?:[129][0-9])|(?:0[0-8])|(4[0-1]))[0-9]{6})\$")
+//            val matcher = pattern.matcher(inputPhoneNumber)
+//            if (matcher.matches()) {
+//                validPhoneNumber = "254" + matcher.group(1)
+//                return true
+//            }
             return true
 //
         }

@@ -1,6 +1,5 @@
 package com.dev.lishabora.Views.Trader.Fragments;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -269,7 +268,8 @@ public class FragmentGiveLoan extends Fragment implements CollectListener {
                 giveLoan(edtAmount.getText().toString(), new Gson().toJson(loanModel));
             }
         });
-
+        edtAmount.requestFocus();
+        edtAmount.setSelection(edtAmount.getText().length());
         fetchBalance();
     }
 
@@ -297,12 +297,9 @@ public class FragmentGiveLoan extends Fragment implements CollectListener {
     }
 
     private void fetchBalance() {
-        balncesViewModel.getByFarmerCode(famerModel.getCode()).observe(this, new Observer<List<FarmerBalance>>() {
-            @Override
-            public void onChanged(@Nullable List<FarmerBalance> farmerBalances) {
-                if (farmerBalances != null) {
-                    calculate(farmerBalances);
-                }
+        balncesViewModel.getByFarmerCode(famerModel.getCode()).observe(this, farmerBalances -> {
+            if (farmerBalances != null) {
+                calculate(farmerBalances);
             }
         });
     }
