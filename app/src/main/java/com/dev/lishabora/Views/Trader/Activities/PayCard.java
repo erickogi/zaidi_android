@@ -20,6 +20,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.Display;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -112,6 +113,8 @@ public class PayCard extends AppCompatActivity {
     String json = "";
     private List<FamerModel> famerModelsBottom;
     private List<Collection> collectionsBottom;
+    private ImageView arrowBack;
+
 
     private void loadFarmers() {
 
@@ -435,7 +438,7 @@ public class PayCard extends AppCompatActivity {
 
 
         btnBack = findViewById(R.id.btn_back);
-        btnBack.setVisibility(View.GONE);
+        btnBack.setVisibility(View.VISIBLE);
 
         statusview = findViewById(R.id.status_view);
         background = findViewById(R.id.background);
@@ -457,13 +460,16 @@ public class PayCard extends AppCompatActivity {
         }
 
 
-
+        arrowBack =  toolBar.findViewById(R.id.arrow_back);
+        arrowBack.setVisibility(View.VISIBLE);
+        arrowBack.setOnClickListener(v -> onBackPressed());
 
 
         toolBar.findViewById(R.id.action_help).setOnClickListener(v -> showIntro());
         if (!new PrefrenceManager(this).isPayCardIntroShown()) {
             showIntro();
         }
+
     }
     void showIntro() {
         final Display display = this.getWindowManager().getDefaultDisplay();
