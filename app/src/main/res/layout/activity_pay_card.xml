@@ -9,17 +9,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context="com.dev.lishabora.Views.Trader.Activities.PayCard">
+        tools:context="com.dev.zaidi.Views.Trader.Activities.PayCard">
 
 
 
-        <com.dev.lishabora.Views.Trader.MilkCardToolBarUI
+        <com.dev.zaidi.Views.Trader.MilkCardToolBarUI
             android:id="@+id/toolbar"
             android:layout_height="wrap_content"
         android:layout_width="match_parent"
             android:background="@color/colorPrimary">
 
-        </com.dev.lishabora.Views.Trader.MilkCardToolBarUI>
+        </com.dev.zaidi.Views.Trader.MilkCardToolBarUI>
 
 
     <android.support.v7.widget.RecyclerView

@@ -5,7 +5,7 @@
     android:layout_gravity="center"
     android:gravity="center"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.dev.lishabora.Views.SplashActivity"
+    tools:context="com.dev.zaidi.Views.SplashActivity"
     android:background="@color/white">
 
     <ImageView

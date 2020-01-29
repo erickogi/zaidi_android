@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.dev.lishabora.Views.Trader.Activities.LoansAndOrders"
+    tools:context="com.dev.zaidi.Views.Trader.Activities.LoansAndOrders"
     tools:showIn="@layout/activity_loans_and_orders">
 
     <android.support.v4.view.ViewPager

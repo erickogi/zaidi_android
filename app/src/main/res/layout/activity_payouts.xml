@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.dev.lishabora.Views.Trader.Activities.Payouts">
+    tools:context="com.dev.zaidi.Views.Trader.Activities.Payouts">
 
 
     <android.support.design.widget.AppBarLayout

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.dev.lishaboramobile">
+    package="com.dev.zaidi">
 
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -30,7 +30,7 @@
 
     <application
         android:usesCleartextTraffic="true"
-        android:name="com.dev.lishabora.Application"
+        android:name="com.dev.zaidi.Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -38,7 +38,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.dev.lishabora.Views.SplashActivity"
+            android:name="com.dev.zaidi.Views.SplashActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
@@ -49,24 +49,24 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name="com.dev.lishabora.TimeChangedReceiver">
+        <receiver android:name="com.dev.zaidi.TimeChangedReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.TIME_SET" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.dev.lishabora.Utils.SmsReceiver">
+        <receiver android:name="com.dev.zaidi.Utils.SmsReceiver">
             <intent-filter android:priority="99999">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
 
-        <service android:name="com.dev.lishabora.FireBase.Firebase">
+        <service android:name="com.dev.zaidi.FireBase.Firebase">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
         <service
-            android:name="com.dev.lishabora.FireBase.FirebaseService"
+            android:name="com.dev.zaidi.FireBase.FirebaseService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -75,7 +75,7 @@
         </service>
 
         <service
-            android:name="com.dev.lishabora.TrackerService"
+            android:name="com.dev.zaidi.TrackerService"
             android:enabled="true"
             android:exported="true"></service>
 
@@ -94,91 +94,91 @@
         <!-- android:value="@string/default_notification_channel_id" /> -->
 
         <activity
-            android:name="com.dev.lishabora.Views.Trader.Activities.TraderActivity"
+            android:name="com.dev.zaidi.Views.Trader.Activities.TraderActivity"
             android:label="@string/title_activity_trader"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="com.dev.lishabora.Views.Trader.Activities.CreateFarmerActivity" />
+        <activity android:name="com.dev.zaidi.Views.Trader.Activities.CreateFarmerActivity" />
         <activity
-            android:name="com.dev.lishabora.Views.Admin.Activities.CreateTrader"
+            android:name="com.dev.zaidi.Views.Admin.Activities.CreateTrader"
             android:label="New Trader"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.dev.lishabora.Views.Trader.Activities.Register"
+            android:name="com.dev.zaidi.Views.Trader.Activities.Register"
             android:label="Register"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.dev.lishabora.Views.Login.Activities.LoginActivity"
+            android:name="com.dev.zaidi.Views.Login.Activities.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.dev.lishabora.Views.Admin.Activities.AdminsActivity"
+            android:name="com.dev.zaidi.Views.Admin.Activities.AdminsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.dev.lishabora.Views.Login.ResetPassword"
+            android:name="com.dev.zaidi.Views.Login.ResetPassword"
             android:label="@string/title_activity_reset_password"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.dev.lishabora.Views.Admin.Activities.AdimTraderProfile"
+            android:name="com.dev.zaidi.Views.Admin.Activities.AdimTraderProfile"
             android:label="@string/title_activity_adim_profile"
-            android:parentActivityName="com.dev.lishabora.Views.Admin.Activities.AdminsActivity"
+            android:parentActivityName="com.dev.zaidi.Views.Admin.Activities.AdminsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.dev.lishabora.Views.Trader.Activities.FirstTimeLaunch"
+            android:name="com.dev.zaidi.Views.Trader.Activities.FirstTimeLaunch"
             android:label="@string/title_activity_first_time_launch"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.dev.lishabora.Views.Trader.Activities.GiveOrder"
+            android:name="com.dev.zaidi.Views.Trader.Activities.GiveOrder"
             android:label="Order Processing"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.dev.lishabora.Views.Trader.Activities.Payouts"
+            android:name="com.dev.zaidi.Views.Trader.Activities.Payouts"
             android:label="@string/title_activity_payouts"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.dev.lishabora.Views.Trader.Activities.PayCard"
+            android:name="com.dev.zaidi.Views.Trader.Activities.PayCard"
             android:screenOrientation="portrait"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.dev.lishabora.Views.Trader.Activities.FarmerProfile"
+            android:name="com.dev.zaidi.Views.Trader.Activities.FarmerProfile"
             android:label="@string/title_activity_farmer_profile"
-            android:parentActivityName="com.dev.lishabora.Views.Trader.Activities.TraderActivity"
+            android:parentActivityName="com.dev.zaidi.Views.Trader.Activities.TraderActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.dev.lishabora.Views.Trader.Activities.EditOrder"
+            android:name="com.dev.zaidi.Views.Trader.Activities.EditOrder"
             android:theme="@style/NoTitleDialog" />
         <activity
-            android:name="com.dev.lishabora.Views.Trader.Activities.ActivityCollect"
+            android:name="com.dev.zaidi.Views.Trader.Activities.ActivityCollect"
             android:theme="@style/NoTitleDialog" />
         <activity
-            android:name="com.dev.lishabora.Views.Trader.Activities.Reports"
+            android:name="com.dev.zaidi.Views.Trader.Activities.Reports"
             android:label="@string/title_activity_reports"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.dev.lishabora.Views.Reports.Reports"
+            android:name="com.dev.zaidi.Views.Reports.Reports"
             android:label="@string/title_activity_milk_reports"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="com.dev.lishabora.Views.Trader.Activities.SyncWorks" />
+        <activity android:name="com.dev.zaidi.Views.Trader.Activities.SyncWorks" />
         <activity
-            android:name="com.dev.lishabora.Views.Trader.Activities.LoansAndOrders"
+            android:name="com.dev.zaidi.Views.Trader.Activities.LoansAndOrders"
             android:label="@string/title_activity_loans_and_orders"
             android:launchMode="singleTop"
-            android:parentActivityName="com.dev.lishabora.Views.Trader.Activities.TraderActivity"
+            android:parentActivityName="com.dev.zaidi.Views.Trader.Activities.TraderActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.dev.lishabora.Views.Admin.Activities.AdminMain"
+            android:name="com.dev.zaidi.Views.Admin.Activities.AdminMain"
             android:label="@string/title_activity_admin_main"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name="com.dev.lishabora.About" />
+        <activity android:name="com.dev.zaidi.About" />
 
 
 <!--        <receiver-->

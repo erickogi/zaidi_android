@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:511298483228:android:feee85759df59f42",
         "android_client_info": {
-          "package_name": "com.dev.lishaboramobile"
+          "package_name": "com.dev.zaidi"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "511298483228-g52ipvbko7o74uib3988p4lv06ch5qil.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.dev.lishaboramobile",
+            "package_name": "com.dev.zaidi",
             "certificate_hash": "87fbf7edadff0dff22c4f9c6574c15f1711b24c1"
           }
         },

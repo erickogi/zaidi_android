@@ -6,7 +6,7 @@
     android:layout_marginBottom="10dp"
 
     android:background="@color/white"
-    tools:context="com.dev.lishabora.Views.Trader.Activities.PayCard">
+    tools:context="com.dev.zaidi.Views.Trader.Activities.PayCard">
 
 
     <!--<android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"-->
@@ -439,13 +439,13 @@
 
 
     <!--</LinearLayout>-->
-    <com.dev.lishabora.Views.Trader.MilkCardToolBarUI
+    <com.dev.zaidi.Views.Trader.MilkCardToolBarUI
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary">
 
-    </com.dev.lishabora.Views.Trader.MilkCardToolBarUI>
+    </com.dev.zaidi.Views.Trader.MilkCardToolBarUI>
 
     <TextView
         android:visibility="gone"
