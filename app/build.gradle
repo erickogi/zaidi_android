@@ -19,6 +19,12 @@ android {
         }
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
 
     buildTypes {
         release {
@@ -160,6 +166,9 @@ dependencies {
 //
 //    debugCompile 'com.readystatesoftware.chuck:library:1.1.0'
 //    releaseCompile 'com.readystatesoftware.chuck:library-no-op:1.1.0'
+
+    debugCompile 'com.readystatesoftware.chuck:library:1.1.0'
+    releaseCompile 'com.readystatesoftware.chuck:library-no-op:1.1.0'
 
 }
 

@@ -187,7 +187,7 @@ public class Application extends MultiDexApplication {
 
         }
         try {
-            Request.Companion.getResponseSync(ApiConstants.Companion.getSync(), jsonObject, "", new SyncResponseCallback() {
+            Request.Companion.getResponseSync(context,ApiConstants.Companion.getSync(), jsonObject, "", new SyncResponseCallback() {
                 @Override
                 public void response(SyncResponseModel responseModel, NetworkAnalytics analytics) {
 
@@ -225,7 +225,6 @@ public class Application extends MultiDexApplication {
                     if (traderModel != null) {
                         traderModel.setSynchingStatus(2);
                         traderModel.setLastsynchingMessage(error);
-
                         lmDatabase.tradersDao().updateRecord(traderModel);
 
                     }

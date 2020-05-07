@@ -258,7 +258,6 @@ public class PrefrenceManager {
         traderModel.setTransactiontime(pref.getString(transactiontime, null));
         traderModel.setCycleStartDay(pref.getString(cycleStart, ""));
         traderModel.setCycleEndDay(pref.getString(cycleEnd, ""));
-
         traderModel.setCycleStartDayNumber(pref.getInt(cyclestartdayNumber, 0));
         traderModel.setCycleEndDayNumber(pref.getInt(cycleenddayNumber, 0));
 

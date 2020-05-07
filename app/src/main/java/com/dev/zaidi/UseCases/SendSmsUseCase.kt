@@ -12,11 +12,9 @@ class SendSmsUseCase {
             // At least KitKat
             {
                 val defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(activity.applicationContext) // Need to change the build to API 19
-
                 val sendIntent = Intent(Intent.ACTION_SEND)
                 sendIntent.type = "text/plain"
                 sendIntent.putExtra(Intent.EXTRA_TEXT, "text")
-
                 if (defaultSmsPackageName != null) {
                     sendIntent.setPackage(defaultSmsPackageName)
                 }

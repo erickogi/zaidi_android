@@ -1,5 +1,6 @@
 package com.dev.zaidi.Network
 
+import android.content.Context
 import android.util.Log
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
@@ -7,8 +8,12 @@ import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.StringRequestListener
 import com.dev.zaidi.Models.*
 import com.dev.zaidi.Models.Trader.Data
-import com.dev.zaidi.Utils.*
+import com.dev.zaidi.Utils.ResponseCallback
+import com.dev.zaidi.Utils.SyncChangesCallback
+import com.dev.zaidi.Utils.SyncDownResponseCallback
+import com.dev.zaidi.Utils.SyncResponseCallback
 import com.google.gson.Gson
+import com.readystatesoftware.chuck.ChuckInterceptor
 import okhttp3.OkHttpClient
 import org.json.JSONArray
 import org.json.JSONObject
@@ -70,8 +75,6 @@ class Request {
             })
 
         }
-
-
         fun getResponseSingle(url: String, jsonObject: JSONObject, token: String, responseCallback: ResponseCallback) {
             postRequest(url, jsonObject, token, object : RequestListener {
                 override fun onError(error: ANError, analytics: NetworkAnalytics) {
@@ -116,7 +119,6 @@ class Request {
             })
 
         }
-
         fun getResponseSyncChanges(url: String, jsonObject: JSONObject, token: String, responseCallback: SyncChangesCallback) {
             postRequest(url, jsonObject, token, object : RequestListener {
                 override fun onError(error: ANError, analytics: NetworkAnalytics) {
@@ -162,7 +164,6 @@ class Request {
             })
 
         }
-
         fun getResponseSync(url: String, jsonObject: JSONObject, token: String, responseCallback: SyncResponseCallback) {
             postRequest(url, jsonObject, token, object : RequestListener {
                 override fun onError(error: ANError, analytics: NetworkAnalytics) {
@@ -201,7 +202,44 @@ class Request {
             })
 
         }
+        fun getResponseSync(context: Context?=null,url: String, jsonObject: JSONObject, token: String, responseCallback: SyncResponseCallback) {
+            postRequest(url, jsonObject, token, object : RequestListener {
+                override fun onError(error: ANError, analytics: NetworkAnalytics) {
 
+                    responseCallback.response(error.toString(), analytics)
+
+                }
+
+                override fun onError(error: String, analytics: NetworkAnalytics) {
+
+
+                    responseCallback.response(error, analytics)
+
+                }
+
+                override fun onSuccess(response: String, analytics: NetworkAnalytics) {
+                    try {
+
+
+                        val gson = Gson()
+
+
+
+                        syncresponseModelSingle = gson.fromJson(response, SyncResponseModel::class.java)
+                        Timber.tag("2ReTrRe").d(gson.toJson(syncresponseModelSingle))
+                        responseCallback.response(syncresponseModelSingle, analytics)
+
+
+                    } catch (e: Exception) {
+                        responseCallback.response(response, analytics)
+
+                        e.printStackTrace()
+                    }
+
+                }
+            },context)
+
+        }
         fun getResponseSyncDown(url: String, jsonObject: JSONObject, token: String, responseCallback: SyncDownResponseCallback) {
             postRequest(url, jsonObject, token, object : RequestListener {
                 override fun onError(error: ANError, analytics: NetworkAnalytics) {
@@ -243,8 +281,6 @@ class Request {
             })
 
         }
-
-
         fun getRequest(url: String, token: String?, listener: RequestListener) {
 
             var mtoken = ""
@@ -298,9 +334,7 @@ class Request {
                         }
                     })
         }
-
-
-        fun postRequest(url: String, params: JSONObject, token: String?, listener: RequestListener) {
+        fun postRequest(url: String, params: JSONObject, token: String?, listener: RequestListener,context: Context? = null) {
 
             var mtoken = ""
             if (token != null) {
@@ -311,15 +345,20 @@ class Request {
             var analytics = NetworkAnalytics()
 
             val okHttpClient = OkHttpClient().newBuilder()
+                    .retryOnConnectionFailure(true)
                     .connectTimeout(1000, TimeUnit.SECONDS)
                     .readTimeout(1000, TimeUnit.SECONDS)
                     .writeTimeout(1000, TimeUnit.SECONDS)
+                    .addInterceptor(ChuckInterceptor(context))
                     .build()
 
 
 
             AndroidNetworking.post(url)
                     .addJSONObjectBody(params)
+
+                    .setOkHttpClient(okHttpClient)
+
 
 
                     .addHeaders("Authorization", "Bearer $mtoken")
@@ -331,12 +370,8 @@ class Request {
                     //.setOkHttpClient(okHttpClient)
 
                     .build()
-                    .setAnalyticsListener { timeTakenInMillis, bytesSent, bytesReceived, isFromCache ->
-                        Logs.d("Analy12Kq", " timeTakenInMillis  " , timeTakenInMillis)
-                        Logs.d("Analy12Kq", " bytesSent  " , bytesSent)
-                        Logs.d("Analy12Kq", " bytesReceived  " , bytesReceived)
-                        Logs.d("Analy12Kq", " isFromCache  " , isFromCache)
 
+                    .setAnalyticsListener { timeTakenInMillis, bytesSent, bytesReceived, isFromCache ->
                         analytics = (NetworkAnalytics(timeTakenInMillis, bytesSent, bytesReceived, isFromCache))
 
                     }
@@ -358,7 +393,6 @@ class Request {
                         }
                     })
         }
-
         fun postRequest(url: String, params: JSONArray, token: String?, listener: RequestListener) {
 
             var mtoken = ""
