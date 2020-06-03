@@ -1,8 +1,9 @@
 package com.dev.zaidi.Jobs.Evernote;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 
-import com.dev.zaidi.Application;
+import com.dev.zaidi.SyncService;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
 
@@ -31,16 +32,20 @@ public class UpSyncJob extends Job {
                 .build()
                 .schedule();
     }
+    public static void sync() {
+      //  this.startService(new Intent(getContext(), SyncService.class));
+    }
 
     @NonNull
     @Override
     protected Result onRunJob(Params params) {
 
-        Application.sync();
+       // new Thread(Application::sync).start();
+        getContext().startService(new Intent(getContext(), SyncService.class));
 
-
-
-
+//        Intent mIntent = new Intent(getContext(), SyncJob.class);
+//        SyncJob.enqueueWork(getContext(), mIntent);
+       // new Handler().post(()-> getContext().startService(new Intent(getContext(), SyncService.class)));
 
 
         return Result.SUCCESS;

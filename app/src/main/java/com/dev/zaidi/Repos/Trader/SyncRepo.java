@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 
 import com.dev.zaidi.Database.LMDatabase;
 import com.dev.zaidi.Database.SyncDao;
-import com.dev.zaidi.Jobs.Evernote.UpSyncJob;
 import com.dev.zaidi.Models.SyncModel;
 
 import java.util.List;
@@ -88,8 +87,8 @@ public class SyncRepo {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            //com.dev.lishabora.Application.sync();
-            UpSyncJob.scheduleExact();
+            com.dev.zaidi.Application.startSync();
+           // UpSyncJob.scheduleExact();
 
             // Log.d("testSyncUp", "DATA INSERTED SYNC CALLED");
 

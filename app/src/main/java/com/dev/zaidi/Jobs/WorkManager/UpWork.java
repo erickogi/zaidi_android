@@ -1,36 +1,48 @@
 package com.dev.zaidi.Jobs.WorkManager;
 
 
-public class UpWork {//extends Worker {
+import android.content.Context;
+import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.util.Log;
+
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
+
+import com.dev.zaidi.SyncJob;
+public class UpWork extends Worker {
+    public UpWork(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+        super(context, workerParams);
+    }
+
+    @NonNull
+    @Override
+    public Result doWork() {
+        doUpSync();
+        return Result.success();
+    }
+
 //    @NonNull
 //    @Override
 //    public WorkerResult doWork() {
 //
-//       // doUpSync();
+//        doUpSync();
 //
 //        return WorkerResult.SUCCESS;
 //    }
-//
-//    private void doUpSync() {
-//
-//        Context context=getApplicationContext();
-//
-////        LMDatabase lmDatabase=LMDatabase.getDatabase(context);
-////        lmDatabase.tradersDao().getAllByArchivedStatus(1);
-//
-//        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context,"ctx")
-//                .setSmallIcon(R.mipmap.ic_launcher)
-//                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),R.mipmap.ic_launcher))
-//                .setSmallIcon(R.drawable.ic_launcher_background)
-//                .setContentTitle("Title")
-//                .setContentText("Desc");
-//
-//        android.app.NotificationManager notificationManager =
-//                (android.app.NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-//
-//        notificationManager.notify(0 , notificationBuilder.build());
-//
-//
-//        //TradersViewModel viewModel=ViewModelProviders.of(UpWork.class).get(TradersViewModel.class);
-//    }
+
+    private void doUpSync() {
+
+      //  getApplicationContext().startService(new Intent(getApplicationContext(), SyncService.class));
+
+        Intent mIntent = new Intent(getApplicationContext(), SyncJob.class);
+        SyncJob.enqueueWork(getApplicationContext(), mIntent);
+
+      // new Handler().post(() -> getApplicationContext().startService(new Intent(getApplicationContext(), SyncService.class)));
+        Log.d("upworkwork","mehereeree");
+       // new Thread(Application::sync).start();
+        //Application.sync();
+
+
+    }
 }

@@ -13,7 +13,6 @@ import com.dev.zaidi.Utils.SyncChangesCallback
 import com.dev.zaidi.Utils.SyncDownResponseCallback
 import com.dev.zaidi.Utils.SyncResponseCallback
 import com.google.gson.Gson
-import com.readystatesoftware.chuck.ChuckInterceptor
 import okhttp3.OkHttpClient
 import org.json.JSONArray
 import org.json.JSONObject
@@ -30,7 +29,7 @@ class Request {
         internal var dataresponseModelSingle = Data()
 
 
-        fun getResponse(url: String, jsonObject: JSONObject, token: String, responseCallback: ResponseCallback) {
+        fun getResponse(context: Context?= null,url: String, jsonObject: JSONObject, token: String, responseCallback: ResponseCallback) {
             postRequest(url, jsonObject, token, object : RequestListener {
                 override fun onError(error: ANError, analytics: NetworkAnalytics) {
                     responseModel.data = null
@@ -72,10 +71,10 @@ class Request {
                     }
 
                 }
-            })
+            },context)
 
         }
-        fun getResponseSingle(url: String, jsonObject: JSONObject, token: String, responseCallback: ResponseCallback) {
+        fun getResponseSingle(context: Context? = null,url: String, jsonObject: JSONObject, token: String, responseCallback: ResponseCallback) {
             postRequest(url, jsonObject, token, object : RequestListener {
                 override fun onError(error: ANError, analytics: NetworkAnalytics) {
                     responseModelSingle.data = null
@@ -116,10 +115,10 @@ class Request {
                     }
 
                 }
-            })
+            },context)
 
         }
-        fun getResponseSyncChanges(url: String, jsonObject: JSONObject, token: String, responseCallback: SyncChangesCallback) {
+        fun getResponseSyncChanges(context: Context?,url: String, jsonObject: JSONObject, token: String, responseCallback: SyncChangesCallback) {
             postRequest(url, jsonObject, token, object : RequestListener {
                 override fun onError(error: ANError, analytics: NetworkAnalytics) {
                     responseModelSingle.data = null
@@ -161,7 +160,7 @@ class Request {
                     }
 
                 }
-            })
+            },context)
 
         }
         fun getResponseSync(url: String, jsonObject: JSONObject, token: String, responseCallback: SyncResponseCallback) {
@@ -240,7 +239,7 @@ class Request {
             },context)
 
         }
-        fun getResponseSyncDown(url: String, jsonObject: JSONObject, token: String, responseCallback: SyncDownResponseCallback) {
+        fun getResponseSyncDown(context: Context?,url: String, jsonObject: JSONObject, token: String, responseCallback: SyncDownResponseCallback) {
             postRequest(url, jsonObject, token, object : RequestListener {
                 override fun onError(error: ANError, analytics: NetworkAnalytics) {
 
@@ -278,7 +277,7 @@ class Request {
                     }
 
                 }
-            })
+            },context)
 
         }
         fun getRequest(url: String, token: String?, listener: RequestListener) {
@@ -349,7 +348,8 @@ class Request {
                     .connectTimeout(1000, TimeUnit.SECONDS)
                     .readTimeout(1000, TimeUnit.SECONDS)
                     .writeTimeout(1000, TimeUnit.SECONDS)
-                    .addInterceptor(ChuckInterceptor(context))
+                   // .addInterceptor(ChuckInterceptor(context))
+
                     .build()
 
 
@@ -363,6 +363,7 @@ class Request {
 
                     .addHeaders("Authorization", "Bearer $mtoken")
                     .addHeaders("Accept", "application/json")
+                    .addHeaders("Connection","close")
 
 
                     .setTag("test")

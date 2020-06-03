@@ -339,7 +339,7 @@ public class TraderViewModel extends AndroidViewModel
         if (this.productss == null) {
             this.productss = new MutableLiveData();
             if (fetchFromOnline) {
-                Request.Companion.getResponse(ApiConstants.Companion.getProducts(), jsonObject, "", new ResponseCallback() {
+                Request.Companion.getResponse(getApplication().getBaseContext(),ApiConstants.Companion.getProducts(), jsonObject, "", new ResponseCallback() {
                             @Override
                             public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                                 productss.setValue(responseModel);
@@ -505,7 +505,7 @@ public class TraderViewModel extends AndroidViewModel
         }
 
         if (isOnline) {
-            Request.Companion.getResponse(ApiConstants.Companion.getTraderRoutes(), getTraderRoutesObject(), "", new ResponseCallback() {
+            Request.Companion.getResponse(getApplication().getBaseContext(),ApiConstants.Companion.getTraderRoutes(), getTraderRoutesObject(), "", new ResponseCallback() {
                         @Override
                         public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                             if (responseModel.getResultCode() == 1) {
@@ -556,7 +556,7 @@ public class TraderViewModel extends AndroidViewModel
         }
         if (isOnline) {
             if (isOnline) {
-                Request.Companion.getResponse(ApiConstants.Companion.getUnits(), getTraderUnitObject(), "", new ResponseCallback() {
+                Request.Companion.getResponse(getApplication().getBaseContext(),ApiConstants.Companion.getUnits(), getTraderUnitObject(), "", new ResponseCallback() {
                             @Override
                             public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                                 JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
@@ -604,7 +604,7 @@ public class TraderViewModel extends AndroidViewModel
         }
         if (isOnline) {
             if (isOnline) {
-                Request.Companion.getResponse(ApiConstants.Companion.getCycles(), getTraderCycleObject(), "", new ResponseCallback() {
+                Request.Companion.getResponse(getApplication().getBaseContext(),ApiConstants.Companion.getCycles(), getTraderCycleObject(), "", new ResponseCallback() {
                             @Override
                             public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                                 try {
@@ -649,7 +649,7 @@ public class TraderViewModel extends AndroidViewModel
         }
         if (isOnline) {
             if (isOnline) {
-                Request.Companion.getResponse(ApiConstants.Companion.getCycles(), getTraderCycleObject(), "", new ResponseCallback() {
+                Request.Companion.getResponse(getApplication().getBaseContext(),ApiConstants.Companion.getCycles(), getTraderCycleObject(), "", new ResponseCallback() {
                             @Override
                             public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                                 JsonArray jsonArray = gson.toJsonTree(responseModel.getData()).getAsJsonArray();
@@ -742,7 +742,7 @@ public class TraderViewModel extends AndroidViewModel
         this.createRouteSuccess = new MutableLiveData();
 
         if (b) {
-            Request.Companion.getResponse(ApiConstants.Companion.getCreateRoutes(), jsonObject, "", new ResponseCallback() {
+            Request.Companion.getResponse(getApplication().getBaseContext(),ApiConstants.Companion.getCreateRoutes(), jsonObject, "", new ResponseCallback() {
                 @Override
                 public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                     createRouteSuccess.setValue(responseModel);
@@ -784,7 +784,7 @@ public class TraderViewModel extends AndroidViewModel
         this.updateRouteSuccess = new MutableLiveData();
 
         if (b) {
-            Request.Companion.getResponse(ApiConstants.Companion.getCreateRoutes(), jsonObject, "", new ResponseCallback() {
+            Request.Companion.getResponse(getApplication().getBaseContext(),ApiConstants.Companion.getCreateRoutes(), jsonObject, "", new ResponseCallback() {
                 @Override
                 public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                     updateRouteSuccess.setValue(responseModel);
@@ -826,7 +826,7 @@ public class TraderViewModel extends AndroidViewModel
         this.deleteRouteSuccess = new MutableLiveData();
 
         if (b) {
-            Request.Companion.getResponse(ApiConstants.Companion.getCreateRoutes(), jsonObject, "", new ResponseCallback() {
+            Request.Companion.getResponse(getApplication().getBaseContext(),ApiConstants.Companion.getCreateRoutes(), jsonObject, "", new ResponseCallback() {
                 @Override
                 public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                     deleteRouteSuccess.setValue(responseModel);
@@ -1316,7 +1316,7 @@ public class TraderViewModel extends AndroidViewModel
         this.createFarmerSuccess = new MutableLiveData();
 
         if (b) {
-            Request.Companion.getResponse(ApiConstants.Companion.getCreateFarmer(), getFarmerJson(), "", new ResponseCallback() {
+            Request.Companion.getResponse(getApplication().getBaseContext(),ApiConstants.Companion.getCreateFarmer(), getFarmerJson(), "", new ResponseCallback() {
                 @Override
                 public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                     createFarmerSuccess.setValue(responseModel);
@@ -1382,7 +1382,7 @@ public class TraderViewModel extends AndroidViewModel
         this.updateFarmerSuccess = new MutableLiveData();
 
         if (isOnline) {
-            Request.Companion.getResponse(ApiConstants.Companion.getCreateFarmer(), getFarmerJson(), "", new ResponseCallback() {
+            Request.Companion.getResponse(getApplication().getBaseContext(),ApiConstants.Companion.getCreateFarmer(), getFarmerJson(), "", new ResponseCallback() {
                 @Override
                 public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                     updateFarmerSuccess.setValue(responseModel);

@@ -203,16 +203,10 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-
-            case R.id.btn_new_pass_next:
-
-                nextOnNewPassClicked();
-
-                break;
-
-            default:
-                Timber.d(" No action on click");
+        if (view.getId() == R.id.btn_new_pass_next) {
+            nextOnNewPassClicked();
+        } else {
+            Timber.d(" No action on click");
         }
     }
 
@@ -238,7 +232,7 @@ public class ForgotPassConfirmFragment extends Fragment implements View.OnClickL
 
                 Logs.Companion.d("respons-edsa", authModel);
 
-                Request.Companion.getResponseSingle(ApiConstants.Companion.getNewPassordConfirm(), jsonObject, "", new ResponseCallback() {
+                Request.Companion.getResponseSingle(getContext(),ApiConstants.Companion.getNewPassordConfirm(), jsonObject, "", new ResponseCallback() {
                     @Override
                     public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
 

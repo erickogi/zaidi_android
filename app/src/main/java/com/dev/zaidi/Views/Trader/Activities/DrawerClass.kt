@@ -143,7 +143,7 @@ class DrawerClass {
                             payout,// notifications,// transactions,
                             DividerDrawerItem(),
                             account,
-                            // settings,
+                             settings,
 
 
                             // invalidate,
@@ -212,7 +212,10 @@ class DrawerClass {
                                         itemListener.profileSettingsClicked()
                                         result.closeDrawer()
                                     }
-
+                                    8 -> {
+                                        itemListener.appSettingsClicked()
+                                        result.closeDrawer()
+                                    }
 
                                     20 -> {
                                         itemListener.productsClicked()

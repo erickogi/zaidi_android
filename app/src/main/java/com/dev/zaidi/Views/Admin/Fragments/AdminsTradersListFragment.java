@@ -233,7 +233,7 @@ public class AdminsTradersListFragment extends Fragment implements RecyclerTouch
             JSONObject jb = new JSONObject(gson.toJson(traderModel));
 
             avi.smoothToShow();
-            Request.Companion.getResponseSyncDown(ApiConstants.Companion.getViewInfo(), jb, "",
+            Request.Companion.getResponseSyncDown(getContext(),ApiConstants.Companion.getViewInfo(), jb, "",
                     new SyncDownResponseCallback() {
                         @Override
                         public void response(Data responseModel, NetworkAnalytics analytics) {

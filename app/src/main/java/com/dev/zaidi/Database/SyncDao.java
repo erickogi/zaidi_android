@@ -34,8 +34,8 @@ public interface SyncDao {
     @Query("SELECT * FROM SYNC ")
     LiveData<List<SyncModel>> getAllByStatus();
 
-    @Query("SELECT * FROM SYNC ")
-    List<SyncModel> getAllByStatusRaw();
+    @Query("SELECT * FROM SYNC LIMIT :i")
+    List<SyncModel> getAllByStatusRaw(int i);
 
 
 

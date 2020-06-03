@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:paddingBottom="40dp"
+    android:layout_gravity="center">
+
+    <TextView
+        android:id="@+id/set_size_help_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:textColor="@color/textblack"
+
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:text="Adjust the number of items to sync on every attempt by dragging below. "
+        android:textSize="20dp" />
+    <TextView
+        android:layout_marginTop="@dimen/materialize_baseline_grid_x10"
+        android:id="@+id/set_size_help_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:textStyle="italic"
+        android:text="Adjust the number of items to sync on every attempt by dragging below. \n For low internt connectivity select lower number "
+        android:textSize="16dp" />
+    <SeekBar
+        android:visibility="gone"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/size_seekbar"
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+
+        />
+
+    <com.jaygoo.widget.RangeSeekBar
+        android:id="@+id/rangeSeekBar"
+        app:rsb_mode="single"
+        app:rsb_steps="5"
+        app:rsb_progress_color="#f1f1f1"
+        app:rsb_progress_default_color="#f1f1f1"
+        app:rsb_progress_height="4dp"
+        app:rsb_progress_radius="4dp"
+        app:rsb_indicator_padding_left="10dp"
+        app:rsb_indicator_padding_right="10dp"
+        app:rsb_indicator_padding_top="10dp"
+        app:rsb_indicator_padding_bottom="10dp"
+        app:rsb_indicator_arrow_size="5dp"
+        app:rsb_indicator_text_size="15sp"
+        app:rsb_indicator_text_color="@color/white"
+        app:rsb_indicator_show_mode = "alwaysShow"
+        app:rsb_step_auto_bonding="true"
+        android:layout_marginBottom="50dp"
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:rsb_min="50"
+        app:rsb_max="1000"
+        app:rsb_min_interval="30" />
+</LinearLayout>

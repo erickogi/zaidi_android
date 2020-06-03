@@ -33,6 +33,8 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
 
+
+//
         // imageView = findViewById(R.id.image);
 
         // imageView.setImageResource(R.drawable.ic_launcher);

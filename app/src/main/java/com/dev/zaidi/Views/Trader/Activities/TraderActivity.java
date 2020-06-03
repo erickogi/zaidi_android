@@ -42,6 +42,7 @@ import com.dev.zaidi.Models.Trader.TraderModel;
 import com.dev.zaidi.Network.ApiConstants;
 import com.dev.zaidi.Network.Request;
 import com.dev.zaidi.R;
+import com.dev.zaidi.SyncService;
 import com.dev.zaidi.TrackerService;
 import com.dev.zaidi.Utils.MyToast;
 import com.dev.zaidi.Utils.PrefrenceManager;
@@ -72,6 +73,7 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.gson.Gson;
+import com.jaygoo.widget.RangeSeekBar;
 import com.mikepenz.materialdrawer.Drawer;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -357,15 +359,44 @@ public class TraderActivity extends AppCompatActivity {
                 fragment = new FragmentNotifications();
                 popOutFragments();
                 setUpView("Notifications");
-
             }
 
 
 
             @Override
             public void appSettingsClicked() {
-                MyToast.toast("We are working on implementing this  \n sit tight", TraderActivity.this);
+                LayoutInflater layoutInflaterAndroid = LayoutInflater.from(TraderActivity.this);
+                View mView = layoutInflaterAndroid.inflate(R.layout.sync_settings_dialog, null);
 
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(TraderActivity.this);
+                alertDialog.setCancelable(false);//.setTitle("Sync Settings");
+                alertDialog.setView(mView);
+                RangeSeekBar rangeSeekBar = (RangeSeekBar) mView.findViewById(R.id.rangeSeekBar);
+
+                alertDialog.setPositiveButton("Set" , (dialog, which) -> {
+                    traderPrefs.setSyncNumber(Math.round(rangeSeekBar.getLeftSeekBar().getProgress()));
+                    startService(new Intent(TraderActivity.this, SyncService.class));
+                });
+                alertDialog.setNegativeButton("Dismiss", (dialog, which) -> {
+
+                });
+                AlertDialog alertDialogAndroid = alertDialog.create();
+                alertDialogAndroid.setCancelable(false);
+                alertDialogAndroid.show();
+
+
+
+//                Dialog dialog = new Dialog(TraderActivity.this);
+//                dialog.setContentView(R.layout.sync_settings_dialog);
+//                dialog.setTitle("Settings");
+//                dialog.setCancelable(false);
+////there are a lot of settings, for dialog, check them all out!
+//                dialog.show();
+//
+//                dialog.p
+                //seekbar.sho
+                rangeSeekBar.setProgress(traderPrefs.syncNumber());
+                rangeSeekBar.setIndicatorTextDecimalFormat("0");
             }
 
             @Override
@@ -428,7 +459,7 @@ public class TraderActivity extends AppCompatActivity {
 
         progressDialog.show();
 
-        Request.Companion.getResponse(ApiConstants.Companion.getUpdateTrader(), jsonObject, "",
+        Request.Companion.getResponse(this,ApiConstants.Companion.getUpdateTrader(), jsonObject, "",
                 new ResponseCallback() {
                     @Override
                     public void response(ResponseModel responseModel, NetworkAnalytics analytics) {

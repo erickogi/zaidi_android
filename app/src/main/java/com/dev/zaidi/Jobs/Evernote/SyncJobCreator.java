@@ -34,3 +34,4 @@ public class SyncJobCreator implements JobCreator {
         }
     }
 }
+//WorkManager.getInstance().enqueue(SimpleJob.buildRequest())

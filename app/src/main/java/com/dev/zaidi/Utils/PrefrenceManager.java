@@ -24,6 +24,7 @@ public class PrefrenceManager {
     private static final String KEY_TYPE_LOGGED_IN = "typeLoggedIn";
 
     private static final String dev_folder = "devfolder";
+    private static final String syncNumber = "sync_Number";
     //ADMIN
 
     private static final String NAMES = "names";
@@ -132,6 +133,15 @@ public class PrefrenceManager {
 
     public void setDev_folder(String dev_folde) {
         editor.putString(dev_folder, dev_folde);
+        editor.commit();
+    }
+
+    public int syncNumber(){
+        return pref.getInt(syncNumber, 100);
+    }
+
+    public void setSyncNumber(int syncNumberSet) {
+        editor.putInt(syncNumber, syncNumberSet);
         editor.commit();
     }
 

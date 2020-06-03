@@ -38,7 +38,7 @@ public class LoginViewModel extends AndroidViewModel {
 
 
 
-        Request.Companion.getResponseSingle(ApiConstants.Companion.getPhoneAuth(), jsonObject, "", new ResponseCallback() {
+        Request.Companion.getResponseSingle(getApplication().getBaseContext(),ApiConstants.Companion.getPhoneAuth(), jsonObject, "", new ResponseCallback() {
             @Override
             public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
 
@@ -63,7 +63,7 @@ public class LoginViewModel extends AndroidViewModel {
         // if (this.passAuth == null) {
             this.passAuth = new MutableLiveData();
         // }
-        Request.Companion.getResponseSingle(ApiConstants.Companion.getPasswordAuth(), jsonObject, "", new ResponseCallback() {
+        Request.Companion.getResponseSingle(getApplication().getBaseContext(),ApiConstants.Companion.getPasswordAuth(), jsonObject, "", new ResponseCallback() {
             @Override
             public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
 
@@ -86,7 +86,7 @@ public class LoginViewModel extends AndroidViewModel {
 //            this.otpRequest = new MutableLiveData();
 //        }
         this.otpRequest = new MutableLiveData();
-        Request.Companion.getResponseSingle(ApiConstants.Companion.getOtpRequest(), jsonObject, "", new ResponseCallback() {
+        Request.Companion.getResponseSingle(getApplication().getBaseContext(),ApiConstants.Companion.getOtpRequest(), jsonObject, "", new ResponseCallback() {
             @Override
             public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                 responseModel.setAnalytics(analytics);
@@ -111,7 +111,7 @@ public class LoginViewModel extends AndroidViewModel {
         if (this.otpConfirm == null) {
             this.otpConfirm = new MutableLiveData();
         }
-        Request.Companion.getResponseSingle(ApiConstants.Companion.getOtpRequest(), jsonObject, "", new ResponseCallback() {
+        Request.Companion.getResponseSingle(getApplication().getBaseContext(),ApiConstants.Companion.getOtpRequest(), jsonObject, "", new ResponseCallback() {
             @Override
             public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
 
@@ -131,7 +131,7 @@ public class LoginViewModel extends AndroidViewModel {
         //  if (this.newPassConfirm == null) {
             this.newPassConfirm = new MutableLiveData();
         //  }
-        Request.Companion.getResponseSingle(ApiConstants.Companion.getNewPassordConfirm(), jsonObject, "", new ResponseCallback() {
+        Request.Companion.getResponseSingle(getApplication().getBaseContext(),ApiConstants.Companion.getNewPassordConfirm(), jsonObject, "", new ResponseCallback() {
             @Override
             public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
 

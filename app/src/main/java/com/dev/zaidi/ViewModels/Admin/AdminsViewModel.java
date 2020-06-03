@@ -67,7 +67,7 @@ public class AdminsViewModel extends AndroidViewModel {
         }
 
         if (fetchFromOnline) {
-            Request.Companion.getResponse(ApiConstants.Companion.getTraders(), jsonObject, "", new ResponseCallback() {
+            Request.Companion.getResponse(getApplication().getBaseContext(),ApiConstants.Companion.getTraders(), jsonObject, "", new ResponseCallback() {
                         @Override
                         public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                             traders.setValue(responseModel);
@@ -90,7 +90,7 @@ public class AdminsViewModel extends AndroidViewModel {
         if (this.products == null) {
             this.products = new MutableLiveData();
             if (fetchFromOnline) {
-                Request.Companion.getResponse(ApiConstants.Companion.getProducts(), jsonObject, "", new ResponseCallback() {
+                Request.Companion.getResponse(getApplication().getBaseContext(),ApiConstants.Companion.getProducts(), jsonObject, "", new ResponseCallback() {
                             @Override
                             public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                                 products.setValue(responseModel);
@@ -120,7 +120,7 @@ public class AdminsViewModel extends AndroidViewModel {
         if (this.traderRoutes == null) {
             this.traderRoutes = new MutableLiveData();
             if (fetchFromOnline) {
-                Request.Companion.getResponse(ApiConstants.Companion.getTraderRoutes(), jsonObject, "", new ResponseCallback() {
+                Request.Companion.getResponse(getApplication().getBaseContext(),ApiConstants.Companion.getTraderRoutes(), jsonObject, "", new ResponseCallback() {
                             @Override
                             public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                                 traderRoutes.setValue(responseModel);
@@ -150,7 +150,7 @@ public class AdminsViewModel extends AndroidViewModel {
         if (this.traderProducts == null) {
             this.traderProducts = new MutableLiveData();
             if (fetchFromOnline) {
-                Request.Companion.getResponse(ApiConstants.Companion.getTraderProducts(), jsonObject, "", new ResponseCallback() {
+                Request.Companion.getResponse(getApplication().getBaseContext(),ApiConstants.Companion.getTraderProducts(), jsonObject, "", new ResponseCallback() {
                             @Override
                             public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                                 traderProducts.setValue(responseModel);
@@ -191,7 +191,7 @@ public class AdminsViewModel extends AndroidViewModel {
         if (this.traderFarmers == null) {
             this.traderFarmers = new MutableLiveData();
             if (fetchFromOnline) {
-                Request.Companion.getResponse(ApiConstants.Companion.getTraderFarmers(), jsonObject, "", new ResponseCallback() {
+                Request.Companion.getResponse(getApplication().getBaseContext(),ApiConstants.Companion.getTraderFarmers(), jsonObject, "", new ResponseCallback() {
                             @Override
                             public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                                 traderFarmers.setValue(responseModel);
@@ -226,7 +226,7 @@ public class AdminsViewModel extends AndroidViewModel {
         this.traders = new MutableLiveData();
 
         if (fetchFromOnline) {
-            Request.Companion.getResponse(ApiConstants.Companion.getTraders(), jsonObject, "", new ResponseCallback() {
+            Request.Companion.getResponse(getApplication().getBaseContext(),ApiConstants.Companion.getTraders(), jsonObject, "", new ResponseCallback() {
                         @Override
                         public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                             traders.setValue(responseModel);
@@ -257,7 +257,7 @@ public class AdminsViewModel extends AndroidViewModel {
         //updateSuccess.setValue(new MutableLiveData<>());
 
         if (updateOnline) {
-            Request.Companion.getResponse(ApiConstants.Companion.getUpdateTrader(), jsonObject, "",
+            Request.Companion.getResponse(getApplication().getBaseContext(),ApiConstants.Companion.getUpdateTrader(), jsonObject, "",
                     new ResponseCallback() {
                         @Override
                         public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
@@ -286,7 +286,7 @@ public class AdminsViewModel extends AndroidViewModel {
         this.createSuccess = new MutableLiveData();
 
         if (createOnline) {
-            Request.Companion.getResponse(ApiConstants.Companion.getCreateTrader(), requestData, "", new ResponseCallback() {
+            Request.Companion.getResponse(getApplication().getBaseContext(),ApiConstants.Companion.getCreateTrader(), requestData, "", new ResponseCallback() {
                 @Override
                 public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                     createSuccess.setValue(responseModel);
@@ -312,7 +312,7 @@ public class AdminsViewModel extends AndroidViewModel {
         this.createSuccess = new MutableLiveData();
 
         if (createOnline) {
-            Request.Companion.getResponseSingle(ApiConstants.Companion.getCreateTrader(), requestData, "", new ResponseCallback() {
+            Request.Companion.getResponseSingle(getApplication().getBaseContext(),ApiConstants.Companion.getCreateTrader(), requestData, "", new ResponseCallback() {
                 @Override
                 public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                     createSuccess.setValue(responseModel);
@@ -341,7 +341,7 @@ public class AdminsViewModel extends AndroidViewModel {
         //updateSuccess.setValue(new MutableLiveData<>());
 
         if (b) {
-            Request.Companion.getResponse(ApiConstants.Companion.getUpdateAdmin(), jsonObject, "",
+            Request.Companion.getResponse(getApplication().getBaseContext(),ApiConstants.Companion.getUpdateAdmin(), jsonObject, "",
                     new ResponseCallback() {
                         @Override
                         public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
@@ -367,7 +367,7 @@ public class AdminsViewModel extends AndroidViewModel {
         this.createProductSuccess = new MutableLiveData();
 
         if (b) {
-            Request.Companion.getResponse(ApiConstants.Companion.getCreateProducts(), jsonObject, "", new ResponseCallback() {
+            Request.Companion.getResponse(getApplication().getBaseContext(),ApiConstants.Companion.getCreateProducts(), jsonObject, "", new ResponseCallback() {
                 @Override
                 public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                     createProductSuccess.setValue(responseModel);
@@ -393,7 +393,7 @@ public class AdminsViewModel extends AndroidViewModel {
 
         }
         if (fetchFromOnline) {
-            Request.Companion.getResponse(ApiConstants.Companion.getProducts(), jsonObject, "", new ResponseCallback() {
+            Request.Companion.getResponse(getApplication().getBaseContext(),ApiConstants.Companion.getProducts(), jsonObject, "", new ResponseCallback() {
                         @Override
                         public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                             products.setValue(responseModel);
@@ -418,7 +418,7 @@ public class AdminsViewModel extends AndroidViewModel {
         this.updateProductSuccess = new MutableLiveData();
 
         if (b) {
-            Request.Companion.getResponse(ApiConstants.Companion.getUpdateProducts(), jsonObject, "", new ResponseCallback() {
+            Request.Companion.getResponse(getApplication().getBaseContext(),ApiConstants.Companion.getUpdateProducts(), jsonObject, "", new ResponseCallback() {
                 @Override
                 public void response(ResponseModel responseModel, NetworkAnalytics analytics) {
                     updateProductSuccess.setValue(responseModel);
